@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Verkaufs-Manager (lokal)</title>
+<title>Ankauf-Manager (lokal)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
@@ -23,11 +23,11 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 <div class="max-w-4xl mx-auto p-6">
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-blue-400">Verkaufs-Manager</h1>
+      <h1 class="text-2xl font-bold text-blue-400">Ankauf-Manager</h1>
       <div class="small-muted">Automatische Verteilung: Verkäufer 60% • Du 40%</div>
     </div>
     <div class="flex items-center gap-3">
-      <button id="btnNew" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Neuer Eintrag</button>
+      <button id="btnNew" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Neuer Ankauf</button>
       <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Übersicht</button>
       <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500">Admin</button>
     </div>
@@ -36,7 +36,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
   <div id="mainContainer" class="space-y-6">
     <!-- NEW ENTRY -->
     <div id="newEntry" class="card p-6 shadow-soft">
-      <h2 class="text-lg font-semibold mb-4">Neuen Verkauf anlegen</h2>
+      <h2 class="text-lg font-semibold mb-4">Neuen Ankauf</h2>
       <form id="entryForm" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input id="buyer" type="text" placeholder="Käufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
@@ -47,11 +47,11 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
           <input id="quantity" type="number" min="1" step="1" placeholder="Menge" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
             <div class="small-muted">Verkäufer (60%)</div>
-            <div id="sellerShare" class="text-lg font-semibold mt-1">0€</div>
+            <div id="sellerShare" class="text-lg font-semibold mt-1">0$</div>
           </div>
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
             <div class="small-muted">Dein Anteil (40%)</div>
-            <div id="yourShare" class="text-lg font-semibold mt-1">0€</div>
+            <div id="yourShare" class="text-lg font-semibold mt-1">0$</div>
           </div>
         </div>
 
@@ -79,7 +79,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
       <div id="adminContent" class="hidden-el">
         <div class="flex items-center justify-between mb-4">
           <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
-          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0€</span></div>
+          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0$</span></div>
           <button id="exportCsv" class="px-3 py-1 bg-blue-600 rounded-md">CSV Export</button>
         </div>
         <div class="overflow-auto max-h-[50vh]">
@@ -107,7 +107,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 
 <script>
 /* ======== CONFIG ======== */
-const UNIT_PRICE = 2500; // fester Preis pro Menge
+const UNIT_PRICE = 1000; // Preis pro Menge in Dollar
 const ADMIN_PASSWORD = 'admin123';
 
 /* ======== STATE ======== */
@@ -116,7 +116,7 @@ let entries = [];
 /* ======== HELPERS ======== */
 function show(el){ el.classList.remove('hidden-el'); }
 function hide(el){ el.classList.add('hidden-el'); }
-function formatCurrency(n){ return Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '€'; }
+function formatCurrency(n){ return Math.round(n)+'$'; } // ganze Zahl, Dollar
 function nowIso(){ return new Date().toISOString(); }
 function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
 
@@ -133,7 +133,7 @@ const saveFeedback=document.getElementById('saveFeedback');
 
 function computeShares(q){ 
   const price = q * UNIT_PRICE; 
-  return { price, seller: +(price*0.6).toFixed(2), you: +(price*0.4).toFixed(2) }; 
+  return { price, seller: q*UNIT_PRICE*0.6, you: q*UNIT_PRICE*0.4 }; 
 }
 function updateSharesUI(){ 
   const q = Number(quantityInput.value)||0; 

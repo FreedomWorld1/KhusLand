@@ -29,6 +29,19 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
       <button id="btnNew" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
       <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
       <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+
+      <!-- Hamburger-Menü -->
+      <div class="relative">
+        <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
+          <span class="block h-0.5 bg-gray-100"></span>
+          <span class="block h-0.5 bg-gray-100"></span>
+          <span class="block h-0.5 bg-gray-100"></span>
+        </button>
+        <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+          <a href="index.html" class="block px-4 py-2 hover:bg-gray-700">Seite 1 - Weed</a>
+          <a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Seite 2 - Kokain</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -64,19 +77,19 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
           <div>
             <label class="label-small">Cash</label>
             <input id="cash" type="number" min="0" step="0.01" placeholder="z.B. 100000"
-              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full font-semibold text-green-400 text-base" />
+              class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full font-semibold text-green-400 text-base" />
           </div>
         </div>
 
         <!-- Verkäufer & Käufer Anteile -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          <div class="p-3 rounded-md bg-gray-800 border border-gray-700 text-center">
-            <div class="small-muted mb-1">Verkäufer (80 %)</div>
-            <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
+          <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+            <div class="small-muted mb-0.5">Verkäufer (80 %)</div>
+            <div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
           </div>
-          <div class="p-3 rounded-md bg-gray-800 border border-gray-700 text-center">
-            <div class="small-muted mb-1">Käufer (20 %)</div>
-            <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
+          <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+            <div class="small-muted mb-0.5">Käufer (20 %)</div>
+            <div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
           </div>
         </div>
 
@@ -149,6 +162,10 @@ function nowIso(){return new Date().toISOString();}
 function uid(){return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,9);}
 function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
 function loadLocal(){const s=localStorage.getItem('kokain_entries');entries=s?JSON.parse(s):[];}
+
+const hamburgerBtn=document.getElementById('hamburgerBtn');
+const hamburgerMenu=document.getElementById('hamburgerMenu');
+hamburgerBtn.addEventListener('click',()=>{hamburgerMenu.classList.toggle('hidden');});
 
 const form=document.getElementById('entryForm');
 const cashInput=document.getElementById('cash');

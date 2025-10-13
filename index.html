@@ -29,17 +29,6 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
       <button id="btnNew1" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
       <button id="btnOverview1" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
       <button id="btnAdmin1" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
-      <div class="relative">
-        <button id="hamburgerBtn1" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
-          <span class="block h-0.5 bg-gray-100"></span>
-          <span class="block h-0.5 bg-gray-100"></span>
-          <span class="block h-0.5 bg-gray-100"></span>
-        </button>
-        <div id="hamburgerMenu1" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
-          <a href="index.html" class="block px-4 py-2 hover:bg-gray-700 active-link">Seite 1 - Weed</a>
-          <a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Seite 2 - Kokain</a>
-        </div>
-      </div>
     </div>
   </header>
 
@@ -54,7 +43,7 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
           <input id="seller1" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          <input id="quantity1" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
+          <input id="quantity1" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
         </div>
         <div class="flex gap-3 mt-3">
           <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
@@ -111,13 +100,13 @@ function hide(el){el.classList.add('hidden-el');}
 function saveLocal(){localStorage.setItem('weed_entries', JSON.stringify(entries1));}
 function loadLocal(){entries1=JSON.parse(localStorage.getItem('weed_entries')||'[]');}
 
-// Form submit
-document.getElementById('entryForm1').addEventListener('submit',e=>{
+// Formular submit
+document.getElementById('entryForm1').addEventListener('submit', e => {
   e.preventDefault();
-  const buyer=document.getElementById('buyer1').value;
-  const seller=document.getElementById('seller1').value;
-  const quantity=Number(document.getElementById('quantity1').value);
-  entries1.push({buyer, seller, quantity, date:new Date().toLocaleString()});
+  const buyer = document.getElementById('buyer1').value;
+  const seller = document.getElementById('seller1').value;
+  const quantity = Number(document.getElementById('quantity1').value);
+  entries1.push({ buyer, seller, quantity, date: new Date().toLocaleString() });
   saveLocal();
   e.target.reset();
   renderOverview1();
@@ -126,14 +115,17 @@ document.getElementById('entryForm1').addEventListener('submit',e=>{
 });
 
 // Übersicht rendern
-function renderOverview1(){
-  const list=document.getElementById('entriesList1');
-  list.innerHTML='';
-  if(entries1.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
-  entries1.forEach(en=>{
-    const el=document.createElement('div');
-    el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-    el.innerHTML=`
+function renderOverview1() {
+  const list = document.getElementById('entriesList1');
+  list.innerHTML = '';
+  if (entries1.length === 0) {
+    list.innerHTML = '<p class="text-gray-400">Keine Einträge vorhanden.</p>';
+    return;
+  }
+  entries1.forEach(en => {
+    const el = document.createElement('div');
+    el.className = 'p-3 rounded-md bg-gray-800 border border-gray-700';
+    el.innerHTML = `
       <div class="text-sm text-gray-400 mb-1">${en.date}</div>
       <div class="font-semibold">${en.buyer} → ${en.seller}</div>
       <div class="text-sm mt-1">Menge: ${en.quantity}</div>
@@ -142,27 +134,30 @@ function renderOverview1(){
   });
 }
 
-// Admin login & table
-const adminLoginBtn1=document.getElementById('adminLoginBtn1');
-const adminPassInput1=document.getElementById('adminPass1');
-const adminError1=document.getElementById('adminError1');
-const adminTableBody1=document.getElementById('adminTableBody1');
-const totalCount1=document.getElementById('totalCount1');
-const exportCsv1=document.getElementById('exportCsv1');
+// Admin Login & Tabelle
+const adminLoginBtn1 = document.getElementById('adminLoginBtn1');
+const adminPassInput1 = document.getElementById('adminPass1');
+const adminError1 = document.getElementById('adminError1');
+const adminTableBody1 = document.getElementById('adminTableBody1');
+const totalCount1 = document.getElementById('totalCount1');
+const exportCsv1 = document.getElementById('exportCsv1');
 
-adminLoginBtn1.addEventListener('click',()=>{
-  if(adminPassInput1.value===ADMIN_PASSWORD1){ 
-    adminError1.classList.add('hidden-el'); 
+adminLoginBtn1.addEventListener('click', () => {
+  if (adminPassInput1.value === ADMIN_PASSWORD1) {
+    adminError1.classList.add('hidden-el');
     show(document.getElementById('adminContent1'));
     renderAdminTable1();
-  } else { adminError1.classList.remove('hidden-el'); }
+  } else {
+    adminError1.classList.remove('hidden-el');
+  }
 });
 
-function renderAdminTable1(){
-  adminTableBody1.innerHTML='';
-  entries1.forEach((en,i)=>{
-    const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
-    tr.innerHTML=`
+function renderAdminTable1() {
+  adminTableBody1.innerHTML = '';
+  entries1.forEach((en, i) => {
+    const tr = document.createElement('tr');
+    tr.className = 'border-t border-gray-800';
+    tr.innerHTML = `
       <td class="p-2 small-muted">${en.date}</td>
       <td class="p-2">${en.buyer}</td>
       <td class="p-2">${en.seller}</td>
@@ -171,39 +166,46 @@ function renderAdminTable1(){
     `;
     adminTableBody1.appendChild(tr);
   });
-  totalCount1.innerText=entries1.length;
+  totalCount1.innerText = entries1.length;
 }
 
-function deleteEntry1(index){
-  if(confirm('Eintrag wirklich löschen?')){ entries1.splice(index,1); saveLocal(); renderAdminTable1(); renderOverview1(); }
+function deleteEntry1(index) {
+  if (confirm('Eintrag wirklich löschen?')) {
+    entries1.splice(index, 1);
+    saveLocal();
+    renderAdminTable1();
+    renderOverview1();
+  }
 }
 
 // CSV Export
-exportCsv1.addEventListener('click',()=>{
-  if(entries1.length===0) return alert('Keine Einträge zum Exportieren.');
-  const header=['date','buyer','seller','quantity'];
-  const rows=entries1.map(e=>[`"${e.date}"`,`"${e.buyer}"`,`"${e.seller}"`,e.quantity].join(','));
-  const csv=[header.join(','),...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='entries_weed.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
+exportCsv1.addEventListener('click', () => {
+  if (entries1.length === 0) return alert('Keine Einträge zum Exportieren.');
+  const header = ['date', 'buyer', 'seller', 'quantity'];
+  const rows = entries1.map(e => [`"${e.date}"`,`"${e.buyer}"`,`"${e.seller}"`, e.quantity].join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'entries_weed.csv';
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  a.remove();
 });
 
 // Panels toggle
-const newEl1=document.getElementById('newEntry1');
-const overviewEl1=document.getElementById('overview1');
-const adminEl1=document.getElementById('adminPanel1');
-document.getElementById('btnNew1').addEventListener('click',()=>{show(newEl1); hide(overviewEl1); hide(adminEl1);});
-document.getElementById('btnOverview1').addEventListener('click',()=>{hide(newEl1); show(overviewEl1); hide(adminEl1); renderOverview1();});
-document.getElementById('btnAdmin1').addEventListener('click',()=>{hide(newEl1); hide(overviewEl1); show(adminEl1);});
-
-// Hamburger
-const hamburgerBtn1=document.getElementById('hamburgerBtn1');
-const hamburgerMenu1=document.getElementById('hamburgerMenu1');
-hamburgerBtn1.addEventListener('click',()=>hamburgerMenu1.classList.toggle('hidden'));
+const newEl1 = document.getElementById('newEntry1');
+const overviewEl1 = document.getElementById('overview1');
+const adminEl1 = document.getElementById('adminPanel1');
+document.getElementById('btnNew1').addEventListener('click', () => { show(newEl1); hide(overviewEl1); hide(adminEl1); });
+document.getElementById('btnOverview1').addEventListener('click', () => { hide(newEl1); show(overviewEl1); hide(adminEl1); renderOverview1(); });
+document.getElementById('btnAdmin1').addEventListener('click', () => { hide(newEl1); hide(overviewEl1); show(adminEl1); });
 
 // Init
-loadLocal(); renderOverview1();
+loadLocal();
+renderOverview1();
 </script>
 </body>
 </html>

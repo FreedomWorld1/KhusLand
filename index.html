@@ -135,7 +135,7 @@ const sellerShareEl1=document.getElementById('sellerShare1');
 const yourShareEl1=document.getElementById('yourShare1');
 function updateShares1(){
   const q=Number(quantityInput1.value)||0;
-  const price=q*100;
+  const price=q*2500;
   sellerShareEl1.textContent=formatCurrency(price*0.6);
   yourShareEl1.textContent=formatCurrency(price*0.4);
 }

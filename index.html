@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Weed Ankauf</title>
+<title>Weed Ankauf - Seite 1</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
@@ -22,36 +22,24 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 
 <div class="max-w-4xl mx-auto p-6">
 
-  <!-- HEADER mit Hamburger-Menü -->
-  <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-xl shadow-soft mb-8 p-4 sm:p-5">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-center sm:text-left gap-4">
-      <h1 class="text-3xl font-extrabold text-green-400 tracking-tight drop-shadow-sm">
-        🌿 Weed Ankauf
-      </h1>
-      <!-- Desktop Buttons -->
-      <div class="hidden sm:flex flex-wrap justify-end gap-2">
-        <button id="btnNew" class="btn px-4 py-2 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
-        <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
-        <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
-        <button id="btnCocaine" class="btn px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-500 shadow-sm">Kokain</button>
-      </div>
-      <!-- Hamburger Menü für Mobile -->
-      <div class="sm:hidden relative">
-        <button id="hamburgerBtn" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">
-          ☰
-        </button>
-        <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-40 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
-          <button class="w-full text-left px-4 py-2 hover:bg-gray-700" id="mbNew">Neuer Ankauf</button>
-          <button class="w-full text-left px-4 py-2 hover:bg-gray-700" id="mbOverview">Übersicht</button>
-          <button class="w-full text-left px-4 py-2 hover:bg-gray-700" id="mbAdmin">Admin</button>
-          <button class="w-full text-left px-4 py-2 hover:bg-gray-700" id="mbCocaine">Kokain</button>
-        </div>
+  <!-- HEADER mit Hamburger -->
+  <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-xl shadow-soft mb-8 p-4 flex justify-between items-center">
+    <h1 class="text-3xl font-extrabold text-green-400 tracking-tight drop-shadow-sm">🌿 Weed Ankauf</h1>
+    <div class="relative">
+      <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none">
+        <span class="block h-0.5 bg-gray-100"></span>
+        <span class="block h-0.5 bg-gray-100"></span>
+        <span class="block h-0.5 bg-gray-100"></span>
+      </button>
+      <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+        <a href="index.html" class="block px-4 py-2 hover:bg-gray-700">Seite 1</a>
+        <a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Seite 2</a>
       </div>
     </div>
   </header>
 
   <div id="mainContainer" class="space-y-6">
-    <!-- NEW ENTRY -->
+    <!-- NEUER ANKAUF -->
     <div id="newEntry" class="card p-6 shadow-soft">
       <h2 class="text-lg font-semibold mb-4">Neuen Ankauf</h2>
       <form id="entryForm" class="space-y-4">
@@ -59,7 +47,6 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
           <input id="buyer" type="text" placeholder="Käufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           <input id="seller" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-4">
           <input id="quantity" type="number" min="1" step="1" placeholder="Menge" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
@@ -71,7 +58,6 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
             <div id="yourShare" class="text-lg font-semibold mt-1">0$</div>
           </div>
         </div>
-
         <div class="flex gap-3 mt-4">
           <button type="submit" class="px-4 py-2 bg-green-600 rounded-md btn">Speichern</button>
           <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 rounded-md btn">Zurücksetzen</button>
@@ -80,7 +66,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
       </form>
     </div>
 
-    <!-- OVERVIEW -->
+    <!-- ÜBERSICHT -->
     <div id="overview" class="card p-6 shadow-soft hidden-el">
       <div id="entriesList" class="space-y-3 max-h-[50vh] overflow-auto"></div>
     </div>
@@ -89,16 +75,186 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
     <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
       <h2 class="text-lg font-semibold mb-4">Admin-Bereich (Passwort geschützt)</h2>
       <div id="adminLoginSection" class="mb-6">
-        <input 
-          id="adminPass" 
-          type="password" 
-          placeholder="Admin-Passwort" 
-          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-        />
-        <button 
-          id="adminLoginBtn" 
-          class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm mt-2"
-        >
-          Einloggen
-        </button>
-        <span id="adminError" class="text-red-400 mt-3 blo
+        <input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"/>
+        <button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm mt-2">Einloggen</button>
+        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center">Falsches Passwort</span>
+      </div>
+      <div id="adminContent" class="hidden-el">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0$</span></div>
+          <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+        </div>
+        <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
+          <table class="w-full text-left text-sm">
+            <thead class="text-gray-400 bg-gray-800">
+              <tr>
+                <th class="p-2">Datum</th>
+                <th class="p-2">Käufer</th>
+                <th class="p-2">Verkäufer</th>
+                <th class="p-2">Menge</th>
+                <th class="p-2">Preis</th>
+                <th class="p-2">Verkäufer (60%)</th>
+                <th class="p-2">Käufer (40%)</th>
+                <th class="p-2">Aktion</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const UNIT_PRICE = 2500;
+const ADMIN_PASSWORD = 'admin123';
+let entries = [];
+
+function show(el){ el.classList.remove('hidden-el'); }
+function hide(el){ el.classList.add('hidden-el'); }
+function formatCurrency(n){ return Math.round(n)+'$'; }
+function nowIso(){ return new Date().toISOString(); }
+function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
+function saveLocalCache(){ localStorage.setItem('vm_entries', JSON.stringify(entries)); }
+function loadLocalCache(){ const s = localStorage.getItem('vm_entries'); entries = s ? JSON.parse(s) : []; }
+
+const form=document.getElementById('entryForm');
+const quantityInput=document.getElementById('quantity');
+const sellerShareEl=document.getElementById('sellerShare');
+const yourShareEl=document.getElementById('yourShare');
+const saveFeedback=document.getElementById('saveFeedback');
+
+function computeShares(q){ 
+  const price = q * UNIT_PRICE; 
+  return { price, seller: q*UNIT_PRICE*0.6, you: q*UNIT_PRICE*0.4 }; 
+}
+function updateSharesUI(){ 
+  const q = Number(quantityInput.value)||0; 
+  const s = computeShares(q); 
+  sellerShareEl.innerText = formatCurrency(s.seller); 
+  yourShareEl.innerText = formatCurrency(s.you); 
+}
+quantityInput.addEventListener('input', updateSharesUI);
+
+form.addEventListener('submit',(e)=>{
+  e.preventDefault();
+  const buyer=document.getElementById('buyer').value.trim();
+  const seller=document.getElementById('seller').value.trim();
+  const quantity = parseInt(quantityInput.value);
+  if(!buyer || !seller || isNaN(quantity) || quantity<1){ 
+    saveFeedback.classList.remove('hidden-el'); 
+    saveFeedback.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; 
+    return; 
+  }
+  const { price, seller: sellerShare, you: yourShare } = computeShares(quantity);
+  const entry = { id:uid(), dateIso:nowIso(), buyer, seller, quantity, price, sellerShare, yourShare };
+  entries.unshift(entry);
+  saveLocalCache();
+  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Gespeichert.';
+  setTimeout(()=>saveFeedback.classList.add('hidden-el'),2000);
+  renderOverview(); renderAdminTable(); form.reset(); updateSharesUI();
+});
+document.getElementById('resetForm').addEventListener('click',()=>{ form.reset(); updateSharesUI(); });
+
+const entriesList=document.getElementById('entriesList');
+function renderOverview(){
+  entriesList.innerHTML='';
+  if(entries.length===0){ entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
+  entries.forEach(en=>{
+    const el=document.createElement('div'); el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
+    el.innerHTML=`
+      <div>
+        <div class="text-sm text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
+        <div class="text-lg font-semibold mt-1">${en.buyer} → ${en.seller}</div>
+      </div>
+      <div class="text-right ml-4">
+        <div class="small-muted">Preis</div>
+        <div class="text-xl font-bold text-blue-400">${formatCurrency(en.price)}</div>
+        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Käufer: ${formatCurrency(en.yourShare)}</div>
+      </div>
+    `;
+    entriesList.appendChild(el);
+  });
+}
+
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminPassInput=document.getElementById('adminPass');
+const adminError=document.getElementById('adminError');
+const adminContent=document.getElementById('adminContent');
+const adminTableBody=document.getElementById('adminTableBody');
+const totalCount=document.getElementById('totalCount');
+const totalRevenue=document.getElementById('totalRevenue');
+
+adminLoginBtn.addEventListener('click',()=>{
+  if(adminPassInput.value===ADMIN_PASSWORD){ 
+    adminError.classList.add('hidden-el'); 
+    adminPassInput.value=''; 
+    show(adminContent); 
+    renderAdminTable(); 
+  } else { adminError.classList.remove('hidden-el'); }
+});
+
+function renderAdminTable(){
+  adminTableBody.innerHTML=''; 
+  let revenue=0;
+  entries.forEach((en,i)=>{
+    revenue+=en.price;
+    const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
+    tr.innerHTML=`
+      <td class="p-2 small-muted">${new Date(en.dateIso).toLocaleString()}</td>
+      <td class="p-2">${en.buyer}</td>
+      <td class="p-2">${en.seller}</td>
+      <td class="p-2">${en.quantity}</td>
+      <td class="p-2">${formatCurrency(en.price)}</td>
+      <td class="p-2">${formatCurrency(en.sellerShare)}</td>
+      <td class="p-2">${formatCurrency(en.yourShare)}</td>
+      <td class="p-2">
+        <button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry(${i})">Löschen</button>
+      </td>
+    `;
+    adminTableBody.appendChild(tr);
+  });
+  totalCount.innerText=entries.length; totalRevenue.innerText=formatCurrency(revenue);
+}
+
+function deleteEntry(index){
+  if(confirm('Eintrag wirklich löschen?')){ entries.splice(index,1); saveLocalCache(); renderAdminTable(); renderOverview(); }
+}
+
+function exportCSV(){
+  if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
+  const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
+  const rows=entries.map(e=>[
+    `"${new Date(e.dateIso).toLocaleString()}"`,
+    `"${e.buyer}"`,
+    `"${e.seller}"`,
+    e.quantity,
+    e.price,
+    e.sellerShare,
+    e.yourShare
+  ].join(','));
+  const csv=[header.join(','), ...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='entries_seite1.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
+}
+document.getElementById('exportCsv').addEventListener('click',exportCSV);
+
+const newEl=document.getElementById('newEntry');
+const overviewEl=document.getElementById('overview');
+const adminEl=document.getElementById('adminPanel');
+document.getElementById('btnNew')?.addEventListener('click',()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
+document.getElementById('btnOverview')?.addEventListener('click',()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
+document.getElementById('btnAdmin')?.addEventListener('click',()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
+
+loadLocalCache(); renderOverview(); updateSharesUI();
+
+// Hamburger Menü
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const hamburgerMenu = document.getElementById('hamburgerMenu');
+hamburgerBtn.addEventListener('click', () => { hamburgerMenu.classList.toggle('hidden'); });
+</script>
+</body>
+</html>

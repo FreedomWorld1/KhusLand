@@ -107,7 +107,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 
 <script>
 /* ======== CONFIG ======== */
-const UNIT_PRICE = 1000; // Preis pro Menge
+const UNIT_PRICE = 2500; // Preis pro Menge
 const ADMIN_PASSWORD = 'admin123';
 
 /* ======== STATE ======== */
@@ -133,18 +133,48 @@ const saveFeedback=document.getElementById('saveFeedback');
 
 function computeShares(q){ 
   const price = q * UNIT_PRICE; 
-  return { price, seller: Math.round(price*0.6), you: Math.round(price*0.4) }; 
+  return { price, seller: Math.round(price * 0.6), you: Math.round(price * 0.4) }; 
 }
+
 function updateSharesUI(){ 
-  const q = Number(quantityInput.value)||0; 
+  const q = parseInt(quantityInput.value) || 0; 
   const s = computeShares(q); 
   sellerShareEl.innerText = s.seller; 
   yourShareEl.innerText = s.you; 
 }
+
 quantityInput.addEventListener('input', updateSharesUI);
+updateSharesUI(); // initial
 
 form.addEventListener('submit',(e)=>{
   e.preventDefault();
   const buyer=document.getElementById('buyer').value.trim();
   const seller=document.getElementById('seller').value.trim();
-  const quantity =
+  const quantity = parseInt(quantityInput.value);
+  if(!buyer || !seller || isNaN(quantity) || quantity<1){ 
+    saveFeedback.classList.remove('hidden-el'); 
+    saveFeedback.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; 
+    return; 
+  }
+  const { price, seller: sellerShare, you: yourShare } = computeShares(quantity);
+  const entry = { id:uid(), dateIso:nowIso(), buyer, seller, quantity, price, sellerShare, yourShare };
+  entries.unshift(entry);
+  saveLocalCache();
+  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Gespeichert.';
+  setTimeout(()=>saveFeedback.classList.add('hidden-el'),2000);
+  renderOverview(); renderAdminTable(); form.reset(); updateSharesUI();
+});
+
+document.getElementById('resetForm').addEventListener('click',()=>{ form.reset(); updateSharesUI(); });
+
+/* ======== OVERVIEW ======== */
+const entriesList=document.getElementById('entriesList');
+function renderOverview(){
+  entriesList.innerHTML='';
+  if(entries.length===0){ entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
+  entries.forEach(en=>{
+    const el=document.createElement('div'); el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
+    el.innerHTML=`
+      <div>
+        <div class="text-sm text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
+        <div class="text-lg

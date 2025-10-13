@@ -7,13 +7,15 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
-.card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); border-radius: 12px; }
-.shadow-soft { box-shadow: 0 6px 20px rgba(2,6,23,0.6); }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 14px; }
+.shadow-soft { box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
 .small-muted { color: #9ca3af; font-size: 0.9rem; }
 .btn { transition: all .15s ease; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
 .active-menu { background-color: #4f46e5 !important; color: #fff !important; }
+input { transition: all 0.15s ease; }
+input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
@@ -23,7 +25,6 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
   <!-- HEADER -->
   <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-xl shadow-soft mb-8 p-4 flex justify-between items-center">
     <h1 class="text-3xl font-extrabold text-purple-400 tracking-tight drop-shadow-sm">💊 Kokain Ankauf</h1>
-
     <div class="flex items-center gap-2">
       <a href="index.html" class="btn px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md shadow-sm">Weed Ankauf</a>
       <button id="btnNew" class="btn px-4 py-2 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
@@ -32,6 +33,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
     </div>
   </header>
 
+  <!-- MAIN -->
   <div id="mainContainer" class="space-y-6">
 
     <!-- NEUER ANKAUF -->
@@ -40,42 +42,48 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
       <form id="entryForm" class="space-y-6">
 
         <!-- Käufer & Verkäufer -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <input id="buyer" type="text" placeholder="Käufer (Name)" 
-            class="p-3.5 rounded-md bg-gray-800 border border-gray-700 w-full text-base focus:ring-2 focus:ring-purple-500 focus:outline-none" required />
-          <input id="seller" type="text" placeholder="Verkäufer (Name)" 
-            class="p-3.5 rounded-md bg-gray-800 border border-gray-700 w-full text-base focus:ring-2 focus:ring-purple-500 focus:outline-none" required />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Käufer (Name)</label>
+            <input id="buyer" type="text" placeholder="z.B. Max Mustermann" 
+              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base" required />
+          </div>
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Verkäufer (Name)</label>
+            <input id="seller" type="text" placeholder="z.B. Dealer X" 
+              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base" required />
+          </div>
         </div>
 
         <!-- Menge & Cash -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-end">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
           <div>
             <label for="quantity" class="block text-sm text-gray-400 mb-1">Menge</label>
             <input id="quantity" type="number" min="1" step="1" placeholder="z.B. 100"
-              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base" />
           </div>
 
           <div>
             <label for="cash" class="block text-sm text-gray-400 mb-1">Cash</label>
             <input id="cash" type="number" min="0" step="0.01" placeholder="z.B. 100000"
-              class="p-3.5 rounded-md bg-gray-800 border border-gray-700 w-full text-lg font-semibold text-green-400 focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+              class="p-4 rounded-md bg-gray-800 border border-gray-700 w-full text-lg font-semibold text-green-400" />
           </div>
         </div>
 
-        <!-- Ergebnisse -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
-          <div class="p-3 rounded-md bg-gray-800 border border-gray-700 text-center">
+        <!-- Verkäufer & Käufer Anteile -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+          <div class="p-4 rounded-md bg-gray-800 border border-gray-700 text-center">
             <div class="small-muted mb-1">Verkäufer (80%)</div>
             <div id="sellerShare" class="text-xl font-bold text-green-400">0$</div>
           </div>
-          <div class="p-3 rounded-md bg-gray-800 border border-gray-700 text-center">
+          <div class="p-4 rounded-md bg-gray-800 border border-gray-700 text-center">
             <div class="small-muted mb-1">Käufer (20%)</div>
             <div id="yourShare" class="text-xl font-bold text-blue-400">0$</div>
           </div>
         </div>
 
         <!-- Buttons -->
-        <div class="flex gap-4 mt-5">
+        <div class="flex flex-wrap gap-4 mt-5">
           <button type="submit" 
             class="px-5 py-2.5 bg-green-600 hover:bg-green-500 rounded-md btn font-medium text-base">
             Speichern
@@ -247,33 +255,4 @@ function deleteEntry(index){
   if(confirm('Eintrag wirklich löschen?')){ entries.splice(index,1); saveLocalCache(); renderAdminTable(); renderOverview(); }
 }
 
-function exportCSV(){
-  if(entries.length===0) return alert('Keine Einträge.');
-  const header=['date','buyer','seller','quantity','cash','sellerShare','you'];
-  const rows=entries.map(e=>[
-    `"${new Date(e.dateIso).toLocaleString()}"`,
-    `"${e.buyer}"`,
-    `"${e.seller}"`,
-    e.quantity,
-    e.cash,
-    e.sellerShare,
-    e.you
-  ].join(','));
-  const csv=[header.join(','), ...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='kokain_entries.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-}
-document.getElementById('exportCsv').addEventListener('click',exportCSV);
-
-const newEl=document.getElementById('newEntry');
-const overviewEl=document.getElementById('overview');
-const adminEl=document.getElementById('adminPanel');
-document.getElementById('btnNew').addEventListener('click',()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
-document.getElementById('btnOverview').addEventListener('click',()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
-document.getElementById('btnAdmin').addEventListener('click',()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
-
-loadLocalCache(); renderOverview(); updateSharesUI();
-</script>
-</body>
-</html>
+function exportCSV(

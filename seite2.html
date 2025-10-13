@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Kokain Ankauf - Seite 2</title>
+<title>Kokain Ankauf</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
@@ -100,21 +100,21 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 
     <!-- ÜBERSICHT -->
     <div id="overview" class="card p-5 shadow-soft hidden-el">
+      <h2 class="text-lg font-semibold mb-4 text-purple-300">📋 Übersicht</h2>
       <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
     </div>
 
     <!-- ADMIN -->
     <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
-      <h2 class="text-base font-semibold mb-3">Adminbereich (Passwort geschützt)</h2>
-      <div id="adminLoginSection" class="mb-5">
+      <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
+      <div id="adminLoginSection">
         <input id="adminPass" type="password" placeholder="Admin-Passwort"
-          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 mb-3"/>
-        <button id="adminLoginBtn"
-          class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm">Einloggen</button>
-        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">Falsches Passwort</span>
+          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
+        <button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
+        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
       </div>
       <div id="adminContent" class="hidden-el">
-        <p class="small-muted">Admin-Inhalt geladen …</p>
+        <p class="small-muted">Admin erfolgreich eingeloggt ✅</p>
       </div>
     </div>
   </div>
@@ -123,13 +123,12 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <script>
 const ADMIN_PASSWORD='admin456';
 let entries=[];
+
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
-function loadLocal(){entries=JSON.parse(localStorage.getItem('kokain_entries')||'[]');}
-function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
 
-// Menü
+// Hamburger Menü
 const hamburgerBtn=document.getElementById('hamburgerBtn');
 const hamburgerMenu=document.getElementById('hamburgerMenu');
 hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
@@ -139,7 +138,7 @@ const currentPage=window.location.pathname.split("/").pop();
 if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
 else document.getElementById("linkSeite1").classList.add("active-link");
 
-// Bereichsumschaltung
+// Tabs
 const btnNew=document.getElementById('btnNew');
 const btnOverview=document.getElementById('btnOverview');
 const btnAdmin=document.getElementById('btnAdmin');
@@ -147,17 +146,60 @@ const newEntry=document.getElementById('newEntry');
 const overview=document.getElementById('overview');
 const adminPanel=document.getElementById('adminPanel');
 
-btnNew.addEventListener('click',()=>{
-  show(newEntry); hide(overview); hide(adminPanel);
-});
-btnOverview.addEventListener('click',()=>{
-  hide(newEntry); show(overview); hide(adminPanel);
-});
-btnAdmin.addEventListener('click',()=>{
-  hide(newEntry); hide(overview); show(adminPanel);
+btnNew.addEventListener('click',()=>{show(newEntry);hide(overview);hide(adminPanel);});
+btnOverview.addEventListener('click',()=>{hide(newEntry);show(overview);hide(adminPanel);renderOverview();});
+btnAdmin.addEventListener('click',()=>{hide(newEntry);hide(overview);show(adminPanel);});
+
+// Speicherfunktionen
+function loadLocal(){entries=JSON.parse(localStorage.getItem('kokain_entries')||'[]');}
+function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
+
+// Eintrag speichern
+document.getElementById('entryForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const buyer=document.getElementById('buyer').value;
+  const seller=document.getElementById('seller').value;
+  const cash=Number(document.getElementById('cash').value);
+  const quantity=Number(document.getElementById('quantity').value);
+  const sellerShare=cash*0.8;
+  const yourShare=cash*0.2;
+
+  entries.push({buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()});
+  saveLocal();
+  e.target.reset();
+  updateShares();
+  alert("💾 Eintrag gespeichert!");
 });
 
-// Cash-Berechnung
+// Übersicht rendern
+function renderOverview(){
+  const list=document.getElementById('entriesList');
+  list.innerHTML='';
+  if(entries.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>';return;}
+  entries.forEach(en=>{
+    const el=document.createElement('div');
+    el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+    el.innerHTML=`
+      <div class="text-sm text-gray-400 mb-1">${en.date}</div>
+      <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
+      <div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
+      <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+      <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+// Admin login
+document.getElementById('adminLoginBtn').addEventListener('click',()=>{
+  const input=document.getElementById('adminPass').value;
+  const err=document.getElementById('adminError');
+  const cont=document.getElementById('adminContent');
+  if(input===ADMIN_PASSWORD){err.classList.add('hidden-el');show(cont);}
+  else err.classList.remove('hidden-el');
+});
+
+// Cash Berechnung
 const cashInput=document.getElementById('cash');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
@@ -167,6 +209,10 @@ function updateShares(){
   yourShareEl.textContent=formatCurrency(c*0.2);
 }
 cashInput.addEventListener('input',updateShares);
+
+// Init
+loadLocal();
+updateShares();
 </script>
 </body>
 </html>

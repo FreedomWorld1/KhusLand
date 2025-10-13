@@ -7,120 +7,118 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
-.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 14px; }
-.shadow-soft { box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-.small-muted { color: #9ca3af; font-size: 0.9rem; }
-.btn { transition: all .15s ease; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+.shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+.small-muted { color: #9ca3af; font-size: 0.85rem; }
+.btn { transition: all .15s ease; font-size: 0.9rem; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
-.active-menu { background-color: #4f46e5 !important; color: #fff !important; }
-input { transition: all 0.15s ease; }
+input { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
+.label-small { font-size: 0.85rem; color: #aaa; margin-bottom: 0.2rem; display: block; }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 
-<div class="max-w-4xl mx-auto p-6">
+<div class="max-w-3xl mx-auto p-6">
 
   <!-- HEADER -->
-  <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-xl shadow-soft mb-8 p-4 flex justify-between items-center">
-    <h1 class="text-3xl font-extrabold text-purple-400 tracking-tight drop-shadow-sm">💊 Kokain Ankauf</h1>
+  <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-purple-400 tracking-tight">💊 Kokain Ankauf</h1>
     <div class="flex items-center gap-2">
-      <a href="index.html" class="btn px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md shadow-sm">Weed Ankauf</a>
-      <button id="btnNew" class="btn px-4 py-2 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
-      <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
-      <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+      <button id="btnNew" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
+      <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+      <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
     </div>
   </header>
 
   <!-- MAIN -->
-  <div id="mainContainer" class="space-y-6">
+  <div id="mainContainer" class="space-y-5">
 
     <!-- NEUER ANKAUF -->
-    <div id="newEntry" class="card p-8 shadow-soft">
-      <h2 class="text-2xl font-semibold mb-6 text-purple-300">💰 Neuen Ankauf</h2>
-      <form id="entryForm" class="space-y-6">
+    <div id="newEntry" class="card p-6 shadow-soft">
+      <h2 class="text-xl font-semibold mb-4 text-purple-300">💰 Neuer Ankauf</h2>
+      <form id="entryForm" class="space-y-5">
 
         <!-- Käufer & Verkäufer -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm text-gray-400 mb-1">Käufer (Name)</label>
+            <label class="label-small">Käufer</label>
             <input id="buyer" type="text" placeholder="z.B. Max Mustermann" 
-              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base" required />
+              class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           </div>
           <div>
-            <label class="block text-sm text-gray-400 mb-1">Verkäufer (Name)</label>
+            <label class="label-small">Verkäufer</label>
             <input id="seller" type="text" placeholder="z.B. Dealer X" 
-              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base" required />
+              class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           </div>
         </div>
 
         <!-- Menge & Cash -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="quantity" class="block text-sm text-gray-400 mb-1">Menge</label>
+            <label class="label-small">Menge</label>
             <input id="quantity" type="number" min="1" step="1" placeholder="z.B. 100"
-              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base" />
+              class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" />
           </div>
-
           <div>
-            <label for="cash" class="block text-sm text-gray-400 mb-1">Cash</label>
+            <label class="label-small">Cash</label>
             <input id="cash" type="number" min="0" step="0.01" placeholder="z.B. 100000"
-              class="p-4 rounded-md bg-gray-800 border border-gray-700 w-full text-lg font-semibold text-green-400" />
+              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full font-semibold text-green-400 text-base" />
           </div>
         </div>
 
         <!-- Verkäufer & Käufer Anteile -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-          <div class="p-4 rounded-md bg-gray-800 border border-gray-700 text-center">
-            <div class="small-muted mb-1">Verkäufer (80%)</div>
-            <div id="sellerShare" class="text-xl font-bold text-green-400">0$</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+          <div class="p-3 rounded-md bg-gray-800 border border-gray-700 text-center">
+            <div class="small-muted mb-1">Verkäufer (80 %)</div>
+            <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
           </div>
-          <div class="p-4 rounded-md bg-gray-800 border border-gray-700 text-center">
-            <div class="small-muted mb-1">Käufer (20%)</div>
-            <div id="yourShare" class="text-xl font-bold text-blue-400">0$</div>
+          <div class="p-3 rounded-md bg-gray-800 border border-gray-700 text-center">
+            <div class="small-muted mb-1">Käufer (20 %)</div>
+            <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
           </div>
         </div>
 
         <!-- Buttons -->
-        <div class="flex flex-wrap gap-4 mt-5">
+        <div class="flex flex-wrap gap-3 mt-3">
           <button type="submit" 
-            class="px-5 py-2.5 bg-green-600 hover:bg-green-500 rounded-md btn font-medium text-base">
+            class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">
             Speichern
           </button>
           <button type="button" id="resetForm" 
-            class="px-5 py-2.5 bg-red-600 hover:bg-red-500 rounded-md btn font-medium text-base">
+            class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">
             Zurücksetzen
           </button>
         </div>
 
-        <div id="saveFeedback" class="small-muted hidden-el mt-3"></div>
+        <div id="saveFeedback" class="small-muted hidden-el mt-2"></div>
       </form>
     </div>
 
     <!-- ÜBERSICHT -->
-    <div id="overview" class="card p-6 shadow-soft hidden-el">
-      <div id="entriesList" class="space-y-3 max-h-[50vh] overflow-auto"></div>
+    <div id="overview" class="card p-5 shadow-soft hidden-el">
+      <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
     </div>
 
     <!-- ADMIN -->
-    <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
-      <h2 class="text-lg font-semibold mb-4">Admin-Bereich Seite 2 (Passwort geschützt)</h2>
-      <div id="adminLoginSection" class="mb-6">
+    <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
+      <h2 class="text-base font-semibold mb-3">Adminbereich (Passwort geschützt)</h2>
+      <div id="adminLoginSection" class="mb-5">
         <input id="adminPass" type="password" placeholder="Admin-Passwort" 
-          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"/>
+          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 mb-3"/>
         <button id="adminLoginBtn" 
-          class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm mt-2">Einloggen</button>
-        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center">Falsches Passwort</span>
+          class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm">Einloggen</button>
+        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">Falsches Passwort</span>
       </div>
       <div id="adminContent" class="hidden-el">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 text-sm">
           <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
-          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0$</span></div>
-          <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
+          <button id="exportCsv" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
         </div>
         <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
-          <table class="w-full text-left text-sm">
+          <table class="w-full text-left text-xs">
             <thead class="text-gray-400 bg-gray-800">
               <tr>
                 <th class="p-2">Datum</th>
@@ -128,8 +126,8 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
                 <th class="p-2">Verkäufer</th>
                 <th class="p-2">Menge</th>
                 <th class="p-2">Cash</th>
-                <th class="p-2">Verkäufer (80%)</th>
-                <th class="p-2">Käufer (20%)</th>
+                <th class="p-2">Verk. (80 %)</th>
+                <th class="p-2">Kauf. (20 %)</th>
                 <th class="p-2">Aktion</th>
               </tr>
             </thead>
@@ -138,121 +136,99 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
 <script>
-const ADMIN_PASSWORD = 'admin456';
-let entries = [];
-
-function show(el){ el.classList.remove('hidden-el'); }
-function hide(el){ el.classList.add('hidden-el'); }
-function formatCurrency(n){ return Math.round(n)+'$'; }
-function nowIso(){ return new Date().toISOString(); }
-function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
-function saveLocalCache(){ localStorage.setItem('vm_entries_s2', JSON.stringify(entries)); }
-function loadLocalCache(){ const s = localStorage.getItem('vm_entries_s2'); entries = s ? JSON.parse(s) : []; }
+const ADMIN_PASSWORD='admin456';
+let entries=[];
+function show(el){el.classList.remove('hidden-el');}
+function hide(el){el.classList.add('hidden-el');}
+function formatCurrency(n){return Math.round(n)+' $';}
+function nowIso(){return new Date().toISOString();}
+function uid(){return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,9);}
+function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
+function loadLocal(){const s=localStorage.getItem('kokain_entries');entries=s?JSON.parse(s):[];}
 
 const form=document.getElementById('entryForm');
 const cashInput=document.getElementById('cash');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
-const saveFeedback=document.getElementById('saveFeedback');
-
-function computeShares(cash){ 
-  return { cash, seller: cash*0.8, you: cash*0.2 }; 
+function updateShares(){
+  const c=Number(cashInput.value)||0;
+  const seller=c*0.8, buyer=c*0.2;
+  sellerShareEl.textContent=formatCurrency(seller);
+  yourShareEl.textContent=formatCurrency(buyer);
 }
-function updateSharesUI(){ 
-  const c = Number(cashInput.value)||0; 
-  const s = computeShares(c); 
-  sellerShareEl.innerText = formatCurrency(s.seller); 
-  yourShareEl.innerText = formatCurrency(s.you); 
-}
-cashInput.addEventListener('input', updateSharesUI);
+cashInput.addEventListener('input',updateShares);
 
-form.addEventListener('submit',(e)=>{
+form.addEventListener('submit',e=>{
   e.preventDefault();
   const buyer=document.getElementById('buyer').value.trim();
   const seller=document.getElementById('seller').value.trim();
   const quantity=document.getElementById('quantity').value.trim();
-  const cash = parseFloat(cashInput.value);
-  if(!buyer || !seller || isNaN(cash) || cash<=0){ 
-    saveFeedback.classList.remove('hidden-el'); 
-    saveFeedback.innerText='Bitte alle Felder korrekt ausfüllen.'; 
-    return; 
-  }
-  const { seller: sellerShare, you: yourShare } = computeShares(cash);
-  const entry = { id:uid(), dateIso:nowIso(), buyer, seller, quantity, cash, sellerShare, yourShare };
+  const cash=parseFloat(cashInput.value);
+  if(!buyer||!seller||isNaN(cash)||cash<=0)return;
+  const entry={id:uid(),dateIso:nowIso(),buyer,seller,quantity,cash,
+               sellerShare:cash*0.8,yourShare:cash*0.2};
   entries.unshift(entry);
-  saveLocalCache();
-  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Gespeichert.';
-  setTimeout(()=>saveFeedback.classList.add('hidden-el'),2000);
-  renderOverview(); renderAdminTable(); form.reset(); updateSharesUI();
+  saveLocal();form.reset();updateShares();renderOverview();
 });
-document.getElementById('resetForm').addEventListener('click',()=>{ form.reset(); updateSharesUI(); });
+document.getElementById('resetForm').addEventListener('click',()=>{form.reset();updateShares();});
 
 const entriesList=document.getElementById('entriesList');
 function renderOverview(){
   entriesList.innerHTML='';
-  if(entries.length===0){ entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
+  if(entries.length===0){entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>';return;}
   entries.forEach(en=>{
-    const el=document.createElement('div'); el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
-    el.innerHTML=`
-      <div>
-        <div class="text-sm text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
-        <div class="text-lg font-semibold mt-1">${en.buyer} → ${en.seller}</div>
-      </div>
-      <div class="text-right ml-4">
-        <div class="small-muted">Cash</div>
-        <div class="text-xl font-bold text-purple-400">${formatCurrency(en.cash)}</div>
-        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Käufer: ${formatCurrency(en.you)}</div>
-      </div>
-    `;
+    const el=document.createElement('div');el.className='p-3 rounded-md border border-gray-700 flex justify-between';
+    el.innerHTML=`<div><div class="text-xs text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
+    <div class="text-sm font-semibold">${en.buyer} → ${en.seller}</div></div>
+    <div class="text-right"><div class="text-sm text-purple-400 font-bold">${formatCurrency(en.cash)}</div>
+    <div class="text-xs text-gray-500 mt-1">V: ${formatCurrency(en.sellerShare)} • K: ${formatCurrency(en.yourShare)}</div></div>`;
     entriesList.appendChild(el);
   });
 }
 
 const adminLoginBtn=document.getElementById('adminLoginBtn');
-const adminPassInput=document.getElementById('adminPass');
+const adminPass=document.getElementById('adminPass');
 const adminError=document.getElementById('adminError');
 const adminContent=document.getElementById('adminContent');
 const adminTableBody=document.getElementById('adminTableBody');
 const totalCount=document.getElementById('totalCount');
 const totalRevenue=document.getElementById('totalRevenue');
-
 adminLoginBtn.addEventListener('click',()=>{
-  if(adminPassInput.value===ADMIN_PASSWORD){ 
-    adminError.classList.add('hidden-el'); 
-    adminPassInput.value=''; 
-    show(adminContent); 
-    renderAdminTable(); 
-  } else { adminError.classList.remove('hidden-el'); }
+  if(adminPass.value===ADMIN_PASSWORD){adminError.classList.add('hidden-el');show(adminContent);renderAdmin();}
+  else adminError.classList.remove('hidden-el');
 });
 
-function renderAdminTable(){
-  adminTableBody.innerHTML=''; 
-  let revenue=0;
+function renderAdmin(){
+  adminTableBody.innerHTML='';let revenue=0;
   entries.forEach((en,i)=>{
     revenue+=en.cash;
-    const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
-    tr.innerHTML=`
-      <td class="p-2 small-muted">${new Date(en.dateIso).toLocaleString()}</td>
-      <td class="p-2">${en.buyer}</td>
-      <td class="p-2">${en.seller}</td>
-      <td class="p-2">${en.quantity}</td>
-      <td class="p-2">${formatCurrency(en.cash)}</td>
-      <td class="p-2">${formatCurrency(en.sellerShare)}</td>
-      <td class="p-2">${formatCurrency(en.you)}</td>
-      <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry(${i})">Löschen</button></td>
-    `;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="p-1">${new Date(en.dateIso).toLocaleString()}</td>
+    <td class="p-1">${en.buyer}</td><td class="p-1">${en.seller}</td>
+    <td class="p-1">${en.quantity}</td><td class="p-1">${formatCurrency(en.cash)}</td>
+    <td class="p-1">${formatCurrency(en.sellerShare)}</td><td class="p-1">${formatCurrency(en.yourShare)}</td>
+    <td class="p-1"><button class="px-2 py-0.5 bg-red-600 text-xs rounded" onclick="del(${i})">X</button></td>`;
     adminTableBody.appendChild(tr);
   });
-  totalCount.innerText=entries.length; totalRevenue.innerText=formatCurrency(revenue);
+  totalCount.textContent=entries.length;
+  totalRevenue.textContent=formatCurrency(revenue);
 }
-
-function deleteEntry(index){
-  if(confirm('Eintrag wirklich löschen?')){ entries.splice(index,1); saveLocalCache(); renderAdminTable(); renderOverview(); }
-}
-
-function exportCSV(
+function del(i){if(confirm('Löschen?')){entries.splice(i,1);saveLocal();renderAdmin();renderOverview();}}
+document.getElementById('exportCsv').addEventListener('click',()=>{
+  if(entries.length===0)return;
+  const csv=[['Datum','Käufer','Verkäufer','Menge','Cash','Verk(80%)','Kauf(20%)']
+    .join(','),...entries.map(e=>[
+      new Date(e.dateIso).toLocaleString(),e.buyer,e.seller,e.quantity,e.cash,e.sellerShare,e.yourShare].join(','))].join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='kokain.csv';a.click();
+});
+document.getElementById('btnNew').onclick=()=>{show(newEntry);hide(overview);hide(adminPanel);}
+document.getElementById('btnOverview').onclick=()=>{hide(newEntry);show(overview);hide(adminPanel);renderOverview();}
+document.getElementById('btnAdmin').onclick=()=>{hide(newEntry);hide(overview);show(adminPanel);}
+loadLocal();renderOverview();updateShares();
+</script>
+</body>
+</html>

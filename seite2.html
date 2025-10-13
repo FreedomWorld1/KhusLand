@@ -3,20 +3,17 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Kokain Ankauf - Seite 2</title>
+<title>Kokain Ankauf</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
-.card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); border-radius: 12px; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); border-radius: 14px; }
 .shadow-soft { box-shadow: 0 6px 20px rgba(2,6,23,0.6); }
 .small-muted { color: #9ca3af; font-size: 0.9rem; }
 .btn { transition: all .15s ease; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
-.active-menu { background-color: #22c55e; color: #fff !important; }
-@media (max-width:640px){ .grid-cols-responsive { grid-template-columns: repeat(1, minmax(0,1fr)); } }
-@media (min-width:641px) and (max-width:1024px){ .grid-cols-responsive { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-@media (min-width:1025px){ .grid-cols-responsive { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+.active-menu { background-color: #4f46e5 !important; color: white !important; }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
@@ -28,87 +25,105 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
     <h1 class="text-3xl font-extrabold text-purple-400 tracking-tight drop-shadow-sm">💊 Kokain Ankauf</h1>
 
     <div class="flex items-center gap-2">
-      <button id="btnNew2" class="btn px-4 py-2 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
-      <button id="btnOverview2" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
-      <button id="btnAdmin2" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+      <button id="btnNew" class="btn px-4 py-2 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
+      <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+      <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
 
-      <!-- Hamburger -->
+      <!-- Hamburger Menü -->
       <div class="relative">
-        <button id="hamburgerBtn2" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-2">
+        <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-2">
           <span class="block h-0.5 bg-gray-100"></span>
           <span class="block h-0.5 bg-gray-100"></span>
           <span class="block h-0.5 bg-gray-100"></span>
         </button>
-        <div id="hamburgerMenu2" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+        <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
           <a href="index.html" class="block px-4 py-2 hover:bg-gray-700">Seite 1</a>
-          <a href="kokain.html" class="block px-4 py-2 hover:bg-gray-700 active-menu">Seite 2</a>
+          <a href="seite2.html" class="block px-4 py-2 bg-gray-700 text-white">Seite 2</a>
         </div>
       </div>
     </div>
   </header>
 
-  <div id="mainContainer2" class="space-y-6">
+  <div id="mainContainer" class="space-y-6">
 
     <!-- NEUER ANKAUF -->
-    <div id="newEntry2" class="card p-6 shadow-soft">
-      <h2 class="text-lg font-semibold mb-4">Neuen Ankauf</h2>
-      <form id="entryForm2" class="space-y-4">
+    <div id="newEntry" class="card p-8 shadow-soft">
+      <h2 class="text-2xl font-semibold mb-6 text-purple-300">💰 Neuen Ankauf</h2>
+      <form id="entryForm" class="space-y-6">
 
         <!-- Käufer & Verkäufer -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input id="buyer2" type="text" placeholder="Käufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
-          <input id="seller2" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <input id="buyer" type="text" placeholder="Käufer (Name)" 
+            class="p-4 rounded-lg bg-gray-800 border border-gray-700 w-full text-lg focus:ring-2 focus:ring-purple-500 focus:outline-none" required />
+          <input id="seller" type="text" placeholder="Verkäufer (Name)" 
+            class="p-4 rounded-lg bg-gray-800 border border-gray-700 w-full text-lg focus:ring-2 focus:ring-purple-500 focus:outline-none" required />
         </div>
 
-        <!-- Menge und Cash nebeneinander -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end mt-2">
+        <!-- Menge & Cash -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
           <div>
-            <label class="small-muted mb-1 block">Menge</label>
-            <input id="amount2" type="text" placeholder="z.B. 100" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full text-sm" />
+            <label for="quantity" class="block text-sm text-gray-400 mb-2">Menge</label>
+            <input id="quantity" type="number" min="1" step="1" placeholder="z.B. 100"
+              class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-base focus:ring-2 focus:ring-purple-500 focus:outline-none" />
           </div>
+
           <div>
-            <label class="small-muted mb-1 block">Cash</label>
-            <input id="cash2" type="number" min="1" step="1" placeholder="100000" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full text-lg font-bold" required />
+            <label for="cash" class="block text-sm text-gray-400 mb-2">Cash</label>
+            <input id="cash" type="number" min="0" step="0.01" placeholder="z.B. 100000"
+              class="p-4 rounded-lg bg-gray-800 border border-gray-700 w-full text-2xl font-semibold text-green-400 focus:ring-2 focus:ring-purple-500 focus:outline-none" />
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
-            <div class="small-muted">Verkäufer (80%)</div>
-            <div id="sellerShare2" class="text-lg font-semibold mt-1">0$</div>
+        <!-- Ergebnisse -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <div class="p-4 rounded-lg bg-gray-800 border border-gray-700 text-center">
+            <div class="small-muted mb-1">Verkäufer (80%)</div>
+            <div id="sellerShare" class="text-2xl font-bold text-green-400">0$</div>
           </div>
-          <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
-            <div class="small-muted">Käufer (20%)</div>
-            <div id="yourShare2" class="text-lg font-semibold mt-1">0$</div>
+          <div class="p-4 rounded-lg bg-gray-800 border border-gray-700 text-center">
+            <div class="small-muted mb-1">Käufer (20%)</div>
+            <div id="yourShare" class="text-2xl font-bold text-blue-400">0$</div>
           </div>
         </div>
 
-        <div class="flex gap-3 mt-4">
-          <button type="submit" class="px-4 py-2 bg-green-600 rounded-md btn">Speichern</button>
-          <button type="button" id="resetForm2" class="px-4 py-2 bg-red-600 rounded-md btn">Zurücksetzen</button>
+        <!-- Buttons -->
+        <div class="flex gap-4 mt-6">
+          <button type="submit" 
+            class="px-6 py-3 bg-green-600 hover:bg-green-500 rounded-md btn font-medium text-lg">
+            Speichern
+          </button>
+          <button type="button" id="resetForm" 
+            class="px-6 py-3 bg-red-600 hover:bg-red-500 rounded-md btn font-medium text-lg">
+            Zurücksetzen
+          </button>
         </div>
-        <div id="saveFeedback2" class="small-muted hidden-el mt-2"></div>
+
+        <div id="saveFeedback" class="small-muted hidden-el mt-3"></div>
       </form>
     </div>
 
     <!-- ÜBERSICHT -->
-    <div id="overview2" class="card p-6 shadow-soft hidden-el">
-      <div id="entriesList2" class="space-y-3 max-h-[50vh] overflow-auto"></div>
+    <div id="overview" class="card p-6 shadow-soft hidden-el">
+      <div id="entriesList" class="space-y-3 max-h-[50vh] overflow-auto"></div>
     </div>
 
     <!-- ADMIN -->
-    <div id="adminPanel2" class="card p-6 shadow-soft hidden-el">
-      <h2 class="text-lg font-semibold mb-4">Admin-Bereich (Seite 2)</h2>
-      <div id="adminLoginSection2" class="mb-6">
-        <input id="adminPass2" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"/>
-        <button id="adminLoginBtn2" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm mt-2">Einloggen</button>
-        <span id="adminError2" class="text-red-400 mt-3 block hidden-el text-center">Falsches Passwort</span>
+    <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
+      <h2 class="text-lg font-semibold mb-4">Admin-Bereich Seite 2 (Passwort geschützt)</h2>
+      <div id="adminLoginSection" class="mb-6">
+        <input id="adminPass" type="password" placeholder="Admin-Passwort" 
+          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"/>
+        <button id="adminLoginBtn" 
+          class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm mt-2">
+          Einloggen
+        </button>
+        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center">Falsches Passwort</span>
       </div>
-      <div id="adminContent2" class="hidden-el">
+      <div id="adminContent" class="hidden-el">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-          <div class="small-muted">Gesamtanzahl: <span id="totalCount2">0</span></div>
-          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue2">0$</span></div>
-          <button id="exportCsv2" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+          <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+          <div class="small-muted">Gesamt Cash: <span id="totalRevenue">0$</span></div>
+          <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
         </div>
         <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
           <table class="w-full text-left text-sm">
@@ -121,10 +136,9 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
                 <th class="p-2">Cash</th>
                 <th class="p-2">Verkäufer (80%)</th>
                 <th class="p-2">Käufer (20%)</th>
-                <th class="p-2">Aktion</th>
               </tr>
             </thead>
-            <tbody id="adminTableBody2" class="divide-y divide-gray-800"></tbody>
+            <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
           </table>
         </div>
       </div>
@@ -134,154 +148,115 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 </div>
 
 <script>
-// --- JS wie vorher, nur Input-Felder für Käufer/Verkäufer integriert ---
-let entries2 = [];
-const ADMIN_PASSWORD2 = 'admin456';
+// --- Seite 2 JS ---
+const ADMIN_PASSWORD = 'admin456';
+let entries = [];
 
 function show(el){ el.classList.remove('hidden-el'); }
 function hide(el){ el.classList.add('hidden-el'); }
-function formatCurrency(n){ return Math.round(n)+'$'; }
+function formatCurrency(n){ return Math.round(n) + '$'; }
+function nowIso(){ return new Date().toLocaleString(); }
 function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
-function saveLocalCache(){ localStorage.setItem('vm_entries2', JSON.stringify(entries2)); }
-function loadLocalCache(){ const s = localStorage.getItem('vm_entries2'); entries2 = s ? JSON.parse(s) : []; }
+function saveLocalCache(){ localStorage.setItem('vm_entries_s2', JSON.stringify(entries)); }
+function loadLocalCache(){ const s = localStorage.getItem('vm_entries_s2'); entries = s ? JSON.parse(s) : []; }
 
-const form2=document.getElementById('entryForm2');
-const cashInput2=document.getElementById('cash2');
-const sellerShareEl2=document.getElementById('sellerShare2');
-const yourShareEl2=document.getElementById('yourShare2');
-const saveFeedback2=document.getElementById('saveFeedback2');
-
-function updateSharesUI2(){ 
-  const cash = Number(cashInput2.value)||0;
-  sellerShareEl2.innerText = formatCurrency(cash*0.8);
-  yourShareEl2.innerText = formatCurrency(cash*0.2);
-}
-cashInput2.addEventListener('input', updateSharesUI2);
-
-form2.addEventListener('submit',(e)=>{
-  e.preventDefault();
-  const buyer=document.getElementById('buyer2').value.trim();
-  const seller=document.getElementById('seller2').value.trim();
-  const cash = Number(cashInput2.value);
-  const amount = document.getElementById('amount2').value.trim();
-  if(!buyer || !seller || isNaN(cash) || cash<1){ 
-    saveFeedback2.classList.remove('hidden-el'); 
-    saveFeedback2.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; 
-    return; 
-  }
-  const sellerCash = cash*0.8;
-  const yourCash = cash*0.2;
-  const entry = { id:uid(), dateIso:new Date().toISOString(), buyer, seller, amount, cash, sellerCash, yourCash };
-  entries2.unshift(entry);
-  saveLocalCache();
-  saveFeedback2.classList.remove('hidden-el'); saveFeedback2.innerText='Gespeichert.';
-  setTimeout(()=>saveFeedback2.classList.add('hidden-el'),2000);
-  renderOverview2(); renderAdminTable2(); form2.reset(); updateSharesUI2();
-});
-document.getElementById('resetForm2').addEventListener('click',()=>{ form2.reset(); updateSharesUI2(); });
-
-// Übersicht
-const entriesList2=document.getElementById('entriesList2');
-function renderOverview2(){
-  entriesList2.innerHTML='';
-  if(entries2.length===0){ entriesList2.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
-  entries2.forEach(en=>{
-    const el=document.createElement('div'); el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
-    el.innerHTML=`
+function renderOverview(){
+  const container = document.getElementById('entriesList');
+  container.innerHTML = entries.map(e => `
+    <div class="bg-gray-800 p-3 rounded-md border border-gray-700 flex justify-between items-center">
       <div>
-        <div class="text-sm text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
-        <div class="text-lg font-semibold mt-1">${en.buyer} → ${en.seller}</div>
-        <div class="small-muted">Menge: ${en.amount}</div>
+        <div class="font-semibold">${e.seller} → ${e.buyer}</div>
+        <div class="text-sm text-gray-400">${e.date}</div>
       </div>
-      <div class="text-right ml-4">
-        <div class="small-muted">Cash</div>
-        <div class="text-xl font-bold text-blue-400">${formatCurrency(en.cash)}</div>
-        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerCash)} • Käufer: ${formatCurrency(en.yourCash)}</div>
-      </div>
-    `;
-    entriesList2.appendChild(el);
-  });
+      <div class="font-bold text-green-400">${formatCurrency(e.cash)}</div>
+    </div>`).join('') || '<div class="text-gray-400">Keine Einträge</div>';
 }
 
-// Admin
-const adminLoginBtn2=document.getElementById('adminLoginBtn2');
-const adminPassInput2=document.getElementById('adminPass2');
-const adminError2=document.getElementById('adminError2');
-const adminContent2=document.getElementById('adminContent2');
-const adminTableBody2=document.getElementById('adminTableBody2');
-const totalCount2=document.getElementById('totalCount2');
-const totalRevenue2=document.getElementById('totalRevenue2');
+function updateAdminTable(){
+  const body = document.getElementById('adminTableBody');
+  let total = 0;
+  body.innerHTML = entries.map(e => {
+    total += e.cash;
+    return `<tr>
+      <td class="p-2">${e.date}</td>
+      <td class="p-2">${e.buyer}</td>
+      <td class="p-2">${e.seller}</td>
+      <td class="p-2">${e.quantity}</td>
+      <td class="p-2">${formatCurrency(e.cash)}</td>
+      <td class="p-2 text-green-400">${formatCurrency(e.sellerShare)}</td>
+      <td class="p-2 text-blue-400">${formatCurrency(e.buyerShare)}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('totalCount').textContent = entries.length;
+  document.getElementById('totalRevenue').textContent = formatCurrency(total);
+}
 
-adminLoginBtn2.addEventListener('click',()=>{
-  if(adminPassInput2.value===ADMIN_PASSWORD2){ 
-    adminError2.classList.add('hidden-el'); 
-    adminPassInput2.value=''; 
-    show(adminContent2); 
-    renderAdminTable2(); 
-  } else { adminError2.classList.remove('hidden-el'); }
+// --- Cash Berechnung ---
+const cashInput = document.getElementById('cash');
+cashInput.addEventListener('input', () => {
+  const cash = parseFloat(cashInput.value) || 0;
+  document.getElementById('sellerShare').textContent = formatCurrency(cash * 0.8);
+  document.getElementById('yourShare').textContent = formatCurrency(cash * 0.2);
 });
 
-function renderAdminTable2(){
-  adminTableBody2.innerHTML=''; 
-  let revenue=0;
-  entries2.forEach((en,i)=>{
-    revenue+=en.cash;
-    const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
-    tr.innerHTML=`
-      <td class="p-2 small-muted">${new Date(en.dateIso).toLocaleString()}</td>
-      <td class="p-2">${en.buyer}</td>
-      <td class="p-2">${en.seller}</td>
-      <td class="p-2">${en.amount}</td>
-      <td class="p-2">${formatCurrency(en.cash)}</td>
-      <td class="p-2">${formatCurrency(en.sellerCash)}</td>
-      <td class="p-2">${formatCurrency(en.yourCash)}</td>
-      <td class="p-2">
-        <button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry2(${i})">Löschen</button>
-      </td>
-    `;
-    adminTableBody2.appendChild(tr);
-  });
-  totalCount2.innerText=entries2.length; totalRevenue2.innerText=formatCurrency(revenue);
-}
+// --- Formular speichern ---
+document.getElementById('entryForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const buyer = document.getElementById('buyer').value.trim();
+  const seller = document.getElementById('seller').value.trim();
+  const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+  const cash = parseFloat(document.getElementById('cash').value) || 0;
+  const entry = {
+    id: uid(),
+    date: nowIso(),
+    buyer, seller, quantity, cash,
+    sellerShare: cash * 0.8,
+    buyerShare: cash * 0.2
+  };
+  entries.push(entry);
+  saveLocalCache();
+  renderOverview();
+  document.getElementById('entryForm').reset();
+  document.getElementById('sellerShare').textContent = '0$';
+  document.getElementById('yourShare').textContent = '0$';
+});
 
-function deleteEntry2(index){
-  if(confirm('Eintrag wirklich löschen?')){ entries2.splice(index,1); saveLocalCache(); renderAdminTable2(); renderOverview2(); }
-}
+document.getElementById('resetForm').addEventListener('click', () => {
+  document.getElementById('entryForm').reset();
+  document.getElementById('sellerShare').textContent = '0$';
+  document.getElementById('yourShare').textContent = '0$';
+});
 
-function exportCSV2(){
-  if(entries2.length===0) return alert('Keine Einträge zum Exportieren.');
-  const header=['date','buyer','seller','amount','cash','sellerCash','yourCash'];
-  const rows=entries2.map(e=>[
-    `"${new Date(e.dateIso).toLocaleString()}"`,
-    `"${e.buyer}"`,
-    `"${e.seller}"`,
-    e.amount,
-    e.cash,
-    e.sellerCash,
-    e.yourCash
-  ].join(','));
-  const csv=[header.join(','), ...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='entries_kokain.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-}
-document.getElementById('exportCsv2').addEventListener('click',exportCSV2);
+// --- Tabs ---
+const newEntry = document.getElementById('newEntry');
+const overview = document.getElementById('overview');
+const adminPanel = document.getElementById('adminPanel');
 
-// Panels
-const newEl2=document.getElementById('newEntry2');
-const overviewEl2=document.getElementById('overview2');
-const adminEl2=document.getElementById('adminPanel2');
-document.getElementById('btnNew2').addEventListener('click',()=>{ show(newEl2); hide(overviewEl2); hide(adminEl2); });
-document.getElementById('btnOverview2').addEventListener('click',()=>{ hide(newEl2); show(overviewEl2); hide(adminEl2); renderOverview2(); });
-document.getElementById('btnAdmin2').addEventListener('click',()=>{ hide(newEl2); hide(overviewEl2); show(adminEl2); });
+document.getElementById('btnNew').onclick = () => { show(newEntry); hide(overview); hide(adminPanel); };
+document.getElementById('btnOverview').onclick = () => { hide(newEntry); show(overview); hide(adminPanel); renderOverview(); };
+document.getElementById('btnAdmin').onclick = () => { hide(newEntry); hide(overview); show(adminPanel); };
 
-// Hamburger
-const hamburgerBtn2 = document.getElementById('hamburgerBtn2');
-const hamburgerMenu2 = document.getElementById('hamburgerMenu2');
-hamburgerBtn2.addEventListener('click', () => { hamburgerMenu2.classList.toggle('hidden'); });
+// --- Admin Login ---
+document.getElementById('adminLoginBtn').onclick = () => {
+  const pass = document.getElementById('adminPass').value;
+  if(pass === ADMIN_PASSWORD){
+    hide(document.getElementById('adminLoginSection'));
+    show(document.getElementById('adminContent'));
+    updateAdminTable();
+  } else {
+    show(document.getElementById('adminError'));
+  }
+};
 
-// Init
-loadLocalCache(); renderOverview2(); updateSharesUI2();
+// --- Hamburger Menü ---
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const hamburgerMenu = document.getElementById('hamburgerMenu');
+hamburgerBtn.addEventListener('click', () => hamburgerMenu.classList.toggle('hidden'));
+
+// --- Init ---
+loadLocalCache();
+renderOverview();
 </script>
+
 </body>
 </html>

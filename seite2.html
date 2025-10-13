@@ -58,7 +58,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
           <input id="seller2" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-4">
-          <input id="quantity2" type="number" min="1" step="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-1/2" required />
+          <input id="cash2" type="number" min="1" step="1" placeholder="Cash" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-1/2" required />
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
             <div class="small-muted">Verkäufer (80%)</div>
             <div id="sellerShare2" class="text-lg font-semibold mt-1">0$</div>
@@ -102,7 +102,6 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
                 <th class="p-2">Datum</th>
                 <th class="p-2">Käufer</th>
                 <th class="p-2">Verkäufer</th>
-                <th class="p-2">Menge</th>
                 <th class="p-2">Cash</th>
                 <th class="p-2">Verkäufer (80%)</th>
                 <th class="p-2">Käufer (20%)</th>
@@ -119,7 +118,6 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 </div>
 
 <script>
-// --- Seite 2 JS Kokain ---
 let entries2 = [];
 const ADMIN_PASSWORD2 = 'admin456';
 
@@ -130,33 +128,33 @@ function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).sli
 function saveLocalCache(){ localStorage.setItem('vm_entries2', JSON.stringify(entries2)); }
 function loadLocalCache(){ const s = localStorage.getItem('vm_entries2'); entries2 = s ? JSON.parse(s) : []; }
 
-// Shares berechnen 80/20
+// Berechnung 80/20 aus Cash
 const form2=document.getElementById('entryForm2');
-const quantityInput2=document.getElementById('quantity2');
+const cashInput2=document.getElementById('cash2');
 const sellerShareEl2=document.getElementById('sellerShare2');
 const yourShareEl2=document.getElementById('yourShare2');
 const saveFeedback2=document.getElementById('saveFeedback2');
 
 function updateSharesUI2(){ 
-  const q = Number(quantityInput2.value)||0; 
-  sellerShareEl2.innerText = formatCurrency(q*0.8); 
-  yourShareEl2.innerText = formatCurrency(q*0.2); 
+  const cash = Number(cashInput2.value)||0;
+  sellerShareEl2.innerText = formatCurrency(cash*0.8);
+  yourShareEl2.innerText = formatCurrency(cash*0.2);
 }
-quantityInput2.addEventListener('input', updateSharesUI2);
+cashInput2.addEventListener('input', updateSharesUI2);
 
 form2.addEventListener('submit',(e)=>{
   e.preventDefault();
   const buyer=document.getElementById('buyer2').value.trim();
   const seller=document.getElementById('seller2').value.trim();
-  const quantity = parseInt(quantityInput2.value);
-  if(!buyer || !seller || isNaN(quantity) || quantity<1){ 
+  const cash = Number(cashInput2.value);
+  if(!buyer || !seller || isNaN(cash) || cash<1){ 
     saveFeedback2.classList.remove('hidden-el'); 
     saveFeedback2.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; 
     return; 
   }
-  const sellerCash = quantity*0.8;
-  const yourCash = quantity*0.2;
-  const entry = { id:uid(), dateIso:new Date().toISOString(), buyer, seller, quantity, cash:quantity, sellerCash, yourCash };
+  const sellerCash = cash*0.8;
+  const yourCash = cash*0.2;
+  const entry = { id:uid(), dateIso:new Date().toISOString(), buyer, seller, cash, sellerCash, yourCash };
   entries2.unshift(entry);
   saveLocalCache();
   saveFeedback2.classList.remove('hidden-el'); saveFeedback2.innerText='Gespeichert.';
@@ -215,7 +213,6 @@ function renderAdminTable2(){
       <td class="p-2 small-muted">${new Date(en.dateIso).toLocaleString()}</td>
       <td class="p-2">${en.buyer}</td>
       <td class="p-2">${en.seller}</td>
-      <td class="p-2">${en.quantity}</td>
       <td class="p-2">${formatCurrency(en.cash)}</td>
       <td class="p-2">${formatCurrency(en.sellerCash)}</td>
       <td class="p-2">${formatCurrency(en.yourCash)}</td>
@@ -234,12 +231,11 @@ function deleteEntry2(index){
 
 function exportCSV2(){
   if(entries2.length===0) return alert('Keine Einträge zum Exportieren.');
-  const header=['date','buyer','seller','quantity','cash','sellerCash','yourCash'];
+  const header=['date','buyer','seller','cash','sellerCash','yourCash'];
   const rows=entries2.map(e=>[
     `"${new Date(e.dateIso).toLocaleString()}"`,
     `"${e.buyer}"`,
     `"${e.seller}"`,
-    e.quantity,
     e.cash,
     e.sellerCash,
     e.yourCash
@@ -251,7 +247,7 @@ function exportCSV2(){
 }
 document.getElementById('exportCsv2').addEventListener('click',exportCSV2);
 
-// Show/Hide Panels
+// Panels
 const newEl2=document.getElementById('newEntry2');
 const overviewEl2=document.getElementById('overview2');
 const adminEl2=document.getElementById('adminPanel2');
@@ -264,9 +260,8 @@ const hamburgerBtn2 = document.getElementById('hamburgerBtn2');
 const hamburgerMenu2 = document.getElementById('hamburgerMenu2');
 hamburgerBtn2.addEventListener('click', () => { hamburgerMenu2.classList.toggle('hidden'); });
 
-// Initial
+// Init
 loadLocalCache(); renderOverview2(); updateSharesUI2();
-
 </script>
 </body>
 </html>

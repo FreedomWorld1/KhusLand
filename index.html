@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Weed-Ankauf (lokal)</title>
+<title>Weed Ankauf</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
@@ -23,8 +23,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 <div class="max-w-4xl mx-auto p-6">
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-blue-400">Ankauf-Manager</h1>
-      <div class="small-muted">Automatische Verteilung: Verkäufer 60% • Du 40%</div>
+      <h1 class="text-2xl font-bold text-green-400">Weed Ankauf</h1>
     </div>
     <div class="flex items-center gap-3">
       <button id="btnNew" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Neuer Ankauf</button>
@@ -43,14 +42,14 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
           <input id="seller" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mt-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mt-4">
           <input id="quantity" type="number" min="1" step="1" placeholder="Menge" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
             <div class="small-muted">Verkäufer (60%)</div>
             <div id="sellerShare" class="text-lg font-semibold mt-1">0$</div>
           </div>
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
-            <div class="small-muted">Dein Anteil (40%)</div>
+            <div class="small-muted">Käufer (40%)</div>
             <div id="yourShare" class="text-lg font-semibold mt-1">0$</div>
           </div>
         </div>
@@ -92,7 +91,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
                 <th class="p-2">Menge</th>
                 <th class="p-2">Preis</th>
                 <th class="p-2">Verkäufer(60%)</th>
-                <th class="p-2">Du(40%)</th>
+                <th class="p-2">Käufer(40%)</th>
                 <th class="p-2">Aktion</th>
               </tr>
             </thead>
@@ -106,25 +105,18 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 </div>
 
 <script>
-/* ======== CONFIG ======== */
-const UNIT_PRICE = 2500; // Preis pro Menge in Dollar
+const UNIT_PRICE = 1000; 
 const ADMIN_PASSWORD = 'admin123';
-
-/* ======== STATE ======== */
 let entries = [];
 
-/* ======== HELPERS ======== */
 function show(el){ el.classList.remove('hidden-el'); }
 function hide(el){ el.classList.add('hidden-el'); }
-function formatCurrency(n){ return Math.round(n)+'$'; } // ganze Zahl, Dollar
+function formatCurrency(n){ return Math.round(n)+'$'; }
 function nowIso(){ return new Date().toISOString(); }
 function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
-
-/* ======== LOCAL STORAGE ======== */
 function saveLocalCache(){ localStorage.setItem('vm_entries', JSON.stringify(entries)); }
 function loadLocalCache(){ const s = localStorage.getItem('vm_entries'); entries = s ? JSON.parse(s) : []; }
 
-/* ======== FORM ======== */
 const form=document.getElementById('entryForm');
 const quantityInput=document.getElementById('quantity');
 const sellerShareEl=document.getElementById('sellerShare');
@@ -163,7 +155,6 @@ form.addEventListener('submit',(e)=>{
 });
 document.getElementById('resetForm').addEventListener('click',()=>{ form.reset(); updateSharesUI(); });
 
-/* ======== OVERVIEW ======== */
 const entriesList=document.getElementById('entriesList');
 function renderOverview(){
   entriesList.innerHTML='';
@@ -178,88 +169,11 @@ function renderOverview(){
       <div class="text-right ml-4">
         <div class="small-muted">Preis</div>
         <div class="text-xl font-bold text-blue-400">${formatCurrency(en.price)}</div>
-        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Du: ${formatCurrency(en.yourShare)}</div>
+        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Käufer: ${formatCurrency(en.you)}</div>
       </div>
     `;
     entriesList.appendChild(el);
   });
 }
 
-/* ======== ADMIN ======== */
-const adminLoginBtn=document.getElementById('adminLoginBtn');
-const adminPassInput=document.getElementById('adminPass');
-const adminError=document.getElementById('adminError');
-const adminContent=document.getElementById('adminContent');
-const adminTableBody=document.getElementById('adminTableBody');
-const totalCount=document.getElementById('totalCount');
-const totalRevenue=document.getElementById('totalRevenue');
-
-adminLoginBtn.addEventListener('click',()=>{
-  if(adminPassInput.value===ADMIN_PASSWORD){ 
-    adminError.classList.add('hidden-el'); 
-    adminPassInput.value=''; 
-    show(adminContent); 
-    renderAdminTable(); 
-  } else { adminError.classList.remove('hidden-el'); }
-});
-
-function renderAdminTable(){
-  adminTableBody.innerHTML=''; 
-  let revenue=0;
-  entries.forEach((en,i)=>{
-    revenue+=en.price;
-    const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
-    tr.innerHTML=`
-      <td class="p-2 small-muted">${new Date(en.dateIso).toLocaleString()}</td>
-      <td class="p-2">${en.buyer}</td>
-      <td class="p-2">${en.seller}</td>
-      <td class="p-2">${en.quantity}</td>
-      <td class="p-2">${formatCurrency(en.price)}</td>
-      <td class="p-2">${formatCurrency(en.sellerShare)}</td>
-      <td class="p-2">${formatCurrency(en.yourShare)}</td>
-      <td class="p-2">
-        <button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry(${i})">Löschen</button>
-      </td>
-    `;
-    adminTableBody.appendChild(tr);
-  });
-  totalCount.innerText=entries.length; totalRevenue.innerText=formatCurrency(revenue);
-}
-
-function deleteEntry(index){
-  if(confirm('Eintrag wirklich löschen?')){ entries.splice(index,1); saveLocalCache(); renderAdminTable(); renderOverview(); }
-}
-
-/* ======== CSV ======== */
-function exportCSV(){
-  if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
-  const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
-  const rows=entries.map(e=>[
-    `"${new Date(e.dateIso).toLocaleString()}"`,
-    `"${e.buyer}"`,
-    `"${e.seller}"`,
-    e.quantity,
-    e.price,
-    e.sellerShare,
-    e.yourShare
-  ].join(','));
-  const csv=[header.join(','), ...rows].join('\n');
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='entries.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-}
-document.getElementById('exportCsv').addEventListener('click',exportCSV);
-
-/* ======== NAVIGATION ======== */
-const newEl=document.getElementById('newEntry');
-const overviewEl=document.getElementById('overview');
-const adminEl=document.getElementById('adminPanel');
-document.getElementById('btnNew').addEventListener('click',()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
-document.getElementById('btnOverview').addEventListener('click',()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
-document.getElementById('btnAdmin').addEventListener('click',()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
-
-/* ======== INIT ======== */
-loadLocalCache(); renderOverview(); updateSharesUI();
-</script>
-</body>
-</html>
+const adminLoginBtn=document.getElementById('admin

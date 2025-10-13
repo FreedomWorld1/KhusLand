@@ -1,1 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title id="htmlTitle">KhusLand Bestellrechner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Zusatzstyles für dunkles, edles Design */
+        :root {
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.06);
+            --accent: #3b82f6;
+        }
+        body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+        .tabs-slider {
+            position: absolute;
+            height: 100%;
+            left: var(--tab-left, 0px);
+            width: var(--tab-width, 0px);
+            border-radius: 0.75rem;
+            transition: left .25s ease, width .25s ease, background-color .25s ease;
+            z-index: 5;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            opacity: .95;
+        }
+        .category-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+        }
+        .quantity-control button { width: 42px; height: 42px; display:flex; align-items:center; justify-content:center; }
+        #kopiertHinweis { transition: opacity .2s ease; }
+        /* kleine Anpassung für mobile */
+        @media (max-width: 640px) {
+            .tabs-container { gap: .25rem; }
+        }
+        /* Tab-Farben als Utility (kannst du erweitern) */
+        .tab-color-TABAK { background: linear-gradient(90deg,#ef4444,#dc2626); }
+        .tab-color-BLÄTTER { background: linear-gradient(90deg,#06b6d4,#0891b2); }
+        .tab-color-ESSEN { background: linear-gradient(90deg,#10b981,#059669); }
+        .tab-color-GETRÄNKE { background: linear-gradient(90deg,#3b82f6,#1e40af); }
+        .tab-color-ALKOHOL { background: linear-gradient(90deg,#f97316,#ea580c); }
+        .tab-color-DESSERTS { background: linear-gradient(90deg,#a78bfa,#7c3aed); }
+        .tab-color-PREMIUM { background: linear-gradient(90deg,#f59e0b,#d97706); }
+        .tab-color-RAUCHWAREN { background: linear-gradient(90deg,#f43f5e,#ef4444); }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 antialiased">
+  <div class="min-h-screen px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl rounded-2xl p-6">
+        <div class="flex items-start justify-between gap-6">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xl font-bold text-blue-400">Bestellseiten</h4>
 
+            <!-- SEITEN-MENU HIER -->
+            <div id="pageTabsContainer" class="flex gap-3 mt-3 mb-3">
+              <!-- Buttons werden per JS generiert -->
+            </div>
+
+            <div class="relative mt-3">
+              <div id="tabsContainer" class="tabs-container flex gap-3 relative p-1">
+                <div id="tabsSlider" class="tabs-slider rounded-lg"></div>
+                <!-- Tab buttons inserted by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-center">
+            <img id="headerImage" src="https://via.placeholder.com/150" alt="Logo" class="rounded-lg shadow-lg mb-2" style="width:110px;height:110px;object-fit:cover;" />
+            <h2 id="calculatorTitle" class="text-2xl font-extrabold text-gray-100 whitespace-nowrap">🌴 KhusLand Bestellrechner 🌴</h2>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <label class="text-sm">🌞</label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="themeToggle" class="sr-only" onchange="toggleTheme()">
+              <div class="w-11 h-6 bg-gray-600 rounded-full peer-checked:bg-blue-600 relative after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all"></div>
+            </label>
+            <label class="text-sm">🌙</label>
+
+            <button onclick="openSettings()" class="ml-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-semibold">⚙️</button>
+          </div>
+        </div>
+
+        <div id="calculatorContent" class="mt-6">
+          <div id="categoriesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+
+          <div class="mt-6 p-4 rounded-lg bg-gray-800 border border-gray-700">
+            <div class="flex justify-between items-center">
+              <div>
+                <div class="text-sm font-semibold text-gray-300">Grund:</div>
+                <div id="grund" class="text-base text-gray-100 mt-1 whitespace-pre-wrap">Noch nichts berechnet</div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm font-semibold text-gray-300">Preis</div>
+                <div id="preis" class="text-2xl font-extrabold text-blue-400 mt-1">0$</div>
+              </div>
+            </div>
+            <div class="mt-3 flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <label class="font-semibold">Personen:</label>
+                <div class="quantity-control inline-flex items-center rounded-md overflow-hidden bg-gray-700">
+                  <button onclick="changeQuantity('personCountInput', -1)" class="px-3 text-xl">−</button>
+                  <input id="personCountInput" type="number" min="0" value="0" oninput="berechne()" class="w-20 text-center bg-gray-800 border-l border-r border-gray-700 outline-none px-2 py-2" />
+                  <button onclick="changeQuantity('personCountInput', 1)" class="px-3 text-xl">+</button>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3">
+                <button onclick="resetRechner()" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md font-semibold">Reset</button>
+                <button onclick="copyText('grund')" class="px-3 py-2 bg-gray-700 rounded-md">📄 Grund</button>
+                <button onclick="copyPriceText()" class="px-3 py-2 bg-gray-700 rounded-md">📄 Preis</button>
+              </div>
+            </div>
+
+            <div id="kopiertHinweis" class="text-sm text-green-400 text-center hidden mt-3">Kopiert ✅</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal (unverändert, wie zuvor) -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+    <!-- ... alle Inhalte unverändert ... -->
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 flex items-center justify-center z-40 bg-black/60 hidden">
+    <div class="loading-spinner border-4 border-gray-700 border-t-4 border-t-blue-500 rounded-full w-10 h-10 animate-spin"></div>
+  </div>
+
+<script>
+/* --------------------------
+   Konfiguration / Default
+   --------------------------*/
+const JSONBIN_MASTER_KEY = '$2a$10$szNDzN.Y6Xwin9HEcbhi/O70xfGZCaX/Kcb8a5lLCCSObE/XysMbq';
+const JSONBIN_BIN_ID = '68e3b63aae596e708f080453';
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+const JSONBIN_HEADERS = {
+  'X-Master-Key': JSONBIN_MASTER_KEY,
+  'Content-Type': 'application/json',
+  'X-Bin-Versioning': 'false'
+};
+const ENCODED_PASSWORD = "MTIzIUtSQyExMjM=";
+const defaultPreise = { /* ... alle default items unverändert ... */ };
+
+let currentPreise = {};
+let categories = ['SPEISEN','GETRÄNKE','ALKOHOL','DESSERTS','PREMIUM','RAUCHWAREN'];
+let foodCategories = ['SPEISEN','DESSERTS'];
+let drinkCategories = ['GETRÄNKE','ALKOHOL'];
+let rauchwarenCategories = ['RAUCHWAREN'];
+let miscellaneousCategories = ['PREMIUM'];
+let customTitle = '🌴 KhusLand Bestellrechner 🌴';
+let customImage = 'https://via.placeholder.com/150';
+const itemsPerPerson = 5;
+const numTabs = 5;
+let activeTab = 1;
+let calculatorStates = {};
+const DEFAULT_IMAGE_URL = 'https://via.placeholder.com/150';
+
+/* Hilfsfunktionen */
+function showLoading(){document.getElementById('loadingOverlay').classList.remove('hidden');}
+function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden');}
+function decodeBase64(s){ if (typeof atob === 'function') return atob(s); return ''; }
+
+/* --------------------------
+   Laden & Speichern (JSONBin)
+   --------------------------*/
+async function loadPreise(){ /* ... unverändert ... */ }
+async function savePreise(){ /* ... unverändert ... */ }
+
+/* --------------------------
+   Tabs + Rendering
+   --------------------------*/
+function renderTabs(){ /* ... unverändert ... */ }
+function updateSliderBasedOnActive(){ /* ... unverändert ... */ }
+function updateSliderPosition(tabButton){ /* ... unverändert ... */ }
+function switchTab(tabNumber){ /* ... unverändert ... */ }
+
+/* --------------------------
+   Seiten-Menü für Tabs
+   --------------------------*/
+function renderPageTabs() {
+  const container = document.getElementById('pageTabsContainer');
+  container.innerHTML = '';
+  for(let i=1; i<=numTabs; i++){
+    const btn = document.createElement('button');
+    btn.className = `px-3 py-1 rounded-md font-semibold text-sm ${i===activeTab?'bg-blue-600 text-white':'bg-gray-700 text-gray-200'}`;
+    btn.innerText = `Seite ${i}`;
+    btn.onclick = () => switchPage(i);
+    container.appendChild(btn);
+  }
+}
+
+function updatePageTabsActive(){
+  const buttons = document.getElementById('pageTabsContainer').children;
+  for(let i=0;i<buttons.length;i++){
+    buttons[i].classList.toggle('bg-blue-600', i+1 === activeTab);
+    buttons[i].classList.toggle('text-white', i+1 === activeTab);
+    buttons[i].classList.toggle('bg-gray-700', i+1 !== activeTab);
+    buttons[i].classList.toggle('text-gray-200', i+1 !== activeTab);
+  }
+}
+
+function switchPage(pageNumber){
+  if(pageNumber === activeTab) return;
+  saveCalculatorState();
+  activeTab = pageNumber;
+  loadCalculatorState();
+  berechne();
+  updatePageTabsActive();
+}
+
+/* --------------------------
+   Render Artikel (Cards) & Rest Funktionen
+   --------------------------*/
+function renderCalculatorInputs(){ /* ... unverändert ... */ }
+function changeQuantity(id, change){ /* ... unverändert ... */ }
+function berechne(){ /* ... unverändert ... */ }
+function copyToClipboard(text){ /* ... unverändert ... */ }
+function copyText(id){ copyToClipboard(document.getElementById(id).innerText); }
+function copyPriceText(){ copyToClipboard(document.getElementById('preis').innerText.replace('$','')); }
+function initializeCalculatorStates(){ /* ... unverändert ... */ }
+function saveCalculatorState(){ /* ... unverändert ... */ }
+function loadCalculatorState(){ /* ... unverändert ... */ }
+
+/* --------------------------
+   Einstellungen / Admin
+   --------------------------*/
+function openSettings(){ /* ... unverändert ... */ }
+function closeSettings(){ /* ... unverändert ... */ }
+async function checkPassword(){ /* ... unverändert ... */ }
+function showEditor(type){ /* ... unverändert ... */ }
+async function renderItemEditor(){ /* ... unverändert ... */ }
+function updateEditorItemsList(){ /* ... unverändert ... */ }
+async function saveItem(){ /* ... unverändert ... */ }
+function editItem(id){ /* ... unverändert ... */ }
+async function deleteItem(id){ /* ... unverändert ... */ }
+function renderCategoryEditor(){ /* ... unverändert ... */ }
+async function updateCategoryTypes(){ /* ... unverändert ... */ }
+async function saveCategory(){ /* ... unverändert ... */ }
+async function editCategoryPrompt(oldName){ /* ... unverändert ... */ }
+async function deleteCategory(categoryName){ /* ... unverändert ... */ }
+function renderGeneralSettingsEditor(){ /* ... unverändert ... */ }
+async function saveGeneralSettings(){ /* ... unverändert ... */ }
+async function resetImage(){ /* ... unverändert ... */ }
+function updateGeneralSettingsDisplay(){ /* ... unverändert ... */ }
+function resetCalculatorInputs(){ /* ... unverändert ... */ }
+function resetRechner(){ /* ... unverändert ... */ }
+function toggleTheme(){ /* ... unverändert ... */ }
+
+/* --------------------------
+   Window onload init
+   --------------------------*/
+window.onload = async function(){
+  initializeCalculatorStates();
+  const savedTheme = localStorage.getItem('theme');
+  if(savedTheme === 'light'){ document.documentElement.classList.add('light'); document.body.classList.add('light'); document.getElementById('themeToggle').checked = true; }
+  else { document.documentElement.classList.remove('light'); document.body.classList.remove('light'); document.getElementById('themeToggle').checked = false; }
+
+  await loadPreise();
+
+  renderPageTabs();          // Seiten-Menü initial rendern
+  updatePageTabsActive();    // aktive Seite hervorheben
+
+  const initialActive = document.querySelector(`.tab-button[data-tab="${activeTab}"]`);
+  if(initialActive) { initialActive.classList.add('active'); updateSliderPosition(initialActive); }
+
+  window.addEventListener('resize', ()=>{
+    const cur = document.querySelector(`.tab-button[data-tab="${activeTab}"]`);
+    if(cur) updateSliderPosition(cur);
+  });
+
+  loadCalculatorState();
+};
+</script>
+</body>
+</html>

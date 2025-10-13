@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Verkaufs-Manager (60/40)</title>
+<title>Verkaufs-Manager (lokal)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
@@ -14,226 +14,125 @@
   .btn { transition: all .15s ease; }
   .btn:hover { transform: translateY(-2px); }
   .hidden-el { display: none; }
-  /* responsive tweaks */
-  @media (max-width:640px){
-    .grid-cols-responsive { grid-template-columns: repeat(1, minmax(0,1fr)); }
-  }
-  @media (min-width:641px) and (max-width:1024px){
-    .grid-cols-responsive { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  }
-  @media (min-width:1025px){
-    .grid-cols-responsive { grid-template-columns: repeat(3, minmax(0,1fr)); }
-  }
+  @media (max-width:640px){ .grid-cols-responsive { grid-template-columns: repeat(1, minmax(0,1fr)); } }
+  @media (min-width:641px) and (max-width:1024px){ .grid-cols-responsive { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (min-width:1025px){ .grid-cols-responsive { grid-template-columns: repeat(3, minmax(0,1fr)); } }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
-  <div class="max-w-6xl mx-auto p-6">
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h1 class="text-2xl font-bold text-blue-400">Verkaufs-Manager</h1>
-        <div class="small-muted">Automatische Verteilung: Verkäufer 60% • Du 40%</div>
-      </div>
-      <div class="flex items-center gap-3">
-        <button id="btnNew" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Neuer Eintrag</button>
-        <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Übersicht</button>
-        <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500">Admin</button>
-      </div>
+<div class="max-w-6xl mx-auto p-6">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-blue-400">Verkaufs-Manager</h1>
+      <div class="small-muted">Automatische Verteilung: Verkäufer 60% • Du 40%</div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="btnNew" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Neuer Eintrag</button>
+      <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700">Übersicht</button>
+      <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500">Admin</button>
+    </div>
+  </div>
+
+  <div id="mainContainer" class="space-y-6">
+    <!-- NEW ENTRY -->
+    <div id="newEntry" class="card p-6 shadow-soft">
+      <h2 class="text-lg font-semibold mb-4">Neuen Verkauf anlegen</h2>
+      <form id="entryForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input id="buyer" type="text" placeholder="Käufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
+          <input id="seller" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
+        </div>
+
+        <div>
+          <textarea id="description" rows="3" placeholder="Produkt / Mängel / Notizen" class="w-full p-3 rounded-md bg-gray-800 border border-gray-700"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+          <input id="price" type="number" min="0" step="0.01" placeholder="Preis (z. B. 120.50)" class="p-3 rounded-md bg-gray-800 border border-gray-700" required />
+          <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
+            <div class="small-muted">Verkäufer (60%)</div>
+            <div id="sellerShare" class="text-lg font-semibold mt-1">0€</div>
+          </div>
+          <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
+            <div class="small-muted">Dein Anteil (40%)</div>
+            <div id="yourShare" class="text-lg font-semibold mt-1">0€</div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button type="submit" class="px-4 py-2 bg-green-600 rounded-md btn">Speichern</button>
+          <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 rounded-md btn">Zurücksetzen</button>
+        </div>
+        <div id="saveFeedback" class="small-muted hidden-el mt-2"></div>
+      </form>
     </div>
 
-    <!-- MAIN CONTAINER -->
-    <div id="mainContainer" class="space-y-6">
-
-      <!-- NEW ENTRY -->
-      <div id="newEntry" class="card p-6 shadow-soft">
-        <h2 class="text-lg font-semibold mb-4">Neuen Verkauf anlegen</h2>
-        <form id="entryForm" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input id="buyer" type="text" placeholder="Käufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
-            <input id="seller" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
-          </div>
-
-          <div>
-            <textarea id="description" rows="3" placeholder="Produkt / Mängel / Notizen" class="w-full p-3 rounded-md bg-gray-800 border border-gray-700"></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-            <input id="price" type="number" min="0" step="0.01" placeholder="Preis (z. B. 120.50)" class="p-3 rounded-md bg-gray-800 border border-gray-700" required />
-            <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
-              <div class="small-muted">Verkäufer (60%)</div>
-              <div id="sellerShare" class="text-lg font-semibold mt-1">0€</div>
-            </div>
-            <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
-              <div class="small-muted">Dein Anteil (40%)</div>
-              <div id="yourShare" class="text-lg font-semibold mt-1">0€</div>
-            </div>
-          </div>
-
-          <div class="flex gap-3">
-            <button type="submit" class="px-4 py-2 bg-green-600 rounded-md btn">Speichern & Hochladen</button>
-            <button type="button" id="saveLocal" class="px-4 py-2 bg-yellow-600 rounded-md btn">Nur lokal speichern</button>
-            <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 rounded-md btn">Zurücksetzen</button>
-          </div>
-          <div id="saveFeedback" class="small-muted hidden-el mt-2"></div>
-        </form>
+    <!-- OVERVIEW -->
+    <div id="overview" class="card p-6 shadow-soft hidden-el">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold">Übersicht aller Einträge</h2>
+        <div class="flex items-center gap-2">
+          <input id="filterText" placeholder="Suche (Käufer/Verkäufer/Notiz)" class="p-2 rounded-md bg-gray-800 border border-gray-700" />
+          <button id="exportCsv" class="px-3 py-2 bg-blue-600 rounded-md">CSV export</button>
+        </div>
       </div>
+      <div id="entriesList" class="space-y-3 max-h-[50vh] overflow-auto"></div>
+    </div>
 
-      <!-- OVERVIEW -->
-      <div id="overview" class="card p-6 shadow-soft hidden-el">
+    <!-- ADMIN -->
+    <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
+      <h2 class="text-lg font-semibold mb-3">Admin: Alle Einträge (lokal)</h2>
+      <div id="adminLoginSection" class="mb-4">
+        <input id="adminPass" type="password" placeholder="Admin-Passwort" class="p-2 rounded-md bg-gray-800 border border-gray-700 mr-2" />
+        <button id="adminLoginBtn" class="px-3 py-2 bg-blue-600 rounded-md">Einloggen</button>
+        <span id="adminError" class="text-red-400 ml-3 hidden-el">Falsches Passwort</span>
+      </div>
+      <div id="adminContent" class="hidden-el">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-lg font-semibold">Übersicht aller Einträge</h2>
-          <div class="flex items-center gap-2">
-            <input id="filterText" placeholder="Suche (Käufer/Verkäufer/Notiz)" class="p-2 rounded-md bg-gray-800 border border-gray-700" />
-            <button id="exportCsv" class="px-3 py-2 bg-blue-600 rounded-md">CSV export</button>
-          </div>
+          <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0€</span></div>
         </div>
-
-        <div id="entriesList" class="space-y-3 max-h-[50vh] overflow-auto"></div>
-      </div>
-
-      <!-- ADMIN (password protected) -->
-      <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
-        <h2 class="text-lg font-semibold mb-3">Admin: Alle Einträge (geschützt)</h2>
-        <div id="adminLoginSection" class="mb-4">
-          <input id="adminPass" type="password" placeholder="Admin-Passwort" class="p-2 rounded-md bg-gray-800 border border-gray-700 mr-2" />
-          <button id="adminLoginBtn" class="px-3 py-2 bg-blue-600 rounded-md">Einloggen</button>
-          <span id="adminError" class="text-red-400 ml-3 hidden-el">Falsches Passwort</span>
-        </div>
-
-        <div id="adminContent" class="hidden-el">
-          <div class="flex items-center justify-between mb-4">
-            <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
-            <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0€</span></div>
-          </div>
-
-          <div class="overflow-auto max-h-[50vh]">
-            <table class="w-full text-left text-sm">
-              <thead class="text-gray-400">
-                <tr>
-                  <th class="p-2">Datum</th>
-                  <th class="p-2">Käufer</th>
-                  <th class="p-2">Verkäufer</th>
-                  <th class="p-2">Preis</th>
-                  <th class="p-2">Verkäufer(60%)</th>
-                  <th class="p-2">Du(40%)</th>
-                  <th class="p-2">Notiz</th>
-                </tr>
-              </thead>
-              <tbody id="adminTableBody"></tbody>
-            </table>
-          </div>
+        <div class="overflow-auto max-h-[50vh]">
+          <table class="w-full text-left text-sm">
+            <thead class="text-gray-400">
+              <tr>
+                <th class="p-2">Datum</th>
+                <th class="p-2">Käufer</th>
+                <th class="p-2">Verkäufer</th>
+                <th class="p-2">Preis</th>
+                <th class="p-2">Verkäufer(60%)</th>
+                <th class="p-2">Du(40%)</th>
+                <th class="p-2">Notiz</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
         </div>
       </div>
-
     </div>
   </div>
-
-  <!-- Loading -->
-  <div id="loading" class="fixed inset-0 bg-black/60 flex items-center justify-center hidden-el z-50">
-    <div class="p-4 card">
-      <div class="small-muted">Wird geladen…</div>
-    </div>
-  </div>
+</div>
 
 <script>
-/* ===========================
-   KONFIGURATION (PLATZHALTER)
-   ===========================
-   Ersetze diese Platzhalter mit deinen echten Werten:
-   - JSONBIN_MASTER_KEY: dein JSONBin 'X-Master-Key'
-   - JSONBIN_BIN_ID: die Bin-ID
-   - ENCODED_ADMIN_PASSWORD: Base64 kodiertes Passwort (z. B. atob("BASE64STRING") -> "passwort")
-   Falls du JSONBin nicht nutzen willst, lasse die Platzhalter und nutze nur die lokale Speicherung.
-*/
-const JSONBIN_MASTER_KEY = 'REPLACE_JSONBIN_MASTER_KEY'; // z.B. '$2a$...'
-const JSONBIN_BIN_ID = 'REPLACE_JSONBIN_BIN_ID';        // z.B. '68e3b63a...'
-const JSONBIN_URL = JSONBIN_BIN_ID && JSONBIN_MASTER_KEY ? `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}` : null;
-const JSONBIN_HEADERS = {
-  'X-Master-Key': JSONBIN_MASTER_KEY,
-  'Content-Type': 'application/json',
-  'X-Bin-Versioning': 'false'
-};
-// Admin passwort (Base64). Ersetze "UkVQTEFDRV9QQVNT" mit Deinem Base64-String.
-const ENCODED_ADMIN_PASSWORD = 'UkVQTEFDRV9QQVNT'; // Beispiel: 'REPLACE_PASS' (BASE64)
+/* ====== APP STATE ====== */
+let entries = []; 
+const ADMIN_PASSWORD = 'admin123'; // dein Admin-Passwort
 
-/* ===========================
-   App state
-   ===========================*/
-let entries = []; // {id, dateIso, buyer, seller, description, price, sellerShare, yourShare}
-
-/* ===========================
-   Helpers
-   ===========================*/
+/* ====== HELPERS ====== */
 function show(el){ el.classList.remove('hidden-el'); }
 function hide(el){ el.classList.add('hidden-el'); }
-function decodeBase64(s){ try { return atob(s); } catch(e){ return ''; } }
 function formatCurrency(n){ return Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '€'; }
 function nowIso(){ return new Date().toISOString(); }
 function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
 
-/* ===========================
-   JSONBin Integration
-   ===========================*/
-async function loadFromJsonBin(){
-  if(!JSONBIN_URL) return false;
-  toggleLoading(true);
-  try {
-    const resp = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_MASTER_KEY }});
-    if(!resp.ok) throw new Error('HTTP ' + resp.status);
-    const json = await resp.json();
-    if(json && json.record && Array.isArray(json.record.entries)){
-      entries = json.record.entries;
-      saveLocalCache(); // keep local backup
-      return true;
-    } else {
-      return false;
-    }
-  } catch(err){
-    console.error('loadFromJsonBin error', err);
-    return false;
-  } finally {
-    toggleLoading(false);
-  }
+/* ====== LOCAL STORAGE ====== */
+function saveLocalCache(){ localStorage.setItem('vm_entries', JSON.stringify(entries)); }
+function loadLocalCache(){ 
+  const s = localStorage.getItem('vm_entries'); 
+  entries = s ? JSON.parse(s) : []; 
 }
 
-async function saveToJsonBin(){
-  if(!JSONBIN_URL) return false;
-  toggleLoading(true);
-  try {
-    const payload = { entries };
-    const resp = await fetch(JSONBIN_URL, {
-      method: 'PUT',
-      headers: JSONBIN_HEADERS,
-      body: JSON.stringify(payload)
-    });
-    if(!resp.ok) throw new Error('HTTP ' + resp.status);
-    const j = await resp.json();
-    console.log('Saved to JSONBin', j);
-    saveLocalCache();
-    return true;
-  } catch(err){
-    console.error('saveToJsonBin error', err);
-    return false;
-  } finally {
-    toggleLoading(false);
-  }
-}
-
-/* Local fallback (browser) */
-function saveLocalCache(){
-  try { localStorage.setItem('vm_entries', JSON.stringify(entries)); } catch(e){ console.warn('localStorage full?'); }
-}
-function loadLocalCache(){
-  try {
-    const s = localStorage.getItem('vm_entries');
-    if(!s) return false;
-    entries = JSON.parse(s) || [];
-    return true;
-  } catch(e){ return false; }
-}
-
-/* ===========================
-   UI: Form handling
-   ===========================*/
+/* ====== FORM ====== */
 const form = document.getElementById('entryForm');
 const priceInput = document.getElementById('price');
 const sellerShareEl = document.getElementById('sellerShare');
@@ -241,100 +140,50 @@ const yourShareEl = document.getElementById('yourShare');
 const saveFeedback = document.getElementById('saveFeedback');
 
 function computeShares(price){
-  const p = Number(price) || 0;
-  const seller = +(p * 0.60).toFixed(2);
-  const you = +(p * 0.40).toFixed(2);
-  return { seller, you };
+  const p = Number(price)||0;
+  return { seller: +(p*0.6).toFixed(2), you: +(p*0.4).toFixed(2) };
 }
 function updateSharesUI(){
-  const v = Number(priceInput.value) || 0;
-  const s = computeShares(v);
+  const s = computeShares(Number(priceInput.value));
   sellerShareEl.innerText = formatCurrency(s.seller);
   yourShareEl.innerText = formatCurrency(s.you);
 }
 priceInput.addEventListener('input', updateSharesUI);
 
-form.addEventListener('submit', async (e)=>{
+form.addEventListener('submit',(e)=>{
   e.preventDefault();
   const buyer = document.getElementById('buyer').value.trim();
   const seller = document.getElementById('seller').value.trim();
   const description = document.getElementById('description').value.trim();
-  const price = parseFloat(document.getElementById('price').value);
-  if(!buyer || !seller || isNaN(price) || price < 0){
-    saveFeedback.classList.remove('hidden-el');
-    saveFeedback.innerText = 'Bitte alle Pflichtfelder korrekt ausfüllen.';
-    return;
+  const price = parseFloat(priceInput.value);
+  if(!buyer || !seller || isNaN(price) || price<0){
+    saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; return;
   }
   const { seller: sellerShare, you: yourShare } = computeShares(price);
-  const entry = {
-    id: uid(),
-    dateIso: nowIso(),
-    buyer, seller, description, price: +price.toFixed(2),
-    sellerShare, yourShare
-  };
-  entries.unshift(entry); // newest first
-
-  // Try to save to JSONBin, fall back to local
-  const ok = await saveToJsonBin();
-  if(!ok){
-    saveLocalCache();
-    saveFeedback.innerText = 'Nicht hochgeladen — lokal gespeichert (JSONBin fehlt).';
-  } else {
-    saveFeedback.innerText = 'Erfolgreich hochgeladen.';
-  }
-  saveFeedback.classList.remove('hidden-el');
-  setTimeout(()=> saveFeedback.classList.add('hidden-el'), 2500);
-  renderOverview();
-  renderAdminTable();
-  form.reset();
-  updateSharesUI();
-});
-
-/* local save button */
-document.getElementById('saveLocal').addEventListener('click', ()=>{
-  const buyer = document.getElementById('buyer').value.trim();
-  const seller = document.getElementById('seller').value.trim();
-  const description = document.getElementById('description').value.trim();
-  const price = parseFloat(document.getElementById('price').value);
-  if(!buyer || !seller || isNaN(price) || price < 0){
-    saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText = 'Bitte alle Pflichtfelder korrekt ausfüllen.'; return;
-  }
-  const { seller: sellerShare, you: yourShare } = computeShares(price);
-  const entry = { id: uid(), dateIso: nowIso(), buyer, seller, description, price: +price.toFixed(2), sellerShare, yourShare };
+  const entry = { id:uid(), dateIso:nowIso(), buyer, seller, description, price: +price.toFixed(2), sellerShare, yourShare };
   entries.unshift(entry);
   saveLocalCache();
-  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText = 'Lokal gespeichert.'; setTimeout(()=> saveFeedback.classList.add('hidden-el'),2000);
+  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Gespeichert.'; setTimeout(()=>saveFeedback.classList.add('hidden-el'),2000);
   renderOverview(); renderAdminTable(); form.reset(); updateSharesUI();
 });
+document.getElementById('resetForm').addEventListener('click', ()=>{ form.reset(); updateSharesUI(); });
 
-/* reset form */
-document.getElementById('resetForm').addEventListener('click', ()=>{
-  form.reset(); updateSharesUI();
-});
-
-/* ===========================
-   UI: Overview rendering
-   ===========================*/
+/* ====== OVERVIEW ====== */
 const entriesList = document.getElementById('entriesList');
 const filterText = document.getElementById('filterText');
 function renderOverview(){
-  entriesList.innerHTML = '';
+  entriesList.innerHTML='';
   const q = filterText.value.trim().toLowerCase();
-  const visible = entries.filter(en => {
-    if(!q) return true;
-    return (en.buyer + ' ' + en.seller + ' ' + en.description).toLowerCase().includes(q);
-  });
-  if(visible.length === 0){
-    entriesList.innerHTML = '<div class="small-muted">Keine Einträge.</div>'; return;
-  }
+  const visible = entries.filter(en => !q || (en.buyer+' '+en.seller+' '+en.description).toLowerCase().includes(q));
+  if(visible.length===0){ entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
   visible.forEach(en=>{
     const el = document.createElement('div');
-    el.className = 'p-4 rounded-md border border-gray-700 flex justify-between items-start';
-    el.innerHTML = `
+    el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
+    el.innerHTML=`
       <div class="min-w-0">
         <div class="text-sm text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
         <div class="text-lg font-semibold mt-1">${en.buyer} → ${en.seller}</div>
-        <div class="small-muted mt-1">${(en.description || '').slice(0,200)}</div>
+        <div class="small-muted mt-1">${(en.description||'').slice(0,200)}</div>
       </div>
       <div class="text-right ml-4">
         <div class="text-sm small-muted">Preis</div>
@@ -347,38 +196,28 @@ function renderOverview(){
 }
 filterText.addEventListener('input', renderOverview);
 
-/* ===========================
-   Admin rendering & auth
-   ===========================*/
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminPassInput = document.getElementById('adminPass');
-const adminError = document.getElementById('adminError');
-const adminContent = document.getElementById('adminContent');
-const adminTableBody = document.getElementById('adminTableBody');
-const totalCount = document.getElementById('totalCount');
-const totalRevenue = document.getElementById('totalRevenue');
+/* ====== ADMIN ====== */
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminPassInput=document.getElementById('adminPass');
+const adminError=document.getElementById('adminError');
+const adminContent=document.getElementById('adminContent');
+const adminTableBody=document.getElementById('adminTableBody');
+const totalCount=document.getElementById('totalCount');
+const totalRevenue=document.getElementById('totalRevenue');
 
 adminLoginBtn.addEventListener('click', ()=>{
-  const pw = adminPassInput.value || '';
-  const decoded = decodeBase64(ENCODED_ADMIN_PASSWORD);
-  if(pw === decoded && decoded !== ''){
-    adminError.classList.add('hidden-el');
-    adminPassInput.value = '';
-    show(adminContent);
-    renderAdminTable();
-  } else {
-    adminError.classList.remove('hidden-el');
-  }
+  if(adminPassInput.value===ADMIN_PASSWORD){
+    adminError.classList.add('hidden-el'); adminPassInput.value='';
+    show(adminContent); renderAdminTable();
+  } else adminError.classList.remove('hidden-el');
 });
 
 function renderAdminTable(){
-  adminTableBody.innerHTML = '';
-  let revenue = 0;
+  adminTableBody.innerHTML=''; let revenue=0;
   entries.forEach(en=>{
-    revenue += Number(en.price || 0);
-    const tr = document.createElement('tr');
-    tr.className = 'border-t border-gray-800';
-    tr.innerHTML = `
+    revenue+=Number(en.price||0);
+    const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
+    tr.innerHTML=`
       <td class="p-2 align-top small-muted">${new Date(en.dateIso).toLocaleString()}</td>
       <td class="p-2 align-top">${en.buyer}</td>
       <td class="p-2 align-top">${en.seller}</td>
@@ -389,66 +228,40 @@ function renderAdminTable(){
     `;
     adminTableBody.appendChild(tr);
   });
-  totalCount.innerText = entries.length;
-  totalRevenue.innerText = formatCurrency(revenue);
+  totalCount.innerText=entries.length; totalRevenue.innerText=formatCurrency(revenue);
 }
 
-/* ===========================
-   CSV Export
-   ===========================*/
+/* ====== CSV ====== */
 function exportCSV(){
-  if(entries.length === 0) return alert('Keine Einträge zum Exportieren.');
-  const header = ['date','buyer','seller','price','sellerShare','yourShare','description'];
-  const rows = entries.map(e => [
+  if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
+  const header=['date','buyer','seller','price','sellerShare','yourShare','description'];
+  const rows=entries.map(e=>[
     `"${new Date(e.dateIso).toLocaleString()}"`,
     `"${e.buyer.replace(/"/g,'""')}"`,
     `"${e.seller.replace(/"/g,'""')}"`,
-    e.price,
-    e.sellerShare,
-    e.yourShare,
+    e.price, e.sellerShare, e.yourShare,
     `"${(e.description||'').replace(/"/g,'""')}"`
   ].join(','));
-  const csv = [header.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'entries.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
+  const csv=[header.join(','), ...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='entries.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
 }
-
-/* ===========================
-   Small UI helpers & navigation
-   ===========================*/
-const newEl = document.getElementById('newEntry');
-const overviewEl = document.getElementById('overview');
-const adminEl = document.getElementById('adminPanel');
-document.getElementById('btnNew').addEventListener('click', ()=> { show(newEl); hide(overviewEl); hide(adminEl); });
-document.getElementById('btnOverview').addEventListener('click', ()=> { hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
-document.getElementById('btnAdmin').addEventListener('click', ()=> { hide(newEl); hide(overviewEl); show(adminEl); });
-
 document.getElementById('exportCsv').addEventListener('click', exportCSV);
 
-/* loading indicator */
-function toggleLoading(on){
-  const el = document.getElementById('loading');
-  if(on) el.classList.remove('hidden-el'); else el.classList.add('hidden-el');
-}
+/* ====== NAVIGATION ====== */
+const newEl=document.getElementById('newEntry');
+const overviewEl=document.getElementById('overview');
+const adminEl=document.getElementById('adminPanel');
+document.getElementById('btnNew').addEventListener('click', ()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
+document.getElementById('btnOverview').addEventListener('click', ()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
+document.getElementById('btnAdmin').addEventListener('click', ()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
 
-/* ===========================
-   Init: load data & UI
-   ===========================*/
-(async function init(){
-  // try load from JSONBin, otherwise local
-  let loaded = false;
-  if(JSONBIN_URL && JSONBIN_MASTER_KEY && JSONBIN_BIN_ID){
-    loaded = await loadFromJsonBin();
-  }
-  if(!loaded){
-    const okLocal = loadLocalCache();
-    if(!okLocal) entries = [];
-  }
-  renderOverview();
-  renderAdminTable();
-  updateSharesUI();
-})();
+/* ====== INIT ====== */
+loadLocalCache();
+renderOverview();
+renderAdminTable();
+updateSharesUI();
 </script>
 </body>
 </html>

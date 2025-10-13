@@ -39,6 +39,14 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
   </header>
 
   <div id="mainContainer" class="space-y-6">
+
+    <!-- NAVIGATION BUTTONS -->
+    <div class="flex flex-wrap justify-center sm:justify-end gap-2 mb-6">
+      <button id="btnNew" class="btn px-4 py-2 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
+      <button id="btnOverview" class="btn px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+      <button id="btnAdmin" class="btn px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+    </div>
+
     <!-- NEUER ANKAUF -->
     <div id="newEntry" class="card p-6 shadow-soft">
       <h2 class="text-lg font-semibold mb-4">Neuen Ankauf</h2>
@@ -104,6 +112,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -172,7 +181,7 @@ function renderOverview(){
       <div class="text-right ml-4">
         <div class="small-muted">Preis</div>
         <div class="text-xl font-bold text-blue-400">${formatCurrency(en.price)}</div>
-        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Käufer: ${formatCurrency(en.yourShare)}</div>
+        <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Käufer: ${formatCurrency(en.you)}</div>
       </div>
     `;
     entriesList.appendChild(el);
@@ -209,7 +218,7 @@ function renderAdminTable(){
       <td class="p-2">${en.quantity}</td>
       <td class="p-2">${formatCurrency(en.price)}</td>
       <td class="p-2">${formatCurrency(en.sellerShare)}</td>
-      <td class="p-2">${formatCurrency(en.yourShare)}</td>
+      <td class="p-2">${formatCurrency(en.you)}</td>
       <td class="p-2">
         <button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry(${i})">Löschen</button>
       </td>
@@ -225,7 +234,7 @@ function deleteEntry(index){
 
 function exportCSV(){
   if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
-  const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
+  const header=['date','buyer','seller','quantity','price','sellerShare','you'];
   const rows=entries.map(e=>[
     `"${new Date(e.dateIso).toLocaleString()}"`,
     `"${e.buyer}"`,
@@ -233,7 +242,7 @@ function exportCSV(){
     e.quantity,
     e.price,
     e.sellerShare,
-    e.yourShare
+    e.you
   ].join(','));
   const csv=[header.join(','), ...rows].join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
@@ -245,9 +254,9 @@ document.getElementById('exportCsv').addEventListener('click',exportCSV);
 const newEl=document.getElementById('newEntry');
 const overviewEl=document.getElementById('overview');
 const adminEl=document.getElementById('adminPanel');
-document.getElementById('btnNew')?.addEventListener('click',()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
-document.getElementById('btnOverview')?.addEventListener('click',()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
-document.getElementById('btnAdmin')?.addEventListener('click',()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
+document.getElementById('btnNew').addEventListener('click',()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
+document.getElementById('btnOverview').addEventListener('click',()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
+document.getElementById('btnAdmin').addEventListener('click',()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
 
 loadLocalCache(); renderOverview(); updateSharesUI();
 
@@ -255,6 +264,7 @@ loadLocalCache(); renderOverview(); updateSharesUI();
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const hamburgerMenu = document.getElementById('hamburgerMenu');
 hamburgerBtn.addEventListener('click', () => { hamburgerMenu.classList.toggle('hidden'); });
+
 </script>
 </body>
 </html>

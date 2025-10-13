@@ -6,21 +6,21 @@
 <title>Verkaufs-Manager (lokal)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
-  .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); border-radius: 12px; }
-  .accent { background: linear-gradient(90deg,#06b6d4,#0891b2); }
-  .shadow-soft { box-shadow: 0 6px 20px rgba(2,6,23,0.6); }
-  .small-muted { color: #9ca3af; font-size: 0.9rem; }
-  .btn { transition: all .15s ease; }
-  .btn:hover { transform: translateY(-2px); }
-  .hidden-el { display: none; }
-  @media (max-width:640px){ .grid-cols-responsive { grid-template-columns: repeat(1, minmax(0,1fr)); } }
-  @media (min-width:641px) and (max-width:1024px){ .grid-cols-responsive { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-  @media (min-width:1025px){ .grid-cols-responsive { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); border-radius: 12px; }
+.shadow-soft { box-shadow: 0 6px 20px rgba(2,6,23,0.6); }
+.small-muted { color: #9ca3af; font-size: 0.9rem; }
+.btn { transition: all .15s ease; }
+.btn:hover { transform: translateY(-2px); }
+.hidden-el { display: none; }
+@media (max-width:640px){ .grid-cols-responsive { grid-template-columns: repeat(1, minmax(0,1fr)); } }
+@media (min-width:641px) and (max-width:1024px){ .grid-cols-responsive { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width:1025px){ .grid-cols-responsive { grid-template-columns: repeat(3, minmax(0,1fr)); } }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
-<div class="max-w-6xl mx-auto p-6">
+
+<div class="max-w-4xl mx-auto p-6">
   <div class="flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-blue-400">Verkaufs-Manager</h1>
@@ -43,12 +43,8 @@
           <input id="seller" type="text" placeholder="Verkäufer (Name)" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
         </div>
 
-        <div>
-          <textarea id="description" rows="3" placeholder="Produkt / Mängel / Notizen" class="w-full p-3 rounded-md bg-gray-800 border border-gray-700"></textarea>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-          <input id="price" type="number" min="0" step="0.01" placeholder="Preis (z. B. 120.50)" class="p-3 rounded-md bg-gray-800 border border-gray-700" required />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mt-4">
+          <input id="quantity" type="number" min="1" step="1" placeholder="Menge" class="p-3 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           <div class="p-3 rounded-md bg-gray-800 border border-gray-700">
             <div class="small-muted">Verkäufer (60%)</div>
             <div id="sellerShare" class="text-lg font-semibold mt-1">0€</div>
@@ -59,7 +55,7 @@
           </div>
         </div>
 
-        <div class="flex gap-3">
+        <div class="flex gap-3 mt-4">
           <button type="submit" class="px-4 py-2 bg-green-600 rounded-md btn">Speichern</button>
           <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 rounded-md btn">Zurücksetzen</button>
         </div>
@@ -69,19 +65,12 @@
 
     <!-- OVERVIEW -->
     <div id="overview" class="card p-6 shadow-soft hidden-el">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold">Übersicht aller Einträge</h2>
-        <div class="flex items-center gap-2">
-          <input id="filterText" placeholder="Suche (Käufer/Verkäufer/Notiz)" class="p-2 rounded-md bg-gray-800 border border-gray-700" />
-          <button id="exportCsv" class="px-3 py-2 bg-blue-600 rounded-md">CSV export</button>
-        </div>
-      </div>
       <div id="entriesList" class="space-y-3 max-h-[50vh] overflow-auto"></div>
     </div>
 
     <!-- ADMIN -->
     <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
-      <h2 class="text-lg font-semibold mb-3">Admin: Alle Einträge (lokal)</h2>
+      <h2 class="text-lg font-semibold mb-3">Admin-Bereich (Passwort geschützt)</h2>
       <div id="adminLoginSection" class="mb-4">
         <input id="adminPass" type="password" placeholder="Admin-Passwort" class="p-2 rounded-md bg-gray-800 border border-gray-700 mr-2" />
         <button id="adminLoginBtn" class="px-3 py-2 bg-blue-600 rounded-md">Einloggen</button>
@@ -91,6 +80,7 @@
         <div class="flex items-center justify-between mb-4">
           <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
           <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0€</span></div>
+          <button id="exportCsv" class="px-3 py-1 bg-blue-600 rounded-md">CSV Export</button>
         </div>
         <div class="overflow-auto max-h-[50vh]">
           <table class="w-full text-left text-sm">
@@ -99,10 +89,11 @@
                 <th class="p-2">Datum</th>
                 <th class="p-2">Käufer</th>
                 <th class="p-2">Verkäufer</th>
+                <th class="p-2">Menge</th>
                 <th class="p-2">Preis</th>
                 <th class="p-2">Verkäufer(60%)</th>
                 <th class="p-2">Du(40%)</th>
-                <th class="p-2">Notiz</th>
+                <th class="p-2">Aktion</th>
               </tr>
             </thead>
             <tbody id="adminTableBody"></tbody>
@@ -110,83 +101,82 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
-/* ====== APP STATE ====== */
-let entries = []; 
-const ADMIN_PASSWORD = 'admin123'; // dein Admin-Passwort
+/* ======== CONFIG ======== */
+const UNIT_PRICE = 2500; // fester Preis pro Menge
+const ADMIN_PASSWORD = 'admin123';
 
-/* ====== HELPERS ====== */
+/* ======== STATE ======== */
+let entries = [];
+
+/* ======== HELPERS ======== */
 function show(el){ el.classList.remove('hidden-el'); }
 function hide(el){ el.classList.add('hidden-el'); }
 function formatCurrency(n){ return Number(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '€'; }
 function nowIso(){ return new Date().toISOString(); }
 function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
 
-/* ====== LOCAL STORAGE ====== */
+/* ======== LOCAL STORAGE ======== */
 function saveLocalCache(){ localStorage.setItem('vm_entries', JSON.stringify(entries)); }
-function loadLocalCache(){ 
-  const s = localStorage.getItem('vm_entries'); 
-  entries = s ? JSON.parse(s) : []; 
-}
+function loadLocalCache(){ const s = localStorage.getItem('vm_entries'); entries = s ? JSON.parse(s) : []; }
 
-/* ====== FORM ====== */
-const form = document.getElementById('entryForm');
-const priceInput = document.getElementById('price');
-const sellerShareEl = document.getElementById('sellerShare');
-const yourShareEl = document.getElementById('yourShare');
-const saveFeedback = document.getElementById('saveFeedback');
+/* ======== FORM ======== */
+const form=document.getElementById('entryForm');
+const quantityInput=document.getElementById('quantity');
+const sellerShareEl=document.getElementById('sellerShare');
+const yourShareEl=document.getElementById('yourShare');
+const saveFeedback=document.getElementById('saveFeedback');
 
-function computeShares(price){
-  const p = Number(price)||0;
-  return { seller: +(p*0.6).toFixed(2), you: +(p*0.4).toFixed(2) };
+function computeShares(q){ 
+  const price = q * UNIT_PRICE; 
+  return { price, seller: +(price*0.6).toFixed(2), you: +(price*0.4).toFixed(2) }; 
 }
-function updateSharesUI(){
-  const s = computeShares(Number(priceInput.value));
-  sellerShareEl.innerText = formatCurrency(s.seller);
-  yourShareEl.innerText = formatCurrency(s.you);
+function updateSharesUI(){ 
+  const q = Number(quantityInput.value)||0; 
+  const s = computeShares(q); 
+  sellerShareEl.innerText = formatCurrency(s.seller); 
+  yourShareEl.innerText = formatCurrency(s.you); 
 }
-priceInput.addEventListener('input', updateSharesUI);
+quantityInput.addEventListener('input', updateSharesUI);
 
 form.addEventListener('submit',(e)=>{
   e.preventDefault();
-  const buyer = document.getElementById('buyer').value.trim();
-  const seller = document.getElementById('seller').value.trim();
-  const description = document.getElementById('description').value.trim();
-  const price = parseFloat(priceInput.value);
-  if(!buyer || !seller || isNaN(price) || price<0){
-    saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; return;
+  const buyer=document.getElementById('buyer').value.trim();
+  const seller=document.getElementById('seller').value.trim();
+  const quantity = parseInt(quantityInput.value);
+  if(!buyer || !seller || isNaN(quantity) || quantity<1){ 
+    saveFeedback.classList.remove('hidden-el'); 
+    saveFeedback.innerText='Bitte alle Pflichtfelder korrekt ausfüllen.'; 
+    return; 
   }
-  const { seller: sellerShare, you: yourShare } = computeShares(price);
-  const entry = { id:uid(), dateIso:nowIso(), buyer, seller, description, price: +price.toFixed(2), sellerShare, yourShare };
+  const { price, seller: sellerShare, you: yourShare } = computeShares(quantity);
+  const entry = { id:uid(), dateIso:nowIso(), buyer, seller, quantity, price, sellerShare, yourShare };
   entries.unshift(entry);
   saveLocalCache();
-  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Gespeichert.'; setTimeout(()=>saveFeedback.classList.add('hidden-el'),2000);
+  saveFeedback.classList.remove('hidden-el'); saveFeedback.innerText='Gespeichert.';
+  setTimeout(()=>saveFeedback.classList.add('hidden-el'),2000);
   renderOverview(); renderAdminTable(); form.reset(); updateSharesUI();
 });
-document.getElementById('resetForm').addEventListener('click', ()=>{ form.reset(); updateSharesUI(); });
+document.getElementById('resetForm').addEventListener('click',()=>{ form.reset(); updateSharesUI(); });
 
-/* ====== OVERVIEW ====== */
-const entriesList = document.getElementById('entriesList');
-const filterText = document.getElementById('filterText');
+/* ======== OVERVIEW ======== */
+const entriesList=document.getElementById('entriesList');
 function renderOverview(){
   entriesList.innerHTML='';
-  const q = filterText.value.trim().toLowerCase();
-  const visible = entries.filter(en => !q || (en.buyer+' '+en.seller+' '+en.description).toLowerCase().includes(q));
-  if(visible.length===0){ entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
-  visible.forEach(en=>{
-    const el = document.createElement('div');
-    el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
+  if(entries.length===0){ entriesList.innerHTML='<div class="small-muted">Keine Einträge.</div>'; return; }
+  entries.forEach(en=>{
+    const el=document.createElement('div'); el.className='p-4 rounded-md border border-gray-700 flex justify-between items-start';
     el.innerHTML=`
-      <div class="min-w-0">
+      <div>
         <div class="text-sm text-gray-400">${new Date(en.dateIso).toLocaleString()}</div>
         <div class="text-lg font-semibold mt-1">${en.buyer} → ${en.seller}</div>
-        <div class="small-muted mt-1">${(en.description||'').slice(0,200)}</div>
       </div>
       <div class="text-right ml-4">
-        <div class="text-sm small-muted">Preis</div>
+        <div class="small-muted">Preis</div>
         <div class="text-xl font-bold text-blue-400">${formatCurrency(en.price)}</div>
         <div class="small-muted mt-2">Verk: ${formatCurrency(en.sellerShare)} • Du: ${formatCurrency(en.yourShare)}</div>
       </div>
@@ -194,9 +184,8 @@ function renderOverview(){
     entriesList.appendChild(el);
   });
 }
-filterText.addEventListener('input', renderOverview);
 
-/* ====== ADMIN ====== */
+/* ======== ADMIN ======== */
 const adminLoginBtn=document.getElementById('adminLoginBtn');
 const adminPassInput=document.getElementById('adminPass');
 const adminError=document.getElementById('adminError');
@@ -205,63 +194,72 @@ const adminTableBody=document.getElementById('adminTableBody');
 const totalCount=document.getElementById('totalCount');
 const totalRevenue=document.getElementById('totalRevenue');
 
-adminLoginBtn.addEventListener('click', ()=>{
-  if(adminPassInput.value===ADMIN_PASSWORD){
-    adminError.classList.add('hidden-el'); adminPassInput.value='';
-    show(adminContent); renderAdminTable();
-  } else adminError.classList.remove('hidden-el');
+adminLoginBtn.addEventListener('click',()=>{
+  if(adminPassInput.value===ADMIN_PASSWORD){ 
+    adminError.classList.add('hidden-el'); 
+    adminPassInput.value=''; 
+    show(adminContent); 
+    renderAdminTable(); 
+  } else { adminError.classList.remove('hidden-el'); }
 });
 
 function renderAdminTable(){
-  adminTableBody.innerHTML=''; let revenue=0;
-  entries.forEach(en=>{
-    revenue+=Number(en.price||0);
+  adminTableBody.innerHTML=''; 
+  let revenue=0;
+  entries.forEach((en,i)=>{
+    revenue+=en.price;
     const tr=document.createElement('tr'); tr.className='border-t border-gray-800';
     tr.innerHTML=`
-      <td class="p-2 align-top small-muted">${new Date(en.dateIso).toLocaleString()}</td>
-      <td class="p-2 align-top">${en.buyer}</td>
-      <td class="p-2 align-top">${en.seller}</td>
-      <td class="p-2 align-top">${formatCurrency(en.price)}</td>
-      <td class="p-2 align-top">${formatCurrency(en.sellerShare)}</td>
-      <td class="p-2 align-top">${formatCurrency(en.yourShare)}</td>
-      <td class="p-2 align-top small-muted">${(en.description||'')}</td>
+      <td class="p-2 small-muted">${new Date(en.dateIso).toLocaleString()}</td>
+      <td class="p-2">${en.buyer}</td>
+      <td class="p-2">${en.seller}</td>
+      <td class="p-2">${en.quantity}</td>
+      <td class="p-2">${formatCurrency(en.price)}</td>
+      <td class="p-2">${formatCurrency(en.sellerShare)}</td>
+      <td class="p-2">${formatCurrency(en.yourShare)}</td>
+      <td class="p-2">
+        <button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry(${i})">Löschen</button>
+      </td>
     `;
     adminTableBody.appendChild(tr);
   });
   totalCount.innerText=entries.length; totalRevenue.innerText=formatCurrency(revenue);
 }
 
-/* ====== CSV ====== */
+function deleteEntry(index){
+  if(confirm('Eintrag wirklich löschen?')){ entries.splice(index,1); saveLocalCache(); renderAdminTable(); renderOverview(); }
+}
+
+/* ======== CSV ======== */
 function exportCSV(){
   if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
-  const header=['date','buyer','seller','price','sellerShare','yourShare','description'];
+  const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
   const rows=entries.map(e=>[
     `"${new Date(e.dateIso).toLocaleString()}"`,
-    `"${e.buyer.replace(/"/g,'""')}"`,
-    `"${e.seller.replace(/"/g,'""')}"`,
-    e.price, e.sellerShare, e.yourShare,
-    `"${(e.description||'').replace(/"/g,'""')}"`
+    `"${e.buyer}"`,
+    `"${e.seller}"`,
+    e.quantity,
+    e.price,
+    e.sellerShare,
+    e.yourShare
   ].join(','));
   const csv=[header.join(','), ...rows].join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a'); a.href=url; a.download='entries.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
 }
-document.getElementById('exportCsv').addEventListener('click', exportCSV);
+document.getElementById('exportCsv').addEventListener('click',exportCSV);
 
-/* ====== NAVIGATION ====== */
+/* ======== NAVIGATION ======== */
 const newEl=document.getElementById('newEntry');
 const overviewEl=document.getElementById('overview');
 const adminEl=document.getElementById('adminPanel');
-document.getElementById('btnNew').addEventListener('click', ()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
-document.getElementById('btnOverview').addEventListener('click', ()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
-document.getElementById('btnAdmin').addEventListener('click', ()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
+document.getElementById('btnNew').addEventListener('click',()=>{ show(newEl); hide(overviewEl); hide(adminEl); });
+document.getElementById('btnOverview').addEventListener('click',()=>{ hide(newEl); show(overviewEl); hide(adminEl); renderOverview(); });
+document.getElementById('btnAdmin').addEventListener('click',()=>{ hide(newEl); hide(overviewEl); show(adminEl); });
 
-/* ====== INIT ====== */
-loadLocalCache();
-renderOverview();
-renderAdminTable();
-updateSharesUI();
+/* ======== INIT ======== */
+loadLocalCache(); renderOverview(); updateSharesUI();
 </script>
 </body>
 </html>

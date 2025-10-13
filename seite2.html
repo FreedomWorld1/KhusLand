@@ -54,35 +54,32 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
       <h2 class="text-xl font-semibold mb-4 text-purple-300">💰 Neuer Ankauf</h2>
       <form id="entryForm" class="space-y-5">
 
-        <!-- Käufer & Verkäufer -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="label-small">Käufer</label>
-            <input id="buyer" type="text" placeholder="z.B. Max Mustermann" 
+            <input id="buyer" type="text" placeholder="z.B. Max Mustermann"
               class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           </div>
           <div>
             <label class="label-small">Verkäufer</label>
-            <input id="seller" type="text" placeholder="z.B. Dealer X" 
+            <input id="seller" type="text" placeholder="z.B. Dealer X"
               class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required />
           </div>
         </div>
 
-        <!-- Menge & Cash -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="label-small">Menge</label>
-            <input id="quantity" type="number" min="1" step="1" placeholder="z.B. 100"
+            <input id="quantity" type="number" min="1" placeholder="z.B. 100"
               class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" />
           </div>
           <div>
             <label class="label-small">Cash</label>
-            <input id="cash" type="number" min="0" step="0.01" placeholder="z.B. 100000"
+            <input id="cash" type="number" min="0" placeholder="z.B. 100000"
               class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full font-semibold text-green-400 text-base" />
           </div>
         </div>
 
-        <!-- Verkäufer & Käufer Anteile -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
           <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
             <div class="small-muted mb-0.5">Verkäufer (80 %)</div>
@@ -94,19 +91,10 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
           </div>
         </div>
 
-        <!-- Buttons -->
-        <div class="flex flex-wrap gap-3 mt-3">
-          <button type="submit" 
-            class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">
-            Speichern
-          </button>
-          <button type="button" id="resetForm" 
-            class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">
-            Zurücksetzen
-          </button>
+        <div class="flex gap-3 mt-3">
+          <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
+          <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
         </div>
-
-        <div id="saveFeedback" class="small-muted hidden-el mt-2"></div>
       </form>
     </div>
 
@@ -119,35 +107,14 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
     <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
       <h2 class="text-base font-semibold mb-3">Adminbereich (Passwort geschützt)</h2>
       <div id="adminLoginSection" class="mb-5">
-        <input id="adminPass" type="password" placeholder="Admin-Passwort" 
+        <input id="adminPass" type="password" placeholder="Admin-Passwort"
           class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 mb-3"/>
-        <button id="adminLoginBtn" 
+        <button id="adminLoginBtn"
           class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm">Einloggen</button>
         <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">Falsches Passwort</span>
       </div>
       <div id="adminContent" class="hidden-el">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 text-sm">
-          <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
-          <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
-          <button id="exportCsv" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
-        </div>
-        <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
-          <table class="w-full text-left text-xs">
-            <thead class="text-gray-400 bg-gray-800">
-              <tr>
-                <th class="p-2">Datum</th>
-                <th class="p-2">Käufer</th>
-                <th class="p-2">Verkäufer</th>
-                <th class="p-2">Menge</th>
-                <th class="p-2">Cash</th>
-                <th class="p-2">Verk. (80 %)</th>
-                <th class="p-2">Kauf. (20 %)</th>
-                <th class="p-2">Aktion</th>
-              </tr>
-            </thead>
-            <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
-          </table>
-        </div>
+        <p class="small-muted">Admin-Inhalt geladen …</p>
       </div>
     </div>
   </div>
@@ -159,33 +126,47 @@ let entries=[];
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
-function nowIso(){return new Date().toISOString();}
-function uid(){return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,9);}
+function loadLocal(){entries=JSON.parse(localStorage.getItem('kokain_entries')||'[]');}
 function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
-function loadLocal(){const s=localStorage.getItem('kokain_entries');entries=s?JSON.parse(s):[];}
 
+// Menü
 const hamburgerBtn=document.getElementById('hamburgerBtn');
 const hamburgerMenu=document.getElementById('hamburgerMenu');
-hamburgerBtn.addEventListener('click',()=>{hamburgerMenu.classList.toggle('hidden');});
+hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
 
-// 🔥 Aktive Seite farblich markieren
-const currentPage = window.location.pathname.split("/").pop();
+// Aktive Seite hervorheben
+const currentPage=window.location.pathname.split("/").pop();
 if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
 else document.getElementById("linkSeite1").classList.add("active-link");
 
-const form=document.getElementById('entryForm');
+// Bereichsumschaltung
+const btnNew=document.getElementById('btnNew');
+const btnOverview=document.getElementById('btnOverview');
+const btnAdmin=document.getElementById('btnAdmin');
+const newEntry=document.getElementById('newEntry');
+const overview=document.getElementById('overview');
+const adminPanel=document.getElementById('adminPanel');
+
+btnNew.addEventListener('click',()=>{
+  show(newEntry); hide(overview); hide(adminPanel);
+});
+btnOverview.addEventListener('click',()=>{
+  hide(newEntry); show(overview); hide(adminPanel);
+});
+btnAdmin.addEventListener('click',()=>{
+  hide(newEntry); hide(overview); show(adminPanel);
+});
+
+// Cash-Berechnung
 const cashInput=document.getElementById('cash');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
 function updateShares(){
   const c=Number(cashInput.value)||0;
-  const seller=c*0.8, buyer=c*0.2;
-  sellerShareEl.textContent=formatCurrency(seller);
-  yourShareEl.textContent=formatCurrency(buyer);
+  sellerShareEl.textContent=formatCurrency(c*0.8);
+  yourShareEl.textContent=formatCurrency(c*0.2);
 }
 cashInput.addEventListener('input',updateShares);
-
-// ... (Rest bleibt gleich)
 </script>
 </body>
 </html>

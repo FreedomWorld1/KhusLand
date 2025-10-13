@@ -1,7 +1,9 @@
-<!DOCTYPE html><html lang="de"><head>
+<!DOCTYPE html>
+<html lang="de">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="htmlTitle">kingsrow Bestellrechner</title>
+    <title id="htmlTitle">KhusLand Bestellrechner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -111,6 +113,7 @@
             overflow: hidden;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             background-color: #e5e7eb; /* Light gray background */
+            flex-shrink: 0; 
         }
         body.dark .quantity-control {
             background-color: #4B5563; /* Darker background for the entire control in dark mode */
@@ -150,7 +153,23 @@
             color: #f7fafc; /* White text color for input in dark mode */
         }
         /* ENDE NEUE CSS */
-        /* NEUE CSS FÜR DROPDOWN */
+        
+        /* NEUE LAYOUT-REGELN FÜR ARTIKEL-ZEILEN */
+        #categoriesGrid .space-y-3 > div {
+            display: flex;
+            align-items: flex-start; /* Anpassung: Richtet am oberen Rand aus, falls Text umbricht */
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        #categoriesGrid .space-y-3 > div .item-details {
+            flex-grow: 1; /* Lässt den Container den gesamten verfügbaren Platz einnehmen */
+            min-width: 0; /* WICHTIG: Erlaubt dem Flex-Element, kleiner als sein Inhalt zu werden, damit der Text umbricht */
+            word-break: break-word; /* Bricht auch extrem lange Wörter ohne Leerzeichen um */
+        }
+        /* ENDE NEUE LAYOUT-REGELN */
+
+        /* NEUE CSS FÜR DROPDOWN (BLEIBT NUR FÜR DIE EINSTELLUNGEN, WENN VORHANDEN) */
         .dropdown-content {
             display: none;
             position: absolute;
@@ -185,7 +204,7 @@
             </div>
             
             <div class="flex justify-between items-center mb-6 relative">
-                <div class="flex-1 min-w-0">
+                <div class="flex flex-col items-start flex-1 min-w-0">
                     <h4 class="text-xl font-bold text-left text-blue-600 dark:text-blue-400">Bestellseiten</h4>
                     <div class="tabs-container" id="tabsContainer">
                         <div class="tabs-slider" id="tabsSlider"></div>
@@ -199,83 +218,10 @@
 
                 <div class="flex flex-col items-center justify-center flex-1">
                     <img id="headerImage" src="https://via.placeholder.com/150" alt="Header Image" class="rounded-lg shadow-md mb-2" style="width: 150px; height: 150px; object-fit: cover;">
-                    <h2 id="calculatorTitle" class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 whitespace-nowrap">🌴 ITALIANA Bestellrechner 🌴</h2>
+                    <h2 id="calculatorTitle" class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 whitespace-nowrap">🌴 KhusLand Bestellrechner 🌴</h2>
                 </div>
 
-                <div class="flex-1 flex justify-end relative">
-                    <button onclick="toggleDropdown()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg font-bold text-gray-800 dark:text-gray-200 flex items-center">
-                        Unternehmen ⬇️
-                    </button>
-                    <div id="unternehmenDropdown" class="dropdown-content bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 w-72">
-                        <h5 class="font-bold text-gray-700 dark:text-gray-300 mb-2">Unternehmen</h5>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-gray-200 dark:bg-gray-700 rounded-lg p-1 flex items-center justify-between">
-                                <label class="inline-flex items-center text-sm">
-                                    <input type="radio" name="company" value="" checked="" class="form-radio text-blue-600" onchange="berechne()">
-                                    <span class="ml-1 text-gray-700 dark:text-gray-300 font-semibold">Kein Unternehmen</span>
-                                </label>
-                            </div>
-                            
-                            <div class="bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
-                                <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-0.5 text-sm">10/10</h6>
-                                <div class="flex flex-col space-y-0.5 text-sm">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="Tuner" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">Tuner</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
-                                <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-0.5 text-sm">50/50</h6>
-                                <div class="flex flex-col space-y-0.5 text-sm">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="Golf Club" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">Golf Club</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="Casino" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">Casino</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="SD" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">SD</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="SSMC" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">SSMC</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="LSMD" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">LSMD</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-200 dark:bg-gray-700 rounded-lg p-1">
-                                <h6 class="font-medium text-gray-800 dark:text-gray-200 mb-0.5 text-sm">25/25</h6>
-                                <div class="flex flex-col space-y-0.5 text-sm">
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="DDJ" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">DDJ</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="Army" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">Army</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="Ranger" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">Ranger</span>
-                                    </label>
-                                    <label class="inline-flex items-center">
-                                        <input type="radio" name="company" value="Alcatraz" class="form-radio text-blue-600" onchange="berechne()">
-                                        <span class="ml-1 text-gray-700 dark:text-gray-300">Alcatraz</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="flex-1"></div>
             </div>
 
             <div id="calculatorContent">
@@ -285,7 +231,7 @@
                 <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-inner mb-4 flex flex-col space-y-2">
                     <div class="flex justify-between items-center">
                         <div class="font-bold text-lg text-gray-800 dark:text-gray-200 flex items-center">
-                            Grund:�
+                            Grund:&nbsp;
                             <span id="grund" class="text-base font-normal text-gray-700 dark:text-gray-300">Noch nichts berechnet</span>
                         </div>
                         <button onclick="copyText('grund')" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 text-2xl focus:outline-none">📄</button>
@@ -293,7 +239,7 @@
                     <hr class="my-2 border-gray-300 dark:border-gray-600">
                     <div class="flex justify-between items-center">
                         <div class="font-bold text-lg text-gray-800 dark:text-gray-200 flex items-center">
-                            Preis:�
+                            Preis:&nbsp;
                             <span id="preis" class="text-lg font-semibold text-blue-600 dark:text-blue-400">0$</span>
                         </div>
                         <button onclick="copyPriceText()" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600 text-2xl focus:outline-none">📄</button>
@@ -386,7 +332,7 @@
 
         // !!! ERSETZE DIES MIT DEINEN EIGENEN WERTEN VON JSONBIN.IO !!!
         const JSONBIN_MASTER_KEY = '$2a$10$szNDzN.Y6Xwin9HEcbhi/O70xfGZCaX/Kcb8a5lLCCSObE/XysMbq';
-        const JSONBIN_BIN_ID = '68ab4204d0ea881f4062f52a';
+        const JSONBIN_BIN_ID = '68e3b63aae596e708f080453';
         // !!! SICHERHEITSHINWEIS: API-Keys im Frontend sind nicht sicher für Produktion !!!
 
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
@@ -395,19 +341,17 @@
             'Content-Type': 'application/json',
             'X-Bin-Versioning': 'false'
         };
+
+        const ENCODED_PASSWORD = "MTIzIUtSQyExMjM=";
         
-        const companyLimits = {
-            "Golf Club": { maxFood: 50, maxDrink: 50 },
-            "Casino": { maxFood: 50, maxDrink: 50 },
-            "SD": { maxFood: 50, maxDrink: 50 },
-            "Army": { maxFood: 25, maxDrink: 25 },
-            "Ranger": { maxFood: 25, maxDrink: 25 },
-            "Tuner": { maxFood: 10, maxDrink: 10 },
-            "SSMC": { maxFood: 50, maxDrink: 50 },
-            "LSMD": { maxFood: 50, maxDrink: 50 },
-            "Alcatraz": { maxFood: 25, maxDrink: 25 },
-            "DDJ": { maxFood: 25, maxDrink: 25 }
-        };
+        function decodeBase64(str) {
+            // Die atob-Funktion dekodiert Base64 in JavaScript
+            if (typeof window !== 'undefined' && typeof atob === 'function') {
+                return atob(str);
+            }
+            // Fallback für Nicht-Browser-Umgebungen (hier unwahrscheinlich)
+            return ''; 
+        }
 
         const defaultPreise = {
             beluga: { name: 'Beluga Kaviar', price: 300, category: 'SPEISEN', id: 'beluga' },
@@ -438,14 +382,13 @@
         let drinkCategories = ['GETRÄNKE', 'ALKOHOL'];
         let rauchwarenCategories = ['RAUCHWAREN'];
         let miscellaneousCategories = ['PREMIUM'];
-        let customTitle = '🌴 ITALIANA Bestellrechner 🌴';
+        let customTitle = '🌴 KhusLand Bestellrechner 🌴';
         let customImage = 'https://via.placeholder.com/150';
         const itemsPerPerson = 5;
         const numTabs = 5;
         let activeTab = 1;
         let calculatorStates = {};
 
-        const PASSWORD = "0815x0815";
         const DEFAULT_IMAGE_URL = 'https://via.placeholder.com/150';
 
         function showLoading() {
@@ -475,7 +418,7 @@
                     drinkCategories = data.record.drinkCategories || ['GETRÄNKE', 'ALKOHOL'];
                     rauchwarenCategories = data.record.rauchwarenCategories || ['RAUCHWAREN'];
                     miscellaneousCategories = data.record.miscellaneousCategories || ['PREMIUM'];
-                    customTitle = data.record.title || '🌴 ITALIANA Bestellrechner 🌴';
+                    customTitle = data.record.title || '🌴 KhusLand Bestellrechner 🌴';
                     customImage = data.record.image || DEFAULT_IMAGE_URL;
                     console.log("Preise und Kategorien erfolgreich vom Server geladen.");
                 } else {
@@ -486,7 +429,7 @@
                     drinkCategories = ['GETRÄNKE', 'ALKOHOL'];
                     rauchwarenCategories = ['RAUCHWAREN'];
                     miscellaneousCategories = ['PREMIUM'];
-                    customTitle = '🌴 ITALIANA Bestellrechner 🌴';
+                    customTitle = '🌴 KhusLand Bestellrechner 🌴';
                     customImage = DEFAULT_IMAGE_URL;
                 }
             } catch (error) {
@@ -498,7 +441,7 @@
                 drinkCategories = ['GETRÄNKE', 'ALKOHOL'];
                 rauchwarenCategories = ['RAUCHWAREN'];
                 miscellaneousCategories = ['PREMIUM'];
-                customTitle = '🌴 ITALIANA Bestellrechner 🌴';
+                customTitle = '🌴 KhusLand Bestellrechner 🌴';
                 customImage = DEFAULT_IMAGE_URL;
             } finally {
                 hideLoading();
@@ -564,7 +507,7 @@
                     const div = document.createElement('div');
                     div.className = 'flex items-center justify-between';
                     div.innerHTML = `
-                        <div class="flex flex-col items-start"> 
+                        <div class="flex flex-col items-start item-details"> 
                             <label for="${item.id}" class="text-gray-700 dark:text-gray-300">${item.name}</label>
                             <span class="text-sm text-gray-500 dark:text-gray-400">${item.price}$</span>
                         </div>
@@ -590,11 +533,6 @@
                 input.value = currentValue;
                 berechne();
             }
-        }
-
-        function toggleDropdown() {
-            const dropdown = document.getElementById("unternehmenDropdown");
-            dropdown.classList.toggle("show");
         }
 
         function initializeCalculatorStates() {
@@ -650,6 +588,12 @@
             } else {
                 document.getElementById("grund").innerText = "Noch nichts berechnet";
                 document.getElementById("preis").innerText = "0$";
+            }
+            
+            // Personenzahl lädt separat
+            const personCountInput = document.getElementById('personCountInput');
+            if (personCountInput && state) {
+                personCountInput.value = state.personCount || '0';
             }
         }
 
@@ -709,11 +653,6 @@
             const orderedItems = [];
             const miscellaneousItems = [];
             
-            const selectedCompanyInput = document.querySelector('input[name="company"]:checked');
-            const selectedCompany = selectedCompanyInput ? selectedCompanyInput.value : "";
-            const isCompanyOrder = selectedCompany !== "";
-            const companyLimit = companyLimits[selectedCompany];
-
             const personCountInput = document.getElementById('personCountInput');
             const manualPersonCount = parseInt(personCountInput.value) || 0;
 
@@ -751,20 +690,10 @@
             const dateString = `${day}.${month}.`;
 
             if (totalItems > 0 || manualPersonCount > 0) {
-                const overText = [];
-                if (isCompanyOrder) {
-                    if (foodCount > companyLimit.maxFood) {
-                        overText.push(`Essen überschreitet Limit (${foodCount}/${companyLimit.maxFood})!`);
-                    }
-                    if (drinkCount > companyLimit.maxDrink) {
-                        overText.push(`Trinken überschreitet Limit (${drinkCount}/${companyLimit.maxDrink})!`);
-                    }
-                }
-
-                let grundParts = [`KRC | ${dateString}`];
-                if (isCompanyOrder) {
-                    grundParts.push(`Kantine ${selectedCompany}`);
-                } else if (manualPersonCount > 0) {
+                
+                let grundParts = [`KL | ${dateString}`];
+                
+                if (manualPersonCount > 0) {
                     grundParts.push(`${manualPersonCount}P`);
                 } else {
                     const personCount = Math.max(foodCount, drinkCount) > 0 ? Math.ceil(Math.max(foodCount, drinkCount) / itemsPerPerson) : 0;
@@ -786,10 +715,6 @@
                     grundParts.push(categories.join(' & '));
                 }
 
-                if (overText.length > 0) {
-                    grundParts.push(`⚠️${overText.join(' ')}`);
-                }
-                
                 grund = grundParts.join(' | ');
             } else {
                 grund = "Noch nichts berechnet";
@@ -871,7 +796,9 @@
             const passwordInput = document.getElementById('passwordInput');
             const passwordError = document.getElementById('passwordError');
 
-            if (passwordInput.value === PASSWORD) {
+            const DECODED_PASSWORD = decodeBase64(ENCODED_PASSWORD);
+
+            if (passwordInput.value === DECODED_PASSWORD) {
                 passwordError.classList.add('hidden');
                 document.getElementById('passwordSection').classList.add('hidden');
                 document.getElementById('editSection').classList.remove('hidden');
@@ -1042,7 +969,7 @@
                         </label>
                         <label class="inline-flex items-center">
                             <input type="checkbox" data-category="${cat}" data-type="drink" ${isDrink ? 'checked' : ''} onchange="updateCategoryTypes()">
-                            <span class="ml-2 text-sm">Trinken</span>
+                            <span class="ml-2 -sm">Trinken</span>
                         </label>
                         <label class="inline-flex items-center">
                             <input type="checkbox" data-category="${cat}" data-type="rauchwaren" ${isRauchwaren ? 'checked' : ''} onchange="updateCategoryTypes()">
@@ -1284,5 +1211,5 @@
             localStorage.setItem('activeTab', tabNumber);
         };
     </script>
-
-</body></html>
+</body>
+</html>

@@ -73,33 +73,48 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 
     <!-- ADMIN -->
     <div id="adminPanel" class="card p-6 shadow-soft hidden-el">
-      <h2 class="text-lg font-semibold mb-3">Admin-Bereich (Passwort geschützt)</h2>
-      <div id="adminLoginSection" class="mb-4">
-        <input id="adminPass" type="password" placeholder="Admin-Passwort" class="p-2 rounded-md bg-gray-800 border border-gray-700 mr-2" />
-        <button id="adminLoginBtn" class="px-3 py-2 bg-blue-600 rounded-md">Einloggen</button>
-        <span id="adminError" class="text-red-400 ml-3 hidden-el">Falsches Passwort</span>
+      <h2 class="text-lg font-semibold mb-4">Admin-Bereich (Passwort geschützt)</h2>
+
+      <!-- LOGIN-BEREICH -->
+      <div id="adminLoginSection" class="mb-6">
+        <input 
+          id="adminPass" 
+          type="password" 
+          placeholder="Admin-Passwort" 
+          class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+        />
+        <button 
+          id="adminLoginBtn" 
+          class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md font-medium transition-colors shadow-sm mt-2"
+        >
+          Einloggen
+        </button>
+        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center">Falsches Passwort</span>
       </div>
+
+      <!-- ADMIN-INHALT -->
       <div id="adminContent" class="hidden-el">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
           <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0$</span></div>
-          <button id="exportCsv" class="px-3 py-1 bg-blue-600 rounded-md">CSV Export</button>
+          <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
         </div>
-        <div class="overflow-auto max-h-[50vh]">
+
+        <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
           <table class="w-full text-left text-sm">
-            <thead class="text-gray-400">
+            <thead class="text-gray-400 bg-gray-800">
               <tr>
                 <th class="p-2">Datum</th>
                 <th class="p-2">Käufer</th>
                 <th class="p-2">Verkäufer</th>
                 <th class="p-2">Menge</th>
                 <th class="p-2">Preis</th>
-                <th class="p-2">Verkäufer(60%)</th>
-                <th class="p-2">Käufer(40%)</th>
+                <th class="p-2">Verkäufer (60%)</th>
+                <th class="p-2">Käufer (40%)</th>
                 <th class="p-2">Aktion</th>
               </tr>
             </thead>
-            <tbody id="adminTableBody"></tbody>
+            <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
           </table>
         </div>
       </div>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Weed Ankauf - Seite 1</title>
+<title>KhusLand - Weed</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
@@ -17,78 +17,86 @@ input { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
 .active-link { background-color: #16a34a !important; color: #fff !important; font-weight: 600; }
 </style>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+    authDomain: "khusland-b7d13.firebaseapp.com",
+    databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+    projectId: "khusland-b7d13",
+    storageBucket: "khusland-b7d13.firebasestorage.app",
+    messagingSenderId: "69573193613",
+    appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+    measurementId: "G-JSCWR4207G"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+</script>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 <div class="max-w-4xl mx-auto p-6">
-<!-- HEADER -->
-<header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
-<h1 class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf</h1>
-<div class="flex items-center gap-2">
-<button id="btnNew1" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
-<button id="btnOverview1" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
-<button id="btnAdmin1" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
-<div class="relative">
-<button id="hamburgerBtn1" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
-<span class="block h-0.5 bg-gray-100"></span>
-<span class="block h-0.5 bg-gray-100"></span>
-<span class="block h-0.5 bg-gray-100"></span>
-</button>
-<div id="hamburgerMenu1" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
-<a href="./" class="block px-4 py-2 hover:bg-gray-700 active-link">Weed</a>
-<a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
-  <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
 
-</div>
-</div>
+<header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
+<h1 class="text-2xl font-bold text-green-400 tracking-tight">🌿 KhusLand - Weed</h1>
+<div class="flex items-center gap-2">
+<button id="btnNew" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
+<button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+<button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
 </div>
 </header>
-<div id="mainContainer1" class="space-y-5">
+
+<div id="mainContainer" class="space-y-5">
+
 <!-- NEUER ANKAUF -->
-<div id="newEntry1" class="card p-6 shadow-soft">
+<div id="newEntry" class="card p-6 shadow-soft">
 <h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
-<form id="entryForm1" class="space-y-5">
+<form id="entryForm" class="space-y-5">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<input id="buyer1" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-<input id="seller1" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+<input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+<input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-<input id="quantity1" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
-<input id="price1" type="number" min="0" placeholder="Preis" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
+<input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
 <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
 <div class="small-muted mb-0.5">Verkäufer (60%)</div>
-<div id="sellerShare1" class="text-base font-bold text-green-400">0 $</div>
+<div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
 </div>
 <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
 <div class="small-muted mb-0.5">Käufer (40%)</div>
-<div id="yourShare1" class="text-base font-bold text-blue-400">0 $</div>
+<div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
 </div>
 </div>
 <div class="flex gap-3 mt-3">
 <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
-<button type="button" id="resetForm1" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
+<button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
 </div>
 </form>
 </div>
+
 <!-- ÜBERSICHT -->
-<div id="overview1" class="card p-5 shadow-soft hidden-el">
+<div id="overview" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
-<div id="entriesList1" class="space-y-3 max-h-[55vh] overflow-auto"></div>
+<div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
 </div>
+
 <!-- ADMIN -->
-<div id="adminPanel1" class="card p-5 shadow-soft hidden-el">
+<div id="adminPanel" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
-<div id="adminLoginSection1">
-<input id="adminPass1" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
-<button id="adminLoginBtn1" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
-<span id="adminError1" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
+<div id="adminLoginSection">
+<input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
+<button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
+<span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
 </div>
-<div id="adminContent1" class="hidden-el">
+<div id="adminContent" class="hidden-el">
 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-<div class="small-muted">Gesamtanzahl: <span id="totalCount1">0</span></div>
-<div class="small-muted">Gesamtumsatz: <span id="totalRevenue1">0 $</span></div>
-<button id="exportCsv1" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+<div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+<div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
 </div>
 <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
 <table class="w-full text-left text-sm">
@@ -99,158 +107,98 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <th class="p-2">Verkäufer</th>
 <th class="p-2">Menge</th>
 <th class="p-2">Preis</th>
-<th class="p-2">Verkäufer (60%)</th>
-<th class="p-2">Käufer (40%)</th>
-<th class="p-2">Aktion</th>
+<th>Verkäufer (60%)</th>
+<th>Käufer (40%)</th>
 </tr>
 </thead>
-<tbody id="adminTableBody1" class="divide-y divide-gray-800"></tbody>
+<tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
 </table>
 </div>
 </div>
 </div>
+
 </div>
-</div>
+
 <script>
-const ADMIN_PASSWORD1='admin123';
-let entries1=[];
+const ADMIN_PASSWORD='admin123';
+let entries=[];
+
+// Utilities
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
-function uid(){return 'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,9);}
-function nowIso(){return new Date().toISOString();}
-function saveLocal(){localStorage.setItem('weed_entries', JSON.stringify(entries1));}
-function loadLocal(){entries1=JSON.parse(localStorage.getItem('weed_entries')||'[]');}
 
 // Shares update
-const quantityInput1=document.getElementById('quantity1');
-const sellerShareEl1=document.getElementById('sellerShare1');
-const yourShareEl1=document.getElementById('yourShare1');
-function updateShares1(){
-const q=Number(quantityInput1.value)||0;
-const price=q*2500;
-sellerShareEl1.textContent=formatCurrency(price*0.6);
-yourShareEl1.textContent=formatCurrency(price*0.4);
+const quantityInput=document.getElementById('quantity');
+const sellerShareEl=document.getElementById('sellerShare');
+const yourShareEl=document.getElementById('yourShare');
+function updateShares(){
+  const q=Number(quantityInput.value)||0;
+  const price=q*2500;
+  sellerShareEl.textContent=formatCurrency(price*0.6);
+  yourShareEl.textContent=formatCurrency(price*0.4);
 }
-quantityInput1.addEventListener('input',updateShares1);
+quantityInput.addEventListener('input',updateShares);
+
+// Firebase Save
+function saveToFirebase(entry){
+  const newRef = database.ref('weed_entries').push();
+  newRef.set(entry);
+}
+
+// Firebase Load
+function loadFromFirebase(){
+  database.ref('weed_entries').on('value', snapshot => {
+    const data = snapshot.val() || {};
+    entries = Object.values(data);
+    renderOverview();
+    renderAdminTable();
+  });
+}
 
 // Form submit
-document.getElementById('entryForm1').addEventListener('submit',e=>{
-e.preventDefault();
-const buyer=document.getElementById('buyer1').value;
-const seller=document.getElementById('seller1').value;
-const quantity=Number(quantityInput1.value);
-const price=quantity*2500;
-const sellerShare=price*0.6;
-const yourShare=price*0.4;
-entries1.push({buyer,seller,quantity,price,sellerShare,yourShare,date:new Date().toLocaleString()});
-saveLocal();
-e.target.reset();
-updateShares1();
-renderOverview1();
-renderAdminTable1();
-alert('💾 Eintrag gespeichert!');
+document.getElementById('entryForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const buyer=document.getElementById('buyer').value;
+  const seller=document.getElementById('seller').value;
+  const quantity=Number(document.getElementById('quantity').value);
+  const price=quantity*2500;
+  const sellerShare=price*0.6;
+  const yourShare=price*0.4;
+  const entry={buyer,seller,quantity,price,sellerShare,yourShare,date:new Date().toLocaleString()};
+  saveToFirebase(entry);
+  e.target.reset();
+  updateShares();
 });
 
-// Übersicht rendern
-function renderOverview1(){
-const list=document.getElementById('entriesList1');
-list.innerHTML='';
-if(entries1.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
-entries1.forEach(en=>{
-const el=document.createElement('div');
-el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-el.innerHTML=
-`<div class="text-sm text-gray-400 mb-1">${en.date}</div>
-<div class="font-semibold">${en.buyer} → ${en.seller}</div>
-<div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
-<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-list.appendChild(el);
-});
+// Render Übersicht
+function renderOverview(){
+  const list=document.getElementById('entriesList');
+  list.innerHTML='';
+  if(entries.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
+  entries.forEach(en=>{
+    const el=document.createElement('div');
+    el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+    el.innerHTML=
+    `<div class="text-sm text-gray-400 mb-1">${en.date}</div>
+     <div class="font-semibold">${en.buyer} → ${en.seller}</div>
+     <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
+     <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+     <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
+    list.appendChild(el);
+  });
 }
-
-// Admin login & table
-const adminLoginBtn1=document.getElementById('adminLoginBtn1');
-const adminPassInput1=document.getElementById('adminPass1');
-const adminError1=document.getElementById('adminError1');
-const adminTableBody1=document.getElementById('adminTableBody1');
-const totalCount1=document.getElementById('totalCount1');
-const totalRevenue1=document.getElementById('totalRevenue1');
-const exportCsv1=document.getElementById('exportCsv1');
-adminLoginBtn1.addEventListener('click',()=>{
-if(adminPassInput1.value===ADMIN_PASSWORD1){
-adminError1.classList.add('hidden-el');
-show(document.getElementById('adminContent1'));
-renderAdminTable1();
-} else { adminError1.classList.remove('hidden-el'); }
-});
-function renderAdminTable1(){
-adminTableBody1.innerHTML='';
-let revenue=0;
-entries1.forEach((en,i)=>{
-revenue+=en.price;
-const tr=document.createElement('tr');
-tr.className='border-t border-gray-800';
-tr.innerHTML=
-`<td class="p-2 small-muted">${en.date}</td>
-<td class="p-2">${en.buyer}</td>
-<td class="p-2">${en.seller}</td>
-<td class="p-2">${en.quantity}</td>
-<td class="p-2">${formatCurrency(en.price)}</td>
-<td class="p-2">${formatCurrency(en.sellerShare)}</td>
-<td class="p-2">${formatCurrency(en.yourShare)}</td>
-<td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry1(${i})">Löschen</button></td>`;
-adminTableBody1.appendChild(tr);
-});
-totalCount1.innerText=entries1.length;
-totalRevenue1.innerText=formatCurrency(revenue);
-}
-function deleteEntry1(index){
-if(confirm('Eintrag wirklich löschen?')){
-entries1.splice(index,1);
-saveLocal();
-renderAdminTable1();
-renderOverview1();
-}
-}
-
-// CSV Export
-exportCsv1.addEventListener('click',()=>{
-if(entries1.length===0) return alert('Keine Einträge zum Exportieren.');
-const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
-const rows=entries1.map(e=>[
-`${e.date}`,`${e.buyer}`,`${e.seller}`,e.quantity,e.price,e.sellerShare,e.yourShare
-].join(','));
-const csv=[header.join(','),...rows].join('\n');
-const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-const url=URL.createObjectURL(blob);
-const a=document.createElement('a');
-a.href=url;
-a.download='entries_weed.csv';
-document.body.appendChild(a);
-a.click();
-URL.revokeObjectURL(url);
-a.remove();
-});
 
 // Panels toggle
-const newEl1=document.getElementById('newEntry1');
-const overviewEl1=document.getElementById('overview1');
-const adminEl1=document.getElementById('adminPanel1');
-document.getElementById('btnNew1').addEventListener('click',()=>{show(newEl1); hide(overviewEl1); hide(adminEl1);});
-document.getElementById('btnOverview1').addEventListener('click',()=>{hide(newEl1); show(overviewEl1); hide(adminEl1); renderOverview1();});
-document.getElementById('btnAdmin1').addEventListener('click',()=>{hide(newEl1); hide(overviewEl1); show(adminEl1);});
+const newEl=document.getElementById('newEntry');
+const overviewEl=document.getElementById('overview');
+const adminEl=document.getElementById('adminPanel');
+document.getElementById('btnNew').addEventListener('click',()=>{show(newEl); hide(overviewEl); hide(adminEl);});
+document.getElementById('btnOverview').addEventListener('click',()=>{hide(newEl); show(overviewEl); hide(adminEl); renderOverview();});
+document.getElementById('btnAdmin').addEventListener('click',()=>{hide(newEl); hide(overviewEl); show(adminEl);});
 
-// Hamburger
-const hamburgerBtn1=document.getElementById('hamburgerBtn1');
-const hamburgerMenu1=document.getElementById('hamburgerMenu1');
-hamburgerBtn1.addEventListener('click',()=>hamburgerMenu1.classList.toggle('hidden'));
-
-// Init
-loadLocal();
-updateShares1();
-renderOverview1();
+// Load initial data
+loadFromFirebase();
 </script>
 </body>
 </html>

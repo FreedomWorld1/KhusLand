@@ -132,7 +132,6 @@ messagingSenderId: "69573193613",
 appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
 measurementId: "G-JSCWR4207G"
 };
-
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase(app);
@@ -141,12 +140,12 @@ const entriesRef = ref(db,'kokain_entries');
 const ADMIN_PASSWORD='admin456';
 let entries=[];
 
-// Hilfsfunktionen
+// Funktionen
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
-function formatDate(d){ 
-  const dt=new Date(d);
+function formatDate(d){
+  const dt = new Date(d);
   return `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}:${String(dt.getSeconds()).padStart(2,'0')}`;
 }
 
@@ -186,6 +185,75 @@ document.getElementById('entryForm').addEventListener('submit', async e=>{
 e.preventDefault();
 const buyer=document.getElementById('buyer').value;
 const seller=document.getElementById('seller').value;
-const cash=Number(document.getElementById('cash').value);
-const quantity=Number(document.getElementById('quantity').value);
+const quantity=Number(document.getElementById('quantity').value)||0;
+const cash=Number(document.getElementById('cash').value)||0;
 const sellerShare=cash*0.8;
+const yourShare=cash*0.2;
+const entry={buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toISOString()};
+await push(entriesRef, entry);
+e.target.reset();
+updateShares();
+});
+
+// Zurücksetzen
+document.getElementById('resetForm').addEventListener('click',()=>{
+document.getElementById('entryForm').reset();
+updateShares();
+});
+
+// Echtzeit Listener
+onValue(entriesRef,snapshot=>{
+entries=[];
+snapshot.forEach(childSnap=>{
+  const data=childSnap.val();
+  data.key=childSnap.key;
+  entries.push(data);
+});
+// Neueste oben
+entries.sort((a,b)=>new Date(b.date)-new Date(a.date));
+renderOverview();
+renderAdminTable();
+});
+
+// Übersicht rendern
+const entriesList=document.getElementById('entriesList');
+function renderOverview(){
+entriesList.innerHTML='';
+if(entries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
+entries.forEach(en=>{
+const el=document.createElement('div');
+el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+el.innerHTML=`<div class="text-sm text-gray-400 mb-1">${formatDate(en.date)}</div>
+<div class="font-semibold">${en.buyer} → ${en.seller}</div>
+<div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
+<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
+entriesList.appendChild(el);
+});
+}
+
+// Adminbereich
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminPassInput=document.getElementById('adminPass');
+const adminError=document.getElementById('adminError');
+const adminTableBody=document.getElementById('adminTableBody');
+const totalCount=document.getElementById('totalCount');
+const totalRevenue=document.getElementById('totalRevenue');
+const exportCsv=document.getElementById('exportCsv');
+
+adminLoginBtn.addEventListener('click',()=>{
+if(adminPassInput.value===ADMIN_PASSWORD){
+adminError.classList.add('hidden-el');
+show(document.getElementById('adminContent'));
+renderAdminTable();
+}else{
+adminError.classList.remove('hidden-el');
+}
+});
+
+function renderAdminTable(){
+adminTableBody.innerHTML='';
+let revenue=0;
+entries.forEach(en=>{
+  revenue+=en.yourShare;
+  const tr=document.createElement

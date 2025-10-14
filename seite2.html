@@ -34,9 +34,9 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <span class="block h-0.5 bg-gray-100"></span>
 <span class="block h-0.5 bg-gray-100"></span>
 </button>
-<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-green-800 border border-gray-700 rounded-md shadow-lg z-50">
 <a href="./" class="block px-4 py-2 hover:bg-gray-700">Weed</a>
-<a href="seite2.html" id="linkSeite2" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
+<a href="seite2.html" id="linkSeite2" class="block px-4 py-2 hover:bg-gray-700 active-link">Kokain</a>
 <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
 </div>
 </div>
@@ -121,7 +121,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-// Firebase Konfiguration
+// Firebase
 const firebaseConfig = {
 apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
 authDomain: "khusland-b7d13.firebaseapp.com",
@@ -141,10 +141,14 @@ const entriesRef = ref(db,'kokain_entries');
 const ADMIN_PASSWORD='admin456';
 let entries=[];
 
-// Utility
+// Hilfsfunktionen
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
+function formatDate(d){ 
+  const dt=new Date(d);
+  return `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}:${String(dt.getSeconds()).padStart(2,'0')}`;
+}
 
 // Hamburger
 const hamburgerBtn=document.getElementById('hamburgerBtn');
@@ -170,9 +174,9 @@ const cashInput=document.getElementById('cash');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
 function updateShares(){ 
-const c=Number(cashInput.value)||0;
-sellerShareEl.textContent=formatCurrency(c*0.8);
-yourShareEl.textContent=formatCurrency(c*0.2);
+  const c=Number(cashInput.value)||0;
+  sellerShareEl.textContent=formatCurrency(c*0.8);
+  yourShareEl.textContent=formatCurrency(c*0.2);
 }
 cashInput.addEventListener('input',updateShares);
 updateShares();
@@ -185,95 +189,3 @@ const seller=document.getElementById('seller').value;
 const cash=Number(document.getElementById('cash').value);
 const quantity=Number(document.getElementById('quantity').value);
 const sellerShare=cash*0.8;
-const yourShare=cash*0.2;
-const entry={buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()};
-await push(entriesRef,entry);
-e.target.reset();
-updateShares();
-});
-
-// Zurücksetzen
-document.getElementById('resetForm').addEventListener('click',()=>{document.getElementById('entryForm').reset(); updateShares();});
-
-// Echtzeit Listener
-onValue(entriesRef,snapshot=>{
-entries=[];
-snapshot.forEach(childSnap=>{
-const data=childSnap.val();
-data.key=childSnap.key;
-entries.push(data);
-});
-renderOverview();
-renderAdminTable();
-});
-
-// Übersicht rendern
-const entriesList=document.getElementById('entriesList');
-function renderOverview(){
-entriesList.innerHTML='';
-if(entries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
-entries.forEach(en=>{
-const el=document.createElement('div');
-el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-el.innerHTML=`
-<div class="text-sm text-gray-400 mb-1">${en.date}</div>
-<div class="font-semibold">${en.buyer} → ${en.seller}</div>
-<div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
-<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-entriesList.appendChild(el);
-});
-}
-
-// Adminbereich
-const adminLoginBtn=document.getElementById('adminLoginBtn');
-const adminPassInput=document.getElementById('adminPass');
-const adminError=document.getElementById('adminError');
-const adminTableBody=document.getElementById('adminTableBody');
-const totalCount=document.getElementById('totalCount');
-const totalRevenue=document.getElementById('totalRevenue');
-const exportCsv=document.getElementById('exportCsv');
-
-adminLoginBtn.addEventListener('click',()=>{
-if(adminPassInput.value===ADMIN_PASSWORD){ adminError.classList.add('hidden-el'); show(document.getElementById('adminContent')); renderAdminTable(); }
-else adminError.classList.remove('hidden-el');
-});
-
-function renderAdminTable(){
-adminTableBody.innerHTML='';
-let revenue=0;
-entries.forEach(en=>{
-revenue+=en.yourShare;
-const tr=document.createElement('tr');
-tr.className='border-t border-gray-800';
-tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
-<td class="p-2">${en.buyer}</td>
-<td class="p-2">${en.seller}</td>
-<td class="p-2">${en.quantity}</td>
-<td class="p-2">${formatCurrency(en.cash)}</td>
-<td class="p-2">${formatCurrency(en.sellerShare)}</td>
-<td class="p-2">${formatCurrency(en.yourShare)}</td>
-<td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
-adminTableBody.appendChild(tr);
-});
-totalCount.innerText = entries.length;
-totalRevenue.innerText = formatCurrency(revenue);
-}
-
-// Löschen
-window.deleteEntry=function(key){ if(confirm('Eintrag wirklich löschen?')){ remove(ref(db,'kokain_entries/'+key)); }}
-
-// CSV Export
-exportCsv.addEventListener('click',()=>{
-if(entries.length===0){alert('Keine Einträge zum Exportieren.'); return;}
-const header=['date','buyer','seller','quantity','cash','sellerShare','yourShare'];
-const rows=entries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.cash,e.sellerShare,e.yourShare].join(','));
-const csv=[header.join(','),...rows].join('\n');
-const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-const url=URL.createObjectURL(blob);
-const a=document.createElement('a');
-a.href=url; a.download='entries_kokain.csv'; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-});
-</script>
-</body>
-</html>

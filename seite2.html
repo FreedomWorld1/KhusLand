@@ -97,8 +97,30 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 </div>
 </div>
 
-<!-- EXISTIERENDES SCRIPT 1 -->
-<script>
+<!-- EXISTIERENDES SCRIPT 1 + Firebase Cloud Integration -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+import { getDatabase, ref, push, set, onValue } 
+from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+  authDomain: "khusland-b7d13.firebaseapp.com",
+  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+  projectId: "khusland-b7d13",
+  storageBucket: "khusland-b7d13.firebasestorage.app",
+  messagingSenderId: "69573193613",
+  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+  measurementId: "G-JSCWR4207G"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app); // Realtime Database
+
+// Alle bisherigen Funktionen aus Script 1
 const ADMIN_PASSWORD='admin456';
 let entries=[];
 
@@ -132,22 +154,40 @@ btnAdmin.addEventListener('click',()=>{hide(newEntry);hide(overview);show(adminP
 function loadLocal(){entries=JSON.parse(localStorage.getItem('kokain_entries')||'[]');}
 function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
 
+// Firebase: Einträge auslesen
+const entriesRef = ref(db, 'kokain_entries');
+onValue(entriesRef, (snapshot)=>{
+  const data = snapshot.val();
+  entries = data ? Object.values(data) : [];
+  renderOverview();
+  renderAdminEntries();
+});
+
 // Eintrag speichern
-document.getElementById('entryForm').addEventListener('submit',e=>{
+document.getElementById('entryForm').addEventListener('submit', e=>{
   e.preventDefault();
-  const buyer=document.getElementById('buyer').value;
-  const seller=document.getElementById('seller').value;
-  const cash=Number(document.getElementById('cash').value);
-  const quantity=Number(document.getElementById('quantity').value);
-  const sellerShare=cash*0.8;
-  const yourShare=cash*0.2;
-  entries.push({buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()});
+  const buyer = document.getElementById('buyer').value;
+  const seller = document.getElementById('seller').value;
+  const cash = Number(document.getElementById('cash').value);
+  const quantity = Number(document.getElementById('quantity').value);
+  const sellerShare = cash*0.8;
+  const yourShare = cash*0.2;
+
+  const newEntry = {buyer, seller, quantity, cash, sellerShare, yourShare, date: new Date().toISOString()};
+
+  // Lokal speichern
+  entries.push(newEntry);
   saveLocal();
+
+  // Firebase speichern
+  const newEntryRef = push(ref(db, 'kokain_entries'));
+  set(newEntryRef, newEntry);
+
   e.target.reset();
   updateShares();
   renderOverview();
   renderAdminEntries();
-  alert("💾 Eintrag gespeichert!");
+  alert("💾 Eintrag gespeichert und in Firebase hochgeladen!");
 });
 
 // Übersicht rendern
@@ -156,94 +196,4 @@ function renderOverview(){
   list.innerHTML='';
   if(entries.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>';return;}
   entries.forEach(en=>{
-    const el=document.createElement('div'); 
-    el.className='p-3 rounded-md bg-gray-800 border border-gray-700'; 
-    el.innerHTML=`<div class="text-sm text-gray-400 mb-1">${en.date}</div>
-      <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
-      <div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
-      <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-      <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-    list.appendChild(el);
-  });
-}
-
-// Admin-Einträge rendern
-function renderAdminEntries(){ 
-  const container = document.getElementById('adminEntries'); 
-  container.innerHTML = ''; 
-  if(entries.length === 0){ container.innerHTML = '<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return; }
-  let totalCash=0; 
-  entries.forEach((en, index) => { 
-    totalCash+=en.cash; 
-    const el = document.createElement('div'); 
-    el.className = 'p-3 rounded-md bg-gray-800 border border-gray-700 flex justify-between items-center'; 
-    el.innerHTML = `<div>
-      <div class="text-sm text-gray-400 mb-1">${en.date}</div>
-      <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
-      <div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
-      <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-      <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
-      </div>
-      <button data-index="${index}" class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded-md btn text-sm">Löschen</button>`;
-    container.appendChild(el); 
-  }); 
-  document.getElementById('totalCount').textContent = entries.length; 
-  document.getElementById('totalRevenue').textContent = formatCurrency(totalCash); 
-  container.querySelectorAll('button').forEach(btn => { 
-    btn.addEventListener('click', () => { 
-      const idx = btn.getAttribute('data-index'); 
-      entries.splice(idx, 1); 
-      saveLocal(); 
-      renderAdminEntries(); 
-      renderOverview(); 
-    }); 
-  });
-}
-
-// Admin login
-document.getElementById('adminLoginBtn').addEventListener('click',()=>{
-  const input=document.getElementById('adminPass').value;
-  const err=document.getElementById('adminError');
-  const cont=document.getElementById('adminContent');
-  if(input===ADMIN_PASSWORD){ err.classList.add('hidden-el'); show(cont); renderAdminEntries(); } 
-  else err.classList.remove('hidden-el'); 
-});
-
-// Cash Berechnung
-const cashInput=document.getElementById('cash'); 
-const sellerShareEl=document.getElementById('sellerShare'); 
-const yourShareEl=document.getElementById('yourShare'); 
-function updateShares(){ 
-  const c=Number(cashInput.value)||0; 
-  sellerShareEl.textContent=formatCurrency(c*0.8); 
-  yourShareEl.textContent=formatCurrency(c*0.2); 
-} 
-cashInput.addEventListener('input',updateShares); 
-
-// Init
-loadLocal(); 
-updateShares();
-</script>
-
-<!-- NEU: Firebase Script -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-    authDomain: "khusland-b7d13.firebaseapp.com",
-    databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-    projectId: "khusland-b7d13",
-    storageBucket: "khusland-b7d13.firebasestorage.app",
-    messagingSenderId: "69573193613",
-    appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-    measurementId: "G-JSCWR4207G"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-
-</body>
-</html>
+    const el=document

@@ -15,6 +15,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 .hidden-el { display: none; }
 input { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
+.bg-scarface { background-color: #000 !important; }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
@@ -132,7 +133,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-// Firebase Config
 const firebaseConfig = {
 apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
 authDomain: "khusland-b7d13.firebaseapp.com",
@@ -161,7 +161,6 @@ function formatDate(d){
   return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
-// Hamburger
 document.getElementById('hamburgerBtn').addEventListener('click',()=>document.getElementById('hamburgerMenu').classList.toggle('hidden'));
 
 // Dropdown
@@ -177,6 +176,7 @@ weedMenu.querySelectorAll('a').forEach(a=>{
         updateShares();
         renderOverview();
         renderAdminTable();
+        updateBackgrounds();
     });
 });
 function updateWeedMenu(){
@@ -194,22 +194,39 @@ function updateWeedMenu(){
 }
 
 // Tabs
+const newEntryDiv = document.getElementById('newEntry');
+const overviewDiv = document.getElementById('overview');
+const adminDiv = document.getElementById('adminPanel');
+
 document.getElementById('btnNew').addEventListener('click',()=>{
-    show(document.getElementById('newEntry'));
-    hide(document.getElementById('overview'));
-    hide(document.getElementById('adminPanel'));
+    show(newEntryDiv);
+    hide(overviewDiv);
+    hide(adminDiv);
 });
 document.getElementById('btnOverview').addEventListener('click',()=>{
-    hide(document.getElementById('newEntry'));
-    show(document.getElementById('overview'));
-    hide(document.getElementById('adminPanel'));
+    hide(newEntryDiv);
+    show(overviewDiv);
+    hide(adminDiv);
     renderOverview();
+    updateBackgrounds();
 });
 document.getElementById('btnAdmin').addEventListener('click',()=>{
-    hide(document.getElementById('newEntry'));
-    hide(document.getElementById('overview'));
-    show(document.getElementById('adminPanel'));
+    hide(newEntryDiv);
+    hide(overviewDiv);
+    show(adminDiv);
+    updateBackgrounds();
 });
+
+// Update Background for ScarFace
+function updateBackgrounds(){
+    if(currentWeedPage==='scarface'){
+        overviewDiv.classList.add('bg-scarface');
+        adminDiv.classList.add('bg-scarface');
+    } else {
+        overviewDiv.classList.remove('bg-scarface');
+        adminDiv.classList.remove('bg-scarface');
+    }
+}
 
 // Shares
 const quantityInput=document.getElementById('quantity');

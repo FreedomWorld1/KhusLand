@@ -7,7 +7,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
-.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; transition: all 0.3s ease; }
 .shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
 .small-muted { color: #9ca3af; font-size: 0.85rem; }
 .btn { transition: all .15s ease; font-size: 0.9rem; cursor:pointer; }
@@ -61,87 +61,65 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <!-- NEUER ANKAUF -->
 <div id="newEntry" class="card p-6 shadow-soft">
 <h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
-<form id="entryForm" class="space-y-5">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-<input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-<input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-<div id="sellerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-<div class="small-muted mb-0.5" id="sellerLabel">Verkäufer (60%)</div>
-<div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
-</div>
-<div id="buyerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-<div class="small-muted mb-0.5" id="buyerLabel">Käufer (40%)</div>
-<div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
-</div>
-</div>
-<div class="flex gap-3 mt-3">
-<button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
-<button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
-</div>
-</form>
+<p class="text-sm text-gray-400">Hier kommt dein Formular oder Logik hin.</p>
 </div>
 
 <!-- ÜBERSICHT -->
 <div id="overview" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
-<div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
+<p class="text-sm text-gray-400">Hier erscheinen deine gespeicherten Daten.</p>
 </div>
 
 <!-- ADMIN -->
 <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
-<div id="adminLoginSection">
-<input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
-<button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
-<span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
-</div>
-<div id="adminContent" class="hidden-el">
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-<div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
-<div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
-<button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
-</div>
-<div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
-<table class="w-full text-left text-sm">
-<thead class="text-gray-400 bg-gray-800">
-<tr>
-<th class="p-2">Datum</th>
-<th class="p-2">Käufer</th>
-<th class="p-2">Verkäufer</th>
-<th class="p-2">Menge</th>
-<th class="p-2">Preis</th>
-<th class="p-2">Verkäufer</th>
-<th class="p-2">Käufer</th>
-<th class="p-2">Aktion</th>
-</tr>
-</thead>
-<tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
-</table>
-</div>
-</div>
+<p class="text-sm text-gray-400">Hier wird der Admin-Content angezeigt.</p>
 </div>
 
 </div>
 
 <script>
-// --- Dropdown-Menü Verhalten ---
-const weedBtn = document.getElementById('weedBtn');
-const weedMenu = document.getElementById('weedMenu');
 let currentWeedPage = 'weed';
 
+// Hamburger Menü öffnen/schließen
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const hamburgerMenu = document.getElementById('hamburgerMenu');
+hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
+
+// Tabs
+const newEntry = document.getElementById('newEntry');
+const overview = document.getElementById('overview');
+const adminPanel = document.getElementById('adminPanel');
+
+document.getElementById('btnNew').addEventListener('click',()=>{
+  newEntry.classList.remove('hidden-el');
+  overview.classList.add('hidden-el');
+  adminPanel.classList.add('hidden-el');
+});
+
+document.getElementById('btnOverview').addEventListener('click',()=>{
+  overview.classList.remove('hidden-el');
+  newEntry.classList.add('hidden-el');
+  adminPanel.classList.add('hidden-el');
+});
+
+document.getElementById('btnAdmin').addEventListener('click',()=>{
+  adminPanel.classList.remove('hidden-el');
+  newEntry.classList.add('hidden-el');
+  overview.classList.add('hidden-el');
+});
+
+// Dropdown
+const weedBtn = document.getElementById('weedBtn');
+const weedMenu = document.getElementById('weedMenu');
 weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
 
 weedMenu.querySelectorAll('a').forEach(a=>{
   a.addEventListener('click', e=>{
     e.preventDefault();
     currentWeedPage = a.dataset.page;
-    weedMenu.classList.add('hidden');
     updateWeedMenu();
+    weedMenu.classList.add('hidden');
     updateBackgrounds();
   });
 });
@@ -157,9 +135,9 @@ function updateWeedMenu(){
   weedBtn.textContent = currentWeedPage==='weed'?'Weed ▾':'ScarFace ▾';
 }
 
-// --- Hintergrund Schwarz bei ScarFace ---
+// Schwarzfärbung für ScarFace
 function updateBackgrounds(){
-  const panels = [document.getElementById('newEntry'), document.getElementById('overview'), document.getElementById('adminPanel')];
+  const panels = [newEntry, overview, adminPanel];
   panels.forEach(p=>{
     if(currentWeedPage==='scarface'){
       p.classList.add('bg-scarface');

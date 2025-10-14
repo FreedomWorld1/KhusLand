@@ -55,7 +55,6 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
             <input id="quantity1" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
-            <input id="price1" type="number" min="0" placeholder="Preis" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
             <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
@@ -102,7 +101,6 @@
                   <th class="p-2">Käufer</th>
                   <th class="p-2">Verkäufer</th>
                   <th class="p-2">Menge</th>
-                  <th class="p-2">Preis</th>
                   <th class="p-2">Verkäufer (60%)</th>
                   <th class="p-2">Käufer (40%)</th>
                   <th class="p-2">Aktion</th>
@@ -145,6 +143,13 @@
     function hide(el){el.classList.add('hidden-el');}
     function formatCurrency(n){return Math.round(n)+' $';}
 
+    // Datumformat TT.MM.JJJJ HH:MM:SS
+    function formatDate(d){
+      const date = new Date(d);
+      const pad = n => n.toString().padStart(2,'0');
+      return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    }
+
     // Shares update
     const quantityInput1=document.getElementById('quantity1');
     const sellerShareEl1=document.getElementById('sellerShare1');
@@ -166,29 +171,24 @@
       const price=quantity*2500;
       const sellerShare=price*0.6;
       const yourShare=price*0.4;
-      const entry = {buyer,seller,quantity,price,sellerShare,yourShare,date:new Date().toLocaleString()};
-
-      // Firebase speichern
+      const entry = {buyer,seller,quantity,price,sellerShare,yourShare,date:new Date().toISOString()};
       await push(entriesRef, entry);
-
-      // Formular zurücksetzen
       e.target.reset();
       updateShares1();
     });
 
-    // Echtzeit-Listener für Firebase, lädt immer alles
+    // Echtzeit-Listener
     onValue(entriesRef, snapshot => {
       entries1 = [];
       snapshot.forEach(childSnap => {
         const data = childSnap.val();
-        data.key = childSnap.key; // Key für Löschen
+        data.key = childSnap.key;
         entries1.push(data);
       });
       renderOverview1();
       renderAdminTable1();
     });
 
-    // Übersicht rendern
     const entriesList1=document.getElementById('entriesList1');
     function renderOverview1(){
       entriesList1.innerHTML='';
@@ -196,97 +196,8 @@
         entriesList1.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>';
         return;
       }
-      entries1.forEach(en=>{
+      // Neueste oben
+      const sorted = [...entries1].sort((a,b)=>new Date(b.date)-new Date(a.date));
+      sorted.forEach(en=>{
         const el=document.createElement('div');
-        el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-        el.innerHTML=`
-          <div class="text-sm text-gray-400 mb-1">${en.date}</div>
-          <div class="font-semibold">${en.buyer} → ${en.seller}</div>
-          <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
-          <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-          <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-        entriesList1.appendChild(el);
-      });
-    }
-
-    // Admin login & table
-    const adminLoginBtn1=document.getElementById('adminLoginBtn1');
-    const adminPassInput1=document.getElementById('adminPass1');
-    const adminError1=document.getElementById('adminError1');
-    const adminTableBody1=document.getElementById('adminTableBody1');
-    const totalCount1=document.getElementById('totalCount1');
-    const totalRevenue1=document.getElementById('totalRevenue1');
-    const exportCsv1=document.getElementById('exportCsv1');
-
-    adminLoginBtn1.addEventListener('click',()=>{
-      if(adminPassInput1.value===ADMIN_PASSWORD1){
-        adminError1.classList.add('hidden-el');
-        show(document.getElementById('adminContent1'));
-        renderAdminTable1();
-      } else {
-        adminError1.classList.remove('hidden-el');
-      }
-    });
-
-    function renderAdminTable1(){
-  adminTableBody1.innerHTML='';
-  let revenue=0; // <-- jetzt für 40%
-  entries1.forEach((en,i)=>{
-    revenue += en.yourShare; // <-- SUMME der 40% Anteile der Käufer
-    const tr=document.createElement('tr');
-    tr.className='border-t border-gray-800';
-    tr.innerHTML=`
-      <td class="p-2 small-muted">${en.date}</td>
-      <td class="p-2">${en.buyer}</td>
-      <td class="p-2">${en.seller}</td>
-      <td class="p-2">${en.quantity}</td>
-      <td class="p-2">${formatCurrency(en.price)}</td>
-      <td class="p-2">${formatCurrency(en.sellerShare)}</td>
-      <td class="p-2">${formatCurrency(en.yourShare)}</td>
-      <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry1('${en.key}')">Löschen</button></td>`;
-    adminTableBody1.appendChild(tr);
-  });
-  totalCount1.innerText = entries1.length;
-  totalRevenue1.innerText = formatCurrency(revenue); // <-- zeigt jetzt 40% an
-}
-    window.deleteEntry1 = function(key){
-      if(confirm('Eintrag wirklich löschen?')){
-        remove(ref(db,'weed_entries/'+key));
-      }
-    }
-
-    // CSV Export
-    exportCsv1.addEventListener('click',()=>{
-      if(entries1.length===0) return alert('Keine Einträge zum Exportieren.');
-      const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
-      const rows=entries1.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare].join(','));
-      const csv=[header.join(','),...rows].join('\n');
-      const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');
-      a.href=url;
-      a.download='entries_weed.csv';
-      document.body.appendChild(a);
-      a.click();
-      URL.revokeObjectURL(url);
-      a.remove();
-    });
-
-    // Panels toggle
-    const newEl1=document.getElementById('newEntry1');
-    const overviewEl1=document.getElementById('overview1');
-    const adminEl1=document.getElementById('adminPanel1');
-    document.getElementById('btnNew1').addEventListener('click',()=>{show(newEl1); hide(overviewEl1); hide(adminEl1);});
-    document.getElementById('btnOverview1').addEventListener('click',()=>{hide(newEl1); show(overviewEl1); hide(adminEl1); renderOverview1();});
-    document.getElementById('btnAdmin1').addEventListener('click',()=>{hide(newEl1); hide(overviewEl1); show(adminEl1);});
-
-    // Hamburger
-    const hamburgerBtn1=document.getElementById('hamburgerBtn1');
-    const hamburgerMenu1=document.getElementById('hamburgerMenu1');
-    hamburgerBtn1.addEventListener('click',()=>hamburgerMenu1.classList.toggle('hidden'));
-
-    // Init
-    updateShares1();
-  </script>
-</body>
-</html>
+        el.className='p-3 rounded-md

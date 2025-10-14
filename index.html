@@ -229,27 +229,26 @@
     });
 
     function renderAdminTable1(){
-      adminTableBody1.innerHTML='';
-      let revenue=0;
-      entries1.forEach((en,i)=>{
-        revenue+=en.price;
-        const tr=document.createElement('tr');
-        tr.className='border-t border-gray-800';
-        tr.innerHTML=`
-          <td class="p-2 small-muted">${en.date}</td>
-          <td class="p-2">${en.buyer}</td>
-          <td class="p-2">${en.seller}</td>
-          <td class="p-2">${en.quantity}</td>
-          <td class="p-2">${formatCurrency(en.price)}</td>
-          <td class="p-2">${formatCurrency(en.sellerShare)}</td>
-          <td class="p-2">${formatCurrency(en.yourShare)}</td>
-          <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry1('${en.key}')">Löschen</button></td>`;
-        adminTableBody1.appendChild(tr);
-      });
-      totalCount1.innerText=entries1.length;
-      totalRevenue1.innerText=formatCurrency(revenue);
-    }
-
+  adminTableBody1.innerHTML='';
+  let revenue=0; // <-- jetzt für 40%
+  entries1.forEach((en,i)=>{
+    revenue += en.yourShare; // <-- SUMME der 40% Anteile der Käufer
+    const tr=document.createElement('tr');
+    tr.className='border-t border-gray-800';
+    tr.innerHTML=`
+      <td class="p-2 small-muted">${en.date}</td>
+      <td class="p-2">${en.buyer}</td>
+      <td class="p-2">${en.seller}</td>
+      <td class="p-2">${en.quantity}</td>
+      <td class="p-2">${formatCurrency(en.price)}</td>
+      <td class="p-2">${formatCurrency(en.sellerShare)}</td>
+      <td class="p-2">${formatCurrency(en.yourShare)}</td>
+      <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry1('${en.key}')">Löschen</button></td>`;
+    adminTableBody1.appendChild(tr);
+  });
+  totalCount1.innerText = entries1.length;
+  totalRevenue1.innerText = formatCurrency(revenue); // <-- zeigt jetzt 40% an
+}
     window.deleteEntry1 = function(key){
       if(confirm('Eintrag wirklich löschen?')){
         remove(ref(db,'weed_entries/'+key));

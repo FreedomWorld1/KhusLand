@@ -132,6 +132,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
+// ---------------- Firebase ----------------
 const firebaseConfig = {
 apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
 authDomain: "khusland-b7d13.firebaseapp.com",
@@ -142,15 +143,15 @@ messagingSenderId: "69573193613",
 appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
 measurementId: "G-JSCWR4207G"
 };
-
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getDatabase(app);
 const entriesRef = ref(db,'weed_entries');
 
+// ---------------- Globals ----------------
 const ADMIN_PASSWORD='admin123';
 let entries=[];
-let currentWeedPage='weed'; // Dropdown Auswahl
+let currentWeedPage='weed';
 
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
@@ -164,36 +165,35 @@ function formatDate(d){
 // ---------------- Hamburger ----------------
 document.getElementById('hamburgerBtn').addEventListener('click',()=>document.getElementById('hamburgerMenu').classList.toggle('hidden'));
 
-// ---------------- Dropdown Weed / ScarFace ----------------
+// ---------------- Dropdown ----------------
 const weedBtn = document.getElementById('weedBtn');
 const weedMenu = document.getElementById('weedMenu');
 
-weedBtn.addEventListener('click', () => weedMenu.classList.toggle('hidden'));
+weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
 
-// Menüauswahl
-weedMenu.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    currentWeedPage = a.dataset.page;
-    updateWeedMenu();
-    weedMenu.classList.add('hidden');
-    renderOverview();
-    renderAdminTable();
-  });
+weedMenu.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', e=>{
+        e.preventDefault();
+        currentWeedPage = a.dataset.page;
+        updateWeedMenu();
+        weedMenu.classList.add('hidden');
+        renderOverview();
+        renderAdminTable();
+    });
 });
 
-function updateWeedMenu() {
-  weedMenu.querySelectorAll('a').forEach(a => {
-    if (a.dataset.page === currentWeedPage) {
-      a.classList.add('bg-gray-900','text-white','font-bold');
-      a.classList.remove('text-gray-400');
-    } else {
-      a.classList.remove('bg-gray-900','text-white','font-bold');
-      a.classList.add('text-gray-400');
-    }
-  });
-  weedBtn.textContent = (currentWeedPage === 'weed' ? 'Weed ▾' : 'ScarFace ▾');
-  weedBtn.className = 'px-3 py-1.5 rounded-md btn ' + (currentWeedPage==='weed'?'bg-green-700':'bg-red-600 text-white');
+function updateWeedMenu(){
+    weedMenu.querySelectorAll('a').forEach(a=>{
+        if(a.dataset.page===currentWeedPage){
+            a.classList.add('bg-gray-900','text-white','font-bold');
+            a.classList.remove('text-gray-400');
+        } else {
+            a.classList.remove('bg-gray-900','text-white','font-bold');
+            a.classList.add('text-gray-400');
+        }
+    });
+    weedBtn.textContent = (currentWeedPage==='weed'?'Weed ▾':'ScarFace ▾');
+    weedBtn.className = 'px-3 py-1.5 rounded-md btn '+(currentWeedPage==='weed'?'bg-green-700':'bg-red-600 text-white');
 }
 updateWeedMenu();
 
@@ -206,6 +206,7 @@ document.getElementById('btnAdmin').addEventListener('click',()=>{hide(document.
 const quantityInput=document.getElementById('quantity');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
+
 function updateShares(){ 
   const q=Number(quantityInput.value)||0;
   const price=q*2500;
@@ -213,66 +214,58 @@ function updateShares(){
   yourShareEl.textContent=formatCurrency(price*0.4);
 }
 quantityInput.addEventListener('input',updateShares);
-updateShares();
 
-// ---------------- Form submit ----------------
+// ---------------- Form Submit ----------------
 document.getElementById('entryForm').addEventListener('submit', async e=>{
-e.preventDefault();
-const buyer=document.getElementById('buyer').value;
-const seller=document.getElementById('seller').value;
-const quantity=Number(quantityInput.value);
-const price=quantity*2500;
-const sellerShare=price*0.6;
-const yourShare=price*0.4;
-const entry = {
-    buyer,
-    seller,
-    quantity,
-    price,
-    sellerShare,
-    yourShare,
-    date: formatDate(new Date()),
-    timestamp: Date.now(),
-    category: currentWeedPage
-};
-await push(entriesRef,entry);
-e.target.reset();
-updateShares();
+    e.preventDefault();
+    const buyer=document.getElementById('buyer').value;
+    const seller=document.getElementById('seller').value;
+    const quantity=Number(quantityInput.value);
+    const price=quantity*2500;
+    const sellerShare=price*0.6;
+    const yourShare=price*0.4;
+    const entry={buyer,seller,quantity,price,sellerShare,yourShare,date:formatDate(new Date()),timestamp:Date.now(),category:currentWeedPage};
+    await push(entriesRef,entry);
+    e.target.reset();
+    updateShares();
 });
 
 // ---------------- Reset ----------------
-document.getElementById('resetForm').addEventListener('click',()=>{document.getElementById('entryForm').reset(); updateShares();});
-
-// ---------------- Real-time listener ----------------
-onValue(entriesRef,snapshot=>{
-entries=[];
-snapshot.forEach(child=>{
-const data=child.val();
-data.key=child.key;
-entries.push(data);
-});
-entries.sort((a,b)=>b.timestamp - a.timestamp);
-renderOverview();
-renderAdminTable();
+document.getElementById('resetForm').addEventListener('click',()=>{
+    document.getElementById('entryForm').reset();
+    updateShares();
 });
 
-// ---------------- Übersicht rendern ----------------
+// ---------------- Real-time Listener ----------------
+onValue(entriesRef, snapshot=>{
+    entries=[];
+    snapshot.forEach(child=>{
+        const data=child.val();
+        data.key=child.key;
+        entries.push(data);
+    });
+    entries.sort((a,b)=>b.timestamp-b.timestamp);
+    renderOverview();
+    renderAdminTable();
+});
+
+// ---------------- Übersicht Render ----------------
 const entriesList=document.getElementById('entriesList');
 function renderOverview(){
-entriesList.innerHTML='';
-const filteredEntries = entries.filter(en => en.category === currentWeedPage || !en.category);
-if(filteredEntries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
-filteredEntries.forEach(en=>{
-const el=document.createElement('div');
-el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-el.innerHTML=`
-<div class="text-sm text-gray-400 mb-1">${en.date}</div>
-<div class="font-semibold">${en.buyer} → ${en.seller}</div>
-<div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
-<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-entriesList.prepend(el);
-});
+    entriesList.innerHTML='';
+    const filteredEntries = entries.filter(en => en.category===currentWeedPage || !en.category);
+    if(filteredEntries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
+    filteredEntries.forEach(en=>{
+        const el=document.createElement('div');
+        el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+        el.innerHTML=`
+        <div class="text-sm text-gray-400 mb-1">${en.date}</div>
+        <div class="font-semibold">${en.buyer} → ${en.seller}</div>
+        <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
+        <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+        <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
+        entriesList.prepend(el);
+    });
 }
 
 // ---------------- Admin ----------------
@@ -285,46 +278,43 @@ const totalRevenue=document.getElementById('totalRevenue');
 const exportCsv=document.getElementById('exportCsv');
 
 adminLoginBtn.addEventListener('click',()=>{
-if(adminPassInput.value===ADMIN_PASSWORD){adminError.classList.add('hidden-el'); show(document.getElementById('adminContent')); renderAdminTable();}
-else adminError.classList.remove('hidden-el');
+    if(adminPassInput.value===ADMIN_PASSWORD){
+        adminError.classList.add('hidden-el'); 
+        show(document.getElementById('adminContent')); 
+        renderAdminTable();
+    } else adminError.classList.remove('hidden-el');
 });
 
 function renderAdminTable(){
-adminTableBody.innerHTML='';
-let revenue=0;
-const filteredEntries = entries.filter(en => en.category === currentWeedPage || !en.category);
-filteredEntries.sort((a,b)=>b.timestamp - a.timestamp).forEach(en=>{
-revenue+=en.yourShare;
-const tr=document.createElement('tr');
-tr.className='border-t border-gray-800';
-tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
-<td class="p-2">${en.buyer}</td>
-<td class="p-2">${en.seller}</td>
-<td class="p-2">${en.quantity}</td>
-<td class="p-2">${formatCurrency(en.price)}</td>
-<td class="p-2">${formatCurrency(en.sellerShare)}</td>
-<td class="p-2">${formatCurrency(en.yourShare)}</td>
-<td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
-adminTableBody.prepend(tr);
-});
-totalCount.innerText=filteredEntries.length;
-totalRevenue.innerText=formatCurrency(revenue);
+    adminTableBody.innerHTML='';
+    let revenue=0;
+    const filteredEntries = entries.filter(en => en.category===currentWeedPage || !en.category);
+    filteredEntries.sort((a,b)=>b.timestamp-a.timestamp).forEach(en=>{
+        revenue+=en.yourShare;
+        const tr=document.createElement('tr');
+        tr.className='border-t border-gray-800';
+        tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
+        <td class="p-2">${en.buyer}</td>
+        <td class="p-2">${en.seller}</td>
+        <td class="p-2">${en.quantity}</td>
+        <td class="p-2">${formatCurrency(en.price)}</td>
+        <td class="p-2">${formatCurrency(en.sellerShare)}</td>
+        <td class="p-2">${formatCurrency(en.yourShare)}</td>
+        <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
+        adminTableBody.prepend(tr);
+    });
+    totalCount.innerText=filteredEntries.length;
+    totalRevenue.innerText=formatCurrency(revenue);
 }
 
 window.deleteEntry=function(key){if(confirm('Eintrag wirklich löschen?')) remove(ref(db,'weed_entries/'+key));}
 
 // ---------------- CSV Export ----------------
 exportCsv.addEventListener('click',()=>{
-if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
-const sortedEntries = [...entries].sort((a,b)=>b.timestamp - a.timestamp);
-const header=['date','buyer','seller','quantity','price','sellerShare','yourShare','category'];
-const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare,e.category].join(','));
-const csv=[header.join(','),...rows].join('\n');
-const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-const url=URL.createObjectURL(blob);
-const a=document.createElement('a');
-a.href=url;
-a.download='entries_weed.csv';
-document.body.appendChild(a);
-a.click();
-URL
+    if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
+    const sortedEntries = [...entries].sort((a,b)=>b.timestamp-a.timestamp);
+    const header=['date','buyer','seller','quantity','price','sellerShare','yourShare','category'];
+    const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare,e.category].join(','));
+    const csv=[header.join(','),...rows].join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL

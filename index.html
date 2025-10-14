@@ -317,4 +317,22 @@ exportCsv.addEventListener('click',()=>{
     const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare,e.category].join(','));
     const csv=[header.join(','),...rows].join('\n');
     const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    const url=URL
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='entries_weed.csv';
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+});
+
+// ---------------- Initial Render ----------------
+document.addEventListener('DOMContentLoaded', ()=>{
+    updateShares();
+    renderOverview();
+    renderAdminTable();
+});
+</script>
+</body>
+</html>

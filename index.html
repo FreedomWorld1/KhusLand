@@ -117,13 +117,11 @@
     </div>
   </div>
 
-  <!-- Kombiniertes Script mit Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    // Firebase-Konfiguration
     const firebaseConfig = {
       apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
       authDomain: "khusland-b7d13.firebaseapp.com",
@@ -138,6 +136,7 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
+    const entriesRef = ref(db, 'weed_entries');
 
     const ADMIN_PASSWORD1 = 'admin123';
     let entries1 = [];
@@ -170,15 +169,23 @@
       const entry = {buyer,seller,quantity,price,sellerShare,yourShare,date:new Date().toLocaleString()};
 
       // Firebase speichern
-      await push(ref(db, 'weed_entries'), entry);
+      await push(entriesRef, entry);
 
-      // Lokal speichern
-      entries1.push(entry);
+      // Formular zurücksetzen
       e.target.reset();
       updateShares1();
+    });
+
+    // Echtzeit-Listener für Firebase, lädt immer alles
+    onValue(entriesRef, snapshot => {
+      entries1 = [];
+      snapshot.forEach(childSnap => {
+        const data = childSnap.val();
+        data.key = childSnap.key; // Key für Löschen
+        entries1.push(data);
+      });
       renderOverview1();
       renderAdminTable1();
-      alert('💾 Eintrag gespeichert!');
     });
 
     // Übersicht rendern
@@ -236,18 +243,16 @@
           <td class="p-2">${formatCurrency(en.price)}</td>
           <td class="p-2">${formatCurrency(en.sellerShare)}</td>
           <td class="p-2">${formatCurrency(en.yourShare)}</td>
-          <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry1(${i})">Löschen</button></td>`;
+          <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry1('${en.key}')">Löschen</button></td>`;
         adminTableBody1.appendChild(tr);
       });
       totalCount1.innerText=entries1.length;
       totalRevenue1.innerText=formatCurrency(revenue);
     }
 
-    window.deleteEntry1 = function(index){
+    window.deleteEntry1 = function(key){
       if(confirm('Eintrag wirklich löschen?')){
-        entries1.splice(index,1);
-        renderAdminTable1();
-        renderOverview1();
+        remove(ref(db,'weed_entries/'+key));
       }
     }
 
@@ -283,7 +288,6 @@
 
     // Init
     updateShares1();
-    renderOverview1();
   </script>
 </body>
 </html>

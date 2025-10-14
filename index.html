@@ -61,69 +61,89 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <!-- NEUER ANKAUF -->
 <div id="newEntry" class="card p-6 shadow-soft">
 <h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
-<p class="text-sm text-gray-400">Hier kommt dein Formular oder Logik hin.</p>
+<form id="entryForm" class="space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+<input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<div id="sellerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+<div class="small-muted mb-0.5" id="sellerLabel">Verkäufer (60%)</div>
+<div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
+</div>
+<div id="buyerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+<div class="small-muted mb-0.5" id="buyerLabel">Käufer (40%)</div>
+<div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
+</div>
+</div>
+<div class="flex gap-3 mt-3">
+<button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
+<button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
+</div>
+</form>
 </div>
 
 <!-- ÜBERSICHT -->
 <div id="overview" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
-<p class="text-sm text-gray-400">Hier erscheinen deine gespeicherten Daten.</p>
+<div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
 </div>
 
 <!-- ADMIN -->
 <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
-<p class="text-sm text-gray-400">Hier wird der Admin-Content angezeigt.</p>
+<div id="adminLoginSection">
+<input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
+<button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
+<span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
+</div>
+<div id="adminContent" class="hidden-el">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+<div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+<div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
+<button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+</div>
+<div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
+<table class="w-full text-left text-sm">
+<thead class="text-gray-400 bg-gray-800">
+<tr>
+<th class="p-2">Datum</th>
+<th class="p-2">Käufer</th>
+<th class="p-2">Verkäufer</th>
+<th class="p-2">Menge</th>
+<th class="p-2">Preis</th>
+<th class="p-2">Verkäufer</th>
+<th class="p-2">Käufer</th>
+<th class="p-2">Aktion</th>
+</tr>
+</thead>
+<tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+</table>
+</div>
+</div>
 </div>
 
 </div>
 
 <script>
-let currentWeedPage = 'weed';
-
-// Hamburger Menü öffnen/schließen
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const hamburgerMenu = document.getElementById('hamburgerMenu');
-hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
-
-// Tabs
-const newEntry = document.getElementById('newEntry');
-const overview = document.getElementById('overview');
-const adminPanel = document.getElementById('adminPanel');
-
-document.getElementById('btnNew').addEventListener('click',()=>{
-  newEntry.classList.remove('hidden-el');
-  overview.classList.add('hidden-el');
-  adminPanel.classList.add('hidden-el');
-});
-
-document.getElementById('btnOverview').addEventListener('click',()=>{
-  overview.classList.remove('hidden-el');
-  newEntry.classList.add('hidden-el');
-  adminPanel.classList.add('hidden-el');
-});
-
-document.getElementById('btnAdmin').addEventListener('click',()=>{
-  adminPanel.classList.remove('hidden-el');
-  newEntry.classList.add('hidden-el');
-  overview.classList.add('hidden-el');
-});
-
-// Dropdown
+// --- Dropdown-Menü Verhalten ---
 const weedBtn = document.getElementById('weedBtn');
 const weedMenu = document.getElementById('weedMenu');
-weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
+let currentWeedPage = 'weed';
 
+weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
 weedMenu.querySelectorAll('a').forEach(a=>{
   a.addEventListener('click', e=>{
     e.preventDefault();
     currentWeedPage = a.dataset.page;
-    updateWeedMenu();
     weedMenu.classList.add('hidden');
+    updateWeedMenu();
     updateBackgrounds();
   });
 });
-
 function updateWeedMenu(){
   weedMenu.querySelectorAll('a').forEach(a=>{
     if(a.dataset.page===currentWeedPage){
@@ -134,10 +154,8 @@ function updateWeedMenu(){
   });
   weedBtn.textContent = currentWeedPage==='weed'?'Weed ▾':'ScarFace ▾';
 }
-
-// Schwarzfärbung für ScarFace
 function updateBackgrounds(){
-  const panels = [newEntry, overview, adminPanel];
+  const panels = [document.getElementById('newEntry'), document.getElementById('overview'), document.getElementById('adminPanel')];
   panels.forEach(p=>{
     if(currentWeedPage==='scarface'){
       p.classList.add('bg-scarface');
@@ -146,6 +164,114 @@ function updateBackgrounds(){
     }
   });
 }
+
+// --- Tabs ---
+const btnNew=document.getElementById('btnNew');
+const btnOverview=document.getElementById('btnOverview');
+const btnAdmin=document.getElementById('btnAdmin');
+const newEntry=document.getElementById('newEntry');
+const overview=document.getElementById('overview');
+const adminPanel=document.getElementById('adminPanel');
+
+btnNew.addEventListener('click',()=>{showSection('new')});
+btnOverview.addEventListener('click',()=>{showSection('overview')});
+btnAdmin.addEventListener('click',()=>{showSection('admin')});
+
+function showSection(section){
+  [newEntry,overview,adminPanel].forEach(div=>div.classList.add('hidden-el'));
+  if(section==='new')newEntry.classList.remove('hidden-el');
+  if(section==='overview')overview.classList.remove('hidden-el');
+  if(section==='admin')adminPanel.classList.remove('hidden-el');
+}
+
+// --- Hamburger Menü ---
+const hamburgerBtn=document.getElementById('hamburgerBtn');
+const hamburgerMenu=document.getElementById('hamburgerMenu');
+hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
+
+// --- Formular Logik ---
+const form=document.getElementById('entryForm');
+const entriesList=document.getElementById('entriesList');
+let entries=[];
+
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const buyer=document.getElementById('buyer').value;
+  const seller=document.getElementById('seller').value;
+  const quantity=document.getElementById('quantity').value;
+  const price=quantity*10;
+  const sellerShare=price*0.6;
+  const buyerShare=price*0.4;
+  const entry={date:new Date().toLocaleString(),buyer,seller,quantity,price,sellerShare,buyerShare};
+  entries.push(entry);
+  renderEntries();
+  form.reset();
+});
+document.getElementById('resetForm').addEventListener('click',()=>form.reset());
+
+function renderEntries(){
+  entriesList.innerHTML='';
+  entries.forEach((e,i)=>{
+    const div=document.createElement('div');
+    div.className='p-3 bg-gray-800 border border-gray-700 rounded';
+    div.innerHTML=`
+      <div class="text-sm"><b>${e.date}</b></div>
+      <div>Menge: ${e.quantity}</div>
+      <div>Preis: ${e.price} $</div>
+      <div>Verkäufer ${e.sellerShare} $ | Käufer ${e.buyerShare} $</div>`;
+    entriesList.appendChild(div);
+  });
+}
+
+// --- Admin Login + CSV Export ---
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminPass=document.getElementById('adminPass');
+const adminError=document.getElementById('adminError');
+const adminContent=document.getElementById('adminContent');
+adminLoginBtn.addEventListener('click',()=>{
+  if(adminPass.value==='1234'){
+    adminContent.classList.remove('hidden-el');
+    document.getElementById('adminLoginSection').classList.add('hidden-el');
+    updateAdminTable();
+  } else {
+    adminError.classList.remove('hidden-el');
+    setTimeout(()=>adminError.classList.add('hidden-el'),2000);
+  }
+});
+function updateAdminTable(){
+  const body=document.getElementById('adminTableBody');
+  body.innerHTML='';
+  entries.forEach((e,i)=>{
+    const row=document.createElement('tr');
+    row.innerHTML=`
+      <td class="p-2">${e.date}</td>
+      <td class="p-2">${e.buyer}</td>
+      <td class="p-2">${e.seller}</td>
+      <td class="p-2">${e.quantity}</td>
+      <td class="p-2">${e.price}</td>
+      <td class="p-2">${e.sellerShare}</td>
+      <td class="p-2">${e.buyerShare}</td>
+      <td class="p-2"><button onclick="deleteEntry(${i})" class="text-red-500">🗑️</button></td>`;
+    body.appendChild(row);
+  });
+  document.getElementById('totalCount').textContent=entries.length;
+  document.getElementById('totalRevenue').textContent=entries.reduce((a,b)=>a+b.price,0)+' $';
+}
+function deleteEntry(i){
+  entries.splice(i,1);
+  updateAdminTable();
+  renderEntries();
+}
+document.getElementById('exportCsv').addEventListener('click',()=>{
+  let csv="Datum,Käufer,Verkäufer,Menge,Preis,Verkäufer,Käufer\n";
+  entries.forEach(e=>{
+    csv+=`${e.date},${e.buyer},${e.seller},${e.quantity},${e.price},${e.sellerShare},${e.buyerShare}\n`;
+  });
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='ankauf.csv';a.click();
+});
 </script>
 </body>
 </html>

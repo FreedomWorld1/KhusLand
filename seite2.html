@@ -5,12 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Kokain Ankauf</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js"></script>
 <style>
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
 .card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
 .shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
 .small-muted { color: #9ca3af; font-size: 0.85rem; }
-.btn { transition: all .15s ease; font-size: 0.9rem; }
+.btn { transition: all .15s ease; font-size: 0.9rem; cursor:pointer; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
 input { transition: all 0.15s ease; font-size: 0.95rem; }
@@ -19,6 +22,7 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
+
 <div class="max-w-4xl mx-auto p-6">
 
 <!-- HEADER -->
@@ -34,9 +38,9 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <span class="block h-0.5 bg-gray-100"></span>
 <span class="block h-0.5 bg-gray-100"></span>
 </button>
-<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-green-800 border border-gray-700 rounded-md shadow-lg z-50">
+<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
 <a href="./" class="block px-4 py-2 hover:bg-gray-700">Weed</a>
-<a href="seite2.html" id="linkSeite2" class="block px-4 py-2 hover:bg-gray-700 active-link">Kokain</a>
+<a href="seite2.html" id="linkSeite2" class="block px-4 py-2 hover:bg-gray-700 text-purple-400">Kokain</a>
 <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
 </div>
 </div>
@@ -116,10 +120,8 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+<script>
+document.addEventListener("DOMContentLoaded", function(){
 
 // Firebase
 const firebaseConfig = {
@@ -132,30 +134,26 @@ messagingSenderId: "69573193613",
 appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
 measurementId: "G-JSCWR4207G"
 };
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getDatabase(app);
-const entriesRef = ref(db,'kokain_entries');
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+const db = firebase.database();
+const entriesRef = db.ref('kokain_entries');
 
 const ADMIN_PASSWORD='admin456';
 let entries=[];
 
-// Funktionen
+// Utility
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
-function formatDate(d){
-  const dt = new Date(d);
-  return `${String(dt.getDate()).padStart(2,'0')}.${String(dt.getMonth()+1).padStart(2,'0')}.${dt.getFullYear()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}:${String(dt.getSeconds()).padStart(2,'0')}`;
+function formatDate(date){
+  const d=new Date(date);
+  const pad=(n)=>n.toString().padStart(2,'0');
+  return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
 // Hamburger
-const hamburgerBtn=document.getElementById('hamburgerBtn');
-const hamburgerMenu=document.getElementById('hamburgerMenu');
-hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
-
-// Aktive Seite
-document.getElementById("linkSeite2").classList.add("active-link");
+document.getElementById('hamburgerBtn').addEventListener('click',()=>document.getElementById('hamburgerMenu').classList.toggle('hidden'));
 
 // Tabs
 const btnNew=document.getElementById('btnNew');
@@ -173,87 +171,21 @@ const cashInput=document.getElementById('cash');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
 function updateShares(){ 
-  const c=Number(cashInput.value)||0;
-  sellerShareEl.textContent=formatCurrency(c*0.8);
-  yourShareEl.textContent=formatCurrency(c*0.2);
+const c=Number(cashInput.value)||0;
+sellerShareEl.textContent=formatCurrency(c*0.8);
+yourShareEl.textContent=formatCurrency(c*0.2);
 }
 cashInput.addEventListener('input',updateShares);
 updateShares();
 
 // Formular speichern
-document.getElementById('entryForm').addEventListener('submit', async e=>{
+document.getElementById('entryForm').addEventListener('submit', function(e){
 e.preventDefault();
 const buyer=document.getElementById('buyer').value;
 const seller=document.getElementById('seller').value;
-const quantity=Number(document.getElementById('quantity').value)||0;
-const cash=Number(document.getElementById('cash').value)||0;
+const cash=Number(document.getElementById('cash').value);
+const quantity=Number(document.getElementById('quantity').value);
 const sellerShare=cash*0.8;
 const yourShare=cash*0.2;
-const entry={buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toISOString()};
-await push(entriesRef, entry);
-e.target.reset();
-updateShares();
-});
-
-// Zurücksetzen
-document.getElementById('resetForm').addEventListener('click',()=>{
-document.getElementById('entryForm').reset();
-updateShares();
-});
-
-// Echtzeit Listener
-onValue(entriesRef,snapshot=>{
-entries=[];
-snapshot.forEach(childSnap=>{
-  const data=childSnap.val();
-  data.key=childSnap.key;
-  entries.push(data);
-});
-// Neueste oben
-entries.sort((a,b)=>new Date(b.date)-new Date(a.date));
-renderOverview();
-renderAdminTable();
-});
-
-// Übersicht rendern
-const entriesList=document.getElementById('entriesList');
-function renderOverview(){
-entriesList.innerHTML='';
-if(entries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
-entries.forEach(en=>{
-const el=document.createElement('div');
-el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-el.innerHTML=`<div class="text-sm text-gray-400 mb-1">${formatDate(en.date)}</div>
-<div class="font-semibold">${en.buyer} → ${en.seller}</div>
-<div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
-<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-entriesList.appendChild(el);
-});
-}
-
-// Adminbereich
-const adminLoginBtn=document.getElementById('adminLoginBtn');
-const adminPassInput=document.getElementById('adminPass');
-const adminError=document.getElementById('adminError');
-const adminTableBody=document.getElementById('adminTableBody');
-const totalCount=document.getElementById('totalCount');
-const totalRevenue=document.getElementById('totalRevenue');
-const exportCsv=document.getElementById('exportCsv');
-
-adminLoginBtn.addEventListener('click',()=>{
-if(adminPassInput.value===ADMIN_PASSWORD){
-adminError.classList.add('hidden-el');
-show(document.getElementById('adminContent'));
-renderAdminTable();
-}else{
-adminError.classList.remove('hidden-el');
-}
-});
-
-function renderAdminTable(){
-adminTableBody.innerHTML='';
-let revenue=0;
-entries.forEach(en=>{
-  revenue+=en.yourShare;
-  const tr=document.createElement
+const date=new Date();
+const entry={buyer,seller,quantity,cash

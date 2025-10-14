@@ -186,7 +186,7 @@ const entry = {
     sellerShare,
     yourShare,
     date: formatDate(new Date()),
-    timestamp: Date.now()  // Für Sortierung
+    timestamp: Date.now()
 };
 
 await push(entriesRef,entry);
@@ -205,7 +205,7 @@ const data=child.val();
 data.key=child.key;
 entries.push(data);
 });
-// Neueste oben
+// Sortierung: Neueste oben
 entries.sort((a,b)=>b.timestamp - a.timestamp);
 renderOverview();
 renderAdminTable();
@@ -225,7 +225,7 @@ el.innerHTML=`
 <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
 <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
 <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-entriesList.appendChild(el);
+entriesList.prepend(el); // ← NEU: prepend statt appendChild
 });
 }
 
@@ -246,10 +246,7 @@ else adminError.classList.remove('hidden-el');
 function renderAdminTable(){
 adminTableBody.innerHTML='';
 let revenue=0;
-
-// Neueste Einträge oben
 const sortedEntries = [...entries].sort((a,b)=>b.timestamp - a.timestamp);
-
 sortedEntries.forEach(en=>{
 revenue+=en.yourShare;
 const tr=document.createElement('tr');
@@ -262,7 +259,7 @@ tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
 <td class="p-2">${formatCurrency(en.sellerShare)}</td>
 <td class="p-2">${formatCurrency(en.yourShare)}</td>
 <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
-adminTableBody.appendChild(tr);
+adminTableBody.prepend(tr); // ← NEU: prepend statt appendChild
 });
 totalCount.innerText=entries.length;
 totalRevenue.innerText=formatCurrency(revenue);
@@ -273,8 +270,10 @@ window.deleteEntry=function(key){if(confirm('Eintrag wirklich löschen?')) remov
 // CSV Export
 exportCsv.addEventListener('click',()=>{
 if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
+// Sortierung: Neueste oben
+const sortedEntries = [...entries].sort((a,b)=>b.timestamp - a.timestamp);
 const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
-const rows=entries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare].join(','));
+const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare].join(','));
 const csv=[header.join(','),...rows].join('\n');
 const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
 const url=URL.createObjectURL(blob);
@@ -289,3 +288,4 @@ a.remove();
 </script>
 </body>
 </html>
+

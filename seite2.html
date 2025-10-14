@@ -21,6 +21,7 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 <div class="max-w-4xl mx-auto p-6">
+
 <!-- HEADER -->
 <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
 <h1 class="text-2xl font-bold text-purple-400 tracking-tight">💊 Kokain Ankauf</h1>
@@ -28,7 +29,6 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <button id="btnNew" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
 <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
 <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
-<!-- Hamburger-Menü -->
 <div class="relative">
 <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
 <span class="block h-0.5 bg-gray-100"></span>
@@ -43,8 +43,10 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 </div>
 </div>
 </header>
+
 <!-- MAIN -->
 <div id="mainContainer" class="space-y-5">
+
 <!-- NEUER ANKAUF -->
 <div id="newEntry" class="card p-6 shadow-soft">
 <h2 class="text-xl font-semibold mb-4 text-purple-300">💰 Neuer Ankauf</h2>
@@ -73,11 +75,13 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 </div>
 </form>
 </div>
+
 <!-- ÜBERSICHT -->
 <div id="overview" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-lg font-semibold mb-4 text-purple-300">📋 Übersicht</h2>
 <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
 </div>
+
 <!-- ADMIN -->
 <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
 <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
@@ -94,10 +98,10 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 <div id="adminEntries" class="overflow-auto max-h-[50vh] rounded-md border border-gray-800"></div>
 </div>
 </div>
-</div>
+
 </div>
 
-<!-- EXISTIERENDES SCRIPT 1 + Firebase Cloud Integration -->
+<!-- SCRIPT -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
@@ -118,25 +122,20 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const db = getDatabase(app); // Realtime Database
+const db = getDatabase(app);
 
-// Alle bisherigen Funktionen aus Script 1
 const ADMIN_PASSWORD='admin456';
 let entries=[];
 
+// Hilfsfunktionen
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
 
-// Hamburger Menü
+// Hamburger-Menü
 const hamburgerBtn=document.getElementById('hamburgerBtn');
 const hamburgerMenu=document.getElementById('hamburgerMenu');
 hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
-
-// Aktive Seite hervorheben
-const currentPage=window.location.pathname.split("/").pop();
-if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
-else document.getElementById("linkSeite1").classList.add("active-link");
 
 // Tabs
 const btnNew=document.getElementById('btnNew');
@@ -150,20 +149,20 @@ btnNew.addEventListener('click',()=>{show(newEntry);hide(overview);hide(adminPan
 btnOverview.addEventListener('click',()=>{hide(newEntry);show(overview);hide(adminPanel);renderOverview();});
 btnAdmin.addEventListener('click',()=>{hide(newEntry);hide(overview);show(adminPanel);});
 
-// Speicherfunktionen
+// LocalStorage
 function loadLocal(){entries=JSON.parse(localStorage.getItem('kokain_entries')||'[]');}
 function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
 
-// Firebase: Einträge auslesen
+// Firebase: Daten laden
 const entriesRef = ref(db, 'kokain_entries');
-onValue(entriesRef, (snapshot)=>{
+onValue(entriesRef, snapshot=>{
   const data = snapshot.val();
   entries = data ? Object.values(data) : [];
   renderOverview();
   renderAdminEntries();
 });
 
-// Eintrag speichern
+// Form-Submit
 document.getElementById('entryForm').addEventListener('submit', e=>{
   e.preventDefault();
   const buyer = document.getElementById('buyer').value;
@@ -185,15 +184,82 @@ document.getElementById('entryForm').addEventListener('submit', e=>{
 
   e.target.reset();
   updateShares();
-  renderOverview();
-  renderAdminEntries();
-  alert("💾 Eintrag gespeichert und in Firebase hochgeladen!");
 });
 
 // Übersicht rendern
-function renderOverview(){ 
-  const list=document.getElementById('entriesList'); 
+function renderOverview(){
+  const list = document.getElementById('entriesList');
   list.innerHTML='';
   if(entries.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>';return;}
   entries.forEach(en=>{
-    const el=document
+    const el = document.createElement('div');
+    el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+    el.innerHTML=`
+      <div class="text-sm text-gray-400 mb-1">${en.date}</div>
+      <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
+      <div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
+      <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+      <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+// Admin rendern
+function renderAdminEntries(){
+  const container = document.getElementById('adminEntries');
+  container.innerHTML='';
+  if(entries.length===0){container.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
+  let totalCash=0;
+  entries.forEach((en,index)=>{
+    totalCash+=en.cash;
+    const el = document.createElement('div');
+    el.className='p-3 rounded-md bg-gray-800 border border-gray-700 flex justify-between items-center';
+    el.innerHTML=`
+      <div>
+        <div class="text-sm text-gray-400 mb-1">${en.date}</div>
+        <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
+        <div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
+        <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+        <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
+      </div>
+      <button data-index="${index}" class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded-md btn text-sm">Löschen</button>
+    `;
+    container.appendChild(el);
+  });
+  document.getElementById('totalCount').textContent = entries.length;
+  document.getElementById('totalRevenue').textContent = formatCurrency(totalCash);
+}
+
+// Cash Berechnung
+const cashInput=document.getElementById('cash');
+const sellerShareEl=document.getElementById('sellerShare');
+const yourShareEl=document.getElementById('yourShare');
+function updateShares(){
+  const c=Number(cashInput.value)||0;
+  sellerShareEl.textContent=formatCurrency(c*0.8);
+  yourShareEl.textContent=formatCurrency(c*0.2);
+}
+cashInput.addEventListener('input',updateShares);
+
+// Admin login
+document.getElementById('adminLoginBtn').addEventListener('click',()=>{
+  const input=document.getElementById('adminPass').value;
+  const err=document.getElementById('adminError');
+  const cont=document.getElementById('adminContent');
+  if(input===ADMIN_PASSWORD){ err.classList.add('hidden-el'); show(cont); renderAdminEntries(); }
+  else err.classList.remove('hidden-el');
+});
+
+// Reset Formular
+document.getElementById('resetForm').addEventListener('click',()=>{
+  document.getElementById('entryForm').reset();
+  updateShares();
+});
+
+// Init
+loadLocal();
+updateShares();
+</script>
+</body>
+</html>

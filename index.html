@@ -16,262 +16,411 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 input { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
 .bg-scarface { background-color: #000 !important; color: #fff !important; border-color: #111 !important; }
+.text-scarface { color: #fff !important; }
 </style>
 </head>
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 <div class="max-w-4xl mx-auto p-6">
 
 <!-- HEADER -->
-<header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
-<h1 class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf</h1>
-<div class="flex items-center gap-2">
+<header id="header" class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
+  <h1 id="brand" class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf</h1>
+  <div class="flex items-center gap-2">
 
-<!-- Dropdown Weed / ScarFace -->
-<div class="relative">
-  <button id="weedBtn" class="px-3 py-1.5 rounded-md btn bg-green-700 text-white">Weed ▾</button>
-  <div id="weedMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
-    <a href="#" class="block px-4 py-2 hover:bg-gray-700 text-gray-400" data-page="weed">Weed</a>
-    <a href="#" class="block px-4 py-2 hover:bg-gray-700 text-gray-400" data-page="scarface">ScarFace</a>
+    <!-- Dropdown Weed / ScarFace -->
+    <div class="relative">
+      <button id="weedBtn" class="px-3 py-1.5 rounded-md btn bg-green-700 text-white">Weed ▾</button>
+      <div id="weedMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+        <a href="#" class="block px-4 py-2 hover:bg-gray-700 text-gray-400" data-page="weed">Weed</a>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-700 text-gray-400" data-page="scarface">ScarFace</a>
+      </div>
+    </div>
+
+    <!-- Tab Buttons -->
+    <button id="btnNew" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Neuer Ankauf</button>
+    <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+    <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+
+    <!-- Hamburger -->
+    <div class="relative">
+      <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
+        <span class="block h-0.5 bg-gray-100"></span>
+        <span class="block h-0.5 bg-gray-100"></span>
+        <span class="block h-0.5 bg-gray-100"></span>
+      </button>
+      <div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+        <a href="index.html" class="block px-4 py-2 hover:bg-gray-700">Weed</a>
+        <a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
+        <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
+      </div>
+    </div>
+
   </div>
-</div>
-
-<!-- Tab Buttons -->
-<button id="btnNew" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Neuer Ankauf</button>
-<button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
-<button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
-
-<!-- Hamburger -->
-<div class="relative">
-<button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
-<span class="block h-0.5 bg-gray-100"></span>
-<span class="block h-0.5 bg-gray-100"></span>
-<span class="block h-0.5 bg-gray-100"></span>
-</button>
-<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
-<a href="index.html" class="block px-4 py-2 hover:bg-gray-700">Weed</a>
-<a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
-<a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
-</div>
-</div>
-</div>
 </header>
 
 <div id="mainContainer" class="space-y-5">
 
-<!-- NEUER ANKAUF -->
-<div id="newEntry" class="card p-6 shadow-soft">
-<h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
-<form id="entryForm" class="space-y-5">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-<input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-<input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-<div id="sellerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-<div class="small-muted mb-0.5" id="sellerLabel">Verkäufer (60%)</div>
-<div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
-</div>
-<div id="buyerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-<div class="small-muted mb-0.5" id="buyerLabel">Käufer (40%)</div>
-<div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
-</div>
-</div>
-<div class="flex gap-3 mt-3">
-<button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
-<button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
-</div>
-</form>
+  <!-- NEUER ANKAUF -->
+  <div id="newEntry" class="card p-6 shadow-soft">
+    <h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
+    <form id="entryForm" class="space-y-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+        <input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+        <input id="quantity" type="number" min="0" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+        <div id="sellerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+          <div class="small-muted mb-0.5" id="sellerLabel">Verkäufer (60%)</div>
+          <div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
+        </div>
+        <div id="buyerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+          <div class="small-muted mb-0.5" id="buyerLabel">Käufer (40%)</div>
+          <div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
+        </div>
+      </div>
+      <div class="flex gap-3 mt-3">
+        <button type="submit" id="saveBtn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
+        <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ÜBERSICHT -->
+  <div id="overview" class="card p-5 shadow-soft hidden-el">
+    <h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
+    <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
+    <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
+    <div id="adminLoginSection">
+      <input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
+      <button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
+      <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
+    </div>
+
+    <div id="adminContent" class="hidden-el">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+        <div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
+        <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+      </div>
+      <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
+        <table class="w-full text-left text-sm">
+          <thead class="text-gray-400 bg-gray-800">
+            <tr>
+              <th class="p-2">Datum</th>
+              <th class="p-2">Käufer</th>
+              <th class="p-2">Verkäufer</th>
+              <th class="p-2">Menge</th>
+              <th class="p-2">Preis</th>
+              <th class="p-2">Verkäufer</th>
+              <th class="p-2">Käufer</th>
+              <th class="p-2">Aktion</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- ÜBERSICHT -->
-<div id="overview" class="card p-5 shadow-soft hidden-el">
-<h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
-<div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
-</div>
+<!-- Firebase + App Logic -->
+<script type="module">
+  // Firebase SDK (module)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+  import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-<!-- ADMIN -->
-<div id="adminPanel" class="card p-5 shadow-soft hidden-el">
-<h2 class="text-base font-semibold mb-3">Adminbereich</h2>
-<div id="adminLoginSection">
-<input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
-<button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
-<span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
-</div>
-<div id="adminContent" class="hidden-el">
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-<div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
-<div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
-<button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
-</div>
-<div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
-<table class="w-full text-left text-sm">
-<thead class="text-gray-400 bg-gray-800">
-<tr>
-<th class="p-2">Datum</th>
-<th class="p-2">Käufer</th>
-<th class="p-2">Verkäufer</th>
-<th class="p-2">Menge</th>
-<th class="p-2">Preis</th>
-<th class="p-2">Verkäufer</th>
-<th class="p-2">Käufer</th>
-<th class="p-2">Aktion</th>
-</tr>
-</thead>
-<tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
-</table>
-</div>
-</div>
-</div>
+  // ====== Deine Firebase-Konfiguration (aus deinem Projekt) ======
+  const firebaseConfig = {
+    apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+    authDomain: "khusland-b7d13.firebaseapp.com",
+    databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+    projectId: "khusland-b7d13",
+    storageBucket: "khusland-b7d13.firebasestorage.app",
+    messagingSenderId: "69573193613",
+    appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+    measurementId: "G-JSCWR4207G"
+  };
+  const app = initializeApp(firebaseConfig);
+  try { getAnalytics(app); } catch(e){ /* Analytics may fail in some contexts */ }
+  const db = getDatabase(app);
+  const entriesRef = ref(db, 'weed_entries');
 
-</div>
+  // ====== Allgemeine Helpers ======
+  const ADMIN_PASSWORD = 'admin123';
 
-<script>
-// --- Dropdown-Menü Verhalten ---
-const weedBtn = document.getElementById('weedBtn');
-const weedMenu = document.getElementById('weedMenu');
-let currentWeedPage = 'weed';
-
-weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
-weedMenu.querySelectorAll('a').forEach(a=>{
-  a.addEventListener('click', e=>{
-    e.preventDefault();
-    currentWeedPage = a.dataset.page;
-    weedMenu.classList.add('hidden');
-    updateWeedMenu();
-    updateBackgrounds();
-  });
-});
-function updateWeedMenu(){
-  weedMenu.querySelectorAll('a').forEach(a=>{
-    if(a.dataset.page===currentWeedPage){
-      a.classList.add('bg-gray-900','text-white','font-bold');
-    } else {
-      a.classList.remove('bg-gray-900','text-white','font-bold');
-    }
-  });
-  weedBtn.textContent = currentWeedPage==='weed'?'Weed ▾':'ScarFace ▾';
-}
-function updateBackgrounds(){
-  const panels = [document.getElementById('newEntry'), document.getElementById('overview'), document.getElementById('adminPanel')];
-  panels.forEach(p=>{
-    if(currentWeedPage==='scarface'){
-      p.classList.add('bg-scarface');
-    } else {
-      p.classList.remove('bg-scarface');
-    }
-  });
-}
-
-// --- Tabs ---
-const btnNew=document.getElementById('btnNew');
-const btnOverview=document.getElementById('btnOverview');
-const btnAdmin=document.getElementById('btnAdmin');
-const newEntry=document.getElementById('newEntry');
-const overview=document.getElementById('overview');
-const adminPanel=document.getElementById('adminPanel');
-
-btnNew.addEventListener('click',()=>{showSection('new')});
-btnOverview.addEventListener('click',()=>{showSection('overview')});
-btnAdmin.addEventListener('click',()=>{showSection('admin')});
-
-function showSection(section){
-  [newEntry,overview,adminPanel].forEach(div=>div.classList.add('hidden-el'));
-  if(section==='new')newEntry.classList.remove('hidden-el');
-  if(section==='overview')overview.classList.remove('hidden-el');
-  if(section==='admin')adminPanel.classList.remove('hidden-el');
-}
-
-// --- Hamburger Menü ---
-const hamburgerBtn=document.getElementById('hamburgerBtn');
-const hamburgerMenu=document.getElementById('hamburgerMenu');
-hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
-
-// --- Formular Logik ---
-const form=document.getElementById('entryForm');
-const entriesList=document.getElementById('entriesList');
-let entries=[];
-
-form.addEventListener('submit',e=>{
-  e.preventDefault();
-  const buyer=document.getElementById('buyer').value;
-  const seller=document.getElementById('seller').value;
-  const quantity=document.getElementById('quantity').value;
-  const price=quantity*10;
-  const sellerShare=price*0.6;
-  const buyerShare=price*0.4;
-  const entry={date:new Date().toLocaleString(),buyer,seller,quantity,price,sellerShare,buyerShare};
-  entries.push(entry);
-  renderEntries();
-  form.reset();
-});
-document.getElementById('resetForm').addEventListener('click',()=>form.reset());
-
-function renderEntries(){
-  entriesList.innerHTML='';
-  entries.forEach((e,i)=>{
-    const div=document.createElement('div');
-    div.className='p-3 bg-gray-800 border border-gray-700 rounded';
-    div.innerHTML=`
-      <div class="text-sm"><b>${e.date}</b></div>
-      <div>Menge: ${e.quantity}</div>
-      <div>Preis: ${e.price} $</div>
-      <div>Verkäufer ${e.sellerShare} $ | Käufer ${e.buyerShare} $</div>`;
-    entriesList.appendChild(div);
-  });
-}
-
-// --- Admin Login + CSV Export ---
-const adminLoginBtn=document.getElementById('adminLoginBtn');
-const adminPass=document.getElementById('adminPass');
-const adminError=document.getElementById('adminError');
-const adminContent=document.getElementById('adminContent');
-adminLoginBtn.addEventListener('click',()=>{
-  if(adminPass.value==='1234'){
-    adminContent.classList.remove('hidden-el');
-    document.getElementById('adminLoginSection').classList.add('hidden-el');
-    updateAdminTable();
-  } else {
-    adminError.classList.remove('hidden-el');
-    setTimeout(()=>adminError.classList.add('hidden-el'),2000);
+  function formatCurrency(n){ return (Math.round(n)) + ' $'; }
+  function formatDate(d){
+    const date = new Date(d);
+    const pad = n => n.toString().padStart(2,'0');
+    return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   }
-});
-function updateAdminTable(){
-  const body=document.getElementById('adminTableBody');
-  body.innerHTML='';
-  entries.forEach((e,i)=>{
-    const row=document.createElement('tr');
-    row.innerHTML=`
-      <td class="p-2">${e.date}</td>
-      <td class="p-2">${e.buyer}</td>
-      <td class="p-2">${e.seller}</td>
-      <td class="p-2">${e.quantity}</td>
-      <td class="p-2">${e.price}</td>
-      <td class="p-2">${e.sellerShare}</td>
-      <td class="p-2">${e.buyerShare}</td>
-      <td class="p-2"><button onclick="deleteEntry(${i})" class="text-red-500">🗑️</button></td>`;
-    body.appendChild(row);
+
+  // ====== UI Elemente & State ======
+  let currentWeedPage = 'weed';
+  let entries = []; // local mirror of firebase entries
+
+  const weedBtn = document.getElementById('weedBtn');
+  const weedMenu = document.getElementById('weedMenu');
+
+  const btnNew = document.getElementById('btnNew');
+  const btnOverview = document.getElementById('btnOverview');
+  const btnAdmin = document.getElementById('btnAdmin');
+
+  const newEntry = document.getElementById('newEntry');
+  const overview = document.getElementById('overview');
+  const adminPanel = document.getElementById('adminPanel');
+
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const hamburgerMenu = document.getElementById('hamburgerMenu');
+
+  const quantityInput = document.getElementById('quantity');
+  const sellerShareEl = document.getElementById('sellerShare');
+  const yourShareEl = document.getElementById('yourShare');
+  const sellerLabel = document.getElementById('sellerLabel');
+  const buyerLabel = document.getElementById('buyerLabel');
+
+  const entryForm = document.getElementById('entryForm');
+  const entriesList = document.getElementById('entriesList');
+
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminPassInput = document.getElementById('adminPass');
+  const adminError = document.getElementById('adminError');
+  const adminContent = document.getElementById('adminContent');
+  const adminTableBody = document.getElementById('adminTableBody');
+  const totalCount = document.getElementById('totalCount');
+  const totalRevenue = document.getElementById('totalRevenue');
+  const exportCsv = document.getElementById('exportCsv');
+
+  // ====== Dropdown (Weed/ScarFace) ======
+  weedBtn.addEventListener('click', ()=> weedMenu.classList.toggle('hidden'));
+  weedMenu.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      currentWeedPage = a.dataset.page;
+      weedMenu.classList.add('hidden');
+      updateWeedMenu();
+      updateShares();
+      renderOverview();
+      renderAdminTable();
+      updateBackgrounds();
+    });
   });
-  document.getElementById('totalCount').textContent=entries.length;
-  document.getElementById('totalRevenue').textContent=entries.reduce((a,b)=>a+b.price,0)+' $';
-}
-function deleteEntry(i){
-  entries.splice(i,1);
-  updateAdminTable();
-  renderEntries();
-}
-document.getElementById('exportCsv').addEventListener('click',()=>{
-  let csv="Datum,Käufer,Verkäufer,Menge,Preis,Verkäufer,Käufer\n";
-  entries.forEach(e=>{
-    csv+=`${e.date},${e.buyer},${e.seller},${e.quantity},${e.price},${e.sellerShare},${e.buyerShare}\n`;
+
+  function updateWeedMenu(){
+    weedMenu.querySelectorAll('a').forEach(a=>{
+      if(a.dataset.page===currentWeedPage){
+        a.classList.add('bg-gray-900','text-white','font-bold');
+        a.classList.remove('text-gray-400');
+      } else {
+        a.classList.remove('bg-gray-900','text-white','font-bold');
+        a.classList.add('text-gray-400');
+      }
+    });
+    weedBtn.textContent = currentWeedPage==='weed' ? 'Weed ▾' : 'ScarFace ▾';
+    weedBtn.className = 'px-3 py-1.5 rounded-md btn ' + (currentWeedPage==='weed' ? 'bg-green-700 text-white' : 'bg-gray-900 text-white');
+  }
+
+  // ====== Backgrounds für ScarFace ======
+  function updateBackgrounds(){
+    const panels = [newEntry, overview, adminPanel];
+    panels.forEach(p=>{
+      if(currentWeedPage==='scarface'){
+        p.classList.add('bg-scarface');
+        // ensure contained text uses readable colors where needed
+        p.querySelectorAll('*').forEach(el=>{
+          el.classList.add('text-scarface');
+        });
+      } else {
+        p.classList.remove('bg-scarface');
+        p.querySelectorAll('*').forEach(el=>{
+          el.classList.remove('text-scarface');
+        });
+      }
+    });
+  }
+
+  // ====== Tabs (Neuer Ankauf / Übersicht / Admin) ======
+  btnNew.addEventListener('click', ()=> showSection('new'));
+  btnOverview.addEventListener('click', ()=> { showSection('overview'); renderOverview(); });
+  btnAdmin.addEventListener('click', ()=> { showSection('admin'); });
+
+  function showSection(section){
+    newEntry.classList.add('hidden-el');
+    overview.classList.add('hidden-el');
+    adminPanel.classList.add('hidden-el');
+    if(section==='new') newEntry.classList.remove('hidden-el');
+    if(section==='overview') overview.classList.remove('hidden-el');
+    if(section==='admin') adminPanel.classList.remove('hidden-el');
+  }
+
+  // ====== Hamburger ======
+  hamburgerBtn.addEventListener('click', ()=> hamburgerMenu.classList.toggle('hidden'));
+  // close menus when clicking outside (optional UX)
+  document.addEventListener('click', (e)=>{
+    if(!weedBtn.contains(e.target) && !weedMenu.contains(e.target)) weedMenu.classList.add('hidden');
+    if(!hamburgerBtn.contains(e.target) && !hamburgerMenu.contains(e.target)) hamburgerMenu.classList.add('hidden');
   });
-  const blob=new Blob([csv],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='ankauf.csv';a.click();
-});
+
+  // ====== Shares Calculation ======
+  function updateShares(){
+    const q = Number(quantityInput.value) || 0;
+    const price = 2500 * q;
+    let sellerPerc = 0.6, buyerPerc = 0.4;
+    if(currentWeedPage === 'scarface'){ sellerPerc = 0.8; buyerPerc = 0.2; }
+    sellerShareEl.textContent = formatCurrency(price * sellerPerc);
+    yourShareEl.textContent = formatCurrency(price * buyerPerc);
+    sellerLabel.textContent = `Verkäufer (${sellerPerc*100}%)`;
+    buyerLabel.textContent = `Käufer (${buyerPerc*100}%)`;
+  }
+  quantityInput.addEventListener('input', updateShares);
+  updateShares();
+
+  // ====== Form Submit -> push to Firebase ======
+  entryForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const buyer = document.getElementById('buyer').value.trim();
+    const seller = document.getElementById('seller').value.trim();
+    const quantity = Number(document.getElementById('quantity').value) || 0;
+    const price = 2500 * quantity;
+    const sellerShare = currentWeedPage==='scarface' ? price * 0.8 : price * 0.6;
+    const yourShare = currentWeedPage==='scarface' ? price * 0.2 : price * 0.4;
+    const entry = {
+      buyer, seller, quantity, price,
+      sellerShare, yourShare,
+      date: formatDate(Date.now()),
+      timestamp: Date.now(),
+      category: currentWeedPage
+    };
+    try {
+      await push(entriesRef, entry);
+      entryForm.reset();
+      updateShares();
+      showSection('overview');
+    } catch(err){
+      console.error('Firebase push error', err);
+      alert('Fehler beim Speichern (siehe Konsole).');
+    }
+  });
+
+  // Reset form
+  document.getElementById('resetForm').addEventListener('click', ()=>{
+    entryForm.reset();
+    updateShares();
+  });
+
+  // ====== Real-time Listener von Firebase ======
+  onValue(entriesRef, snapshot=>{
+    entries = [];
+    snapshot.forEach(child=>{
+      const val = child.val();
+      val.key = child.key;
+      entries.push(val);
+    });
+    // sort desc
+    entries.sort((a,b)=>b.timestamp - a.timestamp);
+    renderOverview();
+    renderAdminTable();
+  });
+
+  // ====== Übersicht rendern ======
+  function renderOverview(){
+    entriesList.innerHTML = '';
+    const filtered = entries.filter(en => en.category === currentWeedPage || !en.category);
+    if(filtered.length === 0){
+      entriesList.innerHTML = '<p class="text-gray-400">Keine Einträge vorhanden.</p>';
+      return;
+    }
+    filtered.forEach(en=>{
+      const el = document.createElement('div');
+      el.className = 'p-3 rounded-md bg-gray-800 border border-gray-700';
+      el.innerHTML = `
+        <div class="text-sm text-gray-400 mb-1">${en.date}</div>
+        <div class="font-semibold">${escapeHtml(en.buyer)} → ${escapeHtml(en.seller)}</div>
+        <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
+        <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+        <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
+      `;
+      entriesList.appendChild(el);
+    });
+  }
+
+  // ====== Admin Ansicht / Tabelle ======
+  adminLoginBtn.addEventListener('click', ()=>{
+    if(adminPassInput.value === ADMIN_PASSWORD){
+      adminError.classList.add('hidden-el');
+      document.getElementById('adminLoginSection').classList.add('hidden-el');
+      adminContent.classList.remove('hidden-el');
+      renderAdminTable();
+    } else {
+      adminError.classList.remove('hidden-el');
+      setTimeout(()=> adminError.classList.add('hidden-el'), 2200);
+    }
+  });
+
+  function renderAdminTable(){
+    adminTableBody.innerHTML = '';
+    const filtered = entries.filter(en => en.category === currentWeedPage || !en.category);
+    let revenue = 0;
+    filtered.forEach(en=>{
+      revenue += Number(en.yourShare || 0);
+      const tr = document.createElement('tr');
+      tr.className = 'border-t border-gray-800';
+      tr.innerHTML = `<td class="p-2 small-muted">${escapeHtml(en.date)}</td>
+        <td class="p-2">${escapeHtml(en.buyer)}</td>
+        <td class="p-2">${escapeHtml(en.seller)}</td>
+        <td class="p-2">${escapeHtml(String(en.quantity))}</td>
+        <td class="p-2">${formatCurrency(en.price)}</td>
+        <td class="p-2">${formatCurrency(en.sellerShare)}</td>
+        <td class="p-2">${formatCurrency(en.yourShare)}</td>
+        <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
+      adminTableBody.appendChild(tr);
+    });
+    totalCount.innerText = filtered.length;
+    totalRevenue.innerText = formatCurrency(revenue);
+  }
+
+  // delete called from global scope
+  window.deleteEntry = function(key){
+    if(!confirm('Eintrag wirklich löschen?')) return;
+    remove(ref(db, 'weed_entries/' + key)).catch(err=>console.error('Delete failed', err));
+  };
+
+  // ====== CSV Export ======
+  exportCsv.addEventListener('click', ()=>{
+    const filtered = entries.filter(en => en.category === currentWeedPage || !en.category);
+    let csv = 'Datum,Käufer,Verkäufer,Menge,Preis,Verkäufer,Käufer\n';
+    filtered.forEach(en=>{
+      csv += `"${en.date}","${(en.buyer||'').replace(/"/g,'""')}","${(en.seller||'').replace(/"/g,'""')}",${en.quantity},${en.price},${en.sellerShare},${en.yourShare}\n`;
+    });
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `${currentWeedPage}_entries.csv`;
+    link.click();
+  });
+
+  // ====== Small utilities ======
+  function escapeHtml(str){
+    if(!str) return '';
+    return String(str).replace(/[&<>"']/g, s=>{
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[s];
+    });
+  }
+
+  // initial UI setup
+  updateWeedMenu();
+  updateBackgrounds();
+  showSection('new');
+
 </script>
 </body>
 </html>

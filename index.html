@@ -178,7 +178,17 @@ const quantity=Number(quantityInput.value);
 const price=quantity*2500;
 const sellerShare=price*0.6;
 const yourShare=price*0.4;
-const entry={buyer,seller,quantity,price,sellerShare,yourShare,date:formatDate(new Date())};
+const entry = {
+    buyer,
+    seller,
+    quantity,
+    price,
+    sellerShare,
+    yourShare,
+    date: formatDate(new Date()),
+    timestamp: Date.now()  // Neu: für Sortierung
+};
+
 await push(entriesRef,entry);
 e.target.reset();
 updateShares();
@@ -196,7 +206,7 @@ data.key=child.key;
 entries.push(data);
 });
 // Neueste oben
-entries.sort((a,b)=>new Date(b.date)-new Date(a.date));
+entries.sort((a,b)=>b.timestamp - a.timestamp);
 renderOverview();
 renderAdminTable();
 });

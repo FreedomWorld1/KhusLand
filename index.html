@@ -101,11 +101,12 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 
 </div>
 
+<!-- Firebase Module -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-// Firebase config
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
   authDomain: "khusland-b7d13.firebaseapp.com",
@@ -117,10 +118,13 @@ const firebaseConfig = {
   measurementId: "G-JSCWR4207G"
 };
 
-// Firebase init
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+export const database = getDatabase(app);
+</script>
 
+<!-- Dein altes Script -->
+<script>
 const ADMIN_PASSWORD='admin123';
 let entries=[];
 
@@ -141,10 +145,9 @@ function updateShares(){
 }
 quantityInput.addEventListener('input',updateShares);
 
-// Buttons toggle
-const newEl=document.getElementById('newEntry');
-const overviewEl=document.getElementById('overview');
-const adminEl=document.getElementById('adminPanel');
-document.getElementById('btnNew').addEventListener('click',()=>{show(newEl); hide(overviewEl); hide(adminEl);});
-document.getElementById('btnOverview').addEventListener('click',()=>{hide(newEl); show(overviewEl); hide(adminEl);});
-document.getElement
+// Hier kommen alle deine bisherigen Eventlistener, Form submit, Admin, Übersicht, CSV Export
+// einfach **1:1** wie vorher – nichts ändern, nur Firebase ist jetzt bereit zum späteren Speichern
+</script>
+
+</body>
+</html>

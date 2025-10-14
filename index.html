@@ -10,7 +10,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 .card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
 .shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
 .small-muted { color: #9ca3af; font-size: 0.85rem; }
-.btn { transition: all .15s ease; font-size: 0.9rem; }
+.btn { transition: all .15s ease; font-size: 0.9rem; cursor:pointer; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
 input { transition: all 0.15s ease; font-size: 0.95rem; }
@@ -141,57 +141,10 @@ function updateShares(){
 }
 quantityInput.addEventListener('input',updateShares);
 
-// Save to Firebase
-function saveToFirebase(entry){
-  const newRef = push(ref(database, 'weed_entries'));
-  set(newRef, entry);
-}
-
-// Load from Firebase
-function loadFromFirebase(){
-  onValue(ref(database, 'weed_entries'), snapshot=>{
-    const data = snapshot.val() || {};
-    entries = Object.values(data);
-    renderOverview();
-    renderAdminTable();
-  });
-}
-
-// Form submit
-document.getElementById('entryForm').addEventListener('submit', e=>{
-  e.preventDefault();
-  const buyer=document.getElementById('buyer').value;
-  const seller=document.getElementById('seller').value;
-  const quantity=Number(quantityInput.value);
-  const price=quantity*2500;
-  const sellerShare=price*0.6;
-  const yourShare=price*0.4;
-  const entry={buyer,seller,quantity,price,sellerShare,yourShare,date:new Date().toLocaleString()};
-  saveToFirebase(entry);
-  e.target.reset();
-  updateShares();
-});
-
-// Render Übersicht
-function renderOverview(){
-  const list=document.getElementById('entriesList');
-  list.innerHTML='';
-  if(entries.length===0){list.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
-  entries.forEach(en=>{
-    const el=document.createElement('div');
-    el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
-    el.innerHTML=
-    `<div class="text-sm text-gray-400 mb-1">${en.date}</div>
-     <div class="font-semibold">${en.buyer} → ${en.seller}</div>
-     <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
-     <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-     <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-    list.appendChild(el);
-  });
-}
-
-// Panels toggle
+// Buttons toggle
 const newEl=document.getElementById('newEntry');
 const overviewEl=document.getElementById('overview');
 const adminEl=document.getElementById('adminPanel');
-document.getElementById('btnNew').addEventListener('click',()=>{show(new
+document.getElementById('btnNew').addEventListener('click',()=>{show(newEl); hide(overviewEl); hide(adminEl);});
+document.getElementById('btnOverview').addEventListener('click',()=>{hide(newEl); show(overviewEl); hide(adminEl);});
+document.getElement

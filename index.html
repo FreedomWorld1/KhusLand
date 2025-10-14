@@ -146,7 +146,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// --- Variablen ---
 let currentWeedPage = 'weed';
 let entries = [];
 const ADMIN_PASSWORD = 'admin123';
@@ -164,7 +163,6 @@ const newEntryDiv = document.getElementById('newEntry');
 const overviewDiv = document.getElementById('overview');
 const adminDiv = document.getElementById('adminPanel');
 
-// --- Hintergrundfarbe ändern ---
 function updateBackgrounds(){
   const panels = [newEntryDiv, overviewDiv, adminDiv];
   panels.forEach(p=>{
@@ -185,6 +183,7 @@ weedMenu.querySelectorAll('a').forEach(a=>{
     weedBtn.textContent = currentWeedPage==='weed'?'Weed ▾':'ScarFace ▾';
     updateBackgrounds();
     setupFirebaseListener();
+    updateShares(); // ⚡ Label & Shares sofort aktualisieren
   });
 });
 
@@ -300,7 +299,7 @@ function renderAdminTable(){
   adminTableBody.innerHTML='';
   let revenue=0;
   entries.forEach(en=>{
-    revenue+=en.yourShare;
+    revenue+=en.price; // ⚡ Gesamtumsatz berechnen
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td class="p-2 small-muted">${en.date}</td>

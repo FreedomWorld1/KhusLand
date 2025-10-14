@@ -10,7 +10,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 .card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
 .shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
 .small-muted { color: #9ca3af; font-size: 0.85rem; }
-.btn { transition: all .15s ease; font-size: 0.9rem; }
+.btn { transition: all .15s ease; font-size: 0.9rem; cursor:pointer; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
 input { transition: all 0.15s ease; font-size: 0.95rem; }
@@ -169,7 +169,6 @@ document.getElementById('hamburgerBtn').addEventListener('click',()=>document.ge
 const weedBtn = document.getElementById('weedBtn');
 const weedMenu = document.getElementById('weedMenu');
 weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
-
 weedMenu.querySelectorAll('a').forEach(a=>{
     a.addEventListener('click', e=>{
         e.preventDefault();
@@ -181,7 +180,6 @@ weedMenu.querySelectorAll('a').forEach(a=>{
         renderAdminTable();
     });
 });
-
 function updateWeedMenu(){
     weedMenu.querySelectorAll('a').forEach(a=>{
         if(a.dataset.page===currentWeedPage){
@@ -192,7 +190,6 @@ function updateWeedMenu(){
             a.classList.add('text-gray-400');
         }
     });
-    // Button oben
     weedBtn.textContent = currentWeedPage==='weed'?'Weed ▾':'ScarFace ▾';
     weedBtn.className = 'px-3 py-1.5 rounded-md btn '+(currentWeedPage==='weed'?'bg-green-700 text-white':'bg-gray-900 text-white');
 }
@@ -324,35 +321,4 @@ function renderAdminTable(){
         adminTableBody.prepend(tr);
     });
     totalCount.innerText=filteredEntries.length;
-    totalRevenue.innerText=formatCurrency(revenue);
-}
-
-window.deleteEntry=function(key){if(confirm('Eintrag wirklich löschen?')) remove(ref(db,'weed_entries/'+key));}
-
-// ---------------- CSV Export ----------------
-exportCsv.addEventListener('click',()=>{
-    if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
-    const sortedEntries = [...entries].sort((a,b)=>b.timestamp-a.timestamp);
-    const header=['date','buyer','seller','quantity','price','sellerShare','yourShare','category'];
-    const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare,e.category].join(','));
-    const csv=[header.join(','),...rows].join('\n');
-    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download='entries.csv';
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-    a.remove();
-}
-
-// ---------------- Initial Render ----------------
-document.addEventListener('DOMContentLoaded', ()=>{
-    updateShares();
-    renderOverview();
-    renderAdminTable();
-});
-</script>
-</body>
-</html>
+    totalRevenue

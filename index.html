@@ -235,13 +235,51 @@ function updateScarShares(){
 scarQuantityInput.addEventListener('input', updateScarShares);
 updateScarShares();
 
-// --- FORM SUBMITS ---
+// --- RESET BUTTONS ---
+document.getElementById('resetForm').addEventListener('click',()=>{
+  document.getElementById('entryForm').reset(); updateShares();
+});
+document.getElementById('scarResetForm').addEventListener('click',()=>{
+  document.getElementById('scarfaceForm').reset(); updateScarShares();
+});
+
+// --- SUBMITS ---
 // Weed
 document.getElementById('entryForm').addEventListener('submit', async e=>{
-e.preventDefault();
-const buyer=document.getElementById('buyer').value;
-const seller=document.getElementById('seller').value;
-const quantity=Number(quantityInput.value);
-const price=quantity*2500;
-const sellerShare=price*0.6;
-const
+  e.preventDefault();
+  const buyer=document.getElementById('buyer').value;
+  const seller=document.getElementById('seller').value;
+  const quantity=Number(quantityInput.value);
+  const price=quantity*2500;
+  const sellerShare=price*0.6;
+  const yourShare=price*0.4;
+  const entry = { buyer,seller,quantity,price,sellerShare,yourShare,date:formatDate(new Date()),timestamp:Date.now() };
+  await push(entriesRef,entry);
+  e.target.reset(); updateShares();
+});
+
+// ScarFace
+document.getElementById('scarfaceForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const buyer=document.getElementById('scarBuyer').value;
+  const seller=document.getElementById('scarSeller').value;
+  const quantity=Number(scarQuantityInput.value);
+  const price=quantity*2500;
+  const sellerShare=price*0.8;
+  const buyerShare=price*0.2;
+  const entry = { buyer,seller,quantity,price,sellerShare,buyerShare,date:formatDate(new Date()),timestamp:Date.now() };
+  await push(scarfaceRef,entry);
+  e.target.reset(); updateScarShares();
+});
+
+// --- REALTIME LISTENERS ---
+onValue(entriesRef,snapshot=>{
+  entries=[];
+  snapshot.forEach(child=>{ const data=child.val(); data.key=child.key; entries.push(data); });
+  entries.sort((a,b)=>b.timestamp - a.timestamp);
+  renderOverview();
+  renderAdminTable();
+});
+onValue(scarfaceRef,snapshot=>{
+  scarEntries=[];
+  snapshot.forEach(child=>{ const data=child.val(); data.key=

@@ -23,7 +23,7 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 
 <!-- HEADER -->
 <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
-<h1 class="text-2xl font-bold text-green-400 tracking-tight">💊 Kokain Ankauf</h1>
+<h1 class="text-2xl font-bold text-purple-400 tracking-tight">💊 Kokain Ankauf</h1>
 <div class="flex items-center gap-2">
 <button id="btnNew" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
 <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
@@ -47,7 +47,7 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 
 <!-- NEUER ANKAUF -->
 <div id="newEntry" class="card p-6 shadow-soft">
-<h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
+<h2 class="text-xl font-semibold mb-4 text-purple-400">💰 Neuer Ankauf</h2>
 <form id="entryForm" class="space-y-5">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
@@ -76,7 +76,7 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
 
 <!-- ÜBERSICHT -->
 <div id="overview" class="card p-5 shadow-soft hidden-el">
-<h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
+<h2 class="text-lg font-semibold mb-4 text-purple-400">📋 Übersicht</h2>
 <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
 </div>
 
@@ -122,14 +122,14 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-  authDomain: "khusland-b7d13.firebaseapp.com",
-  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-  projectId: "khusland-b7d13",
-  storageBucket: "khusland-b7d13.firebasestorage.app",
-  messagingSenderId: "69573193613",
-  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-  measurementId: "G-JSCWR4207G"
+apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+authDomain: "khusland-b7d13.firebaseapp.com",
+databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+projectId: "khusland-b7d13",
+storageBucket: "khusland-b7d13.firebasestorage.app",
+messagingSenderId: "69573193613",
+appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+measurementId: "G-JSCWR4207G"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -149,6 +149,10 @@ const hamburgerBtn=document.getElementById('hamburgerBtn');
 const hamburgerMenu=document.getElementById('hamburgerMenu');
 hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
 
+// Aktive Seite im Hamburger grün
+const currentPage = window.location.pathname.split("/").pop();
+if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
+
 // Tabs
 const btnNew=document.getElementById('btnNew');
 const btnOverview=document.getElementById('btnOverview');
@@ -156,58 +160,88 @@ const btnAdmin=document.getElementById('btnAdmin');
 const newEntry=document.getElementById('newEntry');
 const overview=document.getElementById('overview');
 const adminPanel=document.getElementById('adminPanel');
+btnNew.addEventListener('click',()=>{show(newEntry); hide(overview); hide(adminPanel);});
+btnOverview.addEventListener('click',()=>{hide(newEntry); show(overview); hide(adminPanel); renderOverview();});
+btnAdmin.addEventListener('click',()=>{hide(newEntry); hide(overview); show(adminPanel);});
 
-btnNew.addEventListener('click',()=>{show(newEntry);hide(overview);hide(adminPanel);});
-btnOverview.addEventListener('click',()=>{hide(newEntry);show(overview);hide(adminPanel); renderOverview();});
-btnAdmin.addEventListener('click',()=>{hide(newEntry);hide(overview);show(adminPanel);});
-
-// Kokain-Button grün
-const currentPage=window.location.pathname.split("/").pop();
-if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
-
-// Shares update
+// Shares berechnen
 const cashInput=document.getElementById('cash');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
-function updateShares(){
-  const c=Number(cashInput.value)||0;
-  sellerShareEl.textContent=formatCurrency(c*0.8);
-  yourShareEl.textContent=formatCurrency(c*0.2);
+function updateShares(){ 
+const c=Number(cashInput.value)||0;
+sellerShareEl.textContent=formatCurrency(c*0.8);
+yourShareEl.textContent=formatCurrency(c*0.2);
 }
 cashInput.addEventListener('input',updateShares);
+updateShares();
 
-// Form submit
+// Formular speichern
 document.getElementById('entryForm').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const buyer=document.getElementById('buyer').value;
-  const seller=document.getElementById('seller').value;
-  const quantity=Number(document.getElementById('quantity').value);
-  const cash=Number(cashInput.value);
-  const sellerShare=cash*0.8;
-  const yourShare=cash*0.2;
-  const entry={buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()};
+e.preventDefault();
+const buyer=document.getElementById('buyer').value;
+const seller=document.getElementById('seller').value;
+const cash=Number(document.getElementById('cash').value);
+const quantity=Number(document.getElementById('quantity').value);
+const sellerShare=cash*0.8;
+const yourShare=cash*0.2;
+const entry={buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()};
 
-  // Firebase speichern
-  await push(entriesRef, entry);
-
-  e.target.reset();
-  updateShares();
+await push(entriesRef,entry);
+e.target.reset();
+updateShares();
 });
 
-// Firebase Echtzeit-Listener
+// Echtzeit Listener
 onValue(entriesRef,snapshot=>{
-  entries=[];
-  snapshot.forEach(childSnap=>{
-    const data=childSnap.val();
-    data.key=childSnap.key;
-    entries.push(data);
-  });
-  renderOverview();
-  renderAdminTable();
+entries=[];
+snapshot.forEach(childSnap=>{
+const data=childSnap.val();
+data.key=childSnap.key;
+entries.push(data);
+});
+renderOverview();
+renderAdminTable();
 });
 
 // Übersicht rendern
 const entriesList=document.getElementById('entriesList');
 function renderOverview(){
-  entriesList.innerHTML='';
-  if(entries.length===0){
+entriesList.innerHTML='';
+if(entries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
+entries.forEach(en=>{
+const el=document.createElement('div');
+el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+el.innerHTML=`
+<div class="text-sm text-gray-400 mb-1">${en.date}</div>
+<div class="font-semibold">${en.buyer} → ${en.seller}</div>
+<div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
+<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
+entriesList.appendChild(el);
+});
+}
+
+// Adminbereich
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminPassInput=document.getElementById('adminPass');
+const adminError=document.getElementById('adminError');
+const adminTableBody=document.getElementById('adminTableBody');
+const totalCount=document.getElementById('totalCount');
+const totalRevenue=document.getElementById('totalRevenue');
+const exportCsv=document.getElementById('exportCsv');
+
+adminLoginBtn.addEventListener('click',()=>{
+if(adminPassInput.value===ADMIN_PASSWORD){ adminError.classList.add('hidden-el'); show(document.getElementById('adminContent')); renderAdminTable(); }
+else adminError.classList.remove('hidden-el');
+});
+
+function renderAdminTable(){
+adminTableBody.innerHTML='';
+let revenue=0;
+entries.forEach(en=>{
+revenue+=en.yourShare;
+const tr=document.createElement('tr');
+tr.className='border-t border-gray-800';
+tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
+<td class="p-2">${en.b

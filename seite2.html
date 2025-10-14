@@ -31,7 +31,6 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
       <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
       <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
 
-      <!-- Hamburger-Menü -->
       <div class="relative">
         <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
           <span class="block h-0.5 bg-gray-100"></span>
@@ -42,7 +41,6 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
           <a href="./" class="block px-4 py-2 hover:bg-gray-700">Weed</a>
           <a href="seite2.html" id="linkSeite2" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
           <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
-
         </div>
       </div>
     </div>
@@ -111,23 +109,39 @@ input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22c
   </div>
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+  authDomain: "khusland-b7d13.firebaseapp.com",
+  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+  projectId: "khusland-b7d13",
+  storageBucket: "khusland-b7d13.firebasestorage.app",
+  messagingSenderId: "69573193613",
+  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+  measurementId: "G-JSCWR4207G"
+};
+
+// Init Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const entriesRef = ref(db, 'kokain_entries'); // Firebase-Pfad für Seite2
+
 const ADMIN_PASSWORD='admin456';
 let entries=[];
 
+// Helper
 function show(el){el.classList.remove('hidden-el');}
 function hide(el){el.classList.add('hidden-el');}
 function formatCurrency(n){return Math.round(n)+' $';}
 
-// Hamburger Menü
+// Hamburger
 const hamburgerBtn=document.getElementById('hamburgerBtn');
 const hamburgerMenu=document.getElementById('hamburgerMenu');
 hamburgerBtn.addEventListener('click',()=>hamburgerMenu.classList.toggle('hidden'));
-
-// Aktive Seite hervorheben
-const currentPage=window.location.pathname.split("/").pop();
-if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
-else document.getElementById("linkSeite1").classList.add("active-link");
 
 // Tabs
 const btnNew=document.getElementById('btnNew');
@@ -138,30 +152,50 @@ const overview=document.getElementById('overview');
 const adminPanel=document.getElementById('adminPanel');
 
 btnNew.addEventListener('click',()=>{show(newEntry);hide(overview);hide(adminPanel);});
-btnOverview.addEventListener('click',()=>{hide(newEntry);show(overview);hide(adminPanel);renderOverview();});
+btnOverview.addEventListener('click',()=>{hide(newEntry);show(overview);hide(adminPanel);});
 btnAdmin.addEventListener('click',()=>{hide(newEntry);hide(overview);show(adminPanel);});
 
-// Speicherfunktionen
-function loadLocal(){entries=JSON.parse(localStorage.getItem('kokain_entries')||'[]');}
-function saveLocal(){localStorage.setItem('kokain_entries',JSON.stringify(entries));}
+// Aktive Seite
+const currentPage=window.location.pathname.split("/").pop();
+if(currentPage.includes("seite2")) document.getElementById("linkSeite2").classList.add("active-link");
 
-// Eintrag speichern
-document.getElementById('entryForm').addEventListener('submit',e=>{
+// Shares
+const cashInput=document.getElementById('cash');
+const sellerShareEl=document.getElementById('sellerShare');
+const yourShareEl=document.getElementById('yourShare');
+function updateShares(){
+  const c=Number(cashInput.value)||0;
+  sellerShareEl.textContent=formatCurrency(c*0.8);
+  yourShareEl.textContent=formatCurrency(c*0.2);
+}
+cashInput.addEventListener('input',updateShares);
+
+// Firebase: Eintrag speichern
+document.getElementById('entryForm').addEventListener('submit', async e=>{
   e.preventDefault();
   const buyer=document.getElementById('buyer').value;
   const seller=document.getElementById('seller').value;
-  const cash=Number(document.getElementById('cash').value);
   const quantity=Number(document.getElementById('quantity').value);
+  const cash=Number(document.getElementById('cash').value);
   const sellerShare=cash*0.8;
   const yourShare=cash*0.2;
-
-  entries.push({buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()});
-  saveLocal();
+  const entry={buyer,seller,quantity,cash,sellerShare,yourShare,date:new Date().toLocaleString()};
+  await push(entriesRef, entry);
   e.target.reset();
   updateShares();
+  alert("💾 Eintrag gespeichert!");
+});
+
+// Firebase: Daten laden & live rendern
+onValue(entriesRef, snapshot=>{
+  entries=[];
+  snapshot.forEach(childSnap=>{
+    const data=childSnap.val();
+    data.key = childSnap.key;
+    entries.push(data);
+  });
   renderOverview();
   renderAdminEntries();
-  alert("💾 Eintrag gespeichert!");
 });
 
 // Übersicht rendern
@@ -177,27 +211,22 @@ function renderOverview(){
       <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
       <div class="text-sm mt-1">Menge: ${en.quantity} | Cash: ${formatCurrency(en.cash)}</div>
       <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-      <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
-    `;
+      <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
     list.appendChild(el);
   });
 }
 
-// Admin-Einträge rendern
+// Admin rendern
 function renderAdminEntries(){
-  const container = document.getElementById('adminEntries');
-  container.innerHTML = '';
-  if(entries.length === 0){
-    container.innerHTML = '<p class="text-gray-400">Keine Einträge vorhanden.</p>';
-    return;
-  }
-
-  let totalCash=0;
-  entries.forEach((en, index) => {
-    totalCash+=en.cash;
-    const el = document.createElement('div');
-    el.className = 'p-3 rounded-md bg-gray-800 border border-gray-700 flex justify-between items-center';
-    el.innerHTML = `
+  const container=document.getElementById('adminEntries');
+  container.innerHTML='';
+  if(entries.length===0){container.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>';return;}
+  let totalBuyerShare=0;
+  entries.forEach(en=>{
+    totalBuyerShare+=en.yourShare;
+    const el=document.createElement('div');
+    el.className='p-3 rounded-md bg-gray-800 border border-gray-700 flex justify-between items-center';
+    el.innerHTML=`
       <div>
         <div class="text-sm text-gray-400 mb-1">${en.date}</div>
         <div class="font-semibold">${en.buyer} kauft von ${en.seller}</div>
@@ -205,51 +234,13 @@ function renderAdminEntries(){
         <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
         <div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>
       </div>
-      <button data-index="${index}" class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded-md btn text-sm">Löschen</button>
-    `;
+      <button data-key="${en.key}" class="px-2 py-1 bg-red-600 hover:bg-red-500 rounded-md btn text-sm">Löschen</button>`;
     container.appendChild(el);
   });
-
   document.getElementById('totalCount').textContent = entries.length;
-  document.getElementById('totalRevenue').textContent = formatCurrency(totalCash);
+  document.getElementById('totalRevenue').textContent = formatCurrency(totalBuyerShare);
 
-  container.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const idx = btn.getAttribute('data-index');
-      entries.splice(idx, 1);
-      saveLocal();
-      renderAdminEntries();
-      renderOverview();
-    });
-  });
-}
-
-// Admin login
-document.getElementById('adminLoginBtn').addEventListener('click',()=>{
-  const input=document.getElementById('adminPass').value;
-  const err=document.getElementById('adminError');
-  const cont=document.getElementById('adminContent');
-  if(input===ADMIN_PASSWORD){
-    err.classList.add('hidden-el');
-    show(cont);
-    renderAdminEntries();
-  } else err.classList.remove('hidden-el');
-});
-
-// Cash Berechnung
-const cashInput=document.getElementById('cash');
-const sellerShareEl=document.getElementById('sellerShare');
-const yourShareEl=document.getElementById('yourShare');
-function updateShares(){
-  const c=Number(cashInput.value)||0;
-  sellerShareEl.textContent=formatCurrency(c*0.8);
-  yourShareEl.textContent=formatCurrency(c*0.2);
-}
-cashInput.addEventListener('input',updateShares);
-
-// Init
-loadLocal();
-updateShares();
-</script>
-</body>
-</html>
+  container.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const key = btn.getAttribute('data-key');
+      if(confirm("Eintrag wirklich löschen?")) await

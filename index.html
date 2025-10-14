@@ -132,7 +132,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-// ---------------- Firebase ----------------
+// Firebase Config
 const firebaseConfig = {
 apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
 authDomain: "khusland-b7d13.firebaseapp.com",
@@ -144,11 +144,10 @@ appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
 measurementId: "G-JSCWR4207G"
 };
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app);
 const db = getDatabase(app);
 const entriesRef = ref(db,'weed_entries');
 
-// ---------------- Globals ----------------
 const ADMIN_PASSWORD='admin123';
 let entries=[];
 let currentWeedPage='weed';
@@ -162,10 +161,10 @@ function formatDate(d){
   return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
-// ---------------- Hamburger ----------------
+// Hamburger
 document.getElementById('hamburgerBtn').addEventListener('click',()=>document.getElementById('hamburgerMenu').classList.toggle('hidden'));
 
-// ---------------- Dropdown ----------------
+// Dropdown
 const weedBtn = document.getElementById('weedBtn');
 const weedMenu = document.getElementById('weedMenu');
 weedBtn.addEventListener('click', ()=>weedMenu.classList.toggle('hidden'));
@@ -194,7 +193,7 @@ function updateWeedMenu(){
     weedBtn.className = 'px-3 py-1.5 rounded-md btn '+(currentWeedPage==='weed'?'bg-green-700 text-white':'bg-gray-900 text-white');
 }
 
-// ---------------- Tabs ----------------
+// Tabs
 document.getElementById('btnNew').addEventListener('click',()=>{
     show(document.getElementById('newEntry'));
     hide(document.getElementById('overview'));
@@ -212,7 +211,7 @@ document.getElementById('btnAdmin').addEventListener('click',()=>{
     show(document.getElementById('adminPanel'));
 });
 
-// ---------------- Shares ----------------
+// Shares
 const quantityInput=document.getElementById('quantity');
 const sellerShareEl=document.getElementById('sellerShare');
 const yourShareEl=document.getElementById('yourShare');
@@ -232,7 +231,7 @@ function updateShares(){
 quantityInput.addEventListener('input',updateShares);
 updateShares();
 
-// ---------------- Form Submit ----------------
+// Form Submit
 document.getElementById('entryForm').addEventListener('submit', async e=>{
     e.preventDefault();
     const buyer=document.getElementById('buyer').value;
@@ -247,13 +246,13 @@ document.getElementById('entryForm').addEventListener('submit', async e=>{
     updateShares();
 });
 
-// ---------------- Reset ----------------
+// Reset
 document.getElementById('resetForm').addEventListener('click',()=>{
     document.getElementById('entryForm').reset();
     updateShares();
 });
 
-// ---------------- Realtime Listener ----------------
+// Real-time Listener
 onValue(entriesRef, snapshot=>{
     entries=[];
     snapshot.forEach(child=>{
@@ -266,7 +265,7 @@ onValue(entriesRef, snapshot=>{
     renderAdminTable();
 });
 
-// ---------------- Übersicht ----------------
+// Übersicht
 const entriesList=document.getElementById('entriesList');
 function renderOverview(){
     entriesList.innerHTML='';
@@ -285,7 +284,7 @@ function renderOverview(){
     });
 }
 
-// ---------------- Admin ----------------
+// Admin
 const adminLoginBtn=document.getElementById('adminLoginBtn');
 const adminPassInput=document.getElementById('adminPass');
 const adminError=document.getElementById('adminError');
@@ -321,4 +320,23 @@ function renderAdminTable(){
         adminTableBody.prepend(tr);
     });
     totalCount.innerText=filteredEntries.length;
-    totalRevenue
+    totalRevenue.innerText=formatCurrency(revenue);
+}
+
+window.deleteEntry=function(key){if(confirm('Eintrag wirklich löschen?')) remove(ref(db,'weed_entries/'+key));}
+
+// CSV Export
+exportCsv.addEventListener('click',()=>{
+    let csv='Datum,Käufer,Verkäufer,Menge,Preis,Verkäufer,Käufer\n';
+    entries.filter(en => en.category===currentWeedPage || !en.category).forEach(en=>{
+        csv+=`"${en.date}","${en.buyer}","${en.seller}",${en.quantity},${en.price},${en.sellerShare},${en.yourShare}\n`;
+    });
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const link=document.createElement('a');
+    link.href=URL.createObjectURL(blob);
+    link.download=`${currentWeedPage}_entries.csv`;
+    link.click();
+});
+</script>
+</body>
+</html>

@@ -3,203 +3,181 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Produkt-Dashboard</title>
+<title>Weed Ankauf</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-body { font-family: Inter, ui-sans-serif, system-ui; }
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
 .card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
 .shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
-.hidden-el { display:none; }
+.small-muted { color: #9ca3af; font-size: 0.85rem; }
+.btn { transition: all .15s ease; font-size: 0.9rem; }
+.btn:hover { transform: translateY(-2px); }
+.hidden-el { display: none; }
+input { transition: all 0.15s ease; font-size: 0.95rem; }
+input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
+.active-link { background-color: #16a34a !important; color: #fff !important; font-weight: 600; }
+.theme-scarface { background-color: #000 !important; color: white !important; }
 </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
+<body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 <div class="max-w-4xl mx-auto p-6">
 
 <!-- HEADER -->
-<header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
-  <h1 class="text-2xl font-bold text-green-400">📦 Produkt-Dashboard</h1>
-  <div class="flex items-center gap-2">
-    <!-- Dropdown -->
-    <div class="relative">
-      <button id="productBtn" class="px-3 py-1.5 bg-gray-900 text-white rounded-md">Produkt A ▾</button>
-      <div id="productMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
-        <a href="#" data-page="produktA" class="block px-4 py-2 text-white bg-gray-900">Produkt A</a>
-        <a href="#" data-page="produktB" class="block px-4 py-2 hover:bg-gray-700 text-gray-400">Produkt B</a>
-      </div>
-    </div>
+<header id="headerBar" class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center transition-all">
+<h1 id="headerTitle" class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf</h1>
+<div class="flex items-center gap-2">
 
-    <button id="btnNew" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700">Neuer Eintrag</button>
-    <button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700">Übersicht</button>
-    <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500">Admin</button>
+<!-- Dropdown Weed / ScarFace -->
+<div class="relative">
+  <button id="weedBtn" class="px-3 py-1.5 bg-green-700 rounded-md btn">Weed ▾</button>
+  <div id="weedMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+    <a href="#" class="block px-4 py-2 hover:bg-gray-700 text-gray-400" data-page="weed">Weed</a>
+    <a href="#" class="block px-4 py-2 hover:bg-gray-700 text-gray-400" data-page="scarface">ScarFace</a>
   </div>
+</div>
+
+<!-- Tab Buttons -->
+<button id="btnNew" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Neuer Ankauf</button>
+<button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+<button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+
+<div class="relative">
+<button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
+<span class="block h-0.5 bg-gray-100"></span>
+<span class="block h-0.5 bg-gray-100"></span>
+<span class="block h-0.5 bg-gray-100"></span>
+</button>
+<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+<a href="index.html" class="block px-4 py-2 hover:bg-gray-700 active-link">Weed</a>
+<a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
+<a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
+</div>
+</div>
+</div>
 </header>
 
-<!-- NEUER EINTRAG -->
+<!-- MAIN -->
+<div id="mainContainer" class="space-y-5">
+
+<!-- Neuer Ankauf -->
 <div id="newEntry" class="card p-6 shadow-soft">
-  <h2 class="text-xl font-semibold mb-4 text-green-400">📝 Neuer Eintrag</h2>
-  <form id="entryForm" class="space-y-5">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input id="buyer" type="text" placeholder="Kunde" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-      <input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-      <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-        <div class="text-gray-400 mb-0.5">Verkäufer-Anteil</div>
-        <div id="sellerShare" class="text-base font-bold text-green-400">0 €</div>
-      </div>
-      <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-        <div class="text-gray-400 mb-0.5">Käufer-Anteil</div>
-        <div id="buyerShare" class="text-base font-bold text-blue-400">0 €</div>
-      </div>
-    </div>
-    <div class="flex gap-3 mt-3">
-      <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md font-medium">Speichern</button>
-      <button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md font-medium">Zurücksetzen</button>
-    </div>
-  </form>
+<h2 id="formTitle" class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf</h2>
+<form id="entryForm" class="space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+<input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<div id="sellerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+<div id="sellerLabel" class="small-muted mb-0.5">Verkäufer (60%)</div>
+<div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
+</div>
+<div id="buyerBox" class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+<div id="buyerLabel" class="small-muted mb-0.5">Käufer (40%)</div>
+<div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
+</div>
+</div>
+<div class="flex gap-3 mt-3">
+<button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
+<button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
+</div>
+</form>
 </div>
 
-<!-- ÜBERSICHT -->
+<!-- Übersicht -->
 <div id="overview" class="card p-5 shadow-soft hidden-el">
-  <h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
-  <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
+<h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
+<div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
 </div>
 
-<!-- ADMIN -->
+<!-- Admin -->
 <div id="adminPanel" class="card p-5 shadow-soft hidden-el">
-  <h2 class="text-base font-semibold mb-3">Adminbereich</h2>
-  <p class="text-sm text-gray-400">Hier könnten z. B. Exportfunktionen oder Statistiken erscheinen.</p>
+<h2 class="text-base font-semibold mb-3">Adminbereich</h2>
+<p class="small-muted mb-3">Hier können Daten verwaltet werden.</p>
 </div>
 </div>
 
 <script>
-// --- Grundvariablen ---
-let currentPage = "produktA";
-let entries = [];
+let currentWeedPage = "weed";
+let sellerPercent = 0.6;
+let buyerPercent = 0.4;
 
-// --- Hilfsfunktionen ---
-function show(el){el.classList.remove("hidden-el");}
-function hide(el){el.classList.add("hidden-el");}
-function formatCurrency(n){return Math.round(n) + " €";}
-
-// --- Dropdown ---
-const productBtn = document.getElementById("productBtn");
-const productMenu = document.getElementById("productMenu");
-
-productBtn.addEventListener("click",()=>productMenu.classList.toggle("hidden"));
-productMenu.querySelectorAll("a").forEach(a=>{
-  a.addEventListener("click",e=>{
-    e.preventDefault();
-    currentPage = a.dataset.page;
-    updateProductMenu();
-    productMenu.classList.add("hidden");
-    renderOverview();
-    updateShares();
-  });
-});
-
-function updateProductMenu(){
-  productMenu.querySelectorAll("a").forEach(a=>{
-    if(a.dataset.page===currentPage){
-      a.classList.add("bg-gray-900","text-white","font-bold");
-      a.classList.remove("text-gray-400");
-    }else{
-      a.classList.remove("bg-gray-900","text-white","font-bold");
-      a.classList.add("text-gray-400");
-    }
-  });
-  productBtn.textContent = (currentPage==="produktA"?"Produkt A ▾":"Produkt B ▾");
-  productBtn.className="px-3 py-1.5 rounded-md bg-gray-900 text-white";
-}
-updateProductMenu();
-
-// --- Tabs ---
-document.getElementById("btnNew").addEventListener("click",()=>{
-  show(document.getElementById("newEntry"));
-  hide(document.getElementById("overview"));
-  hide(document.getElementById("adminPanel"));
-});
-document.getElementById("btnOverview").addEventListener("click",()=>{
-  hide(document.getElementById("newEntry"));
-  show(document.getElementById("overview"));
-  hide(document.getElementById("adminPanel"));
-  renderOverview();
-});
-document.getElementById("btnAdmin").addEventListener("click",()=>{
-  hide(document.getElementById("newEntry"));
-  hide(document.getElementById("overview"));
-  show(document.getElementById("adminPanel"));
-});
-
-// --- Berechnung ---
-const quantityInput = document.getElementById("quantity");
+const weedBtn = document.getElementById("weedBtn");
+const weedMenu = document.getElementById("weedMenu");
+const headerBar = document.getElementById("headerBar");
+const headerTitle = document.getElementById("headerTitle");
+const sellerLabel = document.getElementById("sellerLabel");
+const buyerLabel = document.getElementById("buyerLabel");
 const sellerShareEl = document.getElementById("sellerShare");
-const buyerShareEl  = document.getElementById("buyerShare");
+const buyerShareEl = document.getElementById("yourShare");
+const quantityInput = document.getElementById("quantity");
+const sellerBox = document.getElementById("sellerBox");
+const buyerBox = document.getElementById("buyerBox");
+
+weedBtn.addEventListener("click", ()=>weedMenu.classList.toggle("hidden"));
+
+weedMenu.querySelectorAll("a").forEach(a=>{
+  a.addEventListener("click", e=>{
+    e.preventDefault();
+    currentWeedPage = a.dataset.page;
+    updateTheme();
+    weedMenu.classList.add("hidden");
+  });
+});
+
+function updateTheme(){
+  if(currentWeedPage === "scarface"){
+    weedBtn.textContent = "ScarFace ▾";
+    weedBtn.className = "px-3 py-1.5 rounded-md btn bg-black text-white";
+    headerTitle.textContent = "💀 ScarFace Ankauf";
+    headerTitle.className = "text-2xl font-bold text-white";
+    headerBar.style.background = "#000";
+    document.body.style.background = "#000";
+    document.body.style.color = "white";
+    sellerLabel.textContent = "Verkäufer (80%)";
+    buyerLabel.textContent = "Käufer (70%)";
+    sellerBox.style.background = "#111";
+    buyerBox.style.background = "#111";
+    sellerPercent = 0.8;
+    buyerPercent = 0.7;
+  } else {
+    weedBtn.textContent = "Weed ▾";
+    weedBtn.className = "px-3 py-1.5 rounded-md btn bg-green-700 text-white";
+    headerTitle.textContent = "🌿 Weed Ankauf";
+    headerTitle.className = "text-2xl font-bold text-green-400";
+    headerBar.style.background = "";
+    document.body.style.background = "#111827";
+    document.body.style.color = "#f3f4f6";
+    sellerLabel.textContent = "Verkäufer (60%)";
+    buyerLabel.textContent = "Käufer (40%)";
+    sellerBox.style.background = "#1f2937";
+    buyerBox.style.background = "#1f2937";
+    sellerPercent = 0.6;
+    buyerPercent = 0.4;
+  }
+  updateShares();
+}
+
+function formatCurrency(n){return Math.round(n)+" $";}
 
 function updateShares(){
   const q = Number(quantityInput.value) || 0;
-  const price = q * 100;           // Beispielpreis
-  let sellerPercent = 0.6;
-  let buyerPercent  = 0.4;
-  if(currentPage==="produktB"){     // für Produkt B andere Anteile
-    sellerPercent = 0.8;
-    buyerPercent  = 0.7;
-    document.getElementById("newEntry").classList.add("bg-gray-900");
-  } else {
-    document.getElementById("newEntry").classList.remove("bg-gray-900");
-  }
-  sellerShareEl.textContent = formatCurrency(price*sellerPercent);
-  buyerShareEl.textContent  = formatCurrency(price*buyerPercent);
+  const price = q * 2500;
+  sellerShareEl.textContent = formatCurrency(price * sellerPercent);
+  buyerShareEl.textContent = formatCurrency(price * buyerPercent);
 }
-quantityInput.addEventListener("input",updateShares);
+quantityInput.addEventListener("input", updateShares);
 
-// --- Formulare ---
-document.getElementById("entryForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  const entry = {
-    buyer: document.getElementById("buyer").value,
-    seller: document.getElementById("seller").value,
-    quantity: Number(quantityInput.value)||0,
-    category: currentPage,
-    time: new Date().toLocaleString()
-  };
-  entries.push(entry);
-  e.target.reset();
-  updateShares();
-  renderOverview();
-});
-document.getElementById("resetForm").addEventListener("click",()=>{
+// Reset Form
+document.getElementById("resetForm").addEventListener("click", ()=>{
   document.getElementById("entryForm").reset();
   updateShares();
 });
 
-// --- Übersicht ---
-function renderOverview(){
-  const list = document.getElementById("entriesList");
-  list.innerHTML="";
-  const filtered = entries.filter(e=>e.category===currentPage);
-  if(filtered.length===0){
-    list.innerHTML="<p class='text-gray-400'>Keine Einträge vorhanden.</p>";
-    return;
-  }
-  filtered.forEach(en=>{
-    const div=document.createElement("div");
-    div.className="p-3 rounded-md border border-gray-700 "+(currentPage==="produktB"?"bg-gray-900":"bg-gray-800");
-    div.innerHTML=`
-      <div class="text-sm text-gray-400 mb-1">${en.time}</div>
-      <div class="font-semibold">${en.seller} → ${en.buyer}</div>
-      <div class="text-sm mt-1">Menge: ${en.quantity}</div>`;
-    list.prepend(div);
-  });
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-  updateShares();
-  renderOverview();
-});
+updateTheme();
 </script>
 </body>
 </html>

@@ -15,7 +15,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 .hidden-el { display: none; }
 input, textarea { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
-.product-image { width:72px; height:48px; object-fit:cover; border-radius:8px; }
+.product-image { width:120px; height:80px; object-fit:cover; border-radius:8px; }
 </style>
 </head>
 
@@ -65,7 +65,7 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
               <input id="prodQuantity" type="number" min="0" placeholder="Anzahl" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
             </div>
             <textarea id="prodDesc" rows="2" placeholder="Beschreibung" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
-            <input id="prodResources" placeholder="Ressourcen (z.B. Waffenteile:1000; Deadcoins:200000)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"/>
+            <input id="prodResources" placeholder="Ressourcen (z.B. Waffenteile:1000; Deadcoins:200000; Plastik:400)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"/>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <input id="prodImg" placeholder="Bild-URL (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
               <input id="prodCategory" placeholder="Kategorie" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
@@ -203,31 +203,33 @@ function renderProducts(){
     const card = document.createElement('div');
     card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm';
 
+    // Ressourcen-Tabelle ab "Ressource" und "Anzahl"
     let resourcesHTML = '';
     if(p.resources){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
       if(pairs.length > 0){
         resourcesHTML = `
-        <table class="w-full text-sm text-gray-300 border border-gray-700 rounded-md mt-2">
-          <thead class="bg-gray-700 text-green-400">
-            <tr><th class="text-left px-3 py-1">Ressource</th><th class="text-right px-3 py-1">Anzahl</th></tr>
-          </thead>
-          <tbody class="bg-gray-800 divide-y divide-gray-700">
-            ${pairs.map(r=>{
-              const [k,v] = r.split(':');
-              return `<tr><td class="px-3 py-1">${k}</td><td class="px-3 py-1 text-right">${Number(v).toLocaleString('de-DE')}</td></tr>`;
-            }).join('')}
-          </tbody>
-        </table>`;
+        <div class="mt-3">
+          <table class="w-full text-sm border border-gray-700 rounded-md">
+            <thead class="bg-gray-700 text-green-400">
+              <tr><th class="text-left px-3 py-1">Ressource</th><th class="text-right px-3 py-1">Anzahl</th></tr>
+            </thead>
+            <tbody class="bg-gray-800 divide-y divide-gray-700">
+              ${pairs.map(r=>{
+                const [k,v] = r.split(':');
+                return `<tr><td class="px-3 py-1">${k}</td><td class="px-3 py-1 text-right">${Number(v).toLocaleString('de-DE')}</td></tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>`;
       }
     }
 
     card.innerHTML = `
-      <div class="flex gap-3 items-start">
+      <div class="flex gap-4 items-start">
         <img src="${p.image||'https://via.placeholder.com/150'}" alt="" class="product-image"/>
         <div class="flex-1">
-          <div class="font-semibold text-green-400">${escapeHtml(p.name)}</div>
-          <div class="small-muted text-sm mt-1">${escapeHtml(p.description||'')}</div>
+          <div class="font-semibold text-green-400 text-lg">${escapeHtml(p.name)}</div>
           ${resourcesHTML}
         </div>
       </div>`;

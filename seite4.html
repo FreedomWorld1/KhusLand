@@ -6,145 +6,217 @@
 <title>Weed Ankauf — Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+/* --- Grund --- */
 :root{--bg:#0f1724;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
 body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:#071025;color:#e6eef8;margin:0}
 .container{max-width:1100px;margin:0 auto;padding:20px}
+
+/* cards, buttons */
 .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:16px}
 .shadow-soft{box-shadow:0 8px 30px rgba(2,6,23,0.6)}
 .small-muted{color:var(--muted);font-size:0.85rem;margin-top:4px}
 .btn{transition:all .12s ease;border-radius:8px;padding:.45rem .8rem;cursor:pointer;background:#111827;color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
 .btn:hover{transform:translateY(-2px)}
 .hidden-el{display:none !important}
+
+/* product images */
 .product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
 .product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
+
+/* kleinere Karten im Shop */
 #productsGrid .card{max-width:220px;margin:0 auto}
+
+/* settings modal (flat grey-blue style) */
 .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
 .modal-overlay.active .modal-box{transform:translateY(0)}
 .tab-btn{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
 .tab-btn.active{background:linear-gradient(90deg,#94a3b8,#06b6d4);color:#041628;font-weight:700}
+
+/* resource table */
 .table {width:100%;border-collapse:collapse}
 .table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:0.92rem}
+
+/* small helpers */
 .kv{font-size:0.9rem;color:var(--muted)}
+.category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
 .input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
 .color-input{width:48px;height:36px;padding:0;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#fff}
+.small-btn{padding:.35rem .6rem;border-radius:6px}
 .flex-row{display:flex;gap:8px;align-items:center}
+.right{margin-left:auto}
 </style>
 </head>
 <body>
-<div class="container">
-  <!-- HEADER -->
-  <header class="card shadow-soft mb-6 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
-      <div>
-        <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">🌿 Weed Ankauf — Shop</h1>
-        <div class="small-muted">Shop & Einstellungen</div>
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <button id="btnShop" class="btn">Shop</button>
-      <button id="btnCart" class="btn">🛒 Warenkorb (<span id="cartCount">0</span>)</button>
-      <button id="openSettingsBtn" class="btn">⚙️ Einstellungen</button>
-    </div>
-  </header>
-
-  <!-- MAIN SHOP -->
-  <main id="mainContent">
-    <section id="shopView" class="card mb-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 style="font-weight:700;color:#22c55e">🛒 Produkte</h2>
-        <div class="kv">Produkte anzeigen</div>
-      </div>
-      <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
-    </section>
-  </main>
-</div>
-
-<!-- WARENKORB MODAL -->
-<div id="cartModal" class="modal-overlay hidden-el">
-  <div class="modal-box">
-    <div class="flex justify-between mb-4">
-      <h3>🛒 Warenkorb</h3>
-      <button class="btn" onclick="hideCart()">✖</button>
-    </div>
-    <div id="cartItems"></div>
-    <div class="flex justify-between mt-4">
-      <strong>Gesamt:</strong> <span id="cartTotal">0 €</span>
-    </div>
-  </div>
-</div>
-
-<!-- SETTINGS MODAL -->
-<div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
-  <div class="modal-box">
-    <div class="flex items-start justify-between mb-4">
-      <div>
-        <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
-        <div class="kv">Passwortgeschützt — Admin Funktionen</div>
-      </div>
-      <div class="flex gap-2 items-center">
-        <button id="settingsCloseBtn" class="btn">✖</button>
-      </div>
-    </div>
-    <div id="settingsLoginArea">
-      <label class="kv mb-2">Admin Passwort</label>
-      <div class="flex items-center gap-2 mb-3">
-        <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
-        <button id="settingsUnlockBtn" class="btn">Einloggen</button>
-      </div>
-      <div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
-    </div>
-    <div id="settingsEditor" class="hidden-el">
-      <div class="mb-4">
-        <div class="flex gap-2">
-          <button class="tab-btn active" data-tab="products">Produkte</button>
-          <button class="tab-btn" data-tab="categories" style="display:none">Kategorien</button>
-          <button class="tab-btn" data-tab="general">Allgemein</button>
+  <div class="container">
+    <!-- HEADER -->
+    <header class="card shadow-soft mb-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
+        <div>
+          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">🌿 Weed Ankauf — Shop</h1>
+          <div class="small-muted">Shop & Einstellungen</div>
         </div>
       </div>
-      <div id="tabProducts" class="tab-panel">
-        <div class="flex items-center justify-between mb-3">
-          <h4 style="font-weight:700">Produkte verwalten</h4>
+
+      <div class="flex items-center gap-2">
+        <button id="btnShop" class="btn">Shop</button>
+        <button id="openSettingsBtn" class="btn">⚙️ Einstellungen</button>
+      </div>
+    </header>
+
+    <!-- MAIN: SHOP -->
+    <main id="mainContent">
+      <section id="shopView" class="card mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 style="font-weight:700;color:#22c55e">🛒 Produkte</h2>
+          <div class="kv">Produkte anzeigen</div>
+        </div>
+
+        <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SETTINGS MODAL (zentriert, Tabs: Produkte / Kategorien / Allgemein) -->
+  <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
+    <div class="modal-box">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
+          <div class="kv">Passwortgeschützt — Admin Funktionen</div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <button id="settingsCloseBtn" class="btn">✖</button>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="settingsLoginArea">
+        <label class="kv mb-2">Admin Passwort</label>
+        <div class="flex items-center gap-2 mb-3">
+          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+          <button id="settingsUnlockBtn" class="btn">Einloggen</button>
+        </div>
+        <div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
+      </div>
+
+      <!-- EDITOR -->
+      <div id="settingsEditor" class="hidden-el">
+        <!-- tabs -->
+        <div class="mb-4">
           <div class="flex gap-2">
-            <button id="btnNewProduct" class="btn">Neues Produkt</button>
-            <button id="btnReloadProducts" class="btn">Neu laden</button>
+            <button class="tab-btn active" data-tab="products">Produkte</button>
+            <button class="tab-btn" data-tab="categories" style="display:none">Kategorien</button>
+            <button class="tab-btn" data-tab="general">Allgemein</button>
           </div>
         </div>
-        <div class="card" style="max-height:46vh;overflow:auto">
-          <table class="table" style="width:100%">
-            <thead><tr><th>Vorschau</th><th>Name</th><th>Kategorie</th><th style="width:140px">Aktionen</th></tr></thead>
-            <tbody id="productsTableBody"></tbody>
-          </table>
+
+        <!-- PRODUCTS TAB -->
+        <div id="tabProducts" class="tab-panel">
+          <div class="flex items-center justify-between mb-3">
+            <h4 style="font-weight:700">Produkte verwalten</h4>
+            <div class="flex gap-2">
+              <button id="btnNewProduct" class="btn">Neues Produkt</button>
+              <button id="btnReloadProducts" class="btn">Neu laden</button>
+            </div>
+          </div>
+
+          <!-- Produkt-Form (inkl. Ressourcen) -->
+          <div id="productFormCard" class="card mb-3 hidden-el">
+            <form id="productForm">
+              <input id="prodId" type="hidden"/>
+              <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+                <div>
+                  <input id="prodName" class="input" placeholder="Name" required />
+                  <input id="prodImg" class="input" placeholder="Bild-URL" style="margin-top:8px"/>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <label class="kv">Vorschau</label>
+                  <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
+                </div>
+              </div>
+
+              <textarea id="prodDesc" class="input" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+                <select id="prodCategorySelect" class="input">
+                  <option value="">— Keine Kategorie —</option>
+                </select>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <label class="kv">Name-Farbe</label>
+                  <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
+                  <label class="kv" style="margin-left:8px">Anzahl-Farbe</label>
+                  <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
+                </div>
+              </div>
+
+              <!-- Ressourcen-Tabelle -->
+              <div id="resourceTableContainer" style="margin-bottom:8px">
+                <h5 style="margin:0 0 8px 0;font-weight:700">Ressourcen (Name:Anzahl:Farbe)</h5>
+                <table class="table" id="resourceTable">
+                  <thead>
+                    <tr><th>Ressource</th><th style="width:120px;text-align:right">Anzahl</th><th style="width:120px">Farbe</th><th style="width:60px">Aktion</th></tr>
+                  </thead>
+                  <tbody style="background:transparent"></tbody>
+                </table>
+                <div style="margin-top:8px">
+                  <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:8px">
+                <button type="submit" class="btn" style="background:#10b981">Speichern</button>
+                <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">Abbrechen</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Product list -->
+          <div class="card" style="max-height:46vh;overflow:auto">
+            <table class="table" style="width:100%">
+              <thead><tr><th>Vorschau</th><th>Name</th><th>Kategorie</th><th style="width:140px">Aktionen</th></tr></thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div id="tabGeneral" class="tab-panel hidden-el">
-        <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
-        <label class="kv mb-2">Titel</label>
-        <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
-        <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
-        <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
-        <div style="display:flex;gap:8px;margin-top:10px">
-          <button id="saveGeneralBtn" class="btn" style="background:#10b981">Speichern</button>
-          <button id="resetGeneralBtn" class="btn" style="background:#ef4444">Zurücksetzen</button>
+
+        <!-- CATEGORIES TAB (komplett deaktiviert) -->
+        <div id="tabCategories" class="tab-panel hidden-el" style="display:none"></div>
+
+        <!-- GENERAL TAB -->
+        <div id="tabGeneral" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
+          <label class="kv mb-2">Titel</label>
+          <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
+          <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
+          <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button id="saveGeneralBtn" class="btn" style="background:#10b981">Speichern</button>
+            <button id="resetGeneralBtn" class="btn" style="background:#ef4444">Zurücksetzen</button>
+          </div>
         </div>
-      </div>
+
+      </div> <!-- end editor -->
     </div>
   </div>
-</div>
 
 <script type="module">
+/* ---------- Firebase imports ---------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getDatabase, ref, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
+/* ---------- Config (deine) ---------- */
 const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 
+/* ---------- Globals & elements ---------- */
 const ADMIN_PASSWORD = 'admin123';
+
 const openSettingsBtn = document.getElementById('openSettingsBtn');
 const settingsModal = document.getElementById('settingsModal');
 const settingsCloseBtn = document.getElementById('settingsCloseBtn');
@@ -153,130 +225,273 @@ const settingsUnlockBtn = document.getElementById('settingsUnlockBtn');
 const settingsLoginError = document.getElementById('settingsLoginError');
 const settingsLoginArea = document.getElementById('settingsLoginArea');
 const settingsEditor = document.getElementById('settingsEditor');
+
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabPanels = document.querySelectorAll('.tab-panel');
+
+const btnNewProduct = document.getElementById('btnNewProduct');
+const productFormCard = document.getElementById('productFormCard');
+const productForm = document.getElementById('productForm');
+const cancelProductBtn = document.getElementById('cancelProductBtn');
+const prodId = document.getElementById('prodId');
+const prodName = document.getElementById('prodName');
+const prodImg = document.getElementById('prodImg');
+const prodPreview = document.getElementById('prodPreview');
+const prodDesc = document.getElementById('prodDesc');
+const prodCategorySelect = document.getElementById('prodCategorySelect');
+const colorNameInput = document.getElementById('colorNameInput');
+const colorQuantityInput = document.getElementById('colorQuantityInput');
+const addResourceBtn = document.getElementById('addResourceBtn');
+const resourceTable = document.querySelector('#resourceTable tbody');
+
 const productsTableBody = document.getElementById('productsTableBody');
+const btnReloadProducts = document.getElementById('btnReloadProducts');
+
+const settingTitle = document.getElementById('settingTitle');
+const settingHeaderImage = document.getElementById('settingHeaderImage');
+const saveGeneralBtn = document.getElementById('saveGeneralBtn');
+const resetGeneralBtn = document.getElementById('resetGeneralBtn');
+
 const pageTitle = document.getElementById('pageTitle');
 const headerLogo = document.getElementById('headerLogo');
 const productsGrid = document.getElementById('productsGrid');
-const cartModal = document.getElementById('cartModal');
 
 let products = [];
 let settings = { title: '🌿 Weed Ankauf — Shop', headerImage: 'https://via.placeholder.com/48', categories: [] };
-let cart = [];
 
-function showModal(el){ el.classList.remove('hidden-el'); setTimeout(()=>el.classList.add('active'),10); document.body.style.overflow='hidden'; }
-function hideModal(el){ el.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>el.classList.add('hidden-el'),240); }
+/* ---------- Utility: modal open/close ---------- */
+function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
+function hideModal(){ settingsModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>settingsModal.classList.add('hidden-el'),240); }
 
-openSettingsBtn.addEventListener('click', ()=>{ settingsPassword.value=''; settingsLoginError.style.display='none'; settingsLoginArea.style.display=''; settingsEditor.classList.add('hidden-el'); showModal(settingsModal); });
-settingsCloseBtn.addEventListener('click', ()=>hideModal(settingsModal));
+openSettingsBtn.addEventListener('click', ()=>{
+  settingsPassword.value = '';
+  settingsLoginError.style.display = 'none';
+  settingsLoginArea.style.display = '';
+  settingsEditor.classList.add('hidden-el');
+  showModal();
+});
+settingsCloseBtn.addEventListener('click', hideModal);
+settingsModal.addEventListener('click', (e)=> { if(e.target === settingsModal) hideModal(); });
+document.addEventListener('keydown', (e)=> { if(e.key === 'Escape' && !settingsModal.classList.contains('hidden-el')) hideModal(); });
 
-tabBtns.forEach(btn=>{ btn.addEventListener('click', ()=>{
-  tabBtns.forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const t = btn.dataset.tab;
-  tabPanels.forEach(p=>p.classList.add('hidden-el'));
-  document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden-el');
-})});
+/* tab switching */
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = btn.dataset.tab;
+    tabPanels.forEach(p=>p.classList.add('hidden-el'));
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.remove('hidden-el');
+  });
+});
 
+/* ---------- Settings: load/save from Firebase ---------- */
 onValue(settingsRef, snapshot=>{
   const val = snapshot.val();
-  if(val){ settings.title = val.title || settings.title; settings.headerImage = val.headerImage || settings.headerImage; }
+  if(val){
+    settings.title = val.title || settings.title;
+    settings.headerImage = val.headerImage || settings.headerImage;
+  }
   applySettings();
 });
-function applySettings(){ pageTitle.innerText = settings.title; headerLogo.src = settings.headerImage; document.getElementById('settingTitle').value = settings.title; document.getElementById('settingHeaderImage').value = settings.headerImage; }
-document.getElementById('saveGeneralBtn').addEventListener('click', async ()=>{
-  await update(settingsRef, { title: document.getElementById('settingTitle').value, headerImage: document.getElementById('settingHeaderImage').value });
-  alert('Einstellungen gespeichert'); applySettings();
-});
-document.getElementById('resetGeneralBtn').addEventListener('click', async ()=>{
-  if(!confirm('Auf Standard zurücksetzen?')) return;
-  await update(settingsRef, { title:'🌿 Weed Ankauf — Shop', headerImage:'https://via.placeholder.com/48' });
-  applySettings(); alert('Zurückgesetzt');
-});
 
-onValue(productsRef, snapshot=>{
-  products = [];
-  snapshot.forEach(child=>{ const data = child.val(); data.key = child.key; products.push(data); });
-  products.sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
-  renderProductsTable(); renderProductsGrid();
-});
-
-function renderProductsTable(){
-  productsTableBody.innerHTML='';
-  products.forEach(p=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"></td>
-                  <td>${escapeHtml(p.name||'')}</td><td>${escapeHtml(p.category||'')}</td>
-                  <td><button class="btn" data-edit="${p.key}" style="margin-right:6px">Bearbeiten</button>
-                      <button class="btn" data-del="${p.key}" style="background:#ef4444">Löschen</button></td>`;
-    productsTableBody.appendChild(tr);
-    tr.querySelector('[data-edit]').onclick=()=>openProductForm(p);
-    tr.querySelector('[data-del]').onclick=()=>{ if(confirm('Produkt wirklich löschen?')) remove(ref(db,'products/'+p.key)); };
-  });
+function applySettings(){
+  pageTitle.innerText = settings.title || '🌿 Weed Ankauf — Shop';
+  headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
+  if(settingTitle) settingTitle.value = settings.title || '';
+  if(settingHeaderImage) settingHeaderImage.value = settings.headerImage || '';
 }
 
+/* save general */
+saveGeneralBtn.addEventListener('click', async ()=>{
+  const t = (settingTitle.value||'').trim() || '🌿 Weed Ankauf — Shop';
+  const img = (settingHeaderImage.value||'').trim() || 'https://via.placeholder.com/48';
+  try{ await update(settingsRef, { title: t, headerImage: img }); alert('Allgemeine Einstellungen gespeichert'); } catch(e){ console.error(e); alert('Fehler beim Speichern'); }
+});
+resetGeneralBtn.addEventListener('click', async ()=>{
+  if(!confirm('Auf Standard zurücksetzen?')) return;
+  try{ await update(settingsRef, { title:'🌿 Weed Ankauf — Shop', headerImage:'https://via.placeholder.com/48' }); alert('Zurückgesetzt'); } catch(e){ console.error(e); alert('Fehler'); }
+});
+
+/* ---------- Products CRUD ---------- */
+onValue(productsRef, snapshot=>{
+  products = [];
+  snapshot.forEach(child=>{
+    const data = child.val(); data.key = child.key; products.push(data);
+  });
+  products.sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
+  renderProductsTable();
+  renderProductsGrid();
+});
+
 function renderProductsGrid(){
-  productsGrid.innerHTML='';
+  productsGrid.innerHTML = '';
   if(products.length===0){ productsGrid.innerHTML='<div class="kv p-4">Keine Produkte verfügbar.</div>'; return; }
   products.forEach(p=>{
-    const card=document.createElement('div'); card.className='card';
-    const img=document.createElement('img'); img.src=p.image||'https://via.placeholder.com/300x120'; img.className='product-image';
-    const title=document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.style.color=p.colorName||'#22c55e'; title.textContent=p.name||'';
-    const desc=document.createElement('div'); desc.className='small-muted'; desc.textContent=p.description||'';
+    const card = document.createElement('div'); card.className='card';
+    const img = document.createElement('img'); img.src = p.image || 'https://via.placeholder.com/300x120'; img.className='product-image';
+    const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.style.color = p.colorName || '#22c55e'; title.textContent = p.name || '';
+    const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent = p.description || '';
     card.appendChild(img); card.appendChild(title); card.appendChild(desc);
 
-    const addBtn=document.createElement('button');
-    addBtn.textContent='➕ Hinzufügen'; addBtn.className='btn'; addBtn.style.marginTop='6px';
-    addBtn.onclick=()=> addToCart(p);
-    card.appendChild(addBtn);
+    if(p.resources){
+      const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
+      if(pairs.length){
+        const tbl = document.createElement('table'); tbl.className='table'; tbl.style.marginTop='8px';
+        const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Ressource</th><th style="text-align:right">Anzahl</th></tr>'; tbl.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        pairs.forEach(r=>{
+          const [k,v,c] = r.split(':');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="color:${c||'#facc15'}">${escapeHtml(k)}</td><td style="text-align:right;color:${p.colorQuantity||'#3b82f6'}">${Number(v).toLocaleString('de-DE')}</td>`;
+          tbody.appendChild(tr);
+        });
+        tbl.appendChild(tbody); card.appendChild(tbl);
+      }
+    }
+
     productsGrid.appendChild(card);
   });
 }
 
-function addToCart(product){
-  const existing=cart.find(p=>p.key===product.key);
-  if(existing) existing.qty++; else cart.push({...product, qty:1});
-  updateCartDisplay();
-}
-
-function updateCartDisplay(){
-  document.getElementById('cartCount').innerText=cart.reduce((sum,p)=>sum+p.qty,0);
-  renderCartItems();
-}
-
-function renderCartItems(){
-  const cartItems=document.getElementById('cartItems'); cartItems.innerHTML='';
-  cart.forEach(p=>{
-    const div=document.createElement('div'); div.className='flex justify-between mb-2';
-    const price=0;
-    div.innerHTML=`<span>${p.name} x ${p.qty}</span> <span>${(price*p.qty).toLocaleString('de-DE')} €</span>`;
-    cartItems.appendChild(div);
+/* render admin products table */
+function renderProductsTable(){
+  productsTableBody.innerHTML = '';
+  products.forEach(p=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="padding:8px"><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"></td>
+      <td style="padding:8px">${escapeHtml(p.name||'')}</td>
+      <td style="padding:8px">${escapeHtml(p.category||'')}</td>
+      <td style="padding:8px">
+        <button class="btn" data-edit="${p.key}" style="margin-right:6px">Bearbeiten</button>
+        <button class="btn" data-del="${p.key}" style="background:#ef4444">Löschen</button>
+      </td>`;
+    productsTableBody.appendChild(tr);
+    tr.querySelector('[data-edit]').onclick = ()=> openProductForm(p);
+    tr.querySelector('[data-del]').onclick = ()=> { if(confirm('Produkt wirklich löschen?')) remove(ref(db, 'products/' + p.key)); };
   });
-  const total=cart.reduce((sum,p)=>0,0);
-  document.getElementById('cartTotal').innerText=total.toLocaleString('de-DE')+' €';
 }
 
-document.getElementById('btnCart').addEventListener('click',()=>showModal(cartModal));
-function hideCart(){ hideModal(cartModal); }
+/* open product form */
+btnNewProduct.addEventListener('click', ()=> openProductForm());
+function openProductForm(product){
+  productFormCard.classList.remove('hidden-el');
+  resourceTable.innerHTML = '';
+  if(product){
+    prodId.value = product.key || '';
+    prodName.value = product.name || '';
+    prodImg.value = product.image || '';
+    prodPreview.src = product.image || 'https://via.placeholder.com/150x100';
+    prodDesc.value = product.description || '';
+    prodCategorySelect.value = product.category || '';
+    colorNameInput.value = product.colorName || '#22c55e';
+    colorQuantityInput.value = product.colorQuantity || '#3b82f6';
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x=>x.trim()).filter(Boolean);
+      pairs.forEach(p=>{
+        const [k,v,c] = p.split(':');
+        addResourceRow(k,v,c||'#facc15');
+      });
+    }
+  } else {
+    prodId.value = '';
+    productForm.reset();
+    prodPreview.src = 'https://via.placeholder.com/150x100';
+    colorNameInput.value = '#22c55e';
+    colorQuantityInput.value = '#3b82f6';
+  }
+}
 
-// Klick außerhalb schließt Warenkorb
-cartModal.addEventListener('click', e=>{ if(e.target===cartModal) hideCart(); });
+/* resource row */
+function addResourceRow(name='', value='', color='#facc15'){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input class="input" value="${escapeHtml(name)}" /></td>
+    <td style="text-align:right"><input type="number" min="0" class="input" value="${escapeHtml(value)}" /></td>
+    <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
+    <td style="text-align:center"><button class="btn" type="button">❌</button></td>`;
+  const btn = tr.querySelector('button');
+  btn.onclick = ()=> tr.remove();
+  resourceTable.appendChild(tr);
+}
+addResourceBtn.addEventListener('click', ()=> addResourceRow());
 
-// Escape schließt Warenkorb und Settings
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){
-    if(!cartModal.classList.contains('hidden-el')) hideCart();
-    if(!settingsModal.classList.contains('hidden-el')) hideModal(settingsModal);
+/* preview update */
+prodImg.addEventListener('input', ()=> { prodPreview.src = prodImg.value || 'https://via.placeholder.com/150x100'; });
+
+/* cancel product */
+cancelProductBtn.addEventListener('click', ()=> {
+  productFormCard.classList.add('hidden-el');
+  productForm.reset();
+  prodId.value = '';
+});
+
+/* submit product */
+productForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const rows = Array.from(resourceTable.querySelectorAll('tr'));
+  const resources = rows.map(r=>{
+    const name = r.children[0].querySelector('input').value.trim();
+    const qty = r.children[1].querySelector('input').value.trim();
+    const col = r.children[2].querySelector('input').value;
+    return name && qty ? `${name}:${qty}:${col}` : '';
+  }).filter(Boolean).join(';');
+
+  const payload = {
+    name: (prodName.value||'').trim(),
+    image: (prodImg.value||'').trim(),
+    description: (prodDesc.value||'').trim(),
+    category: (prodCategorySelect.value||'').trim(),
+    resources: resources,
+    colorName: colorNameInput.value || '#22c55e',
+    colorQuantity: colorQuantityInput.value || '#3b82f6',
+    updatedAt: Date.now()
+  };
+
+  try{
+    if(prodId.value){
+      await update(ref(db, 'products/' + prodId.value), payload);
+    } else {
+      await push(productsRef, payload);
+    }
+    productFormCard.classList.add('hidden-el');
+    productForm.reset();
+    prodId.value = '';
+  }catch(err){ console.error(err); alert('Fehler beim Speichern des Produkts'); }
+});
+
+/* reload products */
+btnReloadProducts.addEventListener('click', ()=> {
+  get(productsRef).then(()=> alert('Produkte neu geladen.')).catch(()=> alert('Laden fehlgeschlagen.'));
+});
+
+/* login */
+settingsUnlockBtn.addEventListener('click', ()=>{
+  const pw = (settingsPassword.value||'').trim();
+  if(pw === ADMIN_PASSWORD){
+    settingsLoginError.style.display = 'none';
+    settingsLoginArea.style.display = 'none';
+    settingsEditor.classList.remove('hidden-el');
+    settingTitle.value = settings.title || '';
+    settingHeaderImage.value = settings.headerImage || '';
+  } else {
+    settingsLoginError.style.display = '';
   }
 });
 
-settingsUnlockBtn.addEventListener('click', ()=>{
-  if((settingsPassword.value||'').trim()===ADMIN_PASSWORD){ settingsLoginError.style.display='none'; settingsLoginArea.style.display='none'; settingsEditor.classList.remove('hidden-el'); }
-  else settingsLoginError.style.display='';
-});
+/* helper escape */
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
 
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+/* initial apply */
+applySettings();
+populateCategorySelect();
+
+function populateCategorySelect(){
+  prodCategorySelect.innerHTML = '';
+  const none = document.createElement('option'); none.value=''; none.textContent='— Keine —';
+  prodCategorySelect.appendChild(none);
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Scarface Weed</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+.shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+.small-muted { color: #9ca3af; font-size: 0.85rem; }
+.btn { transition: all .15s ease; font-size: 0.9rem; }
+.btn:hover { transform: translateY(-2px); }
+.hidden-el { display: none; }
+input { transition: all 0.15s ease; font-size: 0.95rem; }
+input:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
+.active-link { background-color: #16a34a !important; color: #fff !important; font-weight: 600; }
+</style>
+</head>
+<body class="bg-gray-950 text-gray-100 antialiased min-h-screen">
+<div class="max-w-4xl mx-auto p-6">
+
+<!-- HEADER -->
+<header class="bg-gradient-to-r from-black to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
+<h1 class="text-2xl font-bold text-green-400 tracking-tight">💀 Scarface Weed</h1>
+<div class="flex items-center gap-2">
+<button id="btnNew" class="btn px-3 py-1.5 bg-green-700 rounded-md hover:bg-green-600 shadow-sm">Neuer Ankauf</button>
+<button id="btnOverview" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Übersicht</button>
+<button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
+<div class="relative">
+<button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1">
+<span class="block h-0.5 bg-gray-100"></span>
+<span class="block h-0.5 bg-gray-100"></span>
+<span class="block h-0.5 bg-gray-100"></span>
+</button>
+<div id="hamburgerMenu" class="hidden absolute right-0 mt-2 w-44 bg-gray-800 border border-gray-700 rounded-md shadow-lg z-50">
+<a href="index.html" class="block px-4 py-2 hover:bg-gray-700">Weed</a>
+<a href="seite2.html" class="block px-4 py-2 hover:bg-gray-700">Kokain</a>
+<a href="seite4.html" class="block px-4 py-2 hover:bg-gray-700 active-link">Scarface Weed</a>
+<a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-2 hover:bg-gray-700">30% Rechner</a>
+</div>
+</div>
+</div>
+</header>
+
+<div id="mainContainer" class="space-y-5">
+
+<!-- NEUER ANKAUF -->
+<div id="newEntry" class="card p-6 shadow-soft">
+<h2 class="text-xl font-semibold mb-4 text-green-400">💰 Neuer Ankauf (Scarface Weed)</h2>
+<form id="entryForm" class="space-y-5">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<input id="buyer" type="text" placeholder="Käufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+<input id="seller" type="text" placeholder="Verkäufer" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full" required/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<input id="quantity" type="number" min="1" placeholder="Menge" class="p-2 rounded-md bg-gray-800 border border-gray-700 w-full"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+<div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+<div class="small-muted mb-0.5">Verkäufer (60%)</div>
+<div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
+</div>
+<div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
+<div class="small-muted mb-0.5">Käufer (40%)</div>
+<div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
+</div>
+</div>
+<div class="flex gap-3 mt-3">
+<button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md btn font-medium">Speichern</button>
+<button type="button" id="resetForm" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md btn font-medium">Zurücksetzen</button>
+</div>
+</form>
+</div>
+
+<!-- ÜBERSICHT -->
+<div id="overview" class="card p-5 shadow-soft hidden-el">
+<h2 class="text-lg font-semibold mb-4 text-green-400">📋 Übersicht</h2>
+<div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPanel" class="card p-5 shadow-soft hidden-el">
+<h2 class="text-base font-semibold mb-3">Adminbereich</h2>
+<div id="adminLoginSection">
+<input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
+<button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
+<span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
+</div>
+<div id="adminContent" class="hidden-el">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+<div class="small-muted">Gesamtanzahl: <span id="totalCount">0</span></div>
+<div class="small-muted">Gesamtumsatz: <span id="totalRevenue">0 $</span></div>
+<button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md shadow-sm">CSV Export</button>
+</div>
+<div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
+<table class="w-full text-left text-sm">
+<thead class="text-gray-400 bg-gray-800">
+<tr>
+<th class="p-2">Datum</th>
+<th class="p-2">Käufer</th>
+<th class="p-2">Verkäufer</th>
+<th class="p-2">Menge</th>
+<th class="p-2">Preis</th>
+<th class="p-2">Verkäufer (60%)</th>
+<th class="p-2">Käufer (40%)</th>
+<th class="p-2">Aktion</th>
+</tr>
+</thead>
+<tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+  authDomain: "khusland-b7d13.firebaseapp.com",
+  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+  projectId: "khusland-b7d13",
+  storageBucket: "khusland-b7d13.firebasestorage.app",
+  messagingSenderId: "69573193613",
+  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+  measurementId: "G-JSCWR4207G"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getDatabase(app);
+
+// 🔥 Firebase-Pfad geändert
+const entriesRef = ref(db,'weedscarfrace_entries');
+
+const ADMIN_PASSWORD='admin123';
+let entries=[];
+
+function show(el){el.classList.remove('hidden-el');}
+function hide(el){el.classList.add('hidden-el');}
+function formatCurrency(n){return Math.round(n)+' $';}
+function formatDate(d){
+  const date=new Date(d);
+  const pad=n=>n.toString().padStart(2,'0');
+  return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
+// Hamburger
+document.getElementById('hamburgerBtn').addEventListener('click',()=>document.getElementById('hamburgerMenu').classList.toggle('hidden'));
+
+// Tabs
+document.getElementById('btnNew').addEventListener('click',()=>{show(document.getElementById('newEntry')); hide(document.getElementById('overview')); hide(document.getElementById('adminPanel'));});
+document.getElementById('btnOverview').addEventListener('click',()=>{hide(document.getElementById('newEntry')); show(document.getElementById('overview')); hide(document.getElementById('adminPanel')); renderOverview();});
+document.getElementById('btnAdmin').addEventListener('click',()=>{hide(document.getElementById('newEntry')); hide(document.getElementById('overview')); show(document.getElementById('adminPanel'));});
+
+// Shares
+const quantityInput=document.getElementById('quantity');
+const sellerShareEl=document.getElementById('sellerShare');
+const yourShareEl=document.getElementById('yourShare');
+function updateShares(){ 
+  const q=Number(quantityInput.value)||0;
+  const price=q*2500;
+  sellerShareEl.textContent=formatCurrency(price*0.6);
+  yourShareEl.textContent=formatCurrency(price*0.4);
+}
+quantityInput.addEventListener('input',updateShares);
+updateShares();
+
+// Form submit
+document.getElementById('entryForm').addEventListener('submit', async e=>{
+e.preventDefault();
+const buyer=document.getElementById('buyer').value;
+const seller=document.getElementById('seller').value;
+const quantity=Number(quantityInput.value);
+const price=quantity*2500;
+const sellerShare=price*0.6;
+const yourShare=price*0.4;
+const entry = {
+    buyer,
+    seller,
+    quantity,
+    price,
+    sellerShare,
+    yourShare,
+    date: formatDate(new Date()),
+    timestamp: Date.now()
+};
+
+await push(entriesRef,entry);
+e.target.reset();
+updateShares();
+});
+
+// Reset
+document.getElementById('resetForm').addEventListener('click',()=>{document.getElementById('entryForm').reset(); updateShares();});
+
+// Real-time listener
+onValue(entriesRef,snapshot=>{
+entries=[];
+snapshot.forEach(child=>{
+const data=child.val();
+data.key=child.key;
+entries.push(data);
+});
+entries.sort((a,b)=>b.timestamp - a.timestamp);
+renderOverview();
+renderAdminTable();
+});
+
+// Übersicht rendern
+const entriesList=document.getElementById('entriesList');
+function renderOverview(){
+entriesList.innerHTML='';
+if(entries.length===0){entriesList.innerHTML='<p class="text-gray-400">Keine Einträge vorhanden.</p>'; return;}
+entries.forEach(en=>{
+const el=document.createElement('div');
+el.className='p-3 rounded-md bg-gray-800 border border-gray-700';
+el.innerHTML=`
+<div class="text-sm text-gray-400 mb-1">${en.date}</div>
+<div class="font-semibold">${en.buyer} → ${en.seller}</div>
+<div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
+<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+<div class="text-sm text-blue-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
+entriesList.prepend(el);
+});
+}
+
+// Admin
+const adminLoginBtn=document.getElementById('adminLoginBtn');
+const adminPassInput=document.getElementById('adminPass');
+const adminError=document.getElementById('adminError');
+const adminTableBody=document.getElementById('adminTableBody');
+const totalCount=document.getElementById('totalCount');
+const totalRevenue=document.getElementById('totalRevenue');
+const exportCsv=document.getElementById('exportCsv');
+
+adminLoginBtn.addEventListener('click',()=>{
+if(adminPassInput.value===ADMIN_PASSWORD){adminError.classList.add('hidden-el'); show(document.getElementById('adminContent')); renderAdminTable();}
+else adminError.classList.remove('hidden-el');
+});
+
+function renderAdminTable(){
+adminTableBody.innerHTML='';
+let revenue=0;
+const sortedEntries = [...entries].sort((a,b)=>b.timestamp - a.timestamp);
+sortedEntries.forEach(en=>{
+revenue+=en.yourShare;
+const tr=document.createElement('tr');
+tr.className='border-t border-gray-800';
+tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
+<td class="p-2">${en.buyer}</td>
+<td class="p-2">${en.seller}</td>
+<td class="p-2">${en.quantity}</td>
+<td class="p-2">${formatCurrency(en.price)}</td>
+<td class="p-2">${formatCurrency(en.sellerShare)}</td>
+<td class="p-2">${formatCurrency(en.yourShare)}</td>
+<td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
+adminTableBody.prepend(tr);
+});
+totalCount.innerText=entries.length;
+totalRevenue.innerText=formatCurrency(revenue);
+}
+
+window.deleteEntry=function(key){if(confirm('Eintrag wirklich löschen?')) remove(ref(db,'weedscarfrace_entries/'+key));}
+
+// CSV Export
+exportCsv.addEventListener('click',()=>{
+if(entries.length===0) return alert('Keine Einträge zum Exportieren.');
+const sortedEntries = [...entries].sort((a,b)=>b.timestamp - a.timestamp);
+const header=['date','buyer','seller','quantity','price','sellerShare','yourShare'];
+const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare].join(','));
+const csv=[header.join(','),...rows].join('\n');
+const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+const url=URL.createObjectURL(blob);
+const a=document.createElement('a');
+a.href=url;
+a.download='entries_scarfaceweed.csv';
+document.body.appendChild(a);
+a.click();
+URL.revokeObjectURL(url);
+a.remove();
+});
+</script>
+</body>
+</html>ß

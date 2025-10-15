@@ -6,39 +6,26 @@
 <title>Bullet Farm — Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* --- Grund --- */
 :root{--bg:#0f1724;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
 body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:#071025;color:#e6eef8;margin:0}
 .container{max-width:1100px;margin:0 auto;padding:20px}
-
-/* cards, buttons */
 .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:16px}
 .shadow-soft{box-shadow:0 8px 30px rgba(2,6,23,0.6)}
 .small-muted{color:var(--muted);font-size:0.85rem;margin-top:4px}
 .btn{transition:all .12s ease;border-radius:8px;padding:.45rem .8rem;cursor:pointer;background:#111827;color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
 .btn:hover{transform:translateY(-2px)}
 .hidden-el{display:none !important}
-
-/* product images */
 .product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
 .product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
-
-/* kleinere Karten im Shop */
 #productsGrid .card{max-width:220px;margin:0 auto}
-
-/* modal */
 .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
 .modal-overlay.active .modal-box{transform:translateY(0)}
 .tab-btn{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
 .tab-btn.active{background:linear-gradient(90deg,#94a3b8,#06b6d4);color:#041628;font-weight:700}
-
-/* table */
 .table {width:100%;border-collapse:collapse}
 .table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:0.92rem}
-
-/* helpers */
 .kv{font-size:0.9rem;color:var(--muted)}
 .category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
 .input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
@@ -49,55 +36,95 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 </style>
 </head>
 <body>
-  <div class="container">
-    <!-- HEADER -->
-    <header class="card shadow-soft mb-6 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
-        <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">Bullet Farm</h1>
-          <div class="small-muted">Shop</div>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">🛒 Warenkorb</button>
-        <button id="openSettingsBtn" class="btn">⚙️</button>
-      </div>
-    </header>
-
-    <!-- MAIN: SHOP -->
-    <main id="mainContent">
-      <section id="shopView" class="card mb-6">
-        <div class="flex items-center justify-between mb-4">
-          <h2 style="font-weight:700;color:#22c55e">🛒 Produkte</h2>
-          <div class="kv">Produkte anzeigen</div>
-        </div>
-
-        <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Warenkorb Modal -->
-  <div id="cartModal" class="modal-overlay hidden-el">
-    <div class="modal-box">
-      <div class="flex items-center justify-between mb-4">
-        <h3 style="font-weight:700;color:#94a3b8">🛒 Warenkorb</h3>
-        <button id="cartCloseBtn" class="btn">✖</button>
-      </div>
-      <div id="cartContent">
-        <table class="table">
-          <thead><tr><th>Produkt</th><th>Anzahl</th><th>Preis</th></tr></thead>
-          <tbody id="cartItems"></tbody>
-        </table>
-        <div class="flex justify-end mt-4">
-          <strong>Gesamt: <span id="cartTotal">0</span> €</strong>
-        </div>
+<div class="container">
+  <header class="card shadow-soft mb-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
+      <div>
+        <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">Bullet Farm</h1>
+        <div class="small-muted">Shop</div>
       </div>
     </div>
+    <div class="flex items-center gap-2">
+      <button id="btnShop" class="btn">Shop</button>
+      <button id="openSettingsBtn" class="btn">⚙️</button>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <section id="shopView" class="card mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 style="font-weight:700;color:#22c55e">🛒 Produkte</h2>
+        <div class="kv">Produkte anzeigen</div>
+      </div>
+      <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
+    </section>
+  </main>
+</div>
+
+<div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
+  <div class="modal-box">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
+        <div class="kv">Passwortgeschützt — Admin Funktionen</div>
+      </div>
+      <div class="flex gap-2 items-center">
+        <button id="settingsCloseBtn" class="btn">✖</button>
+      </div>
+    </div>
+
+    <div id="settingsLoginArea">
+      <label class="kv mb-2">Admin Passwort</label>
+      <div class="flex items-center gap-2 mb-3">
+        <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+        <button id="settingsUnlockBtn" class="btn">Einloggen</button>
+      </div>
+      <div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
+    </div>
+
+    <div id="settingsEditor" class="hidden-el">
+      <div class="mb-4">
+        <div class="flex gap-2">
+          <button class="tab-btn active" data-tab="products">Produkte</button>
+          <button class="tab-btn" data-tab="categories" style="display:none">Kategorien</button>
+          <button class="tab-btn" data-tab="general">Allgemein</button>
+        </div>
+      </div>
+
+      <div id="tabProducts" class="tab-panel">
+        <div class="flex items-center justify-between mb-3">
+          <h4 style="font-weight:700">Produkte verwalten</h4>
+          <div class="flex gap-2">
+            <button id="btnNewProduct" class="btn">Neues Produkt</button>
+            <button id="btnReloadProducts" class="btn">Neu laden</button>
+          </div>
+        </div>
+        <div class="card" style="max-height:46vh;overflow:auto">
+          <table class="table" style="width:100%">
+            <thead><tr><th>Vorschau</th><th>Name</th><th>Kategorie</th><th style="width:140px">Aktionen</th></tr></thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="tabCategories" class="tab-panel hidden-el" style="display:none"></div>
+
+      <div id="tabGeneral" class="tab-panel hidden-el">
+        <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
+        <label class="kv mb-2">Titel</label>
+        <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
+        <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
+        <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button id="saveGeneralBtn" class="btn" style="background:#10b981">Speichern</button>
+          <button id="resetGeneralBtn" class="btn" style="background:#ef4444">Zurücksetzen</button>
+        </div>
+      </div>
+
+    </div>
   </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -109,47 +136,87 @@ const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 
+const ADMIN_PASSWORD = 'admin123';
+const openSettingsBtn = document.getElementById('openSettingsBtn');
+const settingsModal = document.getElementById('settingsModal');
+const settingsCloseBtn = document.getElementById('settingsCloseBtn');
+const settingsPassword = document.getElementById('settingsPassword');
+const settingsUnlockBtn = document.getElementById('settingsUnlockBtn');
+const settingsLoginError = document.getElementById('settingsLoginError');
+const settingsLoginArea = document.getElementById('settingsLoginArea');
+const settingsEditor = document.getElementById('settingsEditor');
+
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+const productsTableBody = document.getElementById('productsTableBody');
+const productsGrid = document.getElementById('productsGrid');
 const pageTitle = document.getElementById('pageTitle');
 const headerLogo = document.getElementById('headerLogo');
-const productsGrid = document.getElementById('productsGrid');
-const btnCart = document.getElementById('btnCart');
-const cartModal = document.getElementById('cartModal');
-const cartCloseBtn = document.getElementById('cartCloseBtn');
-const cartItems = document.getElementById('cartItems');
-const cartTotal = document.getElementById('cartTotal');
+const settingTitle = document.getElementById('settingTitle');
+const settingHeaderImage = document.getElementById('settingHeaderImage');
+const saveGeneralBtn = document.getElementById('saveGeneralBtn');
+const resetGeneralBtn = document.getElementById('resetGeneralBtn');
 
 let products = [];
-let cart = [];
+let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48', categories: [] };
 
-/* ---------- Warenkorb ---------- */
-btnCart.addEventListener('click', ()=> {
-  cartItems.innerHTML = '';
-  let total = 0;
-  cart.forEach(item=>{
-    const prod = products.find(p=>p.key===item.key);
-    if(prod){
-      const tr = document.createElement('tr');
-      const price = item.qty * 1; // Beispiel: Preis 1 pro Stück
-      total += price;
-      tr.innerHTML = `<td>${prod.name}</td><td>${item.qty}</td><td>${price.toFixed(2)}</td>`;
-      cartItems.appendChild(tr);
-    }
+function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
+function hideModal(){ settingsModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>settingsModal.classList.add('hidden-el'),240); }
+
+openSettingsBtn.addEventListener('click', ()=>{
+  settingsPassword.value = '';
+  settingsLoginError.style.display = 'none';
+  settingsLoginArea.style.display = '';
+  settingsEditor.classList.add('hidden-el');
+  showModal();
+});
+settingsCloseBtn.addEventListener('click', hideModal);
+settingsModal.addEventListener('click', (e)=> { if(e.target === settingsModal) hideModal(); });
+document.addEventListener('keydown', (e)=> { if(e.key === 'Escape' && !settingsModal.classList.contains('hidden-el')) hideModal(); });
+
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = btn.dataset.tab;
+    tabPanels.forEach(p=>p.classList.add('hidden-el'));
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.remove('hidden-el');
   });
-  cartTotal.innerText = total.toFixed(2);
-  cartModal.classList.remove('hidden-el');
-  setTimeout(()=>cartModal.classList.add('active'),10);
-});
-cartCloseBtn.addEventListener('click', ()=>{
-  cartModal.classList.remove('active');
-  setTimeout(()=>cartModal.classList.add('hidden-el'),200);
 });
 
-/* ---------- Products ---------- */
+onValue(settingsRef, snapshot=>{
+  const val = snapshot.val();
+  if(val){
+    settings.title = val.title || settings.title;
+    settings.headerImage = val.headerImage || settings.headerImage;
+  }
+  applySettings();
+});
+
+function applySettings(){
+  pageTitle.innerText = settings.title || 'Bullet Farm';
+  headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
+  if(settingTitle) settingTitle.value = settings.title || '';
+  if(settingHeaderImage) settingHeaderImage.value = settings.headerImage || '';
+}
+
+saveGeneralBtn.addEventListener('click', async ()=>{
+  const t = (settingTitle.value||'').trim() || 'Bullet Farm';
+  const img = (settingHeaderImage.value||'').trim() || 'https://via.placeholder.com/48';
+  try{ await update(settingsRef, { title: t, headerImage: img }); alert('Allgemeine Einstellungen gespeichert'); } catch(e){ console.error(e); alert('Fehler beim Speichern'); }
+});
+resetGeneralBtn.addEventListener('click', async ()=>{
+  if(!confirm('Auf Standard zurücksetzen?')) return;
+  try{ await update(settingsRef, { title:'Bullet Farm', headerImage:'https://via.placeholder.com/48' }); alert('Zurückgesetzt'); } catch(e){ console.error(e); alert('Fehler'); }
+});
+
 onValue(productsRef, snapshot=>{
   products = [];
   snapshot.forEach(child=>{
     const data = child.val(); data.key = child.key; products.push(data);
   });
+  products.sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
   renderProductsGrid();
 });
 
@@ -160,19 +227,24 @@ function renderProductsGrid(){
     const card = document.createElement('div'); card.className='card';
     const img = document.createElement('img'); img.src = p.image || 'https://via.placeholder.com/300x120'; img.className='product-image';
     const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.style.color = p.colorName || '#22c55e'; title.textContent = p.name || '';
-    card.appendChild(img); card.appendChild(title);
-    const addBtn = document.createElement('button');
-    addBtn.className = 'btn mt-2';
-    addBtn.innerText = 'In den Warenkorb';
-    addBtn.addEventListener('click', ()=>{
-      const existing = cart.find(c=>c.key===p.key);
-      if(existing){ existing.qty++; } else { cart.push({key:p.key, qty:1}); }
-      alert(`${p.name} hinzugefügt`);
-    });
-    card.appendChild(addBtn);
+    const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent = p.description || '';
+    card.appendChild(img); card.appendChild(title); card.appendChild(desc);
     productsGrid.appendChild(card);
   });
 }
+
+settingsUnlockBtn.addEventListener('click', ()=>{
+  const pw = (settingsPassword.value||'').trim();
+  if(pw === ADMIN_PASSWORD){
+    settingsLoginError.style.display = 'none';
+    settingsLoginArea.style.display = 'none';
+    settingsEditor.classList.remove('hidden-el');
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    tabBtns[0].classList.add('active');
+    tabPanels.forEach(p=>p.classList.add('hidden-el'));
+    document.getElementById('tabProducts').classList.remove('hidden-el');
+  } else { settingsLoginError.style.display = ''; }
+});
 </script>
 </body>
 </html>

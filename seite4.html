@@ -68,14 +68,11 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: #7e22ce
             <textarea id="prodDesc" rows="2" placeholder="Beschreibung (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
 
             <!-- Farben -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <label class="flex flex-col">Name-Farbe
                 <input type="color" id="colorNameInput" value="#22c55e"/>
               </label>
-              <label class="flex flex-col">Ressourcen-Farbe
-                <input type="color" id="colorResourceInput" value="#facc15"/>
-              </label>
-              <label class="flex flex-col">Anzahl-Farbe
+              <label class="flex flex-col">Anzahl-Farbe (Ressourcen)
                 <input type="color" id="colorQuantityInput" value="#3b82f6"/>
               </label>
             </div>
@@ -85,7 +82,12 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: #7e22ce
               <h4 class="font-medium mb-1">Ressourcen bearbeiten</h4>
               <table id="resourceTable" class="w-full text-sm border border-gray-700 rounded-md">
                 <thead class="bg-gray-700 text-yellow-400">
-                  <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th><th class="px-3 py-1">Aktion</th></tr>
+                  <tr>
+                    <th class="px-3 py-1 text-left">Ressource</th>
+                    <th class="px-3 py-1 text-right">Anzahl</th>
+                    <th class="px-3 py-1">Farbe</th>
+                    <th class="px-3 py-1">Aktion</th>
+                  </tr>
                 </thead>
                 <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
               </table>
@@ -155,11 +157,9 @@ const prodResources = document.getElementById('prodResources');
 const cancelProduct = document.getElementById('cancelProduct');
 
 const colorNameInput = document.getElementById('colorNameInput');
-const colorResourceInput = document.getElementById('colorResourceInput');
 const colorQuantityInput = document.getElementById('colorQuantityInput');
 
 let colorName = colorNameInput.value;
-let colorResource = colorResourceInput.value;
 let colorQuantity = colorQuantityInput.value;
 
 btnShop.onclick = ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); };
@@ -174,7 +174,6 @@ btnNewProduct.onclick = ()=> openProductForm();
 cancelProduct.onclick = ()=> closeProductForm();
 
 colorNameInput.oninput = ()=> { colorName = colorNameInput.value; renderProducts(); };
-colorResourceInput.oninput = ()=> { colorResource = colorResourceInput.value; renderProducts(); };
 colorQuantityInput.oninput = ()=> { colorQuantity = colorQuantityInput.value; renderProducts(); };
 
 function openProductForm(product){
@@ -191,25 +190,32 @@ function openProductForm(product){
     prodImg.value = product.image || '';
     prodResources.value = product.resources || '';
     prodCategory.value = product.category || '';
+    colorNameInput.value = product.colorName || '#22c55e';
+    colorQuantityInput.value = product.colorQuantity || '#3b82f6';
+    colorName = colorNameInput.value;
+    colorQuantity = colorQuantityInput.value;
 
     if(product.resources){
       const pairs = product.resources.split(';').map(x=>x.trim()).filter(Boolean);
       pairs.forEach(p=>{
-        const [k,v] = p.split(':');
-        addResourceRow(k,v);
+        const [k,v,c] = p.split(':');
+        addResourceRow(k,v,c||'#facc15');
       });
       resourceTableContainer.classList.remove('hidden-el');
     }
   } else { productForm.reset(); prodId.value=''; }
 }
+
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
 
-function addResourceRow(name='', value=''){
+function addResourceRow(name='', value='', color='#facc15'){
   const tbody = document.querySelector('#resourceTable tbody');
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
-                  <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
-                  <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>`;
+  tr.innerHTML = `
+    <td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
+    <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
+    <td><input type="color" class="w-full p-1 rounded-md border border-gray-700 text-sm" value="${color}" /></td>
+    <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>`;
   tr.querySelector('button').onclick = ()=> tr.remove();
   tbody.appendChild(tr);
 }
@@ -221,15 +227,18 @@ productForm.onsubmit = async e=>{
   const resources = Array.from(resourceRows).map(r=>{
     const name = r.children[0].querySelector('input').value.trim();
     const qty = r.children[1].querySelector('input').value.trim();
-    return name && qty ? `${name}:${qty}` : '';
-  }).filter(Boolean).join(';');
+    const color = r.children[2].querySelector('input').value;
+    return name && qty ? `${name}:${qty}:${color}` : '';
+  }).filter(Boolean);
 
   const payload = {
     name: prodName.value.trim(),
     description: prodDesc.value.trim(),
     image: prodImg.value.trim(),
     category: '',
-    resources,
+    resources: resources.join(';'),
+    colorName: colorNameInput.value,
+    colorQuantity: colorQuantityInput.value,
     updatedAt: Date.now()
   };
 
@@ -258,13 +267,16 @@ function renderProducts(){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
       if(pairs.length > 0){
         resourcesHTML = `<table class="w-full text-sm border border-gray-700 rounded-md mt-2">
-          <thead class="bg-gray-700" style="color:${colorResource}">
+          <thead class="bg-gray-700">
             <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th></tr>
           </thead>
           <tbody class="bg-gray-800 divide-y divide-gray-700">
             ${pairs.map(r=>{
-              const [k,v] = r.split(':');
-              return `<tr><td class="px-3 py-1 text-left" style="color:${colorName}">${k}</td><td class="px-3 py-1 text-right" style="color:${colorQuantity}">${Number(v).toLocaleString('de-DE')}</td></tr>`;
+              const [k,v,c] = r.split(':');
+              return `<tr>
+                <td class="px-3 py-1 text-left" style="color:${c||'#facc15'}">${k}</td>
+                <td class="px-3 py-1 text-right" style="color:${p.colorQuantity||'#3b82f6'}">${Number(v).toLocaleString('de-DE')}</td>
+              </tr>`;
             }).join('')}
           </tbody>
         </table>`;
@@ -273,7 +285,7 @@ function renderProducts(){
 
     card.innerHTML = `
       <img src="${p.image||'https://via.placeholder.com/300x120'}" alt="Produktbild" class="product-image mb-2"/>
-      <div class="font-semibold text-lg" style="color:${colorName}">${escapeHtml(p.name)}</div>
+      <div class="font-semibold text-lg" style="color:${p.colorName||'#22c55e'}">${escapeHtml(p.name)}</div>
       <span class="small-muted">${escapeHtml(p.description||'')}</span>
       ${resourcesHTML}
     `;

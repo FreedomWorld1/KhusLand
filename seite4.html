@@ -23,6 +23,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 .product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
 .product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
 
+/* kleinere Karten im Shop */
+#productsGrid .card{max-width:220px;margin:0 auto}
+
 /* settings modal (flat grey-blue style) */
 .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
 .modal-overlay.active{opacity:1;pointer-events:all}
@@ -71,7 +74,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
           <div class="kv">Produkte anzeigen</div>
         </div>
 
-        <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px"></div>
+        <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
       </section>
     </main>
   </div>
@@ -105,7 +108,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
         <div class="mb-4">
           <div class="flex gap-2">
             <button class="tab-btn active" data-tab="products">Produkte</button>
-            <button class="tab-btn" data-tab="categories">Kategorien</button>
+            <button class="tab-btn" data-tab="categories" style="display:none">Kategorien</button>
             <button class="tab-btn" data-tab="general">Allgemein</button>
           </div>
         </div>
@@ -179,25 +182,8 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
           </div>
         </div>
 
-        <!-- CATEGORIES TAB -->
-        <div id="tabCategories" class="tab-panel hidden-el">
-          <div class="flex items-center justify-between mb-3">
-            <h4 style="font-weight:700">Kategorien</h4>
-            <div class="kv">Kategorien werden in /settings gespeichert</div>
-          </div>
-
-          <div id="categoriesList" style="margin-bottom:8px"></div>
-
-          <div style="display:flex;gap:8px;margin-bottom:8px">
-            <input id="newCategoryInput" class="input" placeholder="Neue Kategorie"/>
-            <button id="addCategoryBtn" class="btn">Hinzufügen</button>
-          </div>
-
-          <div style="display:flex;gap:8px">
-            <button id="saveCategoriesBtn" class="btn" style="background:#06b6d4">Speichern</button>
-            <button id="reloadCategoriesBtn" class="btn">Neu laden</button>
-          </div>
-        </div>
+        <!-- CATEGORIES TAB (komplett deaktiviert) -->
+        <div id="tabCategories" class="tab-panel hidden-el" style="display:none"></div>
 
         <!-- GENERAL TAB -->
         <div id="tabGeneral" class="tab-panel hidden-el">
@@ -261,12 +247,6 @@ const resourceTable = document.querySelector('#resourceTable tbody');
 const productsTableBody = document.getElementById('productsTableBody');
 const btnReloadProducts = document.getElementById('btnReloadProducts');
 
-const categoriesList = document.getElementById('categoriesList');
-const newCategoryInput = document.getElementById('newCategoryInput');
-const addCategoryBtn = document.getElementById('addCategoryBtn');
-const saveCategoriesBtn = document.getElementById('saveCategoriesBtn');
-const reloadCategoriesBtn = document.getElementById('reloadCategoriesBtn');
-
 const settingTitle = document.getElementById('settingTitle');
 const settingHeaderImage = document.getElementById('settingHeaderImage');
 const saveGeneralBtn = document.getElementById('saveGeneralBtn');
@@ -283,7 +263,6 @@ let settings = { title: '🌿 Weed Ankauf — Shop', headerImage: 'https://via.p
 function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
 function hideModal(){ settingsModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>settingsModal.classList.add('hidden-el'),240); }
 
-/* open/close events */
 openSettingsBtn.addEventListener('click', ()=>{
   settingsPassword.value = '';
   settingsLoginError.style.display = 'none';
@@ -312,14 +291,10 @@ onValue(settingsRef, snapshot=>{
   if(val){
     settings.title = val.title || settings.title;
     settings.headerImage = val.headerImage || settings.headerImage;
-    settings.categories = Array.isArray(val.categories) ? val.categories : (val.categories ? Object.values(val.categories) : []);
   }
   applySettings();
-  renderCategoryEditor();
-  populateCategorySelect();
 });
 
-/* apply settings to UI */
 function applySettings(){
   pageTitle.innerText = settings.title || '🌿 Weed Ankauf — Shop';
   headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
@@ -338,62 +313,7 @@ resetGeneralBtn.addEventListener('click', async ()=>{
   try{ await update(settingsRef, { title:'🌿 Weed Ankauf — Shop', headerImage:'https://via.placeholder.com/48' }); alert('Zurückgesetzt'); } catch(e){ console.error(e); alert('Fehler'); }
 });
 
-/* ---------- Categories editor ---------- */
-function renderCategoryEditor(){
-  categoriesList.innerHTML = '';
-  const cats = Array.isArray(settings.categories) ? settings.categories : [];
-  if(cats.length === 0){ categoriesList.innerHTML = '<div class="kv">Keine Kategorien vorhanden.</div>'; return; }
-  cats.forEach((c, idx)=>{
-    const wrap = document.createElement('div'); wrap.className='category-item';
-    const input = document.createElement('input'); input.className='input'; input.value = c; input.dataset.idx = idx;
-    const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='6px';
-    const saveBtn = document.createElement('button'); saveBtn.className='btn small-btn'; saveBtn.textContent='✔';
-    const delBtn = document.createElement('button'); delBtn.className='btn small-btn'; delBtn.textContent='🗑';
-    actions.appendChild(saveBtn); actions.appendChild(delBtn);
-    wrap.appendChild(input); wrap.appendChild(actions);
-    categoriesList.appendChild(wrap);
-
-    saveBtn.onclick = ()=> {
-      const v = input.value.trim();
-      if(!v){ alert('Name nicht leer'); return; }
-      settings.categories[idx] = v;
-      alert('Geändert (noch nicht gespeichert). Klicke "Speichern".');
-    };
-    delBtn.onclick = ()=> {
-      if(!confirm(`Kategorie "${settings.categories[idx]}" löschen?`)) return;
-      settings.categories.splice(idx,1);
-      renderCategoryEditor();
-    };
-  });
-}
-
-addCategoryBtn.addEventListener('click', ()=>{
-  const v = (newCategoryInput.value||'').trim();
-  if(!v){ alert('Bitte Namen eingeben'); return; }
-  settings.categories.push(v);
-  newCategoryInput.value=''; renderCategoryEditor();
-});
-saveCategoriesBtn.addEventListener('click', async ()=>{
-  try{ await update(settingsRef, { categories: settings.categories || [] }); alert('Kategorien gespeichert'); populateCategorySelect(); } catch(e){ console.error(e); alert('Fehler beim Speichern'); }
-});
-reloadCategoriesBtn.addEventListener('click', ()=>{
-  get(settingsRef).then(snap=>{
-    const val = snap.val();
-    if(val && Array.isArray(val.categories)) settings.categories = val.categories;
-    renderCategoryEditor(); populateCategorySelect(); alert('Kategorien neu geladen');
-  }).catch(e=>{ console.error(e); alert('Laden fehlgeschlagen'); });
-});
-
-function populateCategorySelect(){
-  prodCategorySelect.innerHTML = '';
-  const none = document.createElement('option'); none.value=''; none.textContent='— Keine —';
-  prodCategorySelect.appendChild(none);
-  (Array.isArray(settings.categories)?settings.categories:[]).forEach(c=>{
-    const o = document.createElement('option'); o.value=c; o.textContent=c; prodCategorySelect.appendChild(o);
-  });
-}
-
-/* ---------- Products CRUD (with resources, colors) ---------- */
+/* ---------- Products CRUD ---------- */
 onValue(productsRef, snapshot=>{
   products = [];
   snapshot.forEach(child=>{
@@ -404,7 +324,6 @@ onValue(productsRef, snapshot=>{
   renderProductsGrid();
 });
 
-/* render shop grid (with resources listing) */
 function renderProductsGrid(){
   productsGrid.innerHTML = '';
   if(products.length===0){ productsGrid.innerHTML='<div class="kv p-4">Keine Produkte verfügbar.</div>'; return; }
@@ -415,7 +334,6 @@ function renderProductsGrid(){
     const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent = p.description || '';
     card.appendChild(img); card.appendChild(title); card.appendChild(desc);
 
-    // resources table
     if(p.resources){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
       if(pairs.length){
@@ -499,7 +417,7 @@ function addResourceRow(name='', value='', color='#facc15'){
 }
 addResourceBtn.addEventListener('click', ()=> addResourceRow());
 
-/* preview update when image URL changes */
+/* preview update */
 prodImg.addEventListener('input', ()=> { prodPreview.src = prodImg.value || 'https://via.placeholder.com/150x100'; });
 
 /* cancel product */
@@ -512,7 +430,6 @@ cancelProductBtn.addEventListener('click', ()=> {
 /* submit product */
 productForm.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  // collect resources
   const rows = Array.from(resourceTable.querySelectorAll('tr'));
   const resources = rows.map(r=>{
     const name = r.children[0].querySelector('input').value.trim();
@@ -544,20 +461,18 @@ productForm.addEventListener('submit', async (e)=>{
   }catch(err){ console.error(err); alert('Fehler beim Speichern des Produkts'); }
 });
 
-/* reload products (force check) */
+/* reload products */
 btnReloadProducts.addEventListener('click', ()=> {
   get(productsRef).then(()=> alert('Produkte neu geladen.')).catch(()=> alert('Laden fehlgeschlagen.'));
 });
 
-/* ---------- Login to settings ---------- */
+/* login */
 settingsUnlockBtn.addEventListener('click', ()=>{
   const pw = (settingsPassword.value||'').trim();
   if(pw === ADMIN_PASSWORD){
     settingsLoginError.style.display = 'none';
     settingsLoginArea.style.display = 'none';
     settingsEditor.classList.remove('hidden-el');
-    renderCategoryEditor();
-    populateCategorySelect();
     settingTitle.value = settings.title || '';
     settingHeaderImage.value = settings.headerImage || '';
   } else {
@@ -568,10 +483,15 @@ settingsUnlockBtn.addEventListener('click', ()=>{
 /* helper escape */
 function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
 
-/* initial apply for header */
+/* initial apply */
 applySettings();
 populateCategorySelect();
 
+function populateCategorySelect(){
+  prodCategorySelect.innerHTML = '';
+  const none = document.createElement('option'); none.value=''; none.textContent='— Keine —';
+  prodCategorySelect.appendChild(none);
+}
 </script>
 </body>
 </html>

@@ -16,6 +16,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 input, textarea { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
 .product-image { width:100%; height:180px; object-fit:cover; border-radius:8px; }
+.product-image-admin { width:80px; height:50px; object-fit:cover; border-radius:4px; }
 </style>
 </head>
 
@@ -71,7 +72,7 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
             <div id="resourceTableContainer" class="mb-3 hidden-el">
               <h4 class="font-medium mb-1">Ressourcen bearbeiten</h4>
               <table id="resourceTable" class="w-full text-sm border border-gray-700 rounded-md">
-                <thead class="bg-gray-700 text-green-400">
+                <thead class="bg-gray-700 text-yellow-400">
                   <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th><th class="px-3 py-1">Aktion</th></tr>
                 </thead>
                 <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
@@ -97,8 +98,6 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
                 <th class="p-2">Vorschau</th>
                 <th class="p-2">Name</th>
                 <th class="p-2">Anzahl</th>
-                <th class="p-2">Kategorie</th>
-                <th class="p-2">Beschreibung</th>
                 <th class="p-2">Aktion</th>
               </tr>
             </thead>
@@ -164,7 +163,6 @@ function openProductForm(product){
   productFormCard.classList.remove('hidden-el');
   const resourceTableContainer = document.getElementById('resourceTableContainer');
   const resourceTableBody = document.querySelector('#resourceTable tbody');
-
   resourceTableBody.innerHTML = '';
   resourceTableContainer.classList.add('hidden-el');
 
@@ -183,8 +181,8 @@ function openProductForm(product){
         const [k,v] = p.split(':');
         addResourceRow(k,v);
       });
+      resourceTableContainer.classList.remove('hidden-el');
     }
-    resourceTableContainer.classList.remove('hidden-el');
   } else { productForm.reset(); prodId.value=''; }
 }
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
@@ -272,11 +270,9 @@ function renderProductsTable(){
   products.forEach(p=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="p-2"><img src="${p.image||'https://via.placeholder.com/80'}" class="w-20 h-14 object-cover rounded"/></td>
+      <td class="p-2"><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"/></td>
       <td class="p-2">${escapeHtml(p.name)}</td>
       <td class="p-2">${p.quantity}</td>
-      <td class="p-2">${escapeHtml(p.category||'')}</td>
-      <td class="p-2 small-muted">${escapeHtml(p.description||'')}</td>
       <td class="p-2">
         <button class="px-2 py-1 bg-yellow-600 rounded mr-1" onclick="editProduct('${p.key}')">Bearbeiten</button>
         <button class="px-2 py-1 bg-red-600 rounded" onclick="deleteProduct('${p.key}')">Löschen</button>

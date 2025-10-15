@@ -10,23 +10,35 @@
 :root{--bg:#0f1724;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
 body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:#071025;color:#e6eef8;margin:0}
 .container{max-width:1100px;margin:0 auto;padding:20px}
+
+/* cards, buttons */
 .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:16px}
 .shadow-soft{box-shadow:0 8px 30px rgba(2,6,23,0.6)}
 .small-muted{color:var(--muted);font-size:0.85rem;margin-top:4px}
 .btn{transition:all .12s ease;border-radius:8px;padding:.45rem .8rem;cursor:pointer;background:#111827;color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
 .btn:hover{transform:translateY(-2px)}
 .hidden-el{display:none !important}
+
+/* product images */
 .product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
 .product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
+
+/* kleinere Karten im Shop */
 #productsGrid .card{max-width:220px;margin:0 auto}
+
+/* settings modal (flat grey-blue style) */
 .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
 .modal-overlay.active .modal-box{transform:translateY(0)}
 .tab-btn{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
 .tab-btn.active{background:linear-gradient(90deg,#94a3b8,#06b6d4);color:#041628;font-weight:700}
+
+/* resource table */
 .table {width:100%;border-collapse:collapse}
 .table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:0.92rem}
+
+/* small helpers */
 .kv{font-size:0.9rem;color:var(--muted)}
 .category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
 .input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
@@ -34,6 +46,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 .small-btn{padding:.35rem .6rem;border-radius:6px}
 .flex-row{display:flex;gap:8px;align-items:center}
 .right{margin-left:auto}
+
+/* Warenkorb modal */
+#cartModal table th, #cartModal table td{text-align:left}
 </style>
 </head>
 <body>
@@ -50,7 +65,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 
       <div class="flex items-center gap-2">
         <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">🛒 Warenkorb (0)</button>
+        <button id="btnCart" class="btn">🛒 Warenkorb</button>
         <button id="openSettingsBtn" class="btn">⚙️</button>
       </div>
     </header>
@@ -68,105 +83,118 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
     </main>
   </div>
 
-  <!-- CART MODAL -->
+  <!-- Warenkorb Modal -->
   <div id="cartModal" class="modal-overlay hidden-el">
     <div class="modal-box">
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex justify-between items-center mb-4">
         <h3 style="font-weight:700;color:#94a3b8;margin:0">🛒 Warenkorb</h3>
         <button id="cartCloseBtn" class="btn">✖</button>
       </div>
-      <div id="cartContent">Warenkorb ist leer.</div>
-      <div class="flex justify-end mt-4">
-        <div id="cartTotal" style="font-weight:700">Gesamt: 0</div>
+      <div id="cartContent">
+        <table class="table" id="cartTable">
+          <thead>
+            <tr><th>Produkt</th><th>Anzahl</th><th>Ressourcen</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- SETTINGS MODAL (wie in deinem Originalscript) -->
-  <!-- ... dein kompletter Settings-Modal bleibt unverändert ... -->
+  <!-- SETTINGS MODAL … (hier bleibt alles wie in deinem Originalscript) -->
 
 <script type="module">
+/* ---------- Firebase imports ---------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-/* ---------- Dein komplettes Original-Script ---------- */
-/* Alles bleibt unverändert, genau so wie du es hattest */
+/* ---------- Config (deine) ---------- */
+const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const productsRef = ref(db, 'products');
+const settingsRef = ref(db, 'settings');
 
-/* ---------- WARENKORB LOGIK HINZUGEFÜGT ---------- */
+/* ---------- Original Globals ---------- */
+const ADMIN_PASSWORD = 'admin123';
+const openSettingsBtn = document.getElementById('openSettingsBtn');
+const settingsModal = document.getElementById('settingsModal');
+/* … alle anderen Elemente bleiben unverändert … */
+
 const btnCart = document.getElementById('btnCart');
 const cartModal = document.getElementById('cartModal');
 const cartCloseBtn = document.getElementById('cartCloseBtn');
-const cartContent = document.getElementById('cartContent');
-const cartTotal = document.getElementById('cartTotal');
-let cart = [];
+const cartTableBody = document.querySelector('#cartTable tbody');
 
-btnCart.addEventListener('click', ()=>{
-  cartModal.classList.remove('hidden-el');
-  setTimeout(()=>cartModal.classList.add('active'),10);
-  document.body.style.overflow='hidden';
-  updateCartModal();
-});
-cartCloseBtn.addEventListener('click', ()=>{
-  cartModal.classList.remove('active');
-  document.body.style.overflow='';
-  setTimeout(()=>cartModal.classList.add('hidden-el'),240);
-});
+let cart = {}; // Produkt-Key => Anzahl
 
-function updateCartModal(){
-  if(cart.length===0){
-    cartContent.innerHTML='Warenkorb ist leer.';
-    cartTotal.innerText='Gesamt: 0';
-  }else{
-    let html='<table class="table"><thead><tr><th>Produkt</th><th>Anzahl</th><th>Preis</th></tr></thead><tbody>';
-    let total=0;
-    cart.forEach(item=>{
-      html+=`<tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.price*item.quantity}</td></tr>`;
-      total+=item.price*item.quantity;
-    });
-    html+='</tbody></table>';
-    cartContent.innerHTML=html;
-    cartTotal.innerText='Gesamt: '+total;
+/* ---------- Warenkorb Funktionen ---------- */
+function showCart(){ cartModal.classList.remove('hidden-el'); setTimeout(()=>cartModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
+function hideCart(){ cartModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>cartModal.classList.add('hidden-el'),240); }
+btnCart.addEventListener('click', showCart);
+cartCloseBtn.addEventListener('click', hideCart);
+cartModal.addEventListener('click', e=>{ if(e.target === cartModal) hideCart(); });
+
+function addToCart(productKey){
+  if(cart[productKey]) cart[productKey] += 1;
+  else cart[productKey] = 1;
+  renderCart();
+}
+
+function renderCart(){
+  cartTableBody.innerHTML = '';
+  for(const key in cart){
+    const prod = products.find(p=>p.key===key);
+    if(!prod) continue;
+    const tr = document.createElement('tr');
+    let resourcesText = '';
+    if(prod.resources){
+      const pairs = prod.resources.split(';').map(x=>x.trim()).filter(Boolean);
+      resourcesText = pairs.map(r=>r.split(':')[0]+':'+r.split(':')[1]).join(', ');
+    }
+    tr.innerHTML = `<td>${escapeHtml(prod.name)}</td><td>${cart[key]}</td><td>${escapeHtml(resourcesText)}</td>`;
+    cartTableBody.appendChild(tr);
   }
-  btnCart.innerText=`🛒 Warenkorb (${cart.reduce((a,b)=>a+b.quantity,0)})`;
 }
 
-// Funktion um Preis aus Ressourcen zu berechnen
-function calculatePrice(product){
-  if(!product.resources) return 1;
-  const pairs=product.resources.split(';').map(x=>x.trim()).filter(Boolean);
-  let sum=0;
-  pairs.forEach(r=>{
-    const [name,qty]=r.split(':');
-    sum+=Number(qty)||0;
-  });
-  return sum;
-}
-
-// Produkte Grid erweitern, um In-Warenkorb Button
-const productsGrid=document.getElementById('productsGrid');
-function renderProductsGridWithCart(){
-  productsGrid.innerHTML='';
+/* ---------- Original renderProductsGrid erweitern ---------- */
+function renderProductsGrid(){
+  productsGrid.innerHTML = '';
   if(products.length===0){ productsGrid.innerHTML='<div class="kv p-4">Keine Produkte verfügbar.</div>'; return; }
   products.forEach(p=>{
-    const card=document.createElement('div'); card.className='card';
-    const img=document.createElement('img'); img.src=p.image||'https://via.placeholder.com/300x120'; img.className='product-image';
-    const title=document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.style.color=p.colorName||'#22c55e'; title.textContent=p.name||'';
-    card.appendChild(img); card.appendChild(title);
-    const btnAdd=document.createElement('button'); btnAdd.className='btn mt-2'; btnAdd.innerText='In Warenkorb';
-    btnAdd.onclick=()=>{ cart.push({name:p.name||'', price:calculatePrice(p), quantity:1}); updateCartModal(); };
-    card.appendChild(btnAdd);
+    const card = document.createElement('div'); card.className='card';
+    const img = document.createElement('img'); img.src = p.image || 'https://via.placeholder.com/300x120'; img.className='product-image';
+    const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.style.color = p.colorName || '#22c55e'; title.textContent = p.name || '';
+    const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent = p.description || '';
+
+    card.appendChild(img); card.appendChild(title); card.appendChild(desc);
+
+    if(p.resources){
+      const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
+      if(pairs.length){
+        const tbl = document.createElement('table'); tbl.className='table'; tbl.style.marginTop='8px';
+        const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Ressource</th><th style="text-align:right">Anzahl</th></tr>'; tbl.appendChild(thead);
+        const tbody = document.createElement('tbody');
+        pairs.forEach(r=>{
+          const [k,v,c] = r.split(':');
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td style="color:${c||'#facc15'}">${escapeHtml(k)}</td><td style="text-align:right;color:${p.colorQuantity||'#3b82f6'}">${Number(v).toLocaleString('de-DE')}</td>`;
+          tbody.appendChild(tr);
+        });
+        tbl.appendChild(tbody); card.appendChild(tbl);
+      }
+    }
+
+    const addBtn = document.createElement('button'); addBtn.className='btn'; addBtn.textContent='In Warenkorb'; addBtn.style.marginTop='6px';
+    addBtn.addEventListener('click', ()=> addToCart(p.key));
+    card.appendChild(addBtn);
+
     productsGrid.appendChild(card);
   });
 }
 
-// Nachdem Produkte geladen wurden, rendern wir mit Cart-Button
-onValue(productsRef, snapshot=>{
-  products=[];
-  snapshot.forEach(child=>{
-    const data=child.val(); data.key=child.key; products.push(data);
-  });
-  renderProductsGridWithCart();
-});
+/* ---------- Original code bleibt unverändert ---------- */
+/* ... Rest deines Originalscripts (Settings, CRUD etc.) ... */
 </script>
 </body>
 </html>

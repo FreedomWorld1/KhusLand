@@ -165,8 +165,8 @@ const yourShareEl=document.getElementById("yourShare");
 function updateShares(){
   const q=Number(quantityInput.value)||0;
   const price=q*2500;
-  sellerShareEl.textContent=formatCurrency(price*0.6);
-  yourShareEl.textContent=formatCurrency(price*0.4);
+  sellerShareEl.textContent=formatCurrency(price*0.8);
+  yourShareEl.textContent=formatCurrency(price*0.2);
 }
 quantityInput.addEventListener("input",updateShares);
 updateShares();

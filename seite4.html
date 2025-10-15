@@ -23,7 +23,6 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 
 <div class="max-w-6xl mx-auto p-6">
-  <!-- HEADER -->
   <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
     <h1 class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf — Shop & Admin</h1>
     <div class="flex items-center gap-2">
@@ -67,19 +66,6 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
             </div>
             <textarea id="prodDesc" rows="2" placeholder="Beschreibung (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
             <input id="prodImg" placeholder="Bild-URL" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
-
-            <!-- Ressourcen Tabelle -->
-            <div id="resourceTableContainer" class="mb-3 hidden-el">
-              <h4 class="font-medium mb-1">Ressourcen bearbeiten</h4>
-              <table id="resourceTable" class="w-full text-sm border border-gray-700 rounded-md">
-                <thead class="bg-gray-700 text-yellow-400">
-                  <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th><th class="px-3 py-1">Aktion</th></tr>
-                </thead>
-                <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
-              </table>
-              <button type="button" id="addResourceBtn" class="mt-2 px-3 py-1 bg-green-600 rounded-md">Ressource hinzufügen</button>
-            </div>
-
             <input id="prodResources" class="hidden-el" />
             <input id="prodCategory" class="hidden-el" />
 
@@ -144,8 +130,8 @@ const prodCategory = document.getElementById('prodCategory');
 const prodResources = document.getElementById('prodResources');
 const cancelProduct = document.getElementById('cancelProduct');
 
-let colorName = 'text-green-400';
-let colorResource = 'text-yellow-400';
+// Farben Admin Bereich
+let colorName = 'text-red-400';
 let colorQuantity = 'text-blue-400';
 
 btnShop.onclick = ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); };
@@ -161,11 +147,6 @@ cancelProduct.onclick = ()=> closeProductForm();
 
 function openProductForm(product){
   productFormCard.classList.remove('hidden-el');
-  const resourceTableContainer = document.getElementById('resourceTableContainer');
-  const resourceTableBody = document.querySelector('#resourceTable tbody');
-  resourceTableBody.innerHTML = '';
-  resourceTableContainer.classList.add('hidden-el');
-
   if(product){
     prodId.value = product.key || '';
     prodName.value = product.name || '';
@@ -174,49 +155,21 @@ function openProductForm(product){
     prodImg.value = product.image || '';
     prodResources.value = product.resources || '';
     prodCategory.value = product.category || '';
-
-    if(product.resources){
-      const pairs = product.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      pairs.forEach(p=>{
-        const [k,v] = p.split(':');
-        addResourceRow(k,v);
-      });
-      resourceTableContainer.classList.remove('hidden-el');
-    }
   } else { productForm.reset(); prodId.value=''; }
 }
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
 
-function addResourceRow(name='', value=''){
-  const tbody = document.querySelector('#resourceTable tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
-                  <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
-                  <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>`;
-  tr.querySelector('button').onclick = ()=> tr.remove();
-  tbody.appendChild(tr);
-}
-document.getElementById('addResourceBtn').onclick = ()=> addResourceRow();
-
 productForm.onsubmit = async e=>{
   e.preventDefault();
-  const resourceRows = document.querySelectorAll('#resourceTable tbody tr');
-  const resources = Array.from(resourceRows).map(r=>{
-    const name = r.children[0].querySelector('input').value.trim();
-    const qty = r.children[1].querySelector('input').value.trim();
-    return name && qty ? `${name}:${qty}` : '';
-  }).filter(Boolean).join(';');
-
   const payload = {
     name: prodName.value.trim(),
     quantity: Number(prodQuantity.value) || 0,
     description: prodDesc.value.trim(),
     image: prodImg.value.trim(),
-    category: '',
-    resources,
+    category: prodCategory.value.trim(),
+    resources: prodResources.value.trim(),
     updatedAt: Date.now()
   };
-
   if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); } 
   else{ await push(productsRef, payload); }
   closeProductForm();
@@ -236,28 +189,26 @@ function renderProducts(){
   products.forEach(p=>{
     const card = document.createElement('div');
     card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm text-center';
-
     let resourcesHTML = '';
     if(p.resources){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
       if(pairs.length > 0){
         resourcesHTML = `<table class="w-full text-sm border border-gray-700 rounded-md mt-2">
-          <thead class="bg-gray-700 ${colorResource}">
+          <thead class="bg-gray-700 text-yellow-400">
             <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th></tr>
           </thead>
           <tbody class="bg-gray-800 divide-y divide-gray-700">
             ${pairs.map(r=>{
               const [k,v] = r.split(':');
-              return `<tr><td class="px-3 py-1 text-left ${colorName}">${k}</td><td class="px-3 py-1 text-right ${colorQuantity}">${Number(v).toLocaleString('de-DE')}</td></tr>`;
+              return `<tr><td class="px-3 py-1 text-left text-green-400">${k}</td><td class="px-3 py-1 text-right text-blue-400">${Number(v).toLocaleString('de-DE')}</td></tr>`;
             }).join('')}
           </tbody>
         </table>`;
       }
     }
-
     card.innerHTML = `
       <img src="${p.image||'https://via.placeholder.com/300x120'}" alt="Produktbild" class="product-image mb-2"/>
-      <div class="font-semibold ${colorName} text-lg">${escapeHtml(p.name)}</div>
+      <div class="font-semibold text-green-400 text-lg">${escapeHtml(p.name)}</div>
       <span class="small-muted">${escapeHtml(p.description||'')}</span>
       ${resourcesHTML}
     `;
@@ -271,8 +222,8 @@ function renderProductsTable(){
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="p-2"><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"/></td>
-      <td class="p-2">${escapeHtml(p.name)}</td>
-      <td class="p-2">${p.quantity.toLocaleString('de-DE')}</td>
+      <td class="p-2 ${colorName}">${escapeHtml(p.name)}</td>
+      <td class="p-2 ${colorQuantity}">${p.quantity.toLocaleString('de-DE')}</td>
       <td class="p-2">
         <button class="px-2 py-1 bg-yellow-600 rounded mr-1" onclick="editProduct('${p.key}')">Bearbeiten</button>
         <button class="px-2 py-1 bg-red-600 rounded" onclick="deleteProduct('${p.key}')">Löschen</button>

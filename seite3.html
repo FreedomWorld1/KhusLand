@@ -60,7 +60,7 @@ input:focus { outline: none; border-color: #22c55e; box-shadow: 0 0 0 2px #22c55
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
 <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
-<div class="small-muted mb-0.5">Verkäufer (80%)</div>
+<div class="small-muted mb-0.5">Verkäufer (60%)</div>
 <div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
 </div>
 <div class="p-2.5 rounded-md bg-gray-800 border border-gray-700 text-center">
@@ -105,7 +105,7 @@ input:focus { outline: none; border-color: #22c55e; box-shadow: 0 0 0 2px #22c55
 <th class="p-2">Menge</th>
 <th class="p-2">Preis</th>
 <th class="p-2">Verkäufer (60%)</th>
-<th class="p-2">Käufer (40%)</th>
+<th class="p-2">Käufer (20%)</th>
 <th class="p-2">Aktion</th>
 </tr>
 </thead>
@@ -123,14 +123,14 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase
 import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = {
-apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-authDomain: "khusland-b7d13.firebaseapp.com",
-databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-projectId: "khusland-b7d13",
-storageBucket: "khusland-b7d13.firebasestorage.app",
-messagingSenderId: "69573193613",
-appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-measurementId: "G-JSCWR4207G"
+  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+  authDomain: "khusland-b7d13.firebaseapp.com",
+  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+  projectId: "khusland-b7d13",
+  storageBucket: "khusland-b7d13.firebasestorage.app",
+  messagingSenderId: "69573193613",
+  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+  measurementId: "G-JSCWR4207G"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -141,139 +141,172 @@ const entriesRef = ref(db, "weedscarface_entries");
 const ADMIN_PASSWORD = "admin123";
 let entries = [];
 
-function show(el){el.classList.remove("hidden-el");}
-function hide(el){el.classList.add("hidden-el");}
-function formatCurrency(n){return Math.round(n)+" $";}
+function show(el){ el.classList.remove("hidden-el"); }
+function hide(el){ el.classList.add("hidden-el"); }
+function formatCurrency(n){ return Math.round(n) + " $"; }
 function formatDate(d){
-  const date=new Date(d);
-  const pad=n=>n.toString().padStart(2,"0");
+  const date = new Date(d);
+  const pad = n => n.toString().padStart(2,"0");
   return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
 // Menü
-document.getElementById("hamburgerBtn").addEventListener("click",()=>document.getElementById("hamburgerMenu").classList.toggle("hidden"));
+document.getElementById("hamburgerBtn").addEventListener("click", () => {
+  document.getElementById("hamburgerMenu").classList.toggle("hidden");
+});
 
 // Tabs
-document.getElementById("btnNew").addEventListener("click",()=>{show(document.getElementById("newEntry")); hide(document.getElementById("overview")); hide(document.getElementById("adminPanel"));});
-document.getElementById("btnOverview").addEventListener("click",()=>{hide(document.getElementById("newEntry")); show(document.getElementById("overview")); hide(document.getElementById("adminPanel")); renderOverview();});
-document.getElementById("btnAdmin").addEventListener("click",()=>{hide(document.getElementById("newEntry")); hide(document.getElementById("overview")); show(document.getElementById("adminPanel"));});
+document.getElementById("btnNew").addEventListener("click", () => {
+  show(document.getElementById("newEntry"));
+  hide(document.getElementById("overview"));
+  hide(document.getElementById("adminPanel"));
+});
+document.getElementById("btnOverview").addEventListener("click", () => {
+  hide(document.getElementById("newEntry"));
+  show(document.getElementById("overview"));
+  hide(document.getElementById("adminPanel"));
+  renderOverview();
+});
+document.getElementById("btnAdmin").addEventListener("click", () => {
+  hide(document.getElementById("newEntry"));
+  hide(document.getElementById("overview"));
+  show(document.getElementById("adminPanel"));
+});
 
 // Anteile berechnen
-const quantityInput=document.getElementById("quantity");
-const sellerShareEl=document.getElementById("sellerShare");
-const yourShareEl=document.getElementById("yourShare");
-function updateShares(){
-  const q=Number(quantityInput.value)||0;
-  const price=q*2500;
-  sellerShareEl.textContent=formatCurrency(price*0.8);
-  yourShareEl.textContent=formatCurrency(price*0.2);
+const quantityInput = document.getElementById("quantity");
+const sellerShareEl = document.getElementById("sellerShare");
+const yourShareEl = document.getElementById("yourShare");
+
+function updateShares() {
+  const q = Number(quantityInput.value) || 0;
+  const price = q * 2500;
+  const sellerShare = price * 0.6; // Verkäufer 60 %
+  const buyerShare = price * 0.2;  // Käufer 20 %
+  sellerShareEl.textContent = formatCurrency(sellerShare);
+  yourShareEl.textContent = formatCurrency(buyerShare);
 }
-quantityInput.addEventListener("input",updateShares);
+quantityInput.addEventListener("input", updateShares);
 updateShares();
 
 // Formular absenden
-document.getElementById("entryForm").addEventListener("submit", async e=>{
-e.preventDefault();
-const buyer=document.getElementById("buyer").value;
-const seller=document.getElementById("seller").value;
-const quantity=Number(quantityInput.value);
-const price=quantity*2500;
-const sellerShare=price*0.8;
-const yourShare=price*0.2;
-const entry = { buyer, seller, quantity, price, sellerShare, yourShare, date: formatDate(new Date()), timestamp: Date.now() };
-await push(entriesRef, entry);
-e.target.reset();
-updateShares();
+document.getElementById("entryForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const buyer = document.getElementById("buyer").value;
+  const seller = document.getElementById("seller").value;
+  const quantity = Number(quantityInput.value);
+  const price = quantity * 2500;
+  const sellerShare = price * 0.6;
+  const buyerShare = price * 0.2;
+  const entry = {
+    buyer, seller, quantity, price,
+    sellerShare, yourShare: buyerShare,
+    date: formatDate(new Date()), timestamp: Date.now()
+  };
+  await push(entriesRef, entry);
+  e.target.reset();
+  updateShares();
 });
 
 // Reset
-document.getElementById("resetForm").addEventListener("click",()=>{document.getElementById("entryForm").reset(); updateShares();});
+document.getElementById("resetForm").addEventListener("click", () => {
+  document.getElementById("entryForm").reset();
+  updateShares();
+});
 
 // Realtime-Daten
-onValue(entriesRef, snapshot=>{
-entries=[];
-snapshot.forEach(child=>{
-const data=child.val();
-data.key=child.key;
-entries.push(data);
-});
-entries.sort((a,b)=>b.timestamp - a.timestamp);
-renderOverview();
-renderAdminTable();
+onValue(entriesRef, snapshot => {
+  entries = [];
+  snapshot.forEach(child => {
+    const data = child.val();
+    data.key = child.key;
+    entries.push(data);
+  });
+  entries.sort((a,b) => b.timestamp - a.timestamp);
+  renderOverview();
+  renderAdminTable();
 });
 
 // Übersicht
-const entriesList=document.getElementById("entriesList");
-function renderOverview(){
-entriesList.innerHTML="";
-if(entries.length===0){entriesList.innerHTML="<p class='text-gray-400'>Keine Einträge vorhanden.</p>"; return;}
-entries.forEach(en=>{
-const el=document.createElement("div");
-el.className="p-3 rounded-md bg-gray-800 border border-gray-700";
-el.innerHTML=`
-<div class="text-sm text-gray-400 mb-1">${en.date}</div>
-<div class="font-semibold">${en.buyer} → ${en.seller}</div>
-<div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
-<div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
-<div class="text-sm text-red-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
-entriesList.prepend(el);
-});
+const entriesList = document.getElementById("entriesList");
+function renderOverview() {
+  entriesList.innerHTML = "";
+  if(entries.length === 0) {
+    entriesList.innerHTML = "<p class='text-gray-400'>Keine Einträge vorhanden.</p>";
+    return;
+  }
+  entries.forEach(en => {
+    const el = document.createElement("div");
+    el.className = "p-3 rounded-md bg-gray-800 border border-gray-700";
+    el.innerHTML = `
+      <div class="text-sm text-gray-400 mb-1">${en.date}</div>
+      <div class="font-semibold">${en.buyer} → ${en.seller}</div>
+      <div class="text-sm mt-1">Menge: ${en.quantity} | Preis: ${formatCurrency(en.price)}</div>
+      <div class="text-sm text-green-400">Verkäufer: ${formatCurrency(en.sellerShare)}</div>
+      <div class="text-sm text-red-400">Käufer: ${formatCurrency(en.yourShare)}</div>`;
+    entriesList.prepend(el);
+  });
 }
 
 // Admin
-const adminLoginBtn=document.getElementById("adminLoginBtn");
-const adminPassInput=document.getElementById("adminPass");
-const adminError=document.getElementById("adminError");
-const adminTableBody=document.getElementById("adminTableBody");
-const totalCount=document.getElementById("totalCount");
-const totalRevenue=document.getElementById("totalRevenue");
-const exportCsv=document.getElementById("exportCsv");
+const adminLoginBtn = document.getElementById("adminLoginBtn");
+const adminPassInput = document.getElementById("adminPass");
+const adminError = document.getElementById("adminError");
+const adminTableBody = document.getElementById("adminTableBody");
+const totalCount = document.getElementById("totalCount");
+const totalRevenue = document.getElementById("totalRevenue");
+const exportCsv = document.getElementById("exportCsv");
 
-adminLoginBtn.addEventListener("click",()=>{
-if(adminPassInput.value===ADMIN_PASSWORD){adminError.classList.add("hidden-el"); show(document.getElementById("adminContent")); renderAdminTable();}
-else adminError.classList.remove("hidden-el");
+adminLoginBtn.addEventListener("click", () => {
+  if(adminPassInput.value === ADMIN_PASSWORD){
+    adminError.classList.add("hidden-el");
+    show(document.getElementById("adminContent"));
+    renderAdminTable();
+  } else adminError.classList.remove("hidden-el");
 });
 
-function renderAdminTable(){
-adminTableBody.innerHTML="";
-let revenue=0;
-const sortedEntries=[...entries].sort((a,b)=>b.timestamp - a.timestamp);
-sortedEntries.forEach(en=>{
-revenue+=en.yourShare;
-const tr=document.createElement("tr");
-tr.className="border-t border-gray-800";
-tr.innerHTML=`<td class="p-2 small-muted">${en.date}</td>
-<td class="p-2">${en.buyer}</td>
-<td class="p-2">${en.seller}</td>
-<td class="p-2">${en.quantity}</td>
-<td class="p-2">${formatCurrency(en.price)}</td>
-<td class="p-2">${formatCurrency(en.sellerShare)}</td>
-<td class="p-2">${formatCurrency(en.yourShare)}</td>
-<td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
-adminTableBody.prepend(tr);
-});
-totalCount.innerText=entries.length;
-totalRevenue.innerText=formatCurrency(revenue);
+function renderAdminTable() {
+  adminTableBody.innerHTML = "";
+  let revenue = 0;
+  const sortedEntries = [...entries].sort((a,b) => b.timestamp - a.timestamp);
+  sortedEntries.forEach(en => {
+    revenue += en.price;
+    const tr = document.createElement("tr");
+    tr.className = "border-t border-gray-800";
+    tr.innerHTML = `<td class="p-2 small-muted">${en.date}</td>
+    <td class="p-2">${en.buyer}</td>
+    <td class="p-2">${en.seller}</td>
+    <td class="p-2">${en.quantity}</td>
+    <td class="p-2">${formatCurrency(en.price)}</td>
+    <td class="p-2">${formatCurrency(en.sellerShare)}</td>
+    <td class="p-2">${formatCurrency(en.yourShare)}</td>
+    <td class="p-2"><button class="px-2 py-1 bg-red-600 text-sm rounded btn" onclick="deleteEntry('${en.key}')">Löschen</button></td>`;
+    adminTableBody.prepend(tr);
+  });
+  totalCount.innerText = entries.length;
+  totalRevenue.innerText = formatCurrency(revenue);
 }
 
-window.deleteEntry=function(key){if(confirm("Eintrag wirklich löschen?")) remove(ref(db,"weedscarface_entries/"+key));}
+window.deleteEntry = function(key) {
+  if(confirm("Eintrag wirklich löschen?")) remove(ref(db, "weedscarface_entries/" + key));
+};
 
 // CSV Export
-exportCsv.addEventListener("click",()=>{
-if(entries.length===0) return alert("Keine Einträge zum Exportieren.");
-const sortedEntries=[...entries].sort((a,b)=>b.timestamp - a.timestamp);
-const header=["date","buyer","seller","quantity","price","sellerShare","yourShare"];
-const rows=sortedEntries.map(e=>[e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare].join(","));
-const csv=[header.join(","),...rows].join("\n");
-const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
-const url=URL.createObjectURL(blob);
-const a=document.createElement("a");
-a.href=url;
-a.download="entries_scarface_weed.csv";
-document.body.appendChild(a);
-a.click();
-URL.revokeObjectURL(url);
-a.remove();
+exportCsv.addEventListener("click", () => {
+  if(entries.length === 0) return alert("Keine Einträge zum Exportieren.");
+  const sortedEntries = [...entries].sort((a,b) => b.timestamp - a.timestamp);
+  const header = ["date","buyer","seller","quantity","price","sellerShare","yourShare"];
+  const rows = sortedEntries.map(e => [e.date,e.buyer,e.seller,e.quantity,e.price,e.sellerShare,e.yourShare].join(","));
+  const csv = [header.join(","),...rows].join("\n");
+  const blob = new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "entries_scarface_weed.csv";
+  document.body.appendChild(a);
+  a.click();
+  URL.revokeObjectURL(url);
+  a.remove();
 });
 </script>
 </body>

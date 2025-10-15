@@ -18,6 +18,7 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
 .product-image { width:72px; height:48px; object-fit:cover; border-radius:8px; }
 </style>
 </head>
+
 <body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
 
 <div class="max-w-6xl mx-auto p-6">
@@ -31,7 +32,7 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
   </header>
 
   <div id="mainContainer" class="space-y-5">
-    <!-- SHOP / PRODUKTE -->
+    <!-- SHOP -->
     <section id="shopView" class="card p-6 shadow-soft">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold text-green-400">🛒 Produkte</h2>
@@ -63,7 +64,8 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
               <input id="prodName" placeholder="Name" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
               <input id="prodQuantity" type="number" min="0" placeholder="Anzahl" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
             </div>
-            <textarea id="prodDesc" rows="3" placeholder="Beschreibung" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
+            <textarea id="prodDesc" rows="2" placeholder="Beschreibung" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
+            <input id="prodResources" placeholder="Ressourcen (z.B. Waffenteile:1000; Deadcoins:200000)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"/>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <input id="prodImg" placeholder="Bild-URL (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
               <input id="prodCategory" placeholder="Kategorie" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
@@ -111,14 +113,13 @@ const firebaseConfig = {
   appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
   measurementId: "G-JSCWR4207G"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 
-// Admin password
 const ADMIN_PASSWORD = 'admin123';
 
-// DOM
 const btnShop = document.getElementById('btnShop');
 const btnAdmin = document.getElementById('btnAdmin');
 const shopView = document.getElementById('shopView');
@@ -126,7 +127,6 @@ const adminPanel = document.getElementById('adminPanel');
 const productsGrid = document.getElementById('productsGrid');
 const productsTableBody = document.getElementById('productsTableBody');
 
-// Admin Controls
 const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminPassInput = document.getElementById('adminPass');
 const adminError = document.getElementById('adminError');
@@ -140,22 +140,20 @@ const prodQuantity = document.getElementById('prodQuantity');
 const prodDesc = document.getElementById('prodDesc');
 const prodImg = document.getElementById('prodImg');
 const prodCategory = document.getElementById('prodCategory');
+const prodResources = document.getElementById('prodResources');
 const cancelProduct = document.getElementById('cancelProduct');
 
-// Views
 btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); });
 btnAdmin.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); adminPanel.classList.remove('hidden-el'); });
 
-// Admin login
 adminLoginBtn.addEventListener('click', ()=>{
   if(adminPassInput.value === ADMIN_PASSWORD){
     adminError.classList.add('hidden-el'); adminContent.classList.remove('hidden-el');
   } else { adminError.classList.remove('hidden-el'); }
 });
 
-// Product form
-btnNewProduct.addEventListener('click', ()=>{ openProductForm(); });
-cancelProduct.addEventListener('click', ()=>{ closeProductForm(); });
+btnNewProduct.addEventListener('click', ()=> openProductForm());
+cancelProduct.addEventListener('click', ()=> closeProductForm());
 
 function openProductForm(product){
   productFormCard.classList.remove('hidden-el');
@@ -166,7 +164,11 @@ function openProductForm(product){
     prodDesc.value = product.description || '';
     prodImg.value = product.image || '';
     prodCategory.value = product.category || '';
-  } else { productForm.reset(); prodId.value=''; }
+    prodResources.value = product.resources || '';
+  } else {
+    productForm.reset();
+    prodId.value='';
+  }
 }
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
 
@@ -178,6 +180,7 @@ productForm.addEventListener('submit', async (e)=>{
     description: prodDesc.value.trim(),
     image: prodImg.value.trim() || '',
     category: prodCategory.value.trim() || '',
+    resources: prodResources.value.trim(),
     updatedAt: Date.now()
   };
   if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); }
@@ -185,7 +188,6 @@ productForm.addEventListener('submit', async (e)=>{
   closeProductForm();
 });
 
-// Listen to products
 let products = [];
 onValue(productsRef, snapshot=>{
   products = [];
@@ -194,30 +196,45 @@ onValue(productsRef, snapshot=>{
   renderProducts(); renderProductsTable();
 });
 
-// Render products
 function renderProducts(){
   productsGrid.innerHTML='';
   if(products.length===0){ productsGrid.innerHTML = '<div class="text-gray-400">Keine Produkte verfügbar.</div>'; return; }
   products.forEach(p=>{
     const card = document.createElement('div');
-    card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700';
+    card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm';
+
+    let resourcesHTML = '';
+    if(p.resources){
+      const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
+      if(pairs.length > 0){
+        resourcesHTML = `
+        <table class="w-full text-sm text-gray-300 border border-gray-700 rounded-md mt-2">
+          <thead class="bg-gray-700 text-green-400">
+            <tr><th class="text-left px-3 py-1">Ressource</th><th class="text-right px-3 py-1">Anzahl</th></tr>
+          </thead>
+          <tbody class="bg-gray-800 divide-y divide-gray-700">
+            ${pairs.map(r=>{
+              const [k,v] = r.split(':');
+              return `<tr><td class="px-3 py-1">${k}</td><td class="px-3 py-1 text-right">${Number(v).toLocaleString('de-DE')}</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+      }
+    }
+
     card.innerHTML = `
-      <div class="flex gap-3">
+      <div class="flex gap-3 items-start">
         <img src="${p.image||'https://via.placeholder.com/150'}" alt="" class="product-image"/>
         <div class="flex-1">
-          <div class="font-semibold">${escapeHtml(p.name)}</div>
+          <div class="font-semibold text-green-400">${escapeHtml(p.name)}</div>
           <div class="small-muted text-sm mt-1">${escapeHtml(p.description||'')}</div>
-        </div>
-        <div class="text-right">
-          <div class="font-semibold text-green-400">${p.quantity} Stück</div>
-          <button class="mt-2 px-3 py-1 rounded-md bg-blue-600" onclick="openBuy('${p.key}')">Kaufen</button>
+          ${resourcesHTML}
         </div>
       </div>`;
     productsGrid.appendChild(card);
   });
 }
 
-// Admin table
 function renderProductsTable(){
   productsTableBody.innerHTML='';
   products.forEach(p=>{
@@ -237,48 +254,10 @@ function renderProductsTable(){
   });
 }
 
-// Utils
 function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>\"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
 window.editProduct = function(key){ const p = products.find(x=>x.key===key); if(p) openProductForm(p); window.scrollTo({top:0,behavior:'smooth'}); }
 window.deleteProduct = function(key){ if(confirm('Produkt wirklich löschen?')) remove(ref(db, 'products/'+key)); }
 
-// Kauf-Flow mit Gutschein
-window.openBuy = async function(key){
-  const p = products.find(x=>x.key===key); if(!p) return alert('Produkt nicht gefunden');
-  const name = prompt('Käufername eingeben'); if(!name) return;
-  const quantity = Number(prompt('Menge', '1')) || 1;
-
-  const userRef = ref(db, 'orders/' + name);
-  let userOrders = [];
-  await onValue(userRef, snapshot=>{
-    userOrders = [];
-    snapshot.forEach(child=>{ const data = child.val(); data.key = child.key; userOrders.push(data); });
-  }, { onlyOnce:true });
-
-  const totalOrders = userOrders.length + 1;
-  let discount = 0;
-  if(totalOrders % 10 === 0) discount = 50;
-  else if(totalOrders % 5 === 0) discount = 20;
-
-  const discountedPrice = Math.round((p.price||0) * quantity * (1 - discount/100));
-
-  const order = {
-    productKey: key,
-    productName: p.name,
-    buyer: name,
-    quantity,
-    price: (p.price||0)*quantity,
-    discountedPrice,
-    discount,
-    date: new Date().toISOString(),
-    timestamp: Date.now(),
-    category: p.category
-  };
-  await push(userRef, order);
-  alert(`Bestellung gespeichert. Rabatt: ${discount}%`);
-};
-
-// Show shop default
 shopView.classList.remove('hidden-el');
 </script>
 </body>

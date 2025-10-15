@@ -3,207 +3,198 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Weed Ankauf — Shop + Admin</title>
+<title>Weed Ankauf — Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+/* Grundlayout */
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
-.card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
-.shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
+.bg-card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
 .small-muted { color: #9ca3af; font-size: 0.8rem; margin-top:2px; display:block; }
-.btn { transition: all .15s ease; font-size: 0.9rem; cursor:pointer; }
+.btn { transition: all .12s ease; font-size: 0.9rem; cursor:pointer; }
 .btn:hover { transform: translateY(-2px); }
-.hidden-el { display: none; }
-input, textarea, select { transition: all 0.15s ease; font-size: 0.95rem; }
-input:focus, textarea:focus, select:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
+
+/* product images */
 .product-image { width:100%; height:120px; object-fit:cover; border-radius:8px; }
 .product-image-admin { width:80px; height:50px; object-fit:cover; border-radius:4px; }
 
-/* Modal (Settings) */
-.modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:50; }
-.modal-content { width: 96%; max-width: 900px; border-radius:10px; padding:16px; background: linear-gradient(180deg,#0f1724,#111827); color: #e5e7eb; border:1px solid rgba(255,255,255,0.04); }
-.tabs { display:flex; gap:8px; margin-bottom:12px; }
-.tab-btn { padding:8px 12px; border-radius:8px; background: rgba(255,255,255,0.02); cursor:pointer; }
-.tab-btn.active { background: linear-gradient(90deg,#4f46e5,#06b6d4); color:white; }
+/* helper */
+.hidden-el { display:none !important; }
 
-/* small helpers */
+/* SETTINGS MODAL - centered with fade */
+.modal-overlay {
+  position: fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.6); z-index:60; opacity:0; pointer-events:none; transition:opacity .22s ease;
+}
+.modal-overlay.active { opacity:1; pointer-events:all; }
+.modal-box {
+  width: 96%; max-width: 980px; background: linear-gradient(180deg,#0b1220,#0f1724); padding:18px; border-radius:12px;
+  border:1px solid rgba(255,255,255,0.04); box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  transform: translateY(-8px); transition:transform .22s ease;
+}
+.modal-overlay.active .modal-box { transform: translateY(0); }
+
+/* tabs */
+.tab-btn { padding:8px 12px; border-radius:8px; background: rgba(255,255,255,0.02); cursor:pointer; }
+.tab-btn.active { background: linear-gradient(90deg,#10b981,#06b6d4); color:#051124; font-weight:600; }
+
+/* categories list */
+.category-item { display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px; background: rgba(255,255,255,0.02); border-radius:8px; margin-bottom:6px; }
+
+/* small text */
 .kv { font-size:0.9rem; color:#9ca3af; }
-.category-item { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px; background: rgba(255,255,255,0.02); border-radius:8px; margin-bottom:6px; }
 </style>
 </head>
-
-<body class="bg-gray-900 text-gray-100 antialiased min-h-screen">
+<body class="bg-gray-900 text-gray-100 min-h-screen antialiased">
 
 <div class="max-w-6xl mx-auto p-6">
-  <!-- HEADER -->
-  <header class="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-800 rounded-lg shadow-soft mb-6 p-4 flex justify-between items-center">
+  <!-- Header -->
+  <header class="flex items-center justify-between mb-6 p-4 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg">
     <div class="flex items-center gap-4">
-      <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" class="rounded-lg" style="width:48px;height:48px;object-fit:cover;">
-      <h1 id="pageTitle" class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf — Shop & Admin</h1>
+      <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" class="rounded" style="width:48px;height:48px;object-fit:cover;">
+      <h1 id="pageTitle" class="text-2xl font-bold text-green-400 tracking-tight">🌿 Weed Ankauf — Shop</h1>
     </div>
-
     <div class="flex items-center gap-2">
-      <button id="btnShop" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700 shadow-sm">Shop</button>
-      <button id="btnAdmin" class="btn px-3 py-1.5 bg-blue-600 rounded-md hover:bg-blue-500 shadow-sm">Admin</button>
-      <button id="openSettingsBtn" title="Einstellungen" class="btn px-3 py-1.5 bg-gray-700 rounded-md hover:bg-gray-600 shadow-sm">⚙️</button>
+      <button id="btnShop" class="btn px-3 py-1.5 bg-gray-800 rounded-md hover:bg-gray-700">Shop</button>
+      <!-- Admin button removed; settings replaces admin -->
+      <button id="openSettingsBtn" class="btn px-3 py-1.5 bg-gray-700 rounded-md hover:bg-gray-600">⚙️ Einstellungen</button>
     </div>
   </header>
 
+  <!-- Main content -->
   <div id="mainContainer" class="space-y-5">
-    <!-- SHOP -->
-    <section id="shopView" class="card p-6 shadow-soft">
+    <section id="shopView" class="bg-card p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-semibold text-green-400">🛒 Produkte</h2>
-        <div class="small-muted">Hier kannst du Produkte kaufen</div>
+        <div class="small-muted">Produkte anzeigen</div>
       </div>
       <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
+  </div>
+</div>
 
-    <!-- ADMIN -->
-    <section id="adminPanel" class="card p-5 shadow-soft hidden-el">
-      <h2 class="text-lg font-semibold mb-3">🔧 Adminbereich — Produkte verwalten</h2>
-      <div id="adminLoginSection" class="mb-4">
-        <input id="adminPass" type="password" placeholder="Admin-Passwort" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700 mb-3"/>
-        <button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-md">Einloggen</button>
-        <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm">❌ Falsches Passwort</span>
+<!-- SETTINGS MODAL (zentriert, Tabs: Produkte / Kategorien / Allgemein) -->
+<div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
+  <div class="modal-box text-gray-100">
+    <div class="flex justify-between items-start mb-3">
+      <h3 class="text-xl font-semibold">⚙️ Einstellungen</h3>
+      <div class="flex gap-2 items-center">
+        <button id="settingsCloseBtn" class="text-red-400 text-xl font-bold">&times;</button>
+      </div>
+    </div>
+
+    <!-- Login -->
+    <div id="settingsLoginArea" class="">
+      <label class="block kv mb-2">Admin-Passwort</label>
+      <div class="flex gap-2 mb-3">
+        <input id="settingsPassword" type="password" placeholder="Passwort" class="w-full p-2 rounded bg-gray-800 border border-gray-700" />
+        <button id="settingsUnlockBtn" class="px-4 py-2 bg-blue-600 rounded">Einloggen</button>
+      </div>
+      <div id="settingsLoginError" class="kv text-red-400 hidden-el">❌ Falsches Passwort</div>
+    </div>
+
+    <!-- Editor (hidden until password ok) -->
+    <div id="settingsEditor" class="hidden-el">
+      <!-- tabs -->
+      <div class="mb-3">
+        <div class="flex gap-2">
+          <button class="tab-btn active" data-tab="products">Produkte</button>
+          <button class="tab-btn" data-tab="categories">Kategorien</button>
+          <button class="tab-btn" data-tab="general">Allgemein</button>
+        </div>
       </div>
 
-      <div id="adminContent" class="hidden-el">
-        <div class="flex gap-3 flex-wrap mb-4">
-          <button id="btnNewProduct" class="px-3 py-2 bg-green-600 rounded-md">Neues Produkt</button>
+      <!-- tab contents -->
+      <div id="tabProducts" class="tab-panel">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">Produkte verwalten</h4>
+          <div class="flex gap-2">
+            <button id="btnNewProduct" class="px-3 py-2 bg-green-600 rounded">Neues Produkt</button>
+            <button id="btnReloadProducts" class="px-3 py-2 bg-gray-700 rounded">Neu laden</button>
+          </div>
         </div>
 
-        <!-- Product Form -->
-        <div id="productFormCard" class="p-4 rounded-md bg-gray-800 border border-gray-700 mb-4 hidden-el">
-          <h3 class="font-semibold mb-2">Produkt erstellen / bearbeiten</h3>
+        <!-- product form -->
+        <div id="productFormCard" class="p-4 bg-gray-800 rounded mb-3 hidden-el">
           <form id="productForm" class="space-y-3">
-            <input id="prodId" type="hidden" />
+            <input id="prodId" type="hidden"/>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input id="prodName" placeholder="Name" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
-              <input id="prodImg" placeholder="Bild-URL" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
+              <input id="prodName" placeholder="Name" class="p-2 rounded bg-gray-900 border border-gray-700 w-full" required />
+              <input id="prodImg" placeholder="Bild-URL" class="p-2 rounded bg-gray-900 border border-gray-700 w-full" />
             </div>
-            <textarea id="prodDesc" rows="2" placeholder="Beschreibung (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
+            <textarea id="prodDesc" rows="2" placeholder="Beschreibung (optional)" class="p-2 rounded bg-gray-900 border border-gray-700 w-full"></textarea>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <label class="flex flex-col">Kategorie
+                <select id="prodCategorySelect" class="p-2 rounded bg-gray-900 border border-gray-700 w-full"></select>
+              </label>
               <label class="flex flex-col">Name-Farbe
-                <input type="color" id="colorNameInput" value="#22c55e"/>
-              </label>
-              <label class="flex flex-col">Anzahl-Farbe (Ressourcen)
-                <input type="color" id="colorQuantityInput" value="#3b82f6"/>
+                <input type="color" id="colorNameInput" value="#22c55e" />
               </label>
             </div>
-
-            <div id="resourceTableContainer" class="mb-3 hidden-el">
-              <h4 class="font-medium mb-1">Ressourcen bearbeiten</h4>
-              <table id="resourceTable" class="w-full text-sm border border-gray-700 rounded-md">
-                <thead class="bg-gray-700 text-yellow-400">
-                  <tr>
-                    <th class="px-3 py-1 text-left">Ressource</th>
-                    <th class="px-3 py-1 text-right">Anzahl</th>
-                    <th class="px-3 py-1">Farbe</th>
-                    <th class="px-3 py-1">Aktion</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
-              </table>
-              <button type="button" id="addResourceBtn" class="mt-2 px-3 py-1 bg-green-600 rounded-md">Ressource hinzufügen</button>
-            </div>
-
-            <input id="prodResources" class="hidden-el" />
-            <input id="prodCategory" class="hidden-el" />
 
             <div class="flex gap-2">
-              <button class="px-4 py-2 bg-green-600 rounded-md" type="submit">Speichern</button>
-              <button id="cancelProduct" type="button" class="px-4 py-2 bg-red-600 rounded-md">Abbrechen</button>
+              <button type="submit" class="px-4 py-2 bg-green-600 rounded">Speichern</button>
+              <button id="cancelProductBtn" type="button" class="px-4 py-2 bg-red-600 rounded">Abbrechen</button>
             </div>
           </form>
         </div>
 
-        <!-- Product List -->
-        <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800">
+        <!-- product list -->
+        <div class="overflow-auto max-h-[50vh] rounded-md border border-gray-800 p-2">
           <table class="w-full text-left text-sm">
-            <thead class="text-gray-400 bg-gray-800">
-              <tr>
-                <th class="p-2">Vorschau</th>
-                <th class="p-2">Name</th>
-                <th class="p-2">Aktion</th>
-              </tr>
+            <thead class="text-gray-300">
+              <tr><th class="p-2">Vorschau</th><th class="p-2">Name</th><th class="p-2">Kategorie</th><th class="p-2">Aktion</th></tr>
             </thead>
             <tbody id="productsTableBody" class="divide-y divide-gray-800"></tbody>
           </table>
         </div>
       </div>
-    </section>
-  </div>
-</div>
 
-<!-- SETTINGS MODAL -->
-<div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
-  <div class="modal-content">
-    <div class="flex justify-between items-start">
-      <h3 class="text-xl font-bold">Einstellungen</h3>
-      <button id="closeSettings" class="px-3 py-1 bg-red-600 rounded-md">Schließen</button>
-    </div>
+      <div id="tabCategories" class="tab-panel hidden-el">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold">Kategorien</h4>
+          <div class="kv">Hinweis: Kategorien werden im Settings-Pfad gespeichert</div>
+        </div>
 
-    <div id="settingsBody" class="mt-4">
-      <!-- Passwort -->
-      <div id="settingsLogin">
-        <label class="block mb-1">Admin-Passwort</label>
-        <input id="settingsPassword" type="password" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700" placeholder="Passwort"/>
+        <div id="categoriesList" class="mb-3"></div>
+
+        <div class="flex gap-2">
+          <input id="newCategoryInput" placeholder="Neue Kategorie" class="p-2 rounded bg-gray-900 border border-gray-700 w-full" />
+          <button id="addCategoryBtn" class="px-4 py-2 bg-green-600 rounded">Hinzufügen</button>
+        </div>
+
         <div class="mt-3 flex gap-2">
-          <button id="unlockSettingsBtn" class="px-4 py-2 bg-blue-600 rounded-md">Anmelden</button>
-          <span id="settingsLoginError" class="kv hidden-el">❌ Falsches Passwort</span>
+          <button id="saveCategoriesBtn" class="px-4 py-2 bg-blue-600 rounded">Speichern</button>
+          <button id="reloadCategoriesBtn" class="px-4 py-2 bg-gray-700 rounded">Neu laden</button>
         </div>
       </div>
 
-      <!-- Editor -->
-      <div id="settingsEditor" class="hidden-el">
-        <div class="tabs mt-3">
-          <button class="tab-btn active" data-tab="general">Allgemein</button>
-          <button class="tab-btn" data-tab="categories">Kategorien</button>
+      <div id="tabGeneral" class="tab-panel hidden-el">
+        <h4 class="font-semibold mb-3">Allgemeine Einstellungen</h4>
+
+        <label class="block kv mb-2">Titel</label>
+        <input id="settingTitle" class="w-full p-2 rounded bg-gray-900 border border-gray-700 mb-3" />
+
+        <label class="block kv mb-2">Header-Bild URL (48x48 empfohlen)</label>
+        <input id="settingHeaderImage" class="w-full p-2 rounded bg-gray-900 border border-gray-700 mb-3" />
+
+        <div class="flex gap-2">
+          <button id="saveGeneralBtn" class="px-4 py-2 bg-green-600 rounded">Speichern</button>
+          <button id="resetGeneralBtn" class="px-4 py-2 bg-red-600 rounded">Zurücksetzen</button>
         </div>
-
-        <div id="tabContent">
-          <!-- GENERAL -->
-          <div class="tab-panel" data-panel="general">
-            <div class="mb-3">
-              <label class="block kv mb-1">Titel</label>
-              <input id="settingTitle" type="text" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700" />
-            </div>
-            <div class="mb-3">
-              <label class="block kv mb-1">Header Bild URL (48x48 empfohlen)</label>
-              <input id="settingHeaderImage" type="text" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700" />
-            </div>
-            <div class="flex gap-2">
-              <button id="saveGeneralSettings" class="px-4 py-2 bg-green-600 rounded-md">Speichern</button>
-              <button id="resetGeneralSettings" class="px-4 py-2 bg-red-600 rounded-md">Zurücksetzen</button>
-            </div>
-          </div>
-
-          <!-- CATEGORIES -->
-          <div class="tab-panel hidden-el" data-panel="categories">
-            <div id="categoriesList" class="mt-2 mb-3"></div>
-
-            <div class="mb-3">
-              <input id="newCategoryInput" type="text" placeholder="Neue Kategorie" class="w-full p-2 rounded-md bg-gray-800 border border-gray-700" />
-              <div class="mt-2 flex gap-2">
-                <button id="addCategoryBtn" class="px-4 py-2 bg-green-600 rounded-md">Hinzufügen</button>
-                <button id="saveCategoriesBtn" class="px-4 py-2 bg-blue-600 rounded-md">Speichern</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </div>
+
+    </div> <!-- end settingsEditor -->
   </div>
 </div>
 
+<!-- Firebase + Logic -->
 <script type="module">
-/* Firebase imports (wie zuvor) */
+/* Firebase */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, remove, update, set, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-/* Deine Firebase-Config (bleibt unverändert) */
+/* --- Firebase config - unverändert --- */
 const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
 
 const app = initializeApp(firebaseConfig);
@@ -211,391 +202,357 @@ const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 
-/* Admin Passwort für Admin-Panel (wie vorher) */
+/* Admin password */
 const ADMIN_PASSWORD = 'admin123';
 
-/* --- Elemente --- */
-const btnShop = document.getElementById('btnShop');
-const btnAdmin = document.getElementById('btnAdmin');
-const shopView = document.getElementById('shopView');
-const adminPanel = document.getElementById('adminPanel');
-const productsGrid = document.getElementById('productsGrid');
-const productsTableBody = document.getElementById('productsTableBody');
+/* --- Elements --- */
+const openSettingsBtn = document.getElementById('openSettingsBtn');
+const settingsModal = document.getElementById('settingsModal');
+const settingsCloseBtn = document.getElementById('settingsCloseBtn');
+const settingsPassword = document.getElementById('settingsPassword');
+const settingsUnlockBtn = document.getElementById('settingsUnlockBtn');
+const settingsLoginError = document.getElementById('settingsLoginError');
+const settingsLoginArea = document.getElementById('settingsLoginArea');
+const settingsEditor = document.getElementById('settingsEditor');
 
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminPassInput = document.getElementById('adminPass');
-const adminError = document.getElementById('adminError');
-const adminContent = document.getElementById('adminContent');
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+/* Products UI */
 const btnNewProduct = document.getElementById('btnNewProduct');
 const productFormCard = document.getElementById('productFormCard');
 const productForm = document.getElementById('productForm');
+const cancelProductBtn = document.getElementById('cancelProductBtn');
 const prodId = document.getElementById('prodId');
 const prodName = document.getElementById('prodName');
-const prodDesc = document.getElementById('prodDesc');
 const prodImg = document.getElementById('prodImg');
-const prodCategory = document.getElementById('prodCategory');
-const prodResources = document.getElementById('prodResources');
-const cancelProduct = document.getElementById('cancelProduct');
-
+const prodDesc = document.getElementById('prodDesc');
+const prodCategorySelect = document.getElementById('prodCategorySelect');
 const colorNameInput = document.getElementById('colorNameInput');
-const colorQuantityInput = document.getElementById('colorQuantityInput');
 
-const openSettingsBtn = document.getElementById('openSettingsBtn');
-const settingsModal = document.getElementById('settingsModal');
-const closeSettings = document.getElementById('closeSettings');
-const unlockSettingsBtn = document.getElementById('unlockSettingsBtn');
-const settingsPassword = document.getElementById('settingsPassword');
-const settingsLoginError = document.getElementById('settingsLoginError');
-const settingsEditor = document.getElementById('settingsEditor');
+const productsTableBody = document.getElementById('productsTableBody');
+const btnReloadProducts = document.getElementById('btnReloadProducts');
 
-const settingTitle = document.getElementById('settingTitle');
-const settingHeaderImage = document.getElementById('settingHeaderImage');
-const saveGeneralSettings = document.getElementById('saveGeneralSettings');
-const resetGeneralSettings = document.getElementById('resetGeneralSettings');
-
+/* Categories UI */
 const categoriesList = document.getElementById('categoriesList');
 const newCategoryInput = document.getElementById('newCategoryInput');
 const addCategoryBtn = document.getElementById('addCategoryBtn');
 const saveCategoriesBtn = document.getElementById('saveCategoriesBtn');
+const reloadCategoriesBtn = document.getElementById('reloadCategoriesBtn');
+
+/* General UI */
+const settingTitle = document.getElementById('settingTitle');
+const settingHeaderImage = document.getElementById('settingHeaderImage');
+const saveGeneralBtn = document.getElementById('saveGeneralBtn');
+const resetGeneralBtn = document.getElementById('resetGeneralBtn');
 
 const pageTitle = document.getElementById('pageTitle');
 const headerLogo = document.getElementById('headerLogo');
+const productsGrid = document.getElementById('productsGrid');
 
 /* state */
-let colorName = colorNameInput.value;
-let colorQuantity = colorQuantityInput.value;
 let products = [];
-let settings = { title: '🌿 Weed Ankauf — Shop & Admin', headerImage: 'https://via.placeholder.com/48', categories: [] };
+let settings = { title: '🌿 Weed Ankauf — Shop', headerImage: 'https://via.placeholder.com/48', categories: [] };
 
-/* UI toggles */
-btnShop.onclick = ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); };
-btnAdmin.onclick = ()=>{ shopView.classList.add('hidden-el'); adminPanel.classList.remove('hidden-el'); };
-
-adminLoginBtn.onclick = ()=>{
-  if(adminPassInput.value === ADMIN_PASSWORD){ adminError.classList.add('hidden-el'); adminContent.classList.remove('hidden-el'); } 
-  else { adminError.classList.remove('hidden-el'); }
-};
-
-/* OPEN SETTINGS MODAL */
-openSettingsBtn.onclick = ()=> {
+/* ---------- Utility ---------- */
+function showModal(){
   settingsModal.classList.remove('hidden-el');
-  document.body.style.overflow = "hidden"; // verhindert Scrollen im Hintergrund
-  document.getElementById('settingsLogin').classList.remove('hidden-el');
-  settingsEditor.classList.add('hidden-el');
+  setTimeout(()=> settingsModal.classList.add('active'), 10);
+  document.body.style.overflow = 'hidden';
+}
+function hideModal(){
+  settingsModal.classList.remove('active');
+  document.body.style.overflow = '';
+  setTimeout(()=> settingsModal.classList.add('hidden-el'), 220);
+}
+
+/* open/close handlers */
+openSettingsBtn.addEventListener('click', ()=> {
+  // reset login UI
   settingsPassword.value = '';
   settingsLoginError.classList.add('hidden-el');
-};
-
-/* CLOSE SETTINGS MODAL (by Button or Overlay Click) */
-function closeSettingsModal(){
-  settingsModal.classList.add('hidden-el');
-  document.body.style.overflow = ""; // Scrollen wieder erlauben
-}
-
-/* Button schließen */
-closeSettings.onclick = closeSettingsModal;
-
-/* Klick außerhalb des Modalfensters schließt es */
-settingsModal.addEventListener('click', (e)=>{
-  if(e.target === settingsModal){
-    closeSettingsModal();
-  }
+  settingsLoginArea.classList.remove('hidden-el');
+  settingsEditor.classList.add('hidden-el');
+  showModal();
 });
+settingsCloseBtn.addEventListener('click', hideModal);
+settingsModal.addEventListener('click', (e)=> { if(e.target === settingsModal) hideModal(); });
+document.addEventListener('keydown', (e)=> { if(e.key === 'Escape' && !settingsModal.classList.contains('hidden-el')) hideModal(); });
 
-/* unlock settings (password) */
-unlockSettingsBtn.onclick = ()=> {
-  if(settingsPassword.value === ADMIN_PASSWORD){
-    settingsLoginError.classList.add('hidden-el');
-    document.getElementById('settingsLogin').classList.add('hidden-el');
-    settingsEditor.classList.remove('hidden-el');
-    showSettingsTab('general');
-    renderCategoriesEditor();
-  } else {
-    settingsLoginError.classList.remove('hidden-el');
-  }
-};
-
-/* tab switching inside settings */
-document.querySelectorAll('.tab-btn').forEach(btn=>{
+/* tab switching */
+tabBtns.forEach(btn=>{
   btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    tabBtns.forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    showSettingsTab(btn.dataset.tab);
+    const t = btn.dataset.tab;
+    tabPanels.forEach(p=> p.classList.add('hidden-el'));
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden-el');
   });
 });
 
-function showSettingsTab(name){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden-el'));
-  const panel = document.querySelector(`.tab-panel[data-panel="${name}"]`);
-  if(panel) panel.classList.remove('hidden-el');
-}
-
-/* resource UI handlers */
-colorNameInput.oninput = ()=> { colorName = colorNameInput.value; renderProducts(); };
-colorQuantityInput.oninput = ()=> { colorQuantity = colorQuantityInput.value; renderProducts(); };
-
-/* product form open/close */
-btnNewProduct.onclick = ()=> openProductForm();
-cancelProduct.onclick = ()=> closeProductForm();
-
-function openProductForm(product){
-  productFormCard.classList.remove('hidden-el');
-  const resourceTableContainer = document.getElementById('resourceTableContainer');
-  const resourceTableBody = document.querySelector('#resourceTable tbody');
-  resourceTableBody.innerHTML = '';
-  resourceTableContainer.classList.add('hidden-el');
-
-  if(product){
-    prodId.value = product.key || '';
-    prodName.value = product.name || '';
-    prodDesc.value = product.description || '';
-    prodImg.value = product.image || '';
-    prodResources.value = product.resources || '';
-    prodCategory.value = product.category || '';
-    colorNameInput.value = product.colorName || '#22c55e';
-    colorQuantityInput.value = product.colorQuantity || '#3b82f6';
-    colorName = colorNameInput.value;
-    colorQuantity = colorQuantityInput.value;
-
-    if(product.resources){
-      const pairs = product.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      pairs.forEach(p=>{
-        const [k,v,c] = p.split(':');
-        addResourceRow(k,v,c||'#facc15');
-      });
-      resourceTableContainer.classList.remove('hidden-el');
-    }
-  } else { productForm.reset(); prodId.value=''; }
-}
-
-function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
-
-function addResourceRow(name='', value='', color='#facc15'){
-  const tbody = document.querySelector('#resourceTable tbody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
-    <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
-    <td><input type="color" class="w-full p-1 rounded-md border border-gray-700 text-sm" value="${color}" /></td>
-    <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>`;
-  tr.querySelector('button').onclick = ()=> tr.remove();
-  tbody.appendChild(tr);
-}
-document.getElementById('addResourceBtn').onclick = ()=> addResourceRow();
-
-/* product form submit */
-productForm.onsubmit = async e=>{
-  e.preventDefault();
-  const resourceRows = document.querySelectorAll('#resourceTable tbody tr');
-  const resources = Array.from(resourceRows).map(r=>{
-    const name = r.children[0].querySelector('input').value.trim();
-    const qty = r.children[1].querySelector('input').value.trim();
-    const color = r.children[2].querySelector('input').value;
-    return name && qty ? `${name}:${qty}:${color}` : '';
-  }).filter(Boolean);
-
-  const payload = {
-    name: prodName.value.trim(),
-    description: prodDesc.value.trim(),
-    image: prodImg.value.trim(),
-    category: '',
-    resources: resources.join(';'),
-    colorName: colorNameInput.value,
-    colorQuantity: colorQuantityInput.value,
-    updatedAt: Date.now()
-  };
-
-  if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); } 
-  else{ await push(productsRef, payload); }
-  closeProductForm();
-};
-
-/* PRODUCTS: realtime load */
-onValue(productsRef, snapshot=>{
-  products = [];
-  snapshot.forEach(child=>{ const data = child.val(); data.key = child.key; products.push(data); });
-  products.sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
-  renderProducts(); renderProductsTable();
-});
-
-/* RENDER products (grid) */
-function renderProducts(){
-  productsGrid.innerHTML='';
-  if(products.length===0){ productsGrid.innerHTML = '<div class="text-gray-400">Keine Produkte verfügbar.</div>'; return; }
-  products.forEach(p=>{
-    const card = document.createElement('div');
-    card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm text-center';
-
-    let resourcesHTML = '';
-    if(p.resources){
-      const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      if(pairs.length > 0){
-        resourcesHTML = `<table class="w-full text-sm border border-gray-700 rounded-md mt-2">
-          <thead class="bg-gray-700">
-            <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th></tr>
-          </thead>
-          <tbody class="bg-gray-800 divide-y divide-gray-700">
-            ${pairs.map(r=>{
-              const [k,v,c] = r.split(':');
-              return `<tr>
-                <td class="px-3 py-1 text-left" style="color:${c||'#facc15'}">${k}</td>
-                <td class="px-3 py-1 text-right" style="color:${p.colorQuantity||'#3b82f6'}">${Number(v).toLocaleString('de-DE')}</td>
-              </tr>`;
-            }).join('')}
-          </tbody>
-        </table>`;
-      }
-    }
-
-    card.innerHTML = `
-      <img src="${p.image||'https://via.placeholder.com/300x120'}" alt="Produktbild" class="product-image mb-2"/>
-      <div class="font-semibold text-lg" style="color:${p.colorName||'#22c55e'}">${escapeHtml(p.name)}</div>
-      <span class="small-muted">${escapeHtml(p.description||'')}</span>
-      ${resourcesHTML}
-    `;
-    productsGrid.appendChild(card);
-  });
-}
-
-/* products table in admin */
-function renderProductsTable(){
-  productsTableBody.innerHTML='';
-  products.forEach(p=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="p-2"><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"/></td>
-      <td class="p-2">${escapeHtml(p.name)}</td>
-      <td class="p-2">
-        <button class="px-2 py-1 bg-yellow-600 rounded mr-1" onclick="editProduct('${p.key}')">Bearbeiten</button>
-        <button class="px-2 py-1 bg-red-600 rounded" onclick="deleteProduct('${p.key}')">Löschen</button>
-      </td>`;
-    productsTableBody.appendChild(tr);
-  });
-}
-
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>\"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
-window.editProduct = key => { const p = products.find(x=>x.key===key); if(p) openProductForm(p); window.scrollTo({top:0,behavior:'smooth'}); };
-window.deleteProduct = key => { if(confirm('Produkt wirklich löschen?')) remove(ref(db, 'products/'+key)); };
-
-/* -------------------------
-   SETTINGS (Firebase / UI)
-   ------------------------- */
-
-/* listen to settings in realtime */
+/* ------------- Firebase: Settings load/save ------------- */
 onValue(settingsRef, snapshot=>{
   const val = snapshot.val();
   if(val){
-    settings = {
-      title: val.title || settings.title,
-      headerImage: val.headerImage || settings.headerImage,
-      categories: Array.isArray(val.categories) ? val.categories : (val.categories ? Object.values(val.categories) : [])
-    };
-    applySettingsToUI();
-    renderCategoriesEditor();
+    settings.title = val.title || settings.title;
+    settings.headerImage = val.headerImage || settings.headerImage;
+    settings.categories = Array.isArray(val.categories) ? val.categories : (val.categories ? Object.values(val.categories) : []);
   }
+  applySettings();
+  renderCategoryEditor();
+  populateCategorySelect();
+  renderProductsGrid(); // to ensure categories may show in product cards if present
 });
 
-/* apply settings to page */
-function applySettingsToUI(){
-  if(settings.title) pageTitle.innerText = settings.title;
-  if(settings.headerImage) headerLogo.src = settings.headerImage;
+/* Apply settings to UI */
+function applySettings(){
+  pageTitle.innerText = settings.title || '🌿 Weed Ankauf — Shop';
+  headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
+  // fill general fields if editor open
+  if(settingTitle) settingTitle.value = settings.title || '';
+  if(settingHeaderImage) settingHeaderImage.value = settings.headerImage || '';
 }
 
-/* save general settings */
-saveGeneralSettings.onclick = async ()=>{
-  const newTitle = settingTitle.value.trim();
-  const newHeader = settingHeaderImage.value.trim();
-  const payload = {};
-  if(newTitle) payload.title = newTitle;
-  else payload.title = '🌿 Weed Ankauf — Shop & Admin';
-  if(newHeader) payload.headerImage = newHeader;
-  else payload.headerImage = 'https://via.placeholder.com/48';
+/* Save general settings */
+saveGeneralBtn.addEventListener('click', async ()=>{
+  const t = (settingTitle.value || '').trim() || '🌿 Weed Ankauf — Shop';
+  const img = (settingHeaderImage.value || '').trim() || 'https://via.placeholder.com/48';
+  try{
+    await update(settingsRef, { title: t, headerImage: img });
+    alert('Allgemeine Einstellungen gespeichert.');
+    applySettings();
+  }catch(err){ console.error(err); alert('Speichern fehlgeschlagen'); }
+});
 
-  try {
-    await update(ref(db, 'settings'), payload);
-    alert('Einstellungen gespeichert');
-  } catch (err) {
-    console.error('Fehler beim Speichern der Einstellungen', err);
-    alert('Speichern fehlgeschlagen');
-  }
-};
-
-/* reset general settings */
-resetGeneralSettings.onclick = async ()=>{
-  if(!confirm('Einstellungen auf Standard zurücksetzen?')) return;
-  try {
-    await update(ref(db, 'settings'), { title:'🌿 Weed Ankauf — Shop & Admin', headerImage:'https://via.placeholder.com/48' });
+/* Reset general settings */
+resetGeneralBtn.addEventListener('click', async ()=>{
+  if(!confirm('Auf Standard zurücksetzen?')) return;
+  try{
+    await update(settingsRef, { title: '🌿 Weed Ankauf — Shop', headerImage: 'https://via.placeholder.com/48' });
     alert('Zurückgesetzt');
-  } catch(err){
-    console.error(err);
-    alert('Fehler beim Zurücksetzen');
-  }
-};
+  }catch(err){ console.error(err); alert('Fehler'); }
+});
 
-/* categories editor rendering */
-function renderCategoriesEditor(){
+/* ------------- Categories editor ------------- */
+function renderCategoryEditor(){
   categoriesList.innerHTML = '';
   const cats = Array.isArray(settings.categories) ? settings.categories : [];
   if(cats.length === 0){
     categoriesList.innerHTML = '<div class="kv">Keine Kategorien vorhanden.</div>';
-    settingTitle.value = settings.title || '';
-    settingHeaderImage.value = settings.headerImage || '';
     return;
   }
-  cats.forEach((cat, idx)=>{
-    const div = document.createElement('div');
-    div.className = 'category-item';
-    div.innerHTML = `
-      <input data-idx="${idx}" class="p-2 bg-gray-800 border border-gray-700 rounded-md" value="${escapeHtml(cat)}" />
-      <div style="display:flex;gap:8px;">
-        <button data-edit="${idx}" class="px-2 py-1 bg-yellow-600 rounded-md">✔️</button>
-        <button data-del="${idx}" class="px-2 py-1 bg-red-600 rounded-md">🗑️</button>
-      </div>
-    `;
-    categoriesList.appendChild(div);
-    div.querySelector(`[data-edit]`).onclick = ()=> {
-      const input = div.querySelector('input');
-      const val = input.value.trim();
-      if(val===''){ alert('Leer nicht erlaubt'); return; }
-      settings.categories[idx] = val;
-      alert('Änderung vorgenommen (noch nicht gespeichert). Klicke "Speichern".');
+  cats.forEach((c, idx)=>{
+    const wrapper = document.createElement('div');
+    wrapper.className = 'category-item';
+    const input = document.createElement('input');
+    input.className = 'p-2 rounded bg-gray-900 border border-gray-700 w-full';
+    input.value = c;
+    input.dataset.idx = idx;
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.gap = '6px';
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'px-2 py-1 bg-yellow-500 rounded';
+    saveBtn.textContent = '✔';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'px-2 py-1 bg-red-600 rounded';
+    delBtn.textContent = '🗑';
+    actions.appendChild(saveBtn);
+    actions.appendChild(delBtn);
+    wrapper.appendChild(input);
+    wrapper.appendChild(actions);
+    categoriesList.appendChild(wrapper);
+
+    saveBtn.onclick = ()=> {
+      const v = input.value.trim();
+      if(!v){ alert('Name nicht leer'); return; }
+      settings.categories[idx] = v;
+      alert('Geändert (noch nicht gespeichert). Klicke "Speichern".');
     };
-    div.querySelector(`[data-del]`).onclick = ()=> {
-      if(!confirm(`Kategorie "${settings.categories[idx]}" wirklich löschen?`)) return;
+    delBtn.onclick = ()=> {
+      if(!confirm(`Kategorie "${settings.categories[idx]}" löschen?`)) return;
       settings.categories.splice(idx,1);
-      renderCategoriesEditor();
-      alert('Kategorie entfernt (noch nicht gespeichert). Klicke "Speichern".');
+      renderCategoryEditor();
     };
   });
-
-  settingTitle.value = settings.title || '';
-  settingHeaderImage.value = settings.headerImage || '';
 }
 
-/* add new category locally */
-addCategoryBtn.onclick = ()=> {
-  const v = newCategoryInput.value.trim();
+addCategoryBtn.addEventListener('click', ()=>{
+  const v = (newCategoryInput.value||'').trim();
   if(!v){ alert('Bitte Namen eingeben'); return; }
   settings.categories.push(v);
   newCategoryInput.value = '';
-  renderCategoriesEditor();
-};
+  renderCategoryEditor();
+});
 
-/* save categories to firebase */
-saveCategoriesBtn.onclick = async ()=> {
-  try {
-    // save as array
-    await update(ref(db, 'settings'), { categories: settings.categories || [] });
-    alert('Kategorien gespeichert');
-  } catch(err){
-    console.error(err);
-    alert('Fehler beim Speichern');
+/* Save categories to Firebase */
+saveCategoriesBtn.addEventListener('click', async ()=>{
+  try{
+    await update(settingsRef, { categories: settings.categories || [] });
+    alert('Kategorien gespeichert.');
+    populateCategorySelect();
+  }catch(err){ console.error(err); alert('Speichern fehlgeschlagen'); }
+});
+
+reloadCategoriesBtn && reloadCategoriesBtn.addEventListener('click', ()=> {
+  // reload from DB (onValue already updates), but force apply:
+  get(settingsRef).then(snap => {
+    const val = snap.val();
+    if(val && Array.isArray(val.categories)) settings.categories = val.categories;
+    renderCategoryEditor(); populateCategorySelect();
+    alert('Kategorien neu geladen.');
+  }).catch(err => { console.error(err); alert('Laden fehlgeschlagen'); });
+});
+
+/* populate category dropdown for product form */
+function populateCategorySelect(){
+  prodCategorySelect.innerHTML = '';
+  const cats = Array.isArray(settings.categories) ? settings.categories : [];
+  const none = document.createElement('option'); none.value=''; none.textContent = '— Keine —';
+  prodCategorySelect.appendChild(none);
+  cats.forEach(c=>{
+    const o = document.createElement('option'); o.value = c; o.textContent = c; prodCategorySelect.appendChild(o);
+  });
+}
+
+/* ------------- Products (CRUD) ------------- */
+onValue(productsRef, snapshot=>{
+  products = [];
+  snapshot.forEach(child=>{
+    const d = child.val(); d.key = child.key; products.push(d);
+  });
+  products.sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
+  renderProductsTable();
+  renderProductsGrid();
+});
+
+/* Render products grid (shop) */
+function renderProductsGrid(){
+  productsGrid.innerHTML = '';
+  if(products.length === 0){ productsGrid.innerHTML = '<div class="text-gray-400 p-4">Keine Produkte verfügbar.</div>'; return; }
+  products.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'p-4 rounded bg-gray-800 border border-gray-700';
+    const img = document.createElement('img');
+    img.src = p.image || 'https://via.placeholder.com/300x120';
+    img.className = 'product-image mb-2';
+    const title = document.createElement('div');
+    title.className = 'font-semibold text-lg';
+    title.style.color = p.colorName || '#22c55e';
+    title.textContent = p.name || '';
+    const desc = document.createElement('div');
+    desc.className = 'small-muted';
+    desc.textContent = p.description || '';
+    card.appendChild(img); card.appendChild(title); card.appendChild(desc);
+    productsGrid.appendChild(card);
+  });
+}
+
+/* Render products in admin table */
+function renderProductsTable(){
+  productsTableBody.innerHTML = '';
+  products.forEach(p=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="p-2"><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"/></td>
+      <td class="p-2">${escapeHtml(p.name||'')}</td>
+      <td class="p-2">${escapeHtml(p.category||'')}</td>
+      <td class="p-2">
+        <button class="px-2 py-1 bg-yellow-600 rounded mr-1" data-edit="${p.key}">Bearbeiten</button>
+        <button class="px-2 py-1 bg-red-600 rounded" data-del="${p.key}">Löschen</button>
+      </td>`;
+    productsTableBody.appendChild(tr);
+
+    tr.querySelector('[data-edit]').onclick = ()=> editProduct(p.key);
+    tr.querySelector('[data-del]').onclick = ()=> {
+      if(confirm('Produkt wirklich löschen?')) remove(ref(db, 'products/' + p.key));
+    };
+  });
+}
+
+/* product form open */
+btnNewProduct.addEventListener('click', ()=> openProductForm());
+function openProductForm(product){
+  productFormCard.classList.remove('hidden-el');
+  if(product){
+    prodId.value = product.key || '';
+    prodName.value = product.name || '';
+    prodImg.value = product.image || '';
+    prodDesc.value = product.description || '';
+    prodCategorySelect.value = product.category || '';
+    colorNameInput.value = product.colorName || '#22c55e';
+  } else {
+    productForm.reset();
+    prodId.value = '';
+    colorNameInput.value = '#22c55e';
   }
-};
+}
 
-/* initial apply */
-applySettingsToUI();
-shopView.classList.remove('hidden-el');
+/* cancel */
+cancelProductBtn.addEventListener('click', ()=> {
+  productFormCard.classList.add('hidden-el');
+  productForm.reset();
+  prodId.value = '';
+});
+
+/* submit product */
+productForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const payload = {
+    name: (prodName.value||'').trim(),
+    image: (prodImg.value||'').trim(),
+    description: (prodDesc.value||'').trim(),
+    category: (prodCategorySelect.value||'').trim(),
+    colorName: (colorNameInput.value||'#22c55e'),
+    updatedAt: Date.now()
+  };
+  try{
+    if(prodId.value){
+      await update(ref(db, 'products/' + prodId.value), payload);
+    } else {
+      await push(productsRef, payload);
+    }
+    productFormCard.classList.add('hidden-el');
+    productForm.reset();
+    prodId.value = '';
+  }catch(err){ console.error(err); alert('Fehler beim Speichern des Produkts'); }
+});
+
+/* edit product */
+function editProduct(key){
+  const p = products.find(x=>x.key === key);
+  if(p) openProductForm(p);
+}
+
+/* reload products (force) */
+btnReloadProducts.addEventListener('click', ()=> {
+  // onValue already keeps data updated; we briefly fetch to confirm
+  get(productsRef).then(()=> alert('Produkte neu geladen (Realtime).')).catch(()=> alert('Laden fehlgeschlagen.'));
+});
+
+/* ------------- Login for settings ------------- */
+settingsUnlockBtn.addEventListener('click', ()=> {
+  const pw = (settingsPassword.value||'').trim();
+  if(pw === ADMIN_PASSWORD){
+    settingsLoginError.classList.add('hidden-el');
+    settingsLoginArea.classList.add('hidden-el');
+    settingsEditor.classList.remove('hidden-el');
+    // prefill editors
+    renderCategoryEditor();
+    populateCategorySelect();
+    settingTitle.value = settings.title || '';
+    settingHeaderImage.value = settings.headerImage || '';
+  } else {
+    settingsLoginError.classList.remove('hidden-el');
+  }
+});
+
+/* helper escape */
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>\"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
+
+/* initial UI apply */
+applySettings();
+populateCategorySelect();
 
 </script>
 </body>

@@ -26,7 +26,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 /* kleinere Karten im Shop */
 #productsGrid .card{max-width:220px;margin:0 auto}
 
-/* settings modal (flat grey-blue style) */
+/* modal */
 .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
@@ -34,11 +34,11 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 .tab-btn{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
 .tab-btn.active{background:linear-gradient(90deg,#94a3b8,#06b6d4);color:#041628;font-weight:700}
 
-/* resource table */
+/* table */
 .table {width:100%;border-collapse:collapse}
 .table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:0.92rem}
 
-/* small helpers */
+/* helpers */
 .kv{font-size:0.9rem;color:var(--muted)}
 .category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
 .input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
@@ -46,9 +46,6 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 .small-btn{padding:.35rem .6rem;border-radius:6px}
 .flex-row{display:flex;gap:8px;align-items:center}
 .right{margin-left:auto}
-
-/* Warenkorb modal */
-#cartModal table th, #cartModal table td{text-align:left}
 </style>
 </head>
 <body>
@@ -86,78 +83,76 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
   <!-- Warenkorb Modal -->
   <div id="cartModal" class="modal-overlay hidden-el">
     <div class="modal-box">
-      <div class="flex justify-between items-center mb-4">
-        <h3 style="font-weight:700;color:#94a3b8;margin:0">🛒 Warenkorb</h3>
+      <div class="flex items-center justify-between mb-4">
+        <h3 style="font-weight:700;color:#94a3b8">🛒 Warenkorb</h3>
         <button id="cartCloseBtn" class="btn">✖</button>
       </div>
       <div id="cartContent">
-        <table class="table" id="cartTable">
-          <thead>
-            <tr><th>Produkt</th><th>Anzahl</th><th>Ressourcen</th></tr>
-          </thead>
-          <tbody></tbody>
+        <table class="table">
+          <thead><tr><th>Produkt</th><th>Anzahl</th><th>Preis</th></tr></thead>
+          <tbody id="cartItems"></tbody>
         </table>
+        <div class="flex justify-end mt-4">
+          <strong>Gesamt: <span id="cartTotal">0</span> €</strong>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- SETTINGS MODAL … (hier bleibt alles wie in deinem Originalscript) -->
-
 <script type="module">
-/* ---------- Firebase imports ---------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-/* ---------- Config (deine) ---------- */
 const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 
-/* ---------- Original Globals ---------- */
-const ADMIN_PASSWORD = 'admin123';
-const openSettingsBtn = document.getElementById('openSettingsBtn');
-const settingsModal = document.getElementById('settingsModal');
-/* … alle anderen Elemente bleiben unverändert … */
-
+const pageTitle = document.getElementById('pageTitle');
+const headerLogo = document.getElementById('headerLogo');
+const productsGrid = document.getElementById('productsGrid');
 const btnCart = document.getElementById('btnCart');
 const cartModal = document.getElementById('cartModal');
 const cartCloseBtn = document.getElementById('cartCloseBtn');
-const cartTableBody = document.querySelector('#cartTable tbody');
+const cartItems = document.getElementById('cartItems');
+const cartTotal = document.getElementById('cartTotal');
 
-let cart = {}; // Produkt-Key => Anzahl
+let products = [];
+let cart = [];
 
-/* ---------- Warenkorb Funktionen ---------- */
-function showCart(){ cartModal.classList.remove('hidden-el'); setTimeout(()=>cartModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
-function hideCart(){ cartModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>cartModal.classList.add('hidden-el'),240); }
-btnCart.addEventListener('click', showCart);
-cartCloseBtn.addEventListener('click', hideCart);
-cartModal.addEventListener('click', e=>{ if(e.target === cartModal) hideCart(); });
-
-function addToCart(productKey){
-  if(cart[productKey]) cart[productKey] += 1;
-  else cart[productKey] = 1;
-  renderCart();
-}
-
-function renderCart(){
-  cartTableBody.innerHTML = '';
-  for(const key in cart){
-    const prod = products.find(p=>p.key===key);
-    if(!prod) continue;
-    const tr = document.createElement('tr');
-    let resourcesText = '';
-    if(prod.resources){
-      const pairs = prod.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      resourcesText = pairs.map(r=>r.split(':')[0]+':'+r.split(':')[1]).join(', ');
+/* ---------- Warenkorb ---------- */
+btnCart.addEventListener('click', ()=> {
+  cartItems.innerHTML = '';
+  let total = 0;
+  cart.forEach(item=>{
+    const prod = products.find(p=>p.key===item.key);
+    if(prod){
+      const tr = document.createElement('tr');
+      const price = item.qty * 1; // Beispiel: Preis 1 pro Stück
+      total += price;
+      tr.innerHTML = `<td>${prod.name}</td><td>${item.qty}</td><td>${price.toFixed(2)}</td>`;
+      cartItems.appendChild(tr);
     }
-    tr.innerHTML = `<td>${escapeHtml(prod.name)}</td><td>${cart[key]}</td><td>${escapeHtml(resourcesText)}</td>`;
-    cartTableBody.appendChild(tr);
-  }
-}
+  });
+  cartTotal.innerText = total.toFixed(2);
+  cartModal.classList.remove('hidden-el');
+  setTimeout(()=>cartModal.classList.add('active'),10);
+});
+cartCloseBtn.addEventListener('click', ()=>{
+  cartModal.classList.remove('active');
+  setTimeout(()=>cartModal.classList.add('hidden-el'),200);
+});
 
-/* ---------- Original renderProductsGrid erweitern ---------- */
+/* ---------- Products ---------- */
+onValue(productsRef, snapshot=>{
+  products = [];
+  snapshot.forEach(child=>{
+    const data = child.val(); data.key = child.key; products.push(data);
+  });
+  renderProductsGrid();
+});
+
 function renderProductsGrid(){
   productsGrid.innerHTML = '';
   if(products.length===0){ productsGrid.innerHTML='<div class="kv p-4">Keine Produkte verfügbar.</div>'; return; }
@@ -165,36 +160,19 @@ function renderProductsGrid(){
     const card = document.createElement('div'); card.className='card';
     const img = document.createElement('img'); img.src = p.image || 'https://via.placeholder.com/300x120'; img.className='product-image';
     const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.style.color = p.colorName || '#22c55e'; title.textContent = p.name || '';
-    const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent = p.description || '';
-
-    card.appendChild(img); card.appendChild(title); card.appendChild(desc);
-
-    if(p.resources){
-      const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      if(pairs.length){
-        const tbl = document.createElement('table'); tbl.className='table'; tbl.style.marginTop='8px';
-        const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Ressource</th><th style="text-align:right">Anzahl</th></tr>'; tbl.appendChild(thead);
-        const tbody = document.createElement('tbody');
-        pairs.forEach(r=>{
-          const [k,v,c] = r.split(':');
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td style="color:${c||'#facc15'}">${escapeHtml(k)}</td><td style="text-align:right;color:${p.colorQuantity||'#3b82f6'}">${Number(v).toLocaleString('de-DE')}</td>`;
-          tbody.appendChild(tr);
-        });
-        tbl.appendChild(tbody); card.appendChild(tbl);
-      }
-    }
-
-    const addBtn = document.createElement('button'); addBtn.className='btn'; addBtn.textContent='In Warenkorb'; addBtn.style.marginTop='6px';
-    addBtn.addEventListener('click', ()=> addToCart(p.key));
+    card.appendChild(img); card.appendChild(title);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn mt-2';
+    addBtn.innerText = 'In den Warenkorb';
+    addBtn.addEventListener('click', ()=>{
+      const existing = cart.find(c=>c.key===p.key);
+      if(existing){ existing.qty++; } else { cart.push({key:p.key, qty:1}); }
+      alert(`${p.name} hinzugefügt`);
+    });
     card.appendChild(addBtn);
-
     productsGrid.appendChild(card);
   });
 }
-
-/* ---------- Original code bleibt unverändert ---------- */
-/* ... Rest deines Originalscripts (Settings, CRUD etc.) ... */
 </script>
 </body>
 </html>

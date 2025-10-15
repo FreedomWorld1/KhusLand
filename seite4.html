@@ -276,19 +276,31 @@ adminLoginBtn.onclick = ()=>{
   else { adminError.classList.remove('hidden-el'); }
 };
 
-/* Settings button */
+/* OPEN SETTINGS MODAL */
 openSettingsBtn.onclick = ()=> {
   settingsModal.classList.remove('hidden-el');
+  document.body.style.overflow = "hidden"; // verhindert Scrollen im Hintergrund
   document.getElementById('settingsLogin').classList.remove('hidden-el');
   settingsEditor.classList.add('hidden-el');
   settingsPassword.value = '';
   settingsLoginError.classList.add('hidden-el');
 };
 
-/* close settings */
-closeSettings.onclick = ()=> {
+/* CLOSE SETTINGS MODAL (by Button or Overlay Click) */
+function closeSettingsModal(){
   settingsModal.classList.add('hidden-el');
-};
+  document.body.style.overflow = ""; // Scrollen wieder erlauben
+}
+
+/* Button schließen */
+closeSettings.onclick = closeSettingsModal;
+
+/* Klick außerhalb des Modalfensters schließt es */
+settingsModal.addEventListener('click', (e)=>{
+  if(e.target === settingsModal){
+    closeSettingsModal();
+  }
+});
 
 /* unlock settings (password) */
 unlockSettingsBtn.onclick = ()=> {

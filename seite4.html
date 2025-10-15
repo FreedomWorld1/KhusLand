@@ -65,11 +65,24 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
               <input id="prodQuantity" type="number" min="0" placeholder="Anzahl" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
             </div>
             <textarea id="prodDesc" rows="2" placeholder="Beschreibung (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
-            <input id="prodResources" placeholder="Ressourcen (z.B. Waffenteile:1000; Deadcoins:200000; Plastik:400)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"/>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input id="prodImg" placeholder="Bild-URL" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
-              <input id="prodCategory" placeholder="Kategorie (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
+            <input id="prodImg" placeholder="Bild-URL" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
+
+            <!-- Ressourcen Tabelle -->
+            <div id="resourceTableContainer" class="mb-3 hidden-el">
+              <h4 class="font-medium mb-1">Ressourcen bearbeiten</h4>
+              <table id="resourceTable" class="w-full text-sm border border-gray-700 rounded-md">
+                <thead class="bg-gray-700 text-green-400">
+                  <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th><th class="px-3 py-1">Aktion</th></tr>
+                </thead>
+                <tbody class="bg-gray-800 divide-y divide-gray-700"></tbody>
+              </table>
+              <button type="button" id="addResourceBtn" class="mt-2 px-3 py-1 bg-green-600 rounded-md">Ressource hinzufügen</button>
             </div>
+
+            <!-- versteckte Felder -->
+            <input id="prodResources" class="hidden-el" />
+            <input id="prodCategory" class="hidden-el" />
+
             <div class="flex gap-2">
               <button class="px-4 py-2 bg-green-600 rounded-md" type="submit">Speichern</button>
               <button id="cancelProduct" type="button" class="px-4 py-2 bg-red-600 rounded-md">Abbrechen</button>
@@ -157,14 +170,29 @@ cancelProduct.onclick = ()=> closeProductForm();
 
 function openProductForm(product){
   productFormCard.classList.remove('hidden-el');
+  const resourceTableContainer = document.getElementById('resourceTableContainer');
+  const resourceTableBody = document.querySelector('#resourceTable tbody');
+
+  resourceTableBody.innerHTML = '';
+  resourceTableContainer.classList.add('hidden-el');
+
   if(product){
     prodId.value = product.key || '';
     prodName.value = product.name || '';
     prodQuantity.value = product.quantity || 0;
     prodDesc.value = product.description || '';
     prodImg.value = product.image || '';
-    prodCategory.value = product.category || '';
     prodResources.value = product.resources || '';
+    prodCategory.value = product.category || '';
+
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x=>x.trim()).filter(Boolean);
+      pairs.forEach(p=>{
+        const [k,v] = p.split(':');
+        addResourceRow(k,v);
+      });
+    }
+    resourceTableContainer.classList.remove('hidden-el');
   } else {
     productForm.reset();
     prodId.value='';
@@ -172,19 +200,41 @@ function openProductForm(product){
 }
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
 
+function addResourceRow(name='', value=''){
+  const tbody = document.querySelector('#resourceTable tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
+    <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
+    <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>
+  `;
+  tr.querySelector('button').onclick = ()=> tr.remove();
+  tbody.appendChild(tr);
+}
+document.getElementById('addResourceBtn').onclick = ()=> addResourceRow();
+
 productForm.onsubmit = async e=>{
   e.preventDefault();
+  const resourceRows = document.querySelectorAll('#resourceTable tbody tr');
+  const resources = Array.from(resourceRows).map(r=>{
+    const name = r.children[0].querySelector('input').value.trim();
+    const qty = r.children[1].querySelector('input').value.trim();
+    return name && qty ? `${name}:${qty}` : '';
+  }).filter(Boolean).join(';');
+
   const payload = {
     name: prodName.value.trim(),
     quantity: Number(prodQuantity.value) || 0,
     description: prodDesc.value.trim(),
     image: prodImg.value.trim(),
-    category: prodCategory.value.trim(),
-    resources: prodResources.value.trim(),
+    category: '',
+    resources,
     updatedAt: Date.now()
   };
+
   if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); }
   else{ await push(productsRef, payload); }
+
   closeProductForm();
 };
 
@@ -203,7 +253,6 @@ function renderProducts(){
     const card = document.createElement('div');
     card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm text-center';
 
-    // Ressourcen-Tabelle
     let resourcesHTML = '';
     if(p.resources){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);

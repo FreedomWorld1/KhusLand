@@ -9,7 +9,7 @@
 body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto; }
 .card { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.05); border-radius: 12px; }
 .shadow-soft { box-shadow: 0 6px 18px rgba(0,0,0,0.45); }
-.small-muted { color: #9ca3af; font-size: 0.85rem; }
+.small-muted { color: #9ca3af; font-size: 0.8rem; margin-top:2px; display:block; }
 .btn { transition: all .15s ease; font-size: 0.9rem; cursor:pointer; }
 .btn:hover { transform: translateY(-2px); }
 .hidden-el { display: none; }
@@ -79,7 +79,6 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
               <button type="button" id="addResourceBtn" class="mt-2 px-3 py-1 bg-green-600 rounded-md">Ressource hinzufügen</button>
             </div>
 
-            <!-- versteckte Felder -->
             <input id="prodResources" class="hidden-el" />
             <input id="prodCategory" class="hidden-el" />
 
@@ -111,21 +110,11 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
   </div>
 </div>
 
-<!-- Firebase + App logic -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-  authDomain: "khusland-b7d13.firebaseapp.com",
-  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-  projectId: "khusland-b7d13",
-  storageBucket: "khusland-b7d13.firebasestorage.app",
-  messagingSenderId: "69573193613",
-  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-  measurementId: "G-JSCWR4207G"
-};
+const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -156,13 +145,16 @@ const prodCategory = document.getElementById('prodCategory');
 const prodResources = document.getElementById('prodResources');
 const cancelProduct = document.getElementById('cancelProduct');
 
+let colorName = 'text-green-400';
+let colorResource = 'text-yellow-400';
+let colorQuantity = 'text-blue-400';
+
 btnShop.onclick = ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); };
 btnAdmin.onclick = ()=>{ shopView.classList.add('hidden-el'); adminPanel.classList.remove('hidden-el'); };
 
 adminLoginBtn.onclick = ()=>{
-  if(adminPassInput.value === ADMIN_PASSWORD){
-    adminError.classList.add('hidden-el'); adminContent.classList.remove('hidden-el');
-  } else { adminError.classList.remove('hidden-el'); }
+  if(adminPassInput.value === ADMIN_PASSWORD){ adminError.classList.add('hidden-el'); adminContent.classList.remove('hidden-el'); } 
+  else { adminError.classList.remove('hidden-el'); }
 };
 
 btnNewProduct.onclick = ()=> openProductForm();
@@ -193,21 +185,16 @@ function openProductForm(product){
       });
     }
     resourceTableContainer.classList.remove('hidden-el');
-  } else {
-    productForm.reset();
-    prodId.value='';
-  }
+  } else { productForm.reset(); prodId.value=''; }
 }
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
 
 function addResourceRow(name='', value=''){
   const tbody = document.querySelector('#resourceTable tbody');
   const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
-    <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
-    <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>
-  `;
+  tr.innerHTML = `<td><input class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${name}" /></td>
+                  <td><input type="number" class="w-full p-1 rounded-md bg-gray-900 border border-gray-700 text-sm" value="${value}" /></td>
+                  <td><button type="button" class="px-2 py-1 bg-red-600 rounded text-sm">❌</button></td>`;
   tr.querySelector('button').onclick = ()=> tr.remove();
   tbody.appendChild(tr);
 }
@@ -232,9 +219,8 @@ productForm.onsubmit = async e=>{
     updatedAt: Date.now()
   };
 
-  if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); }
+  if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); } 
   else{ await push(productsRef, payload); }
-
   closeProductForm();
 };
 
@@ -257,15 +243,14 @@ function renderProducts(){
     if(p.resources){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
       if(pairs.length > 0){
-        resourcesHTML = `
-        <table class="w-full text-sm border border-gray-700 rounded-md mt-3">
-          <thead class="bg-gray-700 text-green-400">
+        resourcesHTML = `<table class="w-full text-sm border border-gray-700 rounded-md mt-2">
+          <thead class="bg-gray-700 ${colorResource}">
             <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th></tr>
           </thead>
           <tbody class="bg-gray-800 divide-y divide-gray-700">
             ${pairs.map(r=>{
               const [k,v] = r.split(':');
-              return `<tr><td class="px-3 py-1 text-left">${k}</td><td class="px-3 py-1 text-right">${Number(v).toLocaleString('de-DE')}</td></tr>`;
+              return `<tr><td class="px-3 py-1 text-left ${colorName}">${k}</td><td class="px-3 py-1 text-right ${colorQuantity}">${Number(v).toLocaleString('de-DE')}</td></tr>`;
             }).join('')}
           </tbody>
         </table>`;
@@ -273,8 +258,9 @@ function renderProducts(){
     }
 
     card.innerHTML = `
-      <img src="${p.image||'https://via.placeholder.com/300x180'}" alt="Produktbild" class="product-image mb-3"/>
-      <div class="font-semibold text-green-400 text-lg">${escapeHtml(p.name)}</div>
+      <img src="${p.image||'https://via.placeholder.com/300x180'}" alt="Produktbild" class="product-image mb-2"/>
+      <div class="font-semibold ${colorName} text-lg">${escapeHtml(p.name)}</div>
+      <span class="small-muted">${escapeHtml(p.description||'')}</span>
       ${resourcesHTML}
     `;
     productsGrid.appendChild(card);

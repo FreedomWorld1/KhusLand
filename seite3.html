@@ -181,7 +181,7 @@ const yourShareEl = document.getElementById("yourShare");
 function updateShares() {
   const q = Number(quantityInput.value) || 0;
   const price = q * 2500;
-  const sellerShare = price * 0.6; // Verkäufer 60 %
+  const sellerShare = price * 0.8; // Verkäufer 80 %
   const buyerShare = price * 0.2;  // Käufer 20 %
   sellerShareEl.textContent = formatCurrency(sellerShare);
   yourShareEl.textContent = formatCurrency(buyerShare);
@@ -196,7 +196,7 @@ document.getElementById("entryForm").addEventListener("submit", async e => {
   const seller = document.getElementById("seller").value;
   const quantity = Number(quantityInput.value);
   const price = quantity * 2500;
-  const sellerShare = price * 0.6;
+  const sellerShare = price * 0.8;
   const buyerShare = price * 0.2;
   const entry = {
     buyer, seller, quantity, price,

@@ -119,17 +119,27 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
       </div>
 
       <!-- TAB PANELS -->
-      <div id="tabProducts" class="tab-panel"></div>
-      <div id="tabCategories" class="tab-panel hidden-el"></div>
-      <div id="tabGeneral" class="tab-panel hidden-el"></div>
-      <div id="tabOrders" class="tab-panel hidden-el"></div>
-      <div id="tabUsers" class="tab-panel hidden-el"></div>
+      <div id="tabProducts" class="tab-panel">
+        <div class="kv" id="productsAdminContent">Produktverwaltung wird geladen...</div>
+      </div>
+      <div id="tabCategories" class="tab-panel hidden-el">
+        <div class="kv" id="categoriesAdminContent">Kategorieverwaltung wird geladen...</div>
+      </div>
+      <div id="tabGeneral" class="tab-panel hidden-el">
+        <div class="kv" id="generalAdminContent">Allgemeine Einstellungen werden geladen...</div>
+      </div>
+      <div id="tabOrders" class="tab-panel hidden-el">
+        <div class="kv" id="ordersAdminContent">Bestellungen werden geladen...</div>
+      </div>
+      <div id="tabUsers" class="tab-panel hidden-el">
+        <div class="kv" id="usersAdminContent">Nutzer werden geladen...</div>
+      </div>
     </div>
   </div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 /* ---------- Firebase Config ---------- */
 const firebaseConfig = { 
@@ -147,7 +157,6 @@ const productsRef = ref(db, 'products');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
 const usersRef = ref(db, 'users');
-const settingsRef = ref(db, 'settings');
 
 /* ---------- Elements ---------- */
 const btnShop = document.getElementById('btnShop');
@@ -171,55 +180,114 @@ const tabBtns = document.querySelectorAll('.tab-btn');
 const tabPanels = document.querySelectorAll('.tab-panel');
 
 const ADMIN_PASSWORD = 'admin123';
-let cart = [];
-let cartCode = Math.floor(1000 + Math.random()*9000).toString();
+let products = [], categories = [], cart = [], cartCode = generateCartCode();
 
 /* ---------- Helpers ---------- */
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
+function escapeHtml(s){ return s ? String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) : ''; }
+function generateCartCode(){ return Math.floor(1000 + Math.random()*9000).toString(); }
 
 /* ---------- Modal & Tabs ---------- */
 function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
 function hideModal(){ settingsModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>settingsModal.classList.add('hidden-el'),240); }
-openSettingsBtn.addEventListener('click', ()=>{ settingsPassword.value=''; settingsLoginError.style.display='none'; settingsLoginArea.style.display=''; settingsEditor.classList.add('hidden-el'); showModal(); });
+
+openSettingsBtn.addEventListener('click', ()=>{
+  settingsPassword.value=''; settingsLoginError.style.display='none'; settingsLoginArea.style.display=''; settingsEditor.classList.add('hidden-el'); showModal();
+});
 settingsCloseBtn.addEventListener('click', hideModal);
 settingsModal.addEventListener('click', e=>{ if(e.target===settingsModal) hideModal(); });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !settingsModal.classList.contains('hidden-el')) hideModal(); });
 
-tabBtns.forEach(btn=>{ btn.addEventListener('click', ()=>{ tabBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const t = btn.dataset.tab; tabPanels.forEach(p=>p.classList.add('hidden-el')); document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden-el'); }); });
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = btn.dataset.tab;
+    tabPanels.forEach(p=>p.classList.add('hidden-el'));
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden-el');
+  });
+});
 
-/* ---------- Shop & Cart ---------- */
+/* ---------- Load Categories & Products ---------- */
+onValue(categoriesRef, snapshot=>{
+  categories=[]; snapshot.forEach(c=>{ const val=c.val(); val.key=c.key; categories.push(val); });
+  shopCategoryFilter.innerHTML='<option value="">— Alle Kategorien —</option>';
+  categories.forEach(c=>{
+    const o=document.createElement('option'); o.value=c.name; o.textContent=c.name;
+    shopCategoryFilter.appendChild(o);
+  });
+});
+onValue(productsRef, snapshot=>{
+  products=[]; snapshot.forEach(p=>{ const val=p.val(); val.key=p.key; products.push(val); });
+  renderProductsGrid();
+});
+
+/* ---------- Shop Grid & Filter ---------- */
+shopCategoryFilter.addEventListener('change', ()=>renderProductsGrid());
+
+function renderProductsGrid(){
+  const filter = (shopCategoryFilter.value||'').trim();
+  productsGrid.innerHTML='';
+  const visible = products.filter(p=>!filter||p.category===filter);
+  if(visible.length===0){ productsGrid.innerHTML='<div class="kv p-4">Keine Produkte verfügbar.</div>'; return; }
+  visible.forEach(p=>{
+    const card = document.createElement('div'); card.className='card';
+    const img = document.createElement('img'); img.src=p.image||'https://via.placeholder.com/300x120'; img.className='product-image';
+    const title = document.createElement('div'); title.style.fontWeight='700'; title.style.fontSize='1rem'; title.style.marginTop='8px'; title.textContent=p.name||'';
+    const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent=p.description||'';
+    card.append(img,title,desc);
+    if(p.resources){
+      const tbl=document.createElement('table'); tbl.className='table'; tbl.style.marginTop='8px';
+      const thead=document.createElement('thead'); thead.innerHTML='<tr><th>Ressource</th><th style="text-align:right">Anzahl</th></tr>'; tbl.appendChild(thead);
+      const tbody=document.createElement('tbody');
+      p.resources.split(';').filter(Boolean).forEach(r=>{ const [k,v,c]=r.split(':'); const tr=document.createElement('tr'); tr.innerHTML=`<td style="color:${c||'#facc15'}">${escapeHtml(k)}</td><td style="text-align:right;color:#3b82f6">${Number(v).toLocaleString('de-DE')}</td>`; tbody.appendChild(tr); });
+      tbl.appendChild(tbody); card.appendChild(tbl);
+    }
+    if(p.category){ const catDiv=document.createElement('div'); catDiv.className='kv'; catDiv.style.marginTop='8px'; catDiv.textContent='Kategorie: '+p.category; card.appendChild(catDiv); }
+    const addBtn=document.createElement('button'); addBtn.className='btn'; addBtn.style.marginTop='8px'; addBtn.textContent='In den Warenkorb';
+    addBtn.onclick=()=>{ addToCart(p); alert(`${p.name} hinzugefügt`); };
+    card.appendChild(addBtn);
+    productsGrid.appendChild(card);
+  });
+}
+
+/* ---------- Cart ---------- */
+function addToCart(product){
+  const resMap={}; if(product.resources) product.resources.split(';').filter(Boolean).forEach(r=>{ const [k,v]=r.split(':'); resMap[k]=Number(v); });
+  const idx = cart.findIndex(c=>c.key===product.key);
+  if(idx===-1){ cart.push({ key:product.key, name:product.name, resources:{...resMap}, qty:1 }); }
+  else{ cart[idx].qty++; for(const k in resMap) cart[idx].resources[k]=(cart[idx].resources[k]||0)+resMap[k]; }
+  renderCart();
+}
+function renderCart(){
+  cartTableBody.innerHTML=''; const totalRes={};
+  cart.forEach(e=>{
+    const tr=document.createElement('tr');
+    const resText=Object.entries(e.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
+    tr.innerHTML=`<td>${escapeHtml(e.name)}</td><td>${escapeHtml(resText)}</td><td style="text-align:right">${e.qty}</td>`;
+    cartTableBody.appendChild(tr);
+    for(const k in e.resources) totalRes[k]=(totalRes[k]||0)+e.resources[k];
+  });
+  cartSummary.innerText='Gesamt Ressourcen: '+(Object.entries(totalRes).map(([k,v])=>`${k}: ${v}`).join(', ')||'keine');
+  cartCodeEl.innerText=cartCode;
+}
 btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
-btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); });
+btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); renderCart(); });
 
-/* ---------- Admin Login ---------- */
+/* ---------- Admin Login & Load Tabs ---------- */
 settingsUnlockBtn.addEventListener('click', ()=>{
   if(settingsPassword.value.trim()===ADMIN_PASSWORD){
     settingsLoginError.style.display='none';
     settingsLoginArea.style.display='none';
     settingsEditor.classList.remove('hidden-el');
-    tabBtns.forEach(b=>b.classList.remove('active'));
-    tabBtns[0].classList.add('active');
-    tabPanels.forEach(p=>p.classList.add('hidden-el'));
-    document.getElementById('tabProducts').classList.remove('hidden-el');
+    tabBtns.forEach(b=>b.classList.remove('active')); tabBtns[0].classList.add('active');
+    tabPanels.forEach(p=>p.classList.add('hidden-el')); document.getElementById('tabProducts').classList.remove('hidden-el');
   } else settingsLoginError.style.display='';
 });
 
-/* ---------- Load Admin Tab Inhalte ---------- */
-onValue(productsRef, snapshot => {
-  const tab = document.getElementById('tabProducts'); tab.innerHTML=''; snapshot.forEach(s => { const p=s.val(); const div=document.createElement('div'); div.className='card mb-2'; div.innerHTML=`<strong>${escapeHtml(p.name)}</strong> (${escapeHtml(p.category||'-')})<br>${escapeHtml(p.description||'')}<br>Ressourcen: ${p.resources||'-'}`; tab.appendChild(div); });
+/* ---------- Load Orders & Users ---------- */
+onValue(ordersRef, snapshot=>{
+  const ordersTab = document.getElementById('ordersAdminContent'); ordersTab.innerHTML='';
+  snapshot.forEach(s=>{ const o=s.val(); const div=document.createElement('div'); div.className='card mb-2'; div.innerHTML=`<strong>Code:</strong> ${o.code} <br> <strong>Name:</strong> ${o.icName||'-'} <br> <strong>Telefon:</strong> ${o.phone||'-'} <br> <strong>Produkte:</strong> ${o.cart.map(p=>p.name+'('+p.qty+')').join(', ')}`; ordersTab.appendChild(div); });
 });
-onValue(categoriesRef, snapshot => {
-  const tab=document.getElementById('tabCategories'); tab.innerHTML=''; snapshot.forEach(s=>{ const c=s.val(); const div=document.createElement('div'); div.className='card mb-2'; div.innerHTML=`<strong>${escapeHtml(c.name)}</strong>`; tab.appendChild(div); });
-});
-onValue(settingsRef, snapshot => {
-  const tab=document.getElementById('tabGeneral'); tab.innerHTML=''; const val=snapshot.val(); const div=document.createElement('div'); div.className='card mb-2'; div.innerHTML=JSON.stringify(val||{}, null,2); tab.appendChild(div);
-});
-onValue(ordersRef, snapshot => {
-  const tab=document.getElementById('tabOrders'); tab.innerHTML=''; snapshot.forEach(s=>{ const o=s.val(); const div=document.createElement('div'); div.className='card mb-2'; div.innerHTML=`Code: ${o.code} <br> Name: ${o.icName||'-'} <br> Telefon: ${o.phone||'-'} <br> Produkte: ${o.cart.map(p=>p.name+'('+p.qty+')').join(', ')}`; tab.appendChild(div); });
-});
-onValue(usersRef, snapshot => {
-  const tab=document.getElementById('tabUsers'); tab.innerHTML=''; snapshot.forEach(s=>{ const u=s.val(); const div=document.createElement('div'); div.className='card mb-2'; div.innerHTML=`IC Name: ${u.icName||'-'} <br> Telefon: ${u.phone||'-'} <br> Bestellungen: ${u.orders? u.orders.map(o=>o.code).join(', '):'-'}`; tab.appendChild(div); });
-});
-</script>
-</body>
-</html>
+onValue(usersRef, snapshot=>{
+  const usersTab=document.get

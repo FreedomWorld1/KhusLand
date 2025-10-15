@@ -6,7 +6,6 @@
 <title>Weed Ankauf — Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* --- Grund --- */
 :root{--bg:#0f1724;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
 body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:#071025;color:#e6eef8;margin:0}
 .container{max-width:1100px;margin:0 auto;padding:20px}
@@ -20,13 +19,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 .hidden-el{display:none !important}
 
 /* product images */
-.product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
+.product-image{width:100%;height:100px;object-fit:cover;border-radius:8px} /* kleinere Höhe für PC */
 .product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
 
-/* kleinere Karten im Shop */
-#productsGrid .card{max-width:220px;margin:0 auto}
-
-/* settings modal (flat grey-blue style) */
+/* modal */
 .modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
 .modal-overlay.active{opacity:1;pointer-events:all}
 .modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
@@ -40,7 +36,6 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 
 /* small helpers */
 .kv{font-size:0.9rem;color:var(--muted)}
-.category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
 .input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
 .color-input{width:48px;height:36px;padding:0;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#fff}
 .small-btn{padding:.35rem .6rem;border-radius:6px}
@@ -49,172 +44,175 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
 </style>
 </head>
 <body>
-  <div class="container">
-    <!-- HEADER -->
-    <header class="card shadow-soft mb-6 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
-        <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">🌿 Weed Ankauf — Shop</h1>
-          <div class="small-muted">Shop & Einstellungen</div>
-        </div>
+<div class="container">
+  <!-- HEADER -->
+  <header class="card shadow-soft mb-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
+      <div>
+        <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">🌿 Weed Ankauf — Shop</h1>
+        <div class="small-muted">Shop & Einstellungen</div>
       </div>
-
-      <div class="flex items-center gap-2">
-        <button id="btnShop" class="btn">Shop</button>
-        <button id="openSettingsBtn" class="btn">⚙️ Einstellungen</button>
-      </div>
-    </header>
-
-    <!-- MAIN: SHOP -->
-    <main id="mainContent">
-      <section id="shopView" class="card mb-6">
-        <div class="flex items-center justify-between mb-4">
-          <h2 style="font-weight:700;color:#22c55e">🛒 Produkte</h2>
-          <div class="kv">Produkte anzeigen</div>
-        </div>
-
-        <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
-      </section>
-    </main>
-  </div>
-
-  <!-- SETTINGS MODAL (zentriert, Tabs: Produkte / Kategorien / Allgemein) -->
-  <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
-    <div class="modal-box">
-      <div class="flex items-start justify-between mb-4">
-        <div>
-          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
-          <div class="kv">Passwortgeschützt — Admin Funktionen</div>
-        </div>
-        <div class="flex gap-2 items-center">
-          <button id="settingsCloseBtn" class="btn">✖</button>
-        </div>
-      </div>
-
-      <!-- LOGIN -->
-      <div id="settingsLoginArea">
-        <label class="kv mb-2">Admin Passwort</label>
-        <div class="flex items-center gap-2 mb-3">
-          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
-          <button id="settingsUnlockBtn" class="btn">Einloggen</button>
-        </div>
-        <div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
-      </div>
-
-      <!-- EDITOR -->
-      <div id="settingsEditor" class="hidden-el">
-        <!-- tabs -->
-        <div class="mb-4">
-          <div class="flex gap-2">
-            <button class="tab-btn active" data-tab="products">Produkte</button>
-            <button class="tab-btn" data-tab="categories" style="display:none">Kategorien</button>
-            <button class="tab-btn" data-tab="general">Allgemein</button>
-          </div>
-        </div>
-
-        <!-- PRODUCTS TAB -->
-        <div id="tabProducts" class="tab-panel">
-          <div class="flex items-center justify-between mb-3">
-            <h4 style="font-weight:700">Produkte verwalten</h4>
-            <div class="flex gap-2">
-              <button id="btnNewProduct" class="btn">Neues Produkt</button>
-              <button id="btnReloadProducts" class="btn">Neu laden</button>
-            </div>
-          </div>
-
-          <!-- Produkt-Form (inkl. Ressourcen) -->
-          <div id="productFormCard" class="card mb-3 hidden-el">
-            <form id="productForm">
-              <input id="prodId" type="hidden"/>
-              <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
-                <div>
-                  <input id="prodName" class="input" placeholder="Name" required />
-                  <input id="prodImg" class="input" placeholder="Bild-URL" style="margin-top:8px"/>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:8px">
-                  <label class="kv">Vorschau</label>
-                  <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
-                </div>
-              </div>
-
-              <textarea id="prodDesc" class="input" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
-
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
-                <select id="prodCategorySelect" class="input">
-                  <option value="">— Keine Kategorie —</option>
-                </select>
-                <div style="display:flex;gap:8px;align-items:center">
-                  <label class="kv">Name-Farbe</label>
-                  <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
-                  <label class="kv" style="margin-left:8px">Anzahl-Farbe</label>
-                  <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
-                </div>
-              </div>
-
-              <!-- Ressourcen-Tabelle -->
-              <div id="resourceTableContainer" style="margin-bottom:8px">
-                <h5 style="margin:0 0 8px 0;font-weight:700">Ressourcen (Name:Anzahl:Farbe)</h5>
-                <table class="table" id="resourceTable">
-                  <thead>
-                    <tr><th>Ressource</th><th style="width:120px;text-align:right">Anzahl</th><th style="width:120px">Farbe</th><th style="width:60px">Aktion</th></tr>
-                  </thead>
-                  <tbody style="background:transparent"></tbody>
-                </table>
-                <div style="margin-top:8px">
-                  <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
-                </div>
-              </div>
-
-              <div style="display:flex;gap:8px">
-                <button type="submit" class="btn" style="background:#10b981">Speichern</button>
-                <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">Abbrechen</button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Product list -->
-          <div class="card" style="max-height:46vh;overflow:auto">
-            <table class="table" style="width:100%">
-              <thead><tr><th>Vorschau</th><th>Name</th><th>Kategorie</th><th style="width:140px">Aktionen</th></tr></thead>
-              <tbody id="productsTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- CATEGORIES TAB (komplett deaktiviert) -->
-        <div id="tabCategories" class="tab-panel hidden-el" style="display:none"></div>
-
-        <!-- GENERAL TAB -->
-        <div id="tabGeneral" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
-          <label class="kv mb-2">Titel</label>
-          <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
-          <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
-          <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
-          <div style="display:flex;gap:8px;margin-top:10px">
-            <button id="saveGeneralBtn" class="btn" style="background:#10b981">Speichern</button>
-            <button id="resetGeneralBtn" class="btn" style="background:#ef4444">Zurücksetzen</button>
-          </div>
-        </div>
-
-      </div> <!-- end editor -->
     </div>
+    <div class="flex items-center gap-2">
+      <button id="btnShop" class="btn">Shop</button>
+      <button id="openSettingsBtn" class="btn">⚙️ Einstellungen</button>
+    </div>
+  </header>
+
+  <!-- MAIN: SHOP -->
+  <main id="mainContent">
+    <section id="shopView" class="card mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 style="font-weight:700;color:#22c55e">🛒 Produkte</h2>
+        <div class="kv">Produkte anzeigen</div>
+      </div>
+      <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px"></div>
+    </section>
+  </main>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
+  <div class="modal-box">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
+        <div class="kv">Passwortgeschützt — Admin Funktionen</div>
+      </div>
+      <div class="flex gap-2 items-center">
+        <button id="settingsCloseBtn" class="btn">✖</button>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="settingsLoginArea">
+      <label class="kv mb-2">Admin Passwort</label>
+      <div class="flex items-center gap-2 mb-3">
+        <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+        <button id="settingsUnlockBtn" class="btn">Einloggen</button>
+      </div>
+      <div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
+    </div>
+
+    <!-- EDITOR -->
+    <div id="settingsEditor" class="hidden-el">
+      <!-- tabs -->
+      <div class="mb-4">
+        <div class="flex gap-2">
+          <button class="tab-btn active" data-tab="products">Produkte</button>
+          <!-- Kategorie Tab entfernt -->
+          <button class="tab-btn" data-tab="general">Allgemein</button>
+          <button class="tab-btn" data-tab="orders">Bestellungen</button>
+        </div>
+      </div>
+
+      <!-- PRODUCTS TAB -->
+      <div id="tabProducts" class="tab-panel">
+        <div class="flex items-center justify-between mb-3">
+          <h4 style="font-weight:700">Produkte verwalten</h4>
+          <div class="flex gap-2">
+            <button id="btnNewProduct" class="btn">Neues Produkt</button>
+            <button id="btnReloadProducts" class="btn">Neu laden</button>
+          </div>
+        </div>
+
+        <div id="productFormCard" class="card mb-3 hidden-el">
+          <form id="productForm">
+            <input id="prodId" type="hidden"/>
+            <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+              <div>
+                <input id="prodName" class="input" placeholder="Name" required />
+                <input id="prodImg" class="input" placeholder="Bild-URL" style="margin-top:8px"/>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label class="kv">Vorschau</label>
+                <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
+              </div>
+            </div>
+
+            <textarea id="prodDesc" class="input" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+              <div style="display:flex;gap:8px;align-items:center">
+                <label class="kv">Name-Farbe</label>
+                <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
+                <label class="kv" style="margin-left:8px">Anzahl-Farbe</label>
+                <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
+              </div>
+            </div>
+
+            <!-- Ressourcen-Tabelle -->
+            <div id="resourceTableContainer" style="margin-bottom:8px">
+              <h5 style="margin:0 0 8px 0;font-weight:700">Ressourcen (Name:Anzahl:Farbe)</h5>
+              <table class="table" id="resourceTable">
+                <thead>
+                  <tr><th>Ressource</th><th style="width:120px;text-align:right">Anzahl</th><th style="width:120px">Farbe</th><th style="width:60px">Aktion</th></tr>
+                </thead>
+                <tbody style="background:transparent"></tbody>
+              </table>
+              <div style="margin-top:8px">
+                <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px">
+              <button type="submit" class="btn" style="background:#10b981">Speichern</button>
+              <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">Abbrechen</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Product list -->
+        <div class="card" style="max-height:46vh;overflow:auto">
+          <table class="table" style="width:100%">
+            <thead><tr><th>Vorschau</th><th>Name</th><th style="width:140px">Aktionen</th></tr></thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- GENERAL TAB -->
+      <div id="tabGeneral" class="tab-panel hidden-el">
+        <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
+        <label class="kv mb-2">Titel</label>
+        <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
+        <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
+        <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button id="saveGeneralBtn" class="btn" style="background:#10b981">Speichern</button>
+          <button id="resetGeneralBtn" class="btn" style="background:#ef4444">Zurücksetzen</button>
+        </div>
+      </div>
+
+      <!-- ORDERS TAB -->
+      <div id="tabOrders" class="tab-panel hidden-el">
+        <h4 style="font-weight:700;margin-bottom:8px">Bestellungen</h4>
+        <div class="card" style="max-height:50vh;overflow:auto">
+          <table class="table">
+            <thead>
+              <tr><th>Kunde</th><th>Produkt</th><th>Menge</th><th>Datum</th></tr>
+            </thead>
+            <tbody id="ordersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div> <!-- end editor -->
   </div>
+</div>
 
 <script type="module">
-/* ---------- Firebase imports ---------- */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-/* ---------- Config (deine) ---------- */
 const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const productsRef = ref(db, 'products');
+const ordersRef = ref(db, 'orders');
 const settingsRef = ref(db, 'settings');
 
-/* ---------- Globals & elements ---------- */
 const ADMIN_PASSWORD = 'admin123';
 
 const openSettingsBtn = document.getElementById('openSettingsBtn');
@@ -238,7 +236,6 @@ const prodName = document.getElementById('prodName');
 const prodImg = document.getElementById('prodImg');
 const prodPreview = document.getElementById('prodPreview');
 const prodDesc = document.getElementById('prodDesc');
-const prodCategorySelect = document.getElementById('prodCategorySelect');
 const colorNameInput = document.getElementById('colorNameInput');
 const colorQuantityInput = document.getElementById('colorQuantityInput');
 const addResourceBtn = document.getElementById('addResourceBtn');
@@ -255,11 +252,12 @@ const resetGeneralBtn = document.getElementById('resetGeneralBtn');
 const pageTitle = document.getElementById('pageTitle');
 const headerLogo = document.getElementById('headerLogo');
 const productsGrid = document.getElementById('productsGrid');
+const ordersTableBody = document.getElementById('ordersTableBody');
 
 let products = [];
-let settings = { title: '🌿 Weed Ankauf — Shop', headerImage: 'https://via.placeholder.com/48', categories: [] };
+let settings = { title: '🌿 Weed Ankauf — Shop', headerImage: 'https://via.placeholder.com/48' };
 
-/* ---------- Utility: modal open/close ---------- */
+/* ---------- Utility ---------- */
 function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
 function hideModal(){ settingsModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>settingsModal.classList.add('hidden-el'),240); }
 
@@ -274,7 +272,6 @@ settingsCloseBtn.addEventListener('click', hideModal);
 settingsModal.addEventListener('click', (e)=> { if(e.target === settingsModal) hideModal(); });
 document.addEventListener('keydown', (e)=> { if(e.key === 'Escape' && !settingsModal.classList.contains('hidden-el')) hideModal(); });
 
-/* tab switching */
 tabBtns.forEach(btn=>{
   btn.addEventListener('click', ()=>{
     tabBtns.forEach(b=>b.classList.remove('active'));
@@ -285,7 +282,7 @@ tabBtns.forEach(btn=>{
   });
 });
 
-/* ---------- Settings: load/save from Firebase ---------- */
+/* ---------- Settings ---------- */
 onValue(settingsRef, snapshot=>{
   const val = snapshot.val();
   if(val){
@@ -294,15 +291,12 @@ onValue(settingsRef, snapshot=>{
   }
   applySettings();
 });
-
 function applySettings(){
   pageTitle.innerText = settings.title || '🌿 Weed Ankauf — Shop';
   headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
   if(settingTitle) settingTitle.value = settings.title || '';
   if(settingHeaderImage) settingHeaderImage.value = settings.headerImage || '';
 }
-
-/* save general */
 saveGeneralBtn.addEventListener('click', async ()=>{
   const t = (settingTitle.value||'').trim() || '🌿 Weed Ankauf — Shop';
   const img = (settingHeaderImage.value||'').trim() || 'https://via.placeholder.com/48';
@@ -313,17 +307,15 @@ resetGeneralBtn.addEventListener('click', async ()=>{
   try{ await update(settingsRef, { title:'🌿 Weed Ankauf — Shop', headerImage:'https://via.placeholder.com/48' }); alert('Zurückgesetzt'); } catch(e){ console.error(e); alert('Fehler'); }
 });
 
-/* ---------- Products CRUD ---------- */
+/* ---------- Products ---------- */
 onValue(productsRef, snapshot=>{
   products = [];
   snapshot.forEach(child=>{
     const data = child.val(); data.key = child.key; products.push(data);
   });
-  products.sort((a,b)=> (b.updatedAt||0) - (a.updatedAt||0));
   renderProductsTable();
   renderProductsGrid();
 });
-
 function renderProductsGrid(){
   productsGrid.innerHTML = '';
   if(products.length===0){ productsGrid.innerHTML='<div class="kv p-4">Keine Produkte verfügbar.</div>'; return; }
@@ -334,27 +326,20 @@ function renderProductsGrid(){
     const desc = document.createElement('div'); desc.className='small-muted'; desc.textContent = p.description || '';
     card.appendChild(img); card.appendChild(title); card.appendChild(desc);
 
-    if(p.resources){
-      const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      if(pairs.length){
-        const tbl = document.createElement('table'); tbl.className='table'; tbl.style.marginTop='8px';
-        const thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Ressource</th><th style="text-align:right">Anzahl</th></tr>'; tbl.appendChild(thead);
-        const tbody = document.createElement('tbody');
-        pairs.forEach(r=>{
-          const [k,v,c] = r.split(':');
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td style="color:${c||'#facc15'}">${escapeHtml(k)}</td><td style="text-align:right;color:${p.colorQuantity||'#3b82f6'}">${Number(v).toLocaleString('de-DE')}</td>`;
-          tbody.appendChild(tr);
-        });
-        tbl.appendChild(tbody); card.appendChild(tbl);
-      }
-    }
+    // Verkauf-Button
+    const sellBtn = document.createElement('button'); sellBtn.className='btn'; sellBtn.textContent='Verkaufen'; sellBtn.style.marginTop='8px';
+    sellBtn.onclick = ()=>{
+      const customer = prompt('Kundenname eingeben:');
+      if(!customer) return;
+      const qty = parseInt(prompt('Anzahl?'),10) || 1;
+      const orderData = { productId:p.key, productName:p.name, employee:customer, quantity:qty, timestamp:Date.now() };
+      push(ordersRef, orderData).then(()=> alert('Bestellung gespeichert!')).catch(()=> alert('Fehler!'));
+    };
+    card.appendChild(sellBtn);
 
     productsGrid.appendChild(card);
   });
 }
-
-/* render admin products table */
 function renderProductsTable(){
   productsTableBody.innerHTML = '';
   products.forEach(p=>{
@@ -362,7 +347,6 @@ function renderProductsTable(){
     tr.innerHTML = `
       <td style="padding:8px"><img src="${p.image||'https://via.placeholder.com/80'}" class="product-image-admin"></td>
       <td style="padding:8px">${escapeHtml(p.name||'')}</td>
-      <td style="padding:8px">${escapeHtml(p.category||'')}</td>
       <td style="padding:8px">
         <button class="btn" data-edit="${p.key}" style="margin-right:6px">Bearbeiten</button>
         <button class="btn" data-del="${p.key}" style="background:#ef4444">Löschen</button>
@@ -373,7 +357,7 @@ function renderProductsTable(){
   });
 }
 
-/* open product form */
+/* Produkt Form */
 btnNewProduct.addEventListener('click', ()=> openProductForm());
 function openProductForm(product){
   productFormCard.classList.remove('hidden-el');
@@ -384,26 +368,11 @@ function openProductForm(product){
     prodImg.value = product.image || '';
     prodPreview.src = product.image || 'https://via.placeholder.com/150x100';
     prodDesc.value = product.description || '';
-    prodCategorySelect.value = product.category || '';
     colorNameInput.value = product.colorName || '#22c55e';
     colorQuantityInput.value = product.colorQuantity || '#3b82f6';
-    if(product.resources){
-      const pairs = product.resources.split(';').map(x=>x.trim()).filter(Boolean);
-      pairs.forEach(p=>{
-        const [k,v,c] = p.split(':');
-        addResourceRow(k,v,c||'#facc15');
-      });
-    }
-  } else {
-    prodId.value = '';
-    productForm.reset();
-    prodPreview.src = 'https://via.placeholder.com/150x100';
-    colorNameInput.value = '#22c55e';
-    colorQuantityInput.value = '#3b82f6';
-  }
+  } else { prodId.value=''; productForm.reset(); prodPreview.src='https://via.placeholder.com/150x100'; }
 }
-
-/* resource row */
+addResourceBtn.addEventListener('click', ()=> addResourceRow());
 function addResourceRow(name='', value='', color='#facc15'){
   const tr = document.createElement('tr');
   tr.innerHTML = `
@@ -411,24 +380,12 @@ function addResourceRow(name='', value='', color='#facc15'){
     <td style="text-align:right"><input type="number" min="0" class="input" value="${escapeHtml(value)}" /></td>
     <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
     <td style="text-align:center"><button class="btn" type="button">❌</button></td>`;
-  const btn = tr.querySelector('button');
-  btn.onclick = ()=> tr.remove();
+  tr.querySelector('button').onclick = ()=> tr.remove();
   resourceTable.appendChild(tr);
 }
-addResourceBtn.addEventListener('click', ()=> addResourceRow());
-
-/* preview update */
 prodImg.addEventListener('input', ()=> { prodPreview.src = prodImg.value || 'https://via.placeholder.com/150x100'; });
-
-/* cancel product */
-cancelProductBtn.addEventListener('click', ()=> {
-  productFormCard.classList.add('hidden-el');
-  productForm.reset();
-  prodId.value = '';
-});
-
-/* submit product */
-productForm.addEventListener('submit', async (e)=>{
+cancelProductBtn.addEventListener('click', ()=> { productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; });
+productForm.addEventListener('submit', async e=>{
   e.preventDefault();
   const rows = Array.from(resourceTable.querySelectorAll('tr'));
   const resources = rows.map(r=>{
@@ -437,61 +394,49 @@ productForm.addEventListener('submit', async (e)=>{
     const col = r.children[2].querySelector('input').value;
     return name && qty ? `${name}:${qty}:${col}` : '';
   }).filter(Boolean).join(';');
-
   const payload = {
     name: (prodName.value||'').trim(),
     image: (prodImg.value||'').trim(),
     description: (prodDesc.value||'').trim(),
-    category: (prodCategorySelect.value||'').trim(),
     resources: resources,
     colorName: colorNameInput.value || '#22c55e',
     colorQuantity: colorQuantityInput.value || '#3b82f6',
     updatedAt: Date.now()
   };
-
   try{
-    if(prodId.value){
-      await update(ref(db, 'products/' + prodId.value), payload);
-    } else {
-      await push(productsRef, payload);
-    }
-    productFormCard.classList.add('hidden-el');
-    productForm.reset();
-    prodId.value = '';
+    if(prodId.value) await update(ref(db, 'products/' + prodId.value), payload);
+    else await push(productsRef, payload);
+    productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value='';
   }catch(err){ console.error(err); alert('Fehler beim Speichern des Produkts'); }
 });
+btnReloadProducts.addEventListener('click', ()=> { get(productsRef).then(()=> alert('Produkte neu geladen.')).catch(()=> alert('Laden fehlgeschlagen.')); });
 
-/* reload products */
-btnReloadProducts.addEventListener('click', ()=> {
-  get(productsRef).then(()=> alert('Produkte neu geladen.')).catch(()=> alert('Laden fehlgeschlagen.'));
+/* ---------- Orders ---------- */
+onValue(ordersRef, snapshot=>{
+  ordersTableBody.innerHTML = '';
+  snapshot.forEach(child=>{
+    const o = child.val();
+    const tr = document.createElement('tr');
+    const date = new Date(o.timestamp||0);
+    tr.innerHTML = `<td>${escapeHtml(o.employee||'')}</td><td>${escapeHtml(o.productName||'')}</td><td>${o.quantity||1}</td><td>${date.toLocaleString('de-DE')}</td>`;
+    ordersTableBody.appendChild(tr);
+  });
 });
 
-/* login */
+/* ---------- Login ---------- */
 settingsUnlockBtn.addEventListener('click', ()=>{
   const pw = (settingsPassword.value||'').trim();
   if(pw === ADMIN_PASSWORD){
-    settingsLoginError.style.display = 'none';
-    settingsLoginArea.style.display = 'none';
+    settingsLoginError.style.display='none';
+    settingsLoginArea.style.display='none';
     settingsEditor.classList.remove('hidden-el');
-    settingTitle.value = settings.title || '';
-    settingHeaderImage.value = settings.headerImage || '';
-  } else {
-    settingsLoginError.style.display = '';
-  }
+  } else settingsLoginError.style.display='';
 });
 
-/* helper escape */
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
+/* helper */
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[c])); }
 
-/* initial apply */
 applySettings();
-populateCategorySelect();
-
-function populateCategorySelect(){
-  prodCategorySelect.innerHTML = '';
-  const none = document.createElement('option'); none.value=''; none.textContent='— Keine —';
-  prodCategorySelect.appendChild(none);
-}
 </script>
 </body>
 </html>

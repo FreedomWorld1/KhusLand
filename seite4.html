@@ -15,7 +15,7 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", 
 .hidden-el { display: none; }
 input, textarea { transition: all 0.15s ease; font-size: 0.95rem; }
 input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 0 0 0 2px #7e22ce55; }
-.product-image { width:120px; height:80px; object-fit:cover; border-radius:8px; }
+.product-image { width:100%; height:180px; object-fit:cover; border-radius:8px; }
 </style>
 </head>
 
@@ -38,7 +38,7 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
         <h2 class="text-xl font-semibold text-green-400">🛒 Produkte</h2>
         <div class="small-muted">Hier kannst du Produkte kaufen</div>
       </div>
-      <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
     <!-- ADMIN -->
@@ -64,11 +64,11 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
               <input id="prodName" placeholder="Name" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
               <input id="prodQuantity" type="number" min="0" placeholder="Anzahl" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" required />
             </div>
-            <textarea id="prodDesc" rows="2" placeholder="Beschreibung" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
+            <textarea id="prodDesc" rows="2" placeholder="Beschreibung (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"></textarea>
             <input id="prodResources" placeholder="Ressourcen (z.B. Waffenteile:1000; Deadcoins:200000; Plastik:400)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full"/>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <input id="prodImg" placeholder="Bild-URL (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
-              <input id="prodCategory" placeholder="Kategorie" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
+              <input id="prodImg" placeholder="Bild-URL" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
+              <input id="prodCategory" placeholder="Kategorie (optional)" class="p-2 rounded-md bg-gray-900 border border-gray-700 w-full" />
             </div>
             <div class="flex gap-2">
               <button class="px-4 py-2 bg-green-600 rounded-md" type="submit">Speichern</button>
@@ -101,7 +101,7 @@ input:focus, textarea:focus { outline: none; border-color: #7e22ce; box-shadow: 
 <!-- Firebase + App logic -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
@@ -143,17 +143,17 @@ const prodCategory = document.getElementById('prodCategory');
 const prodResources = document.getElementById('prodResources');
 const cancelProduct = document.getElementById('cancelProduct');
 
-btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); });
-btnAdmin.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); adminPanel.classList.remove('hidden-el'); });
+btnShop.onclick = ()=>{ shopView.classList.remove('hidden-el'); adminPanel.classList.add('hidden-el'); };
+btnAdmin.onclick = ()=>{ shopView.classList.add('hidden-el'); adminPanel.classList.remove('hidden-el'); };
 
-adminLoginBtn.addEventListener('click', ()=>{
+adminLoginBtn.onclick = ()=>{
   if(adminPassInput.value === ADMIN_PASSWORD){
     adminError.classList.add('hidden-el'); adminContent.classList.remove('hidden-el');
   } else { adminError.classList.remove('hidden-el'); }
-});
+};
 
-btnNewProduct.addEventListener('click', ()=> openProductForm());
-cancelProduct.addEventListener('click', ()=> closeProductForm());
+btnNewProduct.onclick = ()=> openProductForm();
+cancelProduct.onclick = ()=> closeProductForm();
 
 function openProductForm(product){
   productFormCard.classList.remove('hidden-el');
@@ -172,21 +172,21 @@ function openProductForm(product){
 }
 function closeProductForm(){ productFormCard.classList.add('hidden-el'); productForm.reset(); prodId.value=''; }
 
-productForm.addEventListener('submit', async (e)=>{
+productForm.onsubmit = async e=>{
   e.preventDefault();
   const payload = {
     name: prodName.value.trim(),
     quantity: Number(prodQuantity.value) || 0,
     description: prodDesc.value.trim(),
-    image: prodImg.value.trim() || '',
-    category: prodCategory.value.trim() || '',
+    image: prodImg.value.trim(),
+    category: prodCategory.value.trim(),
     resources: prodResources.value.trim(),
     updatedAt: Date.now()
   };
   if(prodId.value){ await update(ref(db, 'products/' + prodId.value), payload); }
   else{ await push(productsRef, payload); }
   closeProductForm();
-});
+};
 
 let products = [];
 onValue(productsRef, snapshot=>{
@@ -201,38 +201,33 @@ function renderProducts(){
   if(products.length===0){ productsGrid.innerHTML = '<div class="text-gray-400">Keine Produkte verfügbar.</div>'; return; }
   products.forEach(p=>{
     const card = document.createElement('div');
-    card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm';
+    card.className = 'p-4 rounded-md bg-gray-800 border border-gray-700 shadow-sm text-center';
 
-    // Ressourcen-Tabelle ab "Ressource" und "Anzahl"
+    // Ressourcen-Tabelle
     let resourcesHTML = '';
     if(p.resources){
       const pairs = p.resources.split(';').map(x=>x.trim()).filter(Boolean);
       if(pairs.length > 0){
         resourcesHTML = `
-        <div class="mt-3">
-          <table class="w-full text-sm border border-gray-700 rounded-md">
-            <thead class="bg-gray-700 text-green-400">
-              <tr><th class="text-left px-3 py-1">Ressource</th><th class="text-right px-3 py-1">Anzahl</th></tr>
-            </thead>
-            <tbody class="bg-gray-800 divide-y divide-gray-700">
-              ${pairs.map(r=>{
-                const [k,v] = r.split(':');
-                return `<tr><td class="px-3 py-1">${k}</td><td class="px-3 py-1 text-right">${Number(v).toLocaleString('de-DE')}</td></tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>`;
+        <table class="w-full text-sm border border-gray-700 rounded-md mt-3">
+          <thead class="bg-gray-700 text-green-400">
+            <tr><th class="px-3 py-1 text-left">Ressource</th><th class="px-3 py-1 text-right">Anzahl</th></tr>
+          </thead>
+          <tbody class="bg-gray-800 divide-y divide-gray-700">
+            ${pairs.map(r=>{
+              const [k,v] = r.split(':');
+              return `<tr><td class="px-3 py-1 text-left">${k}</td><td class="px-3 py-1 text-right">${Number(v).toLocaleString('de-DE')}</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
       }
     }
 
     card.innerHTML = `
-      <div class="flex gap-4 items-start">
-        <img src="${p.image||'https://via.placeholder.com/150'}" alt="" class="product-image"/>
-        <div class="flex-1">
-          <div class="font-semibold text-green-400 text-lg">${escapeHtml(p.name)}</div>
-          ${resourcesHTML}
-        </div>
-      </div>`;
+      <img src="${p.image||'https://via.placeholder.com/300x180'}" alt="Produktbild" class="product-image mb-3"/>
+      <div class="font-semibold text-green-400 text-lg">${escapeHtml(p.name)}</div>
+      ${resourcesHTML}
+    `;
     productsGrid.appendChild(card);
   });
 }
@@ -241,9 +236,8 @@ function renderProductsTable(){
   productsTableBody.innerHTML='';
   products.forEach(p=>{
     const tr = document.createElement('tr');
-    tr.className='border-t border-gray-800';
     tr.innerHTML = `
-      <td class="p-2"><img src="${p.image||'https://via.placeholder.com/150'}" class="product-image"/></td>
+      <td class="p-2"><img src="${p.image||'https://via.placeholder.com/80'}" class="w-20 h-14 object-cover rounded"/></td>
       <td class="p-2">${escapeHtml(p.name)}</td>
       <td class="p-2">${p.quantity}</td>
       <td class="p-2">${escapeHtml(p.category||'')}</td>
@@ -257,8 +251,8 @@ function renderProductsTable(){
 }
 
 function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>\"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c])); }
-window.editProduct = function(key){ const p = products.find(x=>x.key===key); if(p) openProductForm(p); window.scrollTo({top:0,behavior:'smooth'}); }
-window.deleteProduct = function(key){ if(confirm('Produkt wirklich löschen?')) remove(ref(db, 'products/'+key)); }
+window.editProduct = key => { const p = products.find(x=>x.key===key); if(p) openProductForm(p); window.scrollTo({top:0,behavior:'smooth'}); };
+window.deleteProduct = key => { if(confirm('Produkt wirklich löschen?')) remove(ref(db, 'products/'+key)); };
 
 shopView.classList.remove('hidden-el');
 </script>

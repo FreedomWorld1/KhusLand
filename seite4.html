@@ -84,10 +84,6 @@ body {
   transition: transform 0.2s ease;
 }
 
-#productsGrid .card:hover {
-  transform: translateY(-4px);
-}
-
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -143,10 +139,6 @@ body {
   font-weight: 700;
 }
 
-.tab-btn:hover:not(.active) {
-  background: rgba(255,255,255,0.05);
-}
-
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -173,11 +165,6 @@ body {
   background: rgba(255,255,255,0.02);
   border-radius: 8px;
   margin-bottom: 6px;
-  transition: background 0.2s ease;
-}
-
-.category-item:hover {
-  background: rgba(255,255,255,0.04);
 }
 
 .input, textarea, select {
@@ -187,13 +174,7 @@ body {
   padding: 0.5rem;
   border-radius: 8px;
   width: 100%;
-  transition: border-color 0.2s ease;
-  font-size: 16px; /* Verhindert Zoom auf iOS */
-}
-
-.input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: rgba(6, 182, 212, 0.3);
+  font-size: 16px;
 }
 
 .color-input {
@@ -210,16 +191,6 @@ body {
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
   font-size: 0.8rem;
-}
-
-.flex-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.right {
-  margin-left: auto;
 }
 
 .success { color: #10b981; }
@@ -241,7 +212,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Neue Styles für die zweispaltige Bestellungsansicht */
 .orders-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -255,24 +225,12 @@ body {
   gap: 12px;
 }
 
-.orders-column h5 {
-  margin: 0 0 8px 0;
-  font-weight: 700;
-  color: #94a3b8;
-}
-
 .user-order-item {
   background: rgba(255,255,255,0.02);
   border-radius: 8px;
   padding: 12px;
   border: 1px solid rgba(255,255,255,0.03);
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.user-order-item:hover {
-  background: rgba(255,255,255,0.04);
-  transform: translateY(-2px);
 }
 
 .user-order-item.active {
@@ -280,12 +238,7 @@ body {
   border-color: rgba(6, 182, 212, 0.3);
 }
 
-.user-orders-list {
-  max-height: 50vh;
-  overflow-y: auto;
-}
-
-.order-details-container {
+.user-orders-list, .order-details-container {
   max-height: 50vh;
   overflow-y: auto;
 }
@@ -300,64 +253,15 @@ body {
     padding: 12px;
   }
   
-  .modal-box {
-    padding: 12px;
-    margin: 8px;
-  }
-  
-  /* Header mobile optimieren */
-  header.card {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
-  }
-  
-  header .flex.items-center.gap-4 {
-    justify-content: center;
-  }
-  
-  /* Produkt Grid für Mobile - WICHTIG: Einspaltig für bessere Lesbarkeit */
   .grid {
     grid-template-columns: 1fr;
     gap: 12px;
-  }
-  
-  #productsGrid .card {
-    max-width: none;
-    margin: 0;
   }
   
   .product-image {
     height: 120px;
   }
   
-  /* Produktkarten-Inhalt für Mobile optimieren */
-  .product-card-content {
-    padding: 8px 0;
-  }
-  
-  .product-title {
-    font-size: 1.1rem;
-    line-height: 1.3;
-    margin-bottom: 6px;
-  }
-  
-  .product-description {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    margin-bottom: 8px;
-  }
-  
-  /* Ressourcen-Tabelle für Mobile optimieren */
-  .resource-table {
-    font-size: 0.8rem;
-  }
-  
-  .resource-table td {
-    padding: 4px 6px;
-  }
-  
-  /* Tabs für Mobile */
   .flex.gap-2 {
     flex-wrap: wrap;
     gap: 6px;
@@ -367,11 +271,9 @@ body {
     padding: 6px 10px;
     font-size: 0.8rem;
     flex: 1;
-    min-width: 0;
     text-align: center;
   }
   
-  /* Tabellen für Mobile */
   .table-container {
     overflow-x: auto;
   }
@@ -381,46 +283,16 @@ body {
     min-width: 500px;
   }
   
-  .table th, .table td {
-    padding: 6px 4px;
-  }
-  
-  /* Formulare für Mobile */
-  .flex.items-center.gap-2 {
-    flex-wrap: wrap;
-  }
-  
   .btn {
     padding: 0.4rem 0.7rem;
     font-size: 0.85rem;
   }
   
-  /* Bestellungen Layout für Mobile */
   .orders-layout {
     grid-template-columns: 1fr;
     gap: 12px;
   }
   
-  .orders-column {
-    gap: 8px;
-  }
-  
-  /* Produkt Formular für Mobile */
-  .product-form-grid {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-  
-  .color-inputs {
-    flex-wrap: wrap;
-    gap: 6px !important;
-  }
-  
-  .color-inputs label {
-    min-width: 80px;
-  }
-  
-  /* Shop Filter für Mobile */
   .shop-header {
     flex-direction: column;
     gap: 10px;
@@ -431,12 +303,6 @@ body {
     width: 100% !important;
   }
   
-  /* Warenkorb für Mobile */
-  #cartTable {
-    min-width: 400px;
-  }
-  
-  /* Admin Buttons für Mobile */
   .admin-actions {
     flex-direction: column;
     gap: 8px;
@@ -445,43 +311,15 @@ body {
   .admin-actions .btn {
     width: 100%;
   }
-  
-  /* Produkt-Text für Mobile optimieren */
-  .product-text-content {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-  
-  .product-name {
-    font-size: 1.1rem;
-    line-height: 1.3;
-    word-break: break-word;
-  }
-  
-  .product-category {
-    font-size: 0.8rem;
-    margin-top: 6px;
-  }
 }
 
 @media (max-width: 480px) {
   .grid {
-    grid-template-columns: 1fr;
     gap: 10px;
   }
   
   .product-image {
     height: 100px;
-  }
-  
-  .btn {
-    padding: 0.35rem 0.6rem;
-    font-size: 0.8rem;
-  }
-  
-  .tab-btn {
-    padding: 5px 8px;
-    font-size: 0.75rem;
   }
   
   .container {
@@ -491,82 +329,11 @@ body {
   .card {
     padding: 10px;
   }
-  
-  .product-title {
-    font-size: 1rem;
-  }
-  
-  .product-description {
-    font-size: 0.8rem;
-  }
-}
-
-/* Größere Screens */
-@media (min-width: 769px) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-  }
-  
-  #productsGrid .card:hover {
-    transform: translateY(-4px);
-  }
-  
-  .category-item:hover {
-    background: rgba(255,255,255,0.04);
-  }
-  
-  .user-order-item:hover {
-    background: rgba(255,255,255,0.04);
-    transform: translateY(-2px);
-  }
-}
-
-/* Touch Device Optimierungen */
-@media (hover: none) {
-  .btn:hover {
-    transform: none;
-    background: #111827;
-  }
-  
-  #productsGrid .card:hover {
-    transform: none;
-  }
-  
-  .category-item:hover {
-    background: rgba(255,255,255,0.02);
-  }
-  
-  .user-order-item:hover {
-    background: rgba(255,255,255,0.02);
-    transform: none;
-  }
-}
-
-/* Zusätzliche Mobile-Optimierungen für Produktkarten */
-.product-card {
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  min-height: 0;
-}
-
-.product-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.product-resources {
-  flex-shrink: 0;
-  margin-top: auto;
 }
 
 .mobile-optimized-text {
   word-break: break-word;
   overflow-wrap: break-word;
-  hyphens: auto;
 }
 </style>
 </head>
@@ -624,10 +391,189 @@ body {
     </main>
   </div>
 
-  <!-- Der Rest des Modal-Codes bleibt gleich wie vorher -->
   <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
     <div class="modal-box">
-      <!-- ... Modal Inhalt unverändert ... -->
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
+          <div class="kv">Passwortgeschützt — Admin Funktionen</div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <button id="settingsCloseBtn" class="btn">✖</button>
+        </div>
+      </div>
+
+      <div id="settingsLoginArea">
+        <label class="kv mb-2">Admin Passwort</label>
+        <div class="flex items-center gap-2 mb-3">
+          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+          <button id="settingsUnlockBtn" class="btn">Einloggen</button>
+        </div>
+        <div id="settingsLoginError" class="error kv" style="display:none">❌ Falsches Passwort</div>
+      </div>
+
+      <div id="settingsEditor" class="hidden-el">
+        <div class="mb-4">
+          <div class="flex gap-2">
+            <button class="tab-btn active" data-tab="products">Produkte</button>
+            <button class="tab-btn" data-tab="categories">Kategorien</button>
+            <button class="tab-btn" data-tab="general">Allgemein</button>
+            <button class="tab-btn" data-tab="orders">Bestellungen</button>
+            <button class="tab-btn" data-tab="users">Nutzer</button>
+          </div>
+        </div>
+
+        <div id="tabProducts" class="tab-panel">
+          <div class="flex items-center justify-between mb-3 admin-actions">
+            <h4 style="font-weight:700">Produkte verwalten</h4>
+            <div class="flex gap-2">
+              <button id="btnNewProduct" class="btn">Neues Produkt</button>
+              <button id="btnReloadProducts" class="btn">Neu laden</button>
+            </div>
+          </div>
+
+          <div id="productFormCard" class="card mb-3 hidden-el">
+            <form id="productForm">
+              <input id="prodId" type="hidden"/>
+              <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+                <div>
+                  <input id="prodName" class="input" placeholder="Name" required />
+                  <input id="prodImg" class="input" placeholder="Bild-URL" style="margin-top:8px"/>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <label class="kv">Vorschau</label>
+                  <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
+                </div>
+              </div>
+
+              <textarea id="prodDesc" class="input" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+                <select id="prodCategorySelect" class="input">
+                  <option value="">— Keine Kategorie —</option>
+                </select>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  <label class="kv">Name-Farbe</label>
+                  <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
+                  <label class="kv">Anzahl-Farbe</label>
+                  <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
+                </div>
+              </div>
+
+              <div id="resourceTableContainer" style="margin-bottom:8px">
+                <h5 style="margin:0 0 8px 0;font-weight:700">Ressourcen (Name:Anzahl:Farbe)</h5>
+                <div class="table-container">
+                  <table class="table" id="resourceTable">
+                    <thead>
+                      <tr>
+                        <th>Ressource</th>
+                        <th style="width:120px;text-align:right">Anzahl</th>
+                        <th style="width:120px">Farbe</th>
+                        <th style="width:60px">Aktion</th>
+                      </tr>
+                    </thead>
+                    <tbody style="background:transparent"></tbody>
+                  </table>
+                </div>
+                <div style="margin-top:8px">
+                  <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="submit" class="btn" style="background:#10b981">✅ Speichern</button>
+                <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">❌ Abbrechen</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card" style="max-height:46vh;overflow:auto">
+            <div class="table-container">
+              <table class="table" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Vorschau</th>
+                    <th>Name</th>
+                    <th>Kategorie</th>
+                    <th>Ressourcen</th>
+                    <th style="width:140px">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="tabCategories" class="tab-panel hidden-el">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <h4 style="font-weight:700">Kategorien verwalten</h4>
+            <div style="display:flex;gap:8px;width:100%;max-width:360px;">
+              <input id="newCategoryInput" class="input" placeholder="Neue Kategorie" />
+              <button id="addCategoryBtn" class="btn">Hinzufügen</button>
+            </div>
+          </div>
+          <div id="categoriesList" class="card" style="max-height:36vh;overflow:auto;padding:12px"></div>
+        </div>
+
+        <div id="tabGeneral" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
+          <label class="kv mb-2">Titel</label>
+          <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
+          <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
+          <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <button id="saveGeneralBtn" class="btn" style="background:#10b981">✅ Speichern</button>
+            <button id="resetGeneralBtn" class="btn" style="background:#ef4444">❌ Zurücksetzen</button>
+          </div>
+        </div>
+
+        <div id="tabOrders" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px">Bestellungen verwalten</h4>
+
+          <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
+            <input id="orderCodeInput" class="input" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
+            <button id="loadOrderBtn" class="btn">Laden</button>
+          </div>
+
+          <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
+            <h5 style="margin:0 0 8px 0">Bestelldetails</h5>
+            <div id="orderItems" class="kv"></div>
+            <div style="margin-top:8px">
+              <input id="orderUserName" class="input" placeholder="Name des Kunden" style="margin-top:6px">
+              <input id="orderPhone" class="input" placeholder="Telefonnummer" style="margin-top:6px">
+              <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
+                <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
+              </div>
+            </div>
+          </div>
+
+          <h5 style="margin-top:10px">Alle Bestellungen</h5>
+          <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
+        </div>
+
+        <div id="tabUsers" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px">Nutzer & Bestellungen</h4>
+          <div class="kv mb-3">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
+          
+          <div class="orders-layout">
+            <div class="orders-column">
+              <h5>📞 Nutzer</h5>
+              <div id="usersList" class="card user-orders-list" style="padding:12px">
+                <div class="kv">Lade Nutzer...</div>
+              </div>
+            </div>
+            
+            <div class="orders-column">
+              <h5>📋 Bestellungen des Nutzers</h5>
+              <div id="userOrdersDetails" class="card order-details-container" style="padding:12px">
+                <div class="kv">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -635,7 +581,6 @@ body {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-/* ---------- Firebase Config ---------- */
 const firebaseConfig = { 
   apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
   authDomain: "khusland-b7d13.firebaseapp.com",
@@ -654,7 +599,6 @@ const settingsRef = ref(db, 'settings');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
 
-/* ---------- Globale Variablen ---------- */
 const ADMIN_PASSWORD = 'admin123';
 
 // DOM Elemente
@@ -717,7 +661,7 @@ const elements = {
 };
 
 let products = [];
-let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48', categories: [] };
+let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' };
 let categories = [];
 let cart = [];
 let allOrders = [];
@@ -725,7 +669,6 @@ let saveOrderBtnEl = null;
 let orderCodeDisplayEl = null;
 let selectedUserId = null;
 
-/* ---------- Modal Funktionen ---------- */
 function showModal() { 
   elements.settingsModal.classList.remove('hidden-el'); 
   setTimeout(() => elements.settingsModal.classList.add('active'), 10); 
@@ -738,7 +681,6 @@ function hideModal() {
   setTimeout(() => elements.settingsModal.classList.add('hidden-el'), 240); 
 }
 
-/* ---------- Event Listener ---------- */
 elements.openSettingsBtn.addEventListener('click', () => {
   elements.settingsPassword.value = '';
   elements.settingsLoginError.style.display = 'none';
@@ -756,7 +698,6 @@ document.addEventListener('keydown', (e) => {
   if(e.key === 'Escape' && !elements.settingsModal.classList.contains('hidden-el')) hideModal(); 
 });
 
-// Tab Navigation
 elements.tabBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     elements.tabBtns.forEach(b => b.classList.remove('active'));
@@ -764,15 +705,10 @@ elements.tabBtns.forEach(btn => {
     const tabName = btn.dataset.tab;
     elements.tabPanels.forEach(p => p.classList.add('hidden-el'));
     document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
-    
-    // Wenn Nutzer-Tab ausgewählt wird, Nutzerliste aktualisieren
-    if (tabName === 'users') {
-      renderUsersList();
-    }
+    if (tabName === 'users') renderUsersList();
   });
 });
 
-/* ---------- Einstellungen ---------- */
 onValue(settingsRef, snapshot => {
   const val = snapshot.val();
   if(val){
@@ -795,10 +731,7 @@ elements.saveGeneralBtn.addEventListener('click', async () => {
   try{ 
     await update(settingsRef, { title, headerImage: image }); 
     alert('✅ Allgemeine Einstellungen gespeichert'); 
-  } catch(e){ 
-    console.error(e); 
-    alert('❌ Fehler beim Speichern'); 
-  }
+  } catch(e){ console.error(e); alert('❌ Fehler beim Speichern'); }
 });
 
 elements.resetGeneralBtn.addEventListener('click', async () => {
@@ -806,13 +739,9 @@ elements.resetGeneralBtn.addEventListener('click', async () => {
   try{ 
     await update(settingsRef, { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' }); 
     alert('✅ Zurückgesetzt'); 
-  } catch(e){ 
-    console.error(e); 
-    alert('❌ Fehler'); 
-  }
+  } catch(e){ console.error(e); alert('❌ Fehler'); }
 });
 
-/* ---------- Kategorien ---------- */
 onValue(categoriesRef, snapshot => {
   categories = [];
   snapshot.forEach(child => {
@@ -843,13 +772,9 @@ function renderCategoriesList(){
     elements.categoriesList.appendChild(div);
     
     div.querySelector('[data-del]').onclick = async () => {
-      if(!confirm('Kategorie wirklich löschen? Produkte bleiben unverändert.')) return;
-      try{ 
-        await remove(ref(db, 'categories/' + category.key)); 
-      } catch(e){ 
-        console.error(e); 
-        alert('❌ Fehler beim Löschen'); 
-      }
+      if(!confirm('Kategorie wirklich löschen?')) return;
+      try{ await remove(ref(db, 'categories/' + category.key)); } 
+      catch(e){ console.error(e); alert('❌ Fehler beim Löschen'); }
     };
     
     div.querySelector('[data-edit]').onclick = () => {
@@ -868,25 +793,12 @@ elements.addCategoryBtn.addEventListener('click', async () => {
   try{
     await push(categoriesRef, { name });
     elements.newCategoryInput.value = '';
-  } catch(e){ 
-    console.error(e); 
-    alert('❌ Fehler beim Anlegen'); 
-  }
+  } catch(e){ console.error(e); alert('❌ Fehler beim Anlegen'); }
 });
 
 function populateCategorySelects(){
-  elements.prodCategorySelect.innerHTML = '';
-  elements.shopCategoryFilter.innerHTML = '';
-  
-  const noneOption = document.createElement('option');
-  noneOption.value = '';
-  noneOption.textContent = '— Keine Kategorie —';
-  elements.prodCategorySelect.appendChild(noneOption);
-  
-  const allOption = document.createElement('option');
-  allOption.value = '';
-  allOption.textContent = '— Alle Kategorien —';
-  elements.shopCategoryFilter.appendChild(allOption);
+  elements.prodCategorySelect.innerHTML = '<option value="">— Keine Kategorie —</option>';
+  elements.shopCategoryFilter.innerHTML = '<option value="">— Alle Kategorien —</option>';
 
   categories.forEach(category => {
     const option1 = document.createElement('option');
@@ -901,7 +813,6 @@ function populateCategorySelects(){
   });
 }
 
-/* ---------- Produkte ---------- */
 onValue(productsRef, snapshot => {
   products = [];
   snapshot.forEach(child => {
@@ -928,7 +839,6 @@ function renderProductsGrid(){
   elements.productsGrid.innerHTML = '';
   const visibleProducts = products.filter(p => !filter || (p.category || '') === filter);
   
-  // Produktanzahl anzeigen
   elements.productsCount.textContent = `${visibleProducts.length} Produkt${visibleProducts.length !== 1 ? 'e' : ''} angezeigt`;
   
   if(visibleProducts.length === 0){ 
@@ -938,18 +848,15 @@ function renderProductsGrid(){
   
   visibleProducts.forEach(product => {
     const card = document.createElement('div');
-    card.className = 'card fade-in product-card';
+    card.className = 'card fade-in';
     
     const img = document.createElement('img');
     img.src = product.image || 'https://via.placeholder.com/300x120';
     img.className = 'product-image';
     img.alt = product.name || 'Produktbild';
     
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'product-content';
-    
     const title = document.createElement('div');
-    title.className = 'product-name mobile-optimized-text';
+    title.className = 'mobile-optimized-text';
     title.style.fontWeight = '700';
     title.style.fontSize = '1rem';
     title.style.marginTop = '8px';
@@ -957,22 +864,19 @@ function renderProductsGrid(){
     title.textContent = product.name || '';
     
     const desc = document.createElement('div');
-    desc.className = 'product-description small-muted mobile-optimized-text';
+    desc.className = 'small-muted mobile-optimized-text';
     desc.textContent = product.description || '';
     
-    contentDiv.appendChild(title);
-    contentDiv.appendChild(desc);
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(desc);
 
-    // Ressourcen Tabelle
     if(product.resources){
       const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
       if(pairs.length > 0){
-        const tableContainer = document.createElement('div');
-        tableContainer.className = 'product-resources';
-        tableContainer.style.marginTop = '8px';
-        
         const table = document.createElement('table');
-        table.className = 'table resource-table';
+        table.className = 'table';
+        table.style.marginTop = '8px';
         table.innerHTML = `
           <thead>
             <tr>
@@ -992,59 +896,404 @@ function renderProductsGrid(){
                 </tr>`;
             }).join('')}
           </tbody>`;
-        tableContainer.appendChild(table);
-        contentDiv.appendChild(tableContainer);
+        card.appendChild(table);
       }
     }
 
-    // Kategorie anzeigen
     if(product.category) {
       const categoryDiv = document.createElement('div');
-      categoryDiv.className = 'product-category kv mobile-optimized-text';
+      categoryDiv.className = 'kv mobile-optimized-text';
       categoryDiv.style.marginTop = '8px';
       categoryDiv.textContent = 'Kategorie: ' + product.category;
-      contentDiv.appendChild(categoryDiv);
+      card.appendChild(categoryDiv);
     }
 
-    // In den Warenkorb Button
     const addButton = document.createElement('button');
     addButton.className = 'btn';
     addButton.style.background = '#10b981';
-    addButton.style.marginTop = '12px';
+    addButton.style.marginTop = '8px';
     addButton.textContent = '✅ In den Warenkorb';
     addButton.onclick = () => { 
       addToCartByProductKey(product.key); 
       alert(`✅ "${product.name}" zum Warenkorb hinzugefügt`); 
     };
-    contentDiv.appendChild(addButton);
+    card.appendChild(addButton);
 
-    card.appendChild(img);
-    card.appendChild(contentDiv);
     elements.productsGrid.appendChild(card);
   });
 }
 
-// Der Rest des JavaScript-Codes bleibt gleich wie vorher...
-// [Hier würde der restliche JavaScript-Code folgen, der identisch mit dem vorherigen ist]
+function renderProductsTable(){
+  elements.productsTableBody.innerHTML = '';
+  products.forEach(product => {
+    const resourcesText = product.resources ? 
+      product.resources.split(';').map(resource => {
+        const [name, value] = resource.split(':');
+        return `${name}: ${value}`;
+      }).join(', ') : '';
+    
+    const row = document.createElement('tr');
+    row.className = 'fade-in';
+    row.innerHTML = `
+      <td style="padding:8px">
+        <img src="${product.image || 'https://via.placeholder.com/80'}" 
+             class="product-image-admin" 
+             alt="${escapeHtml(product.name || '')}">
+      </td>
+      <td style="padding:8px">${escapeHtml(product.name || '')}</td>
+      <td style="padding:8px">${escapeHtml(product.category || '')}</td>
+      <td style="padding:8px">${escapeHtml(resourcesText)}</td>
+      <td style="padding:8px">
+        <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
+        <button class="btn small-btn" data-del="${product.key}" style="background:#ef4444">🗑️ Löschen</button>
+      </td>`;
+    elements.productsTableBody.appendChild(row);
+    
+    row.querySelector('[data-edit]').onclick = () => openProductForm(product);
+    row.querySelector('[data-del]').onclick = () => { 
+      if(confirm('Produkt wirklich löschen?')) {
+        remove(ref(db, 'products/' + product.key))
+          .catch(() => alert('❌ Fehler beim Löschen'));
+      }
+    };
+  });
+}
 
-// Initialisierung
+elements.btnNewProduct.addEventListener('click', () => openProductForm());
+
+function openProductForm(product = null){
+  elements.productFormCard.classList.remove('hidden-el');
+  elements.resourceTable.innerHTML = '';
+  
+  if(product){
+    elements.prodId.value = product.key || '';
+    elements.prodName.value = product.name || '';
+    elements.prodImg.value = product.image || '';
+    elements.prodPreview.src = product.image || 'https://via.placeholder.com/150x100';
+    elements.prodDesc.value = product.description || '';
+    elements.prodCategorySelect.value = product.category || '';
+    elements.colorNameInput.value = product.colorName || '#22c55e';
+    elements.colorQuantityInput.value = product.colorQuantity || '#3b82f6';
+    
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
+      pairs.forEach(resource => {
+        const [name, value, color] = resource.split(':');
+        addResourceRow(name, value, color || '#facc15');
+      });
+    }
+  } else {
+    elements.prodId.value = '';
+    elements.productForm.reset();
+    elements.prodPreview.src = 'https://via.placeholder.com/150x100';
+    elements.colorNameInput.value = '#22c55e';
+    elements.colorQuantityInput.value = '#3b82f6';
+  }
+}
+
+function addResourceRow(name = '', value = '', color = '#facc15'){
+  const row = document.createElement('tr');
+  row.className = 'fade-in';
+  row.innerHTML = `
+    <td><input class="input" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
+    <td style="text-align:right"><input type="number" min="0" class="input" value="${escapeHtml(value)}" placeholder="0" /></td>
+    <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
+    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:#ef4444">❌ Löschen</button></td>`;
+  
+  const deleteButton = row.querySelector('button');
+  deleteButton.onclick = () => row.remove();
+  elements.resourceTable.appendChild(row);
+}
+
+elements.addResourceBtn.addEventListener('click', () => addResourceRow());
+elements.prodImg.addEventListener('input', () => {
+  elements.prodPreview.src = elements.prodImg.value || 'https://via.placeholder.com/150x100';
+});
+elements.cancelProductBtn.addEventListener('click', () => {
+  elements.productFormCard.classList.add('hidden-el');
+  elements.productForm.reset();
+  elements.prodId.value = '';
+});
+
+elements.productForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const rows = Array.from(elements.resourceTable.querySelectorAll('tr'));
+  const resources = rows.map(row => {
+    const name = row.children[0].querySelector('input').value.trim();
+    const quantity = row.children[1].querySelector('input').value.trim();
+    const color = row.children[2].querySelector('input').value;
+    return name && quantity ? `${name}:${quantity}:${color}` : '';
+  }).filter(Boolean).join(';');
+
+  const payload = {
+    name: (elements.prodName.value || '').trim(),
+    image: (elements.prodImg.value || '').trim(),
+    description: (elements.prodDesc.value || '').trim(),
+    category: (elements.prodCategorySelect.value || '').trim(),
+    resources: resources,
+    colorName: elements.colorNameInput.value || '#22c55e',
+    colorQuantity: elements.colorQuantityInput.value || '#3b82f6',
+    updatedAt: Date.now()
+  };
+
+  try{
+    if(elements.prodId.value){
+      await update(ref(db, 'products/' + elements.prodId.value), payload);
+      alert('✅ Produkt aktualisiert');
+    } else {
+      await push(productsRef, payload);
+      alert('✅ Produkt angelegt');
+    }
+    elements.productFormCard.classList.add('hidden-el');
+    elements.productForm.reset();
+    elements.prodId.value = '';
+  } catch(error){ console.error(error); alert('❌ Fehler beim Speichern des Produkts'); }
+});
+
+elements.btnReloadProducts.addEventListener('click', () => {
+  get(productsRef)
+    .then(() => alert('✅ Produkte neu geladen'))
+    .catch(() => alert('❌ Laden fehlgeschlagen'));
+});
+
+elements.settingsUnlockBtn.addEventListener('click', () => {
+  const password = (elements.settingsPassword.value || '').trim();
+  if(password === ADMIN_PASSWORD){
+    elements.settingsLoginError.style.display = 'none';
+    elements.settingsLoginArea.style.display = 'none';
+    elements.settingsEditor.classList.remove('hidden-el');
+    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
+    elements.tabBtns[0].classList.add('active');
+    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
+    document.getElementById('tabProducts').classList.remove('hidden-el');
+  } else {
+    elements.settingsLoginError.style.display = '';
+  }
+});
+
+function resourcesToMap(resourcesString){
+  const map = {};
+  if(!resourcesString) return map;
+  const pairs = resourcesString.split(';').map(x => x.trim()).filter(Boolean);
+  pairs.forEach(resource => {
+    const [name, value] = resource.split(':');
+    if(name && value) map[name] = (map[name] || 0) + Number(value);
+  });
+  return map;
+}
+
+function addToCartByProductKey(productKey){
+  const product = products.find(p => p.key === productKey);
+  if(!product) return;
+  const resourceMap = resourcesToMap(product.resources);
+  const existingIndex = cart.findIndex(item => item.key === productKey);
+  if(existingIndex === -1){
+    cart.push({ key: productKey, name: product.name, resources: {...resourceMap}, quantity: 1 });
+  } else {
+    cart[existingIndex].quantity += 1;
+    for(const resource in resourceMap) {
+      cart[existingIndex].resources[resource] = (cart[existingIndex].resources[resource] || 0) + resourceMap[resource];
+    }
+  }
+  renderCartView();
+}
+
+function renderCartView(){
+  elements.cartTableBody.innerHTML = '';
+  const totalResources = {};
+  cart.forEach(entry => {
+    const tr = document.createElement('tr');
+    const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
+    tr.innerHTML = `<td>${escapeHtml(entry.name)}</td><td>${escapeHtml(resText)}</td><td style="text-align:right">${entry.quantity}</td>`;
+    elements.cartTableBody.appendChild(tr);
+    for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
+  });
+  const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
+  cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
+  ensureOrderUiInCart();
+  if(saveOrderBtnEl) saveOrderBtnEl.disabled = (cart.length === 0);
+}
+
+elements.btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
+elements.btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); renderCartView(); });
+
+function generate4DigitCode(){ return Math.floor(1000 + Math.random() * 9000).toString(); }
+
+function ensureOrderUiInCart(){
+  if(saveOrderBtnEl) return;
+  const wrapper = document.createElement('div');
+  wrapper.style.marginTop = '12px';
+  saveOrderBtnEl = document.createElement('button');
+  saveOrderBtnEl.className = 'btn';
+  saveOrderBtnEl.style.background = '#10b981';
+  saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
+  saveOrderBtnEl.onclick = saveCartAsOrder;
+  wrapper.appendChild(saveOrderBtnEl);
+  orderCodeDisplayEl = document.createElement('div');
+  orderCodeDisplayEl.style.marginTop = '8px';
+  orderCodeDisplayEl.style.fontWeight = '700';
+  orderCodeDisplayEl.style.fontSize = '1.05rem';
+  orderCodeDisplayEl.className = 'success';
+  orderCodeDisplayEl.textContent = '';
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'btn small-btn';
+  copyBtn.style.marginLeft = '8px';
+  copyBtn.textContent = '📋 Kopieren';
+  copyBtn.onclick = ()=> {
+    const txt = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ','').trim();
+    if(!txt) return alert('Kein Bestellcode vorhanden');
+    navigator.clipboard?.writeText(txt).then(()=> alert('Code kopiert')).catch(()=> alert('Kopieren nicht möglich'));
+  };
+  const codeWrap = document.createElement('div');
+  codeWrap.style.display = 'flex';
+  codeWrap.style.alignItems = 'center';
+  codeWrap.style.gap = '8px';
+  codeWrap.appendChild(orderCodeDisplayEl);
+  codeWrap.appendChild(copyBtn);
+  wrapper.appendChild(codeWrap);
+  cartView.appendChild(wrapper);
+}
+
+async function saveCartAsOrder(){
+  if(cart.length === 0) return alert('❌ Warenkorb ist leer');
+  const code = generate4DigitCode();
+  const orderData = { code: code, createdAt: Date.now(), items: cart, status: 'offen', userName: '', phone: '' };
+  try {
+    await push(ordersRef, orderData);
+    if(!orderCodeDisplayEl) ensureOrderUiInCart();
+    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
+    cart = [];
+    renderCartView();
+  } catch (e) { console.error(e); alert('❌ Fehler beim Speichern der Bestellung'); }
+}
+
+onValue(ordersRef, snapshot => {
+  allOrders = [];
+  snapshot.forEach(child => { const o = child.val(); o.key = child.key; allOrders.push(o); });
+  renderOrdersList();
+});
+
+function renderOrdersList() {
+  elements.ordersList.innerHTML = '';
+  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv">Keine Bestellungen vorhanden.</div>'; return; }
+  allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  allOrders.forEach(o=>{
+    const div = document.createElement('div');
+    div.className = 'category-item fade-in';
+    const name = o.userName || '— unbekannt —';
+    const phone = o.phone || '';
+    const total = o.items?.length || 0;
+    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    div.innerHTML = `
+      <div>
+        <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
+        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
+        ${o.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
+        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444">🗑️ Löschen</button>
+      </div>`;
+    elements.ordersList.appendChild(div);
+    div.querySelector('[data-del]').onclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key)); };
+    div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
+  });
+}
+
+elements.loadOrderBtn.addEventListener('click', ()=> {
+  const code = (orderCodeInput.value||'').trim();
+  if(!code) return alert('❌ Code eingeben.');
+  loadOrderByCode(code);
+});
+
+function loadOrderByCode(code){
+  const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
+  if(!order) return alert('❌ Keine Bestellung mit diesem Code gefunden.');
+  orderDetails.style.display = '';
+  orderItems.innerHTML = '';
+  (order.items || []).forEach(i=>{
+    const div = document.createElement('div');
+    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div style="margin-bottom:6px"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv">${escapeHtml(resText)}</div>`;
+    orderItems.appendChild(div);
+  });
+  orderUserName.value = order.userName || '';
+  orderPhone.value = order.phone || '';
+  saveOrderUserBtn.onclick = async ()=> {
+    try { await update(ref(db,'orders/'+order.key), { userName: (orderUserName.value||'').trim(), phone: (orderPhone.value||'').trim() }); alert('✅ Kundendaten gespeichert.'); }
+    catch(e){ console.error(e); alert('❌ Fehler beim Speichern.'); }
+  };
+  markOrderResetBtn.onclick = async ()=> {
+    if(!confirm('Bestellung als bearbeitet markieren?')) return;
+    try { await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' }); alert('✅ Bestellung markiert.'); }
+    catch(e){ console.error(e); alert('❌ Fehler.'); }
+  };
+}
+
+function renderUsersList() {
+  const usersMap = new Map();
+  allOrders.forEach(order => {
+    if (order.phone && order.userName) {
+      const userKey = `${order.phone}-${order.userName}`;
+      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  const users = Array.from(usersMap.values());
+  elements.usersList.innerHTML = '';
+  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
+  users.forEach(user => {
+    const userItem = document.createElement('div');
+    userItem.className = 'user-order-item fade-in';
+    if (selectedUserId === user.phone) userItem.classList.add('active');
+    userItem.innerHTML = `<div style="font-weight:700">${escapeHtml(user.userName)}</div><div class="kv">📞 ${escapeHtml(user.phone)}</div><div class="kv">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
+    userItem.onclick = () => {
+      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      userItem.classList.add('active');
+      selectedUserId = user.phone;
+      renderUserOrders(user);
+    };
+    elements.usersList.appendChild(userItem);
+  });
+}
+
+function renderUserOrders(user) {
+  elements.userOrdersDetails.innerHTML = '';
+  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  sortedOrders.forEach(order => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'card fade-in';
+    orderCard.style.marginBottom = '12px';
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    const status = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>';
+    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div>${status}</div></div>`;
+    if (order.items && order.items.length > 0) {
+      const itemsList = document.createElement('div');
+      itemsList.style.marginTop = '8px';
+      order.items.forEach(item => {
+        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
+        const itemDiv = document.createElement('div');
+        itemDiv.style.marginBottom = '6px';
+        itemDiv.style.padding = '6px';
+        itemDiv.style.background = 'rgba(255,255,255,0.02)';
+        itemDiv.style.borderRadius = '4px';
+        itemDiv.innerHTML = `<div><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv">${escapeHtml(resourceText)}</div>`;
+        itemsList.appendChild(itemDiv);
+      });
+      orderCard.appendChild(itemsList);
+    }
+    elements.userOrdersDetails.appendChild(orderCard);
+  });
+}
+
 ensureOrderUiInCart();
 renderCartView();
 applySettings();
 
-// Enter-Taste für Admin Login
-elements.settingsPassword.addEventListener('keypress', (e) => {
-  if(e.key === 'Enter') {
-    elements.settingsUnlockBtn.click();
-  }
-});
-
-// Enter-Taste für Kategorie hinzufügen
-elements.newCategoryInput.addEventListener('keypress', (e) => {
-  if(e.key === 'Enter') {
-    elements.addCategoryBtn.click();
-  }
-});
+elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
+elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
 
 console.log('🚀 Bullet Farm v2 Shop initialisiert');
 </script>

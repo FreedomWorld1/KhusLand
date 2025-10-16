@@ -331,9 +331,30 @@ body {
   }
 }
 
+/* FIX: Text-Optimierungen für bessere Darstellung auf allen Geräten */
 .mobile-optimized-text {
   word-break: break-word;
   overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+}
+
+.product-card-text {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.table-text-fix {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 200px;
+}
+
+.resource-text-fix {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal !important;
 }
 </style>
 </head>
@@ -344,7 +365,7 @@ body {
         <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
         <div>
           <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">Bullet Farm v2</h1>
-          <div class="small-muted">Shop</div>
+          <div class="small-muted mobile-optimized-text">Shop</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -359,12 +380,12 @@ body {
         <div class="shop-header flex items-center justify-between mb-4">
           <div class="flex items-center gap-3" style="flex-wrap: wrap;">
             <h2 style="font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
-            <div class="kv" style="white-space: nowrap;">Filter:</div>
+            <div class="kv mobile-optimized-text" style="white-space: nowrap;">Filter:</div>
             <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
               <option value="">— Alle Kategorien —</option>
             </select>
           </div>
-          <div class="kv" id="productsCount" style="white-space: nowrap;">Produkte anzeigen</div>
+          <div class="kv mobile-optimized-text" id="productsCount" style="white-space: nowrap;">Produkte anzeigen</div>
         </div>
         <div id="productsGrid" class="grid"></div>
       </section>
@@ -372,21 +393,21 @@ body {
       <section id="cartView" class="card mb-6 hidden-el fade-in">
         <div class="flex items-center justify-between mb-4">
           <h2 style="font-weight:700;color:#22c55e" class="mobile-optimized-text">🛍️ Warenkorb</h2>
-          <div class="kv">Ressourcen & Anzahl</div>
+          <div class="kv mobile-optimized-text">Ressourcen & Anzahl</div>
         </div>
         <div class="table-container">
           <table class="table" id="cartTable">
             <thead>
               <tr>
-                <th>Produkt</th>
-                <th>Ressourcen</th>
-                <th style="text-align:right">Anzahl</th>
+                <th class="mobile-optimized-text">Produkt</th>
+                <th class="mobile-optimized-text">Ressourcen</th>
+                <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
-        <div style="margin-top:12px;font-weight:700" id="cartSummary">Gesamt Ressourcen: keine</div>
+        <div style="margin-top:12px;font-weight:700" id="cartSummary" class="mobile-optimized-text">Gesamt Ressourcen: keine</div>
       </section>
     </main>
   </div>
@@ -395,8 +416,8 @@ body {
     <div class="modal-box">
       <div class="flex items-start justify-between mb-4">
         <div>
-          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
-          <div class="kv">Passwortgeschützt — Admin Funktionen</div>
+          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0" class="mobile-optimized-text">⚙️ Einstellungen</h3>
+          <div class="kv mobile-optimized-text">Passwortgeschützt — Admin Funktionen</div>
         </div>
         <div class="flex gap-2 items-center">
           <button id="settingsCloseBtn" class="btn">✖</button>
@@ -404,12 +425,12 @@ body {
       </div>
 
       <div id="settingsLoginArea">
-        <label class="kv mb-2">Admin Passwort</label>
+        <label class="kv mb-2 mobile-optimized-text">Admin Passwort</label>
         <div class="flex items-center gap-2 mb-3">
           <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
           <button id="settingsUnlockBtn" class="btn">Einloggen</button>
         </div>
-        <div id="settingsLoginError" class="error kv" style="display:none">❌ Falsches Passwort</div>
+        <div id="settingsLoginError" class="error kv mobile-optimized-text" style="display:none">❌ Falsches Passwort</div>
       </div>
 
       <div id="settingsEditor" class="hidden-el">
@@ -425,7 +446,7 @@ body {
 
         <div id="tabProducts" class="tab-panel">
           <div class="flex items-center justify-between mb-3 admin-actions">
-            <h4 style="font-weight:700">Produkte verwalten</h4>
+            <h4 style="font-weight:700" class="mobile-optimized-text">Produkte verwalten</h4>
             <div class="flex gap-2">
               <button id="btnNewProduct" class="btn">Neues Produkt</button>
               <button id="btnReloadProducts" class="btn">Neu laden</button>
@@ -437,39 +458,39 @@ body {
               <input id="prodId" type="hidden"/>
               <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
                 <div>
-                  <input id="prodName" class="input" placeholder="Name" required />
-                  <input id="prodImg" class="input" placeholder="Bild-URL" style="margin-top:8px"/>
+                  <input id="prodName" class="input mobile-optimized-text" placeholder="Name" required />
+                  <input id="prodImg" class="input mobile-optimized-text" placeholder="Bild-URL" style="margin-top:8px"/>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:8px">
-                  <label class="kv">Vorschau</label>
+                  <label class="kv mobile-optimized-text">Vorschau</label>
                   <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
                 </div>
               </div>
 
-              <textarea id="prodDesc" class="input" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
+              <textarea id="prodDesc" class="input mobile-optimized-text" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
 
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
-                <select id="prodCategorySelect" class="input">
+                <select id="prodCategorySelect" class="input mobile-optimized-text">
                   <option value="">— Keine Kategorie —</option>
                 </select>
                 <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                  <label class="kv">Name-Farbe</label>
+                  <label class="kv mobile-optimized-text">Name-Farbe</label>
                   <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
-                  <label class="kv">Anzahl-Farbe</label>
+                  <label class="kv mobile-optimized-text">Anzahl-Farbe</label>
                   <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
                 </div>
               </div>
 
               <div id="resourceTableContainer" style="margin-bottom:8px">
-                <h5 style="margin:0 0 8px 0;font-weight:700">Ressourcen (Name:Anzahl:Farbe)</h5>
+                <h5 style="margin:0 0 8px 0;font-weight:700" class="mobile-optimized-text">Ressourcen (Name:Anzahl:Farbe)</h5>
                 <div class="table-container">
                   <table class="table" id="resourceTable">
                     <thead>
                       <tr>
-                        <th>Ressource</th>
-                        <th style="width:120px;text-align:right">Anzahl</th>
-                        <th style="width:120px">Farbe</th>
-                        <th style="width:60px">Aktion</th>
+                        <th class="mobile-optimized-text">Ressource</th>
+                        <th style="width:120px;text-align:right" class="mobile-optimized-text">Anzahl</th>
+                        <th style="width:120px" class="mobile-optimized-text">Farbe</th>
+                        <th style="width:60px" class="mobile-optimized-text">Aktion</th>
                       </tr>
                     </thead>
                     <tbody style="background:transparent"></tbody>
@@ -492,11 +513,11 @@ body {
               <table class="table" style="width:100%">
                 <thead>
                   <tr>
-                    <th>Vorschau</th>
-                    <th>Name</th>
-                    <th>Kategorie</th>
-                    <th>Ressourcen</th>
-                    <th style="width:140px">Aktionen</th>
+                    <th class="mobile-optimized-text">Vorschau</th>
+                    <th class="mobile-optimized-text">Name</th>
+                    <th class="mobile-optimized-text">Kategorie</th>
+                    <th class="mobile-optimized-text">Ressourcen</th>
+                    <th style="width:140px" class="mobile-optimized-text">Aktionen</th>
                   </tr>
                 </thead>
                 <tbody id="productsTableBody"></tbody>
@@ -507,9 +528,9 @@ body {
 
         <div id="tabCategories" class="tab-panel hidden-el">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-            <h4 style="font-weight:700">Kategorien verwalten</h4>
+            <h4 style="font-weight:700" class="mobile-optimized-text">Kategorien verwalten</h4>
             <div style="display:flex;gap:8px;width:100%;max-width:360px;">
-              <input id="newCategoryInput" class="input" placeholder="Neue Kategorie" />
+              <input id="newCategoryInput" class="input mobile-optimized-text" placeholder="Neue Kategorie" />
               <button id="addCategoryBtn" class="btn">Hinzufügen</button>
             </div>
           </div>
@@ -517,11 +538,11 @@ body {
         </div>
 
         <div id="tabGeneral" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px">Allgemein</h4>
-          <label class="kv mb-2">Titel</label>
-          <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
-          <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
-          <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Allgemein</h4>
+          <label class="kv mb-2 mobile-optimized-text">Titel</label>
+          <input id="settingTitle" class="input mobile-optimized-text" placeholder="Seiten-Titel"/>
+          <label class="kv mb-2 mobile-optimized-text" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
+          <input id="settingHeaderImage" class="input mobile-optimized-text" placeholder="Bild-URL"/>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
             <button id="saveGeneralBtn" class="btn" style="background:#10b981">✅ Speichern</button>
             <button id="resetGeneralBtn" class="btn" style="background:#ef4444">❌ Zurücksetzen</button>
@@ -529,19 +550,19 @@ body {
         </div>
 
         <div id="tabOrders" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px">Bestellungen verwalten</h4>
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Bestellungen verwalten</h4>
 
           <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
-            <input id="orderCodeInput" class="input" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
+            <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
             <button id="loadOrderBtn" class="btn">Laden</button>
           </div>
 
           <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
-            <h5 style="margin:0 0 8px 0">Bestelldetails</h5>
-            <div id="orderItems" class="kv"></div>
+            <h5 style="margin:0 0 8px 0" class="mobile-optimized-text">Bestelldetails</h5>
+            <div id="orderItems" class="kv mobile-optimized-text"></div>
             <div style="margin-top:8px">
-              <input id="orderUserName" class="input" placeholder="Name des Kunden" style="margin-top:6px">
-              <input id="orderPhone" class="input" placeholder="Telefonnummer" style="margin-top:6px">
+              <input id="orderUserName" class="input mobile-optimized-text" placeholder="Name des Kunden" style="margin-top:6px">
+              <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
               <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
                 <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
                 <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
@@ -549,26 +570,26 @@ body {
             </div>
           </div>
 
-          <h5 style="margin-top:10px">Alle Bestellungen</h5>
+          <h5 style="margin-top:10px" class="mobile-optimized-text">Alle Bestellungen</h5>
           <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
         </div>
 
         <div id="tabUsers" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px">Nutzer & Bestellungen</h4>
-          <div class="kv mb-3">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Nutzer & Bestellungen</h4>
+          <div class="kv mb-3 mobile-optimized-text">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
           
           <div class="orders-layout">
             <div class="orders-column">
-              <h5>📞 Nutzer</h5>
+              <h5 class="mobile-optimized-text">📞 Nutzer</h5>
               <div id="usersList" class="card user-orders-list" style="padding:12px">
-                <div class="kv">Lade Nutzer...</div>
+                <div class="kv mobile-optimized-text">Lade Nutzer...</div>
               </div>
             </div>
             
             <div class="orders-column">
-              <h5>📋 Bestellungen des Nutzers</h5>
+              <h5 class="mobile-optimized-text">📋 Bestellungen des Nutzers</h5>
               <div id="userOrdersDetails" class="card order-details-container" style="padding:12px">
-                <div class="kv">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
+                <div class="kv mobile-optimized-text">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
               </div>
             </div>
           </div>
@@ -756,7 +777,7 @@ onValue(categoriesRef, snapshot => {
 function renderCategoriesList(){
   elements.categoriesList.innerHTML = '';
   if(categories.length === 0){ 
-    elements.categoriesList.innerHTML = '<div class="kv">Keine Kategorien vorhanden.</div>'; 
+    elements.categoriesList.innerHTML = '<div class="kv mobile-optimized-text">Keine Kategorien vorhanden.</div>'; 
     return; 
   }
   
@@ -804,11 +825,13 @@ function populateCategorySelects(){
     const option1 = document.createElement('option');
     option1.value = category.name;
     option1.textContent = category.name;
+    option1.className = 'mobile-optimized-text';
     elements.prodCategorySelect.appendChild(option1);
     
     const option2 = document.createElement('option');
     option2.value = category.name;
     option2.textContent = category.name;
+    option2.className = 'mobile-optimized-text';
     elements.shopCategoryFilter.appendChild(option2);
   });
 }
@@ -842,7 +865,7 @@ function renderProductsGrid(){
   elements.productsCount.textContent = `${visibleProducts.length} Produkt${visibleProducts.length !== 1 ? 'e' : ''} angezeigt`;
   
   if(visibleProducts.length === 0){ 
-    elements.productsGrid.innerHTML = '<div class="kv p-4">Keine Produkte verfügbar.</div>'; 
+    elements.productsGrid.innerHTML = '<div class="kv p-4 mobile-optimized-text">Keine Produkte verfügbar.</div>'; 
     return; 
   }
   
@@ -856,7 +879,7 @@ function renderProductsGrid(){
     img.alt = product.name || 'Produktbild';
     
     const title = document.createElement('div');
-    title.className = 'mobile-optimized-text';
+    title.className = 'mobile-optimized-text product-card-text';
     title.style.fontWeight = '700';
     title.style.fontSize = '1rem';
     title.style.marginTop = '8px';
@@ -864,7 +887,7 @@ function renderProductsGrid(){
     title.textContent = product.name || '';
     
     const desc = document.createElement('div');
-    desc.className = 'small-muted mobile-optimized-text';
+    desc.className = 'small-muted mobile-optimized-text product-card-text';
     desc.textContent = product.description || '';
     
     card.appendChild(img);
@@ -880,8 +903,8 @@ function renderProductsGrid(){
         table.innerHTML = `
           <thead>
             <tr>
-              <th>Ressource</th>
-              <th style="text-align:right">Anzahl</th>
+              <th class="mobile-optimized-text">Ressource</th>
+              <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
             </tr>
           </thead>
           <tbody>
@@ -889,8 +912,8 @@ function renderProductsGrid(){
               const [name, value, color] = resource.split(':');
               return `
                 <tr>
-                  <td style="color:${color || '#facc15'}" class="mobile-optimized-text">${escapeHtml(name)}</td>
-                  <td style="text-align:right;color:${product.colorQuantity || '#3b82f6'}">
+                  <td style="color:${color || '#facc15'}" class="mobile-optimized-text resource-text-fix">${escapeHtml(name)}</td>
+                  <td style="text-align:right;color:${product.colorQuantity || '#3b82f6'}" class="mobile-optimized-text">
                     ${Number(value).toLocaleString('de-DE')}
                   </td>
                 </tr>`;
@@ -902,7 +925,7 @@ function renderProductsGrid(){
 
     if(product.category) {
       const categoryDiv = document.createElement('div');
-      categoryDiv.className = 'kv mobile-optimized-text';
+      categoryDiv.className = 'kv mobile-optimized-text product-card-text';
       categoryDiv.style.marginTop = '8px';
       categoryDiv.textContent = 'Kategorie: ' + product.category;
       card.appendChild(categoryDiv);
@@ -940,9 +963,9 @@ function renderProductsTable(){
              class="product-image-admin" 
              alt="${escapeHtml(product.name || '')}">
       </td>
-      <td style="padding:8px">${escapeHtml(product.name || '')}</td>
-      <td style="padding:8px">${escapeHtml(product.category || '')}</td>
-      <td style="padding:8px">${escapeHtml(resourcesText)}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.name || '')}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.category || '')}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(resourcesText)}</td>
       <td style="padding:8px">
         <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
         <button class="btn small-btn" data-del="${product.key}" style="background:#ef4444">🗑️ Löschen</button>
@@ -995,8 +1018,8 @@ function addResourceRow(name = '', value = '', color = '#facc15'){
   const row = document.createElement('tr');
   row.className = 'fade-in';
   row.innerHTML = `
-    <td><input class="input" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
-    <td style="text-align:right"><input type="number" min="0" class="input" value="${escapeHtml(value)}" placeholder="0" /></td>
+    <td><input class="input mobile-optimized-text" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
+    <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="0" /></td>
     <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
     <td style="text-align:center"><button class="btn small-btn" type="button" style="background:#ef4444">❌ Löschen</button></td>`;
   
@@ -1105,7 +1128,7 @@ function renderCartView(){
   cart.forEach(entry => {
     const tr = document.createElement('tr');
     const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
-    tr.innerHTML = `<td>${escapeHtml(entry.name)}</td><td>${escapeHtml(resText)}</td><td style="text-align:right">${entry.quantity}</td>`;
+    tr.innerHTML = `<td class="mobile-optimized-text">${escapeHtml(entry.name)}</td><td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td><td style="text-align:right" class="mobile-optimized-text">${entry.quantity}</td>`;
     elements.cartTableBody.appendChild(tr);
     for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
   });
@@ -1134,7 +1157,7 @@ function ensureOrderUiInCart(){
   orderCodeDisplayEl.style.marginTop = '8px';
   orderCodeDisplayEl.style.fontWeight = '700';
   orderCodeDisplayEl.style.fontSize = '1.05rem';
-  orderCodeDisplayEl.className = 'success';
+  orderCodeDisplayEl.className = 'success mobile-optimized-text';
   orderCodeDisplayEl.textContent = '';
   const copyBtn = document.createElement('button');
   copyBtn.className = 'btn small-btn';
@@ -1176,7 +1199,7 @@ onValue(ordersRef, snapshot => {
 
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
-  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv">Keine Bestellungen vorhanden.</div>'; return; }
+  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; return; }
   allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
   allOrders.forEach(o=>{
     const div = document.createElement('div');
@@ -1186,7 +1209,7 @@ function renderOrdersList() {
     const total = o.items?.length || 0;
     const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
     div.innerHTML = `
-      <div>
+      <div class="mobile-optimized-text">
         <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
         ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
         ${o.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
@@ -1215,7 +1238,7 @@ function loadOrderByCode(code){
   (order.items || []).forEach(i=>{
     const div = document.createElement('div');
     const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML = `<div style="margin-bottom:6px"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv">${escapeHtml(resText)}</div>`;
+    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
     orderItems.appendChild(div);
   });
   orderUserName.value = order.userName || '';
@@ -1242,12 +1265,12 @@ function renderUsersList() {
   });
   const users = Array.from(usersMap.values());
   elements.usersList.innerHTML = '';
-  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
+  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
   users.forEach(user => {
     const userItem = document.createElement('div');
     userItem.className = 'user-order-item fade-in';
     if (selectedUserId === user.phone) userItem.classList.add('active');
-    userItem.innerHTML = `<div style="font-weight:700">${escapeHtml(user.userName)}</div><div class="kv">📞 ${escapeHtml(user.phone)}</div><div class="kv">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
+    userItem.innerHTML = `<div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div><div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div><div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
     userItem.onclick = () => {
       document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
       userItem.classList.add('active');
@@ -1260,7 +1283,7 @@ function renderUsersList() {
 
 function renderUserOrders(user) {
   elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
+  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
   const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   sortedOrders.forEach(order => {
     const orderCard = document.createElement('div');
@@ -1268,7 +1291,7 @@ function renderUserOrders(user) {
     orderCard.style.marginBottom = '12px';
     const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
     const status = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>';
-    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div>${status}</div></div>`;
+    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div class="mobile-optimized-text"><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div class="mobile-optimized-text">${status}</div></div>`;
     if (order.items && order.items.length > 0) {
       const itemsList = document.createElement('div');
       itemsList.style.marginTop = '8px';
@@ -1279,7 +1302,7 @@ function renderUserOrders(user) {
         itemDiv.style.padding = '6px';
         itemDiv.style.background = 'rgba(255,255,255,0.02)';
         itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `<div><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv">${escapeHtml(resourceText)}</div>`;
+        itemDiv.innerHTML = `<div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
         itemsList.appendChild(itemDiv);
       });
       orderCard.appendChild(itemsList);

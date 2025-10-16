@@ -236,6 +236,55 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Neue Styles für die zweispaltige Bestellungsansicht */
+.orders-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.orders-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.orders-column h5 {
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.user-order-item {
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-order-item:hover {
+  background: rgba(255,255,255,0.04);
+  transform: translateY(-2px);
+}
+
+.user-order-item.active {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+.user-orders-list {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.order-details-container {
+  max-height: 50vh;
+  overflow-y: auto;
+}
 </style>
 </head>
 <body>
@@ -318,6 +367,7 @@ body {
             <button class="tab-btn" data-tab="categories">Kategorien</button>
             <button class="tab-btn" data-tab="general">Allgemein</button>
             <button class="tab-btn" data-tab="orders">Bestellungen</button>
+            <button class="tab-btn" data-tab="users">Nutzer</button>
           </div>
         </div>
 
@@ -377,8 +427,8 @@ body {
               </div>
 
               <div style="display:flex;gap:8px">
-                <button type="submit" class="btn success" style="background:#10b981">Speichern</button>
-                <button id="cancelProductBtn" type="button" class="btn error" style="background:#ef4444">Abbrechen</button>
+                <button type="submit" class="btn" style="background:#10b981">✅ Speichern</button>
+                <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">❌ Abbrechen</button>
               </div>
             </form>
           </div>
@@ -417,8 +467,8 @@ body {
           <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
           <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
           <div style="display:flex;gap:8px;margin-top:10px">
-            <button id="saveGeneralBtn" class="btn success" style="background:#10b981">Speichern</button>
-            <button id="resetGeneralBtn" class="btn error" style="background:#ef4444">Zurücksetzen</button>
+            <button id="saveGeneralBtn" class="btn" style="background:#10b981">✅ Speichern</button>
+            <button id="resetGeneralBtn" class="btn" style="background:#ef4444">❌ Zurücksetzen</button>
           </div>
         </div>
 
@@ -437,8 +487,8 @@ body {
               <input id="orderUserName" class="input" placeholder="Name des Kunden" style="margin-top:6px">
               <input id="orderPhone" class="input" placeholder="Telefonnummer" style="margin-top:6px">
               <div style="display:flex;gap:8px;margin-top:8px">
-                <button id="saveOrderUserBtn" class="btn success" style="background:#10b981">Daten speichern</button>
-                <button id="markOrderResetBtn" class="btn error" style="background:#ef4444">Als bearbeitet / zurücksetzen</button>
+                <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
+                <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
               </div>
             </div>
           </div>
@@ -446,6 +496,28 @@ body {
           <h5 style="margin-top:10px">Alle Bestellungen</h5>
           <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
         </div>
+
+        <div id="tabUsers" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px">Nutzer & Bestellungen</h4>
+          <div class="kv mb-3">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
+          
+          <div class="orders-layout">
+            <div class="orders-column">
+              <h5>📞 Nutzer</h5>
+              <div id="usersList" class="card user-orders-list" style="padding:12px">
+                <div class="kv">Lade Nutzer...</div>
+              </div>
+            </div>
+            
+            <div class="orders-column">
+              <h5>📋 Bestellungen des Nutzers</h5>
+              <div id="userOrdersDetails" class="card order-details-container" style="padding:12px">
+                <div class="kv">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -530,7 +602,9 @@ const elements = {
   saveOrderUserBtn: document.getElementById('saveOrderUserBtn'),
   markOrderResetBtn: document.getElementById('markOrderResetBtn'),
   ordersList: document.getElementById('ordersList'),
-  productsCount: document.getElementById('productsCount')
+  productsCount: document.getElementById('productsCount'),
+  usersList: document.getElementById('usersList'),
+  userOrdersDetails: document.getElementById('userOrdersDetails')
 };
 
 let products = [];
@@ -540,6 +614,7 @@ let cart = [];
 let allOrders = [];
 let saveOrderBtnEl = null;
 let orderCodeDisplayEl = null;
+let selectedUserId = null;
 
 /* ---------- Modal Funktionen ---------- */
 function showModal() { 
@@ -580,6 +655,11 @@ elements.tabBtns.forEach(btn => {
     const tabName = btn.dataset.tab;
     elements.tabPanels.forEach(p => p.classList.add('hidden-el'));
     document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
+    
+    // Wenn Nutzer-Tab ausgewählt wird, Nutzerliste aktualisieren
+    if (tabName === 'users') {
+      renderUsersList();
+    }
   });
 });
 
@@ -649,7 +729,7 @@ function renderCategoriesList(){
       <div>${escapeHtml(category.name)}</div>
       <div style="display:flex;gap:6px">
         <button class="btn small-btn" data-edit="${category.key}">✏️</button>
-        <button class="btn small-btn error" data-del="${category.key}" style="background:#ef4444">🗑️</button>
+        <button class="btn small-btn" data-del="${category.key}" style="background:#ef4444">🗑️ Löschen</button>
       </div>`;
     elements.categoriesList.appendChild(div);
     
@@ -812,9 +892,10 @@ function renderProductsGrid(){
 
     // In den Warenkorb Button
     const addButton = document.createElement('button');
-    addButton.className = 'btn success';
+    addButton.className = 'btn';
+    addButton.style.background = '#10b981';
     addButton.style.marginTop = '8px';
-    addButton.textContent = 'In den Warenkorb';
+    addButton.textContent = '✅ In den Warenkorb';
     addButton.onclick = () => { 
       addToCartByProductKey(product.key); 
       alert(`✅ "${product.name}" zum Warenkorb hinzugefügt`); 
@@ -846,8 +927,8 @@ function renderProductsTable(){
       <td style="padding:8px">${escapeHtml(product.category || '')}</td>
       <td style="padding:8px">${escapeHtml(resourcesText)}</td>
       <td style="padding:8px">
-        <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">Bearbeiten</button>
-        <button class="btn small-btn error" data-del="${product.key}" style="background:#ef4444">Löschen</button>
+        <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
+        <button class="btn small-btn" data-del="${product.key}" style="background:#ef4444">🗑️ Löschen</button>
       </td>`;
     elements.productsTableBody.appendChild(row);
     
@@ -901,7 +982,7 @@ function addResourceRow(name = '', value = '', color = '#facc15'){
     <td><input class="input" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
     <td style="text-align:right"><input type="number" min="0" class="input" value="${escapeHtml(value)}" placeholder="0" /></td>
     <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
-    <td style="text-align:center"><button class="btn small-btn error" type="button">❌</button></td>`;
+    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:#ef4444">❌ Löschen</button></td>`;
   
   const deleteButton = row.querySelector('button');
   deleteButton.onclick = () => row.remove();
@@ -1075,8 +1156,9 @@ function ensureOrderUiInCart(){
   wrapper.style.marginTop = '12px';
   
   saveOrderBtnEl = document.createElement('button');
-  saveOrderBtnEl.className = 'btn success';
-  saveOrderBtnEl.textContent = 'Bestellung speichern (Code erzeugen)';
+  saveOrderBtnEl.className = 'btn';
+  saveOrderBtnEl.style.background = '#10b981';
+  saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
   saveOrderBtnEl.onclick = saveCartAsOrder;
   wrapper.appendChild(saveOrderBtnEl);
   
@@ -1090,7 +1172,7 @@ function ensureOrderUiInCart(){
   const copyButton = document.createElement('button');
   copyButton.className = 'btn small-btn';
   copyButton.style.marginLeft = '8px';
-  copyButton.textContent = 'Kopieren';
+  copyButton.textContent = '📋 Kopieren';
   copyButton.onclick = () => {
     const code = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ', '').trim();
     if(!code) return alert('❌ Kein Bestellcode vorhanden');
@@ -1172,8 +1254,8 @@ function renderOrdersList() {
         ${order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
       </div>
       <div style="display:flex;gap:6px">
-        <button class="btn small-btn" data-view="${escapeHtml(order.code)}">👁️</button>
-        <button class="btn small-btn error" data-del="${escapeHtml(order.key)}" style="background:#ef4444">🗑️</button>
+        <button class="btn small-btn" data-view="${escapeHtml(order.code)}">👁️ Ansehen</button>
+        <button class="btn small-btn" data-del="${escapeHtml(order.key)}" style="background:#ef4444">🗑️ Löschen</button>
       </div>`;
     elements.ordersList.appendChild(div);
     
@@ -1240,6 +1322,122 @@ function loadOrderByCode(code){
       alert('❌ Fehler');
     }
   };
+}
+
+/* ---------- Nutzer und Bestellungen ---------- */
+function renderUsersList() {
+  // Gruppiere Bestellungen nach Telefonnummer
+  const usersMap = new Map();
+  
+  allOrders.forEach(order => {
+    if (order.phone && order.userName) {
+      const userKey = `${order.phone}-${order.userName}`;
+      if (!usersMap.has(userKey)) {
+        usersMap.set(userKey, {
+          phone: order.phone,
+          userName: order.userName,
+          orders: []
+        });
+      }
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  
+  const users = Array.from(usersMap.values());
+  
+  elements.usersList.innerHTML = '';
+  
+  if (users.length === 0) {
+    elements.usersList.innerHTML = '<div class="kv">Keine Nutzer mit Telefonnummern gefunden.</div>';
+    return;
+  }
+  
+  users.forEach(user => {
+    const userItem = document.createElement('div');
+    userItem.className = 'user-order-item fade-in';
+    if (selectedUserId === user.phone) {
+      userItem.classList.add('active');
+    }
+    
+    userItem.innerHTML = `
+      <div style="font-weight:700">${escapeHtml(user.userName)}</div>
+      <div class="kv">📞 ${escapeHtml(user.phone)}</div>
+      <div class="kv">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>
+    `;
+    
+    userItem.onclick = () => {
+      // Entferne active Klasse von allen Items
+      document.querySelectorAll('.user-order-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      // Setze active Klasse auf geklicktes Item
+      userItem.classList.add('active');
+      selectedUserId = user.phone;
+      renderUserOrders(user);
+    };
+    
+    elements.usersList.appendChild(userItem);
+  });
+}
+
+function renderUserOrders(user) {
+  elements.userOrdersDetails.innerHTML = '';
+  
+  if (!user || !user.orders.length) {
+    elements.userOrdersDetails.innerHTML = '<div class="kv">Keine Bestellungen für diesen Nutzer gefunden.</div>';
+    return;
+  }
+  
+  // Sortiere Bestellungen nach Datum (neueste zuerst)
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  
+  sortedOrders.forEach(order => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'card fade-in';
+    orderCard.style.marginBottom = '12px';
+    
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    const status = order.status === 'bearbeitet' ? 
+      '<span class="success">✓ Bearbeitet</span>' : 
+      '<span class="warning">● Offen</span>';
+    
+    orderCard.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+        <div>
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong><br>
+          <div class="kv">${escapeHtml(date)}</div>
+        </div>
+        <div>${status}</div>
+      </div>
+    `;
+    
+    // Bestellte Artikel anzeigen
+    if (order.items && order.items.length > 0) {
+      const itemsList = document.createElement('div');
+      itemsList.style.marginTop = '8px';
+      
+      order.items.forEach(item => {
+        const resourceText = Object.entries(item.resources || {})
+          .map(([name, value]) => `${name}: ${value}`)
+          .join(', ');
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.style.marginBottom = '6px';
+        itemDiv.style.padding = '6px';
+        itemDiv.style.background = 'rgba(255,255,255,0.02)';
+        itemDiv.style.borderRadius = '4px';
+        itemDiv.innerHTML = `
+          <div><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
+          <div class="kv">${escapeHtml(resourceText)}</div>
+        `;
+        itemsList.appendChild(itemDiv);
+      });
+      
+      orderCard.appendChild(itemsList);
+    }
+    
+    elements.userOrdersDetails.appendChild(orderCard);
+  });
 }
 
 /* ---------- Initialisierung ---------- */

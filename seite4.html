@@ -83,12 +83,11 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
           <tbody></tbody>
         </table>
         <div style="margin-top:12px;font-weight:700" id="cartSummary">Gesamt Ressourcen: keine</div>
-        <!-- Hier wird der Bestell-Button + Code-Anzeige eingefügt -->
       </section>
     </main>
   </div>
 
-  <!-- SETTINGS MODAL (Produkte / Kategorien / Allgemein / Bestellungen) -->
+  <!-- SETTINGS MODAL (Produkte / Kategorien / Allgemein) -->
   <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
     <div class="modal-box">
       <div class="flex items-start justify-between mb-4">
@@ -118,7 +117,6 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
             <button class="tab-btn active" data-tab="products">Produkte</button>
             <button class="tab-btn" data-tab="categories">Kategorien</button>
             <button class="tab-btn" data-tab="general">Allgemein</button>
-            <button class="tab-btn" data-tab="orders">Bestellungen</button>
           </div>
         </div>
 
@@ -218,32 +216,6 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,H
           </div>
         </div>
 
-        <!-- ORDERS TAB -->
-        <div id="tabOrders" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px">Bestellungen verwalten</h4>
-
-          <div class="flex items-center gap-2 mb-3">
-            <input id="orderCodeInput" class="input" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px">
-            <button id="loadOrderBtn" class="btn">Laden</button>
-          </div>
-
-          <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
-            <h5 style="margin:0 0 8px 0">Bestelldetails</h5>
-            <div id="orderItems" class="kv"></div>
-            <div style="margin-top:8px">
-              <input id="orderUserName" class="input" placeholder="Name des Kunden" style="margin-top:6px">
-              <input id="orderPhone" class="input" placeholder="Telefonnummer" style="margin-top:6px">
-              <div style="display:flex;gap:8px;margin-top:8px">
-                <button id="saveOrderUserBtn" class="btn" style="background:#10b981">Daten speichern</button>
-                <button id="markOrderResetBtn" class="btn" style="background:#ef4444">Als bearbeitet / zurücksetzen</button>
-              </div>
-            </div>
-          </div>
-
-          <h5 style="margin-top:10px">Alle Bestellungen</h5>
-          <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
-        </div>
-
       </div> <!-- end editor -->
     </div>
   </div>
@@ -260,8 +232,6 @@ const db = getDatabase(app);
 const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 const categoriesRef = ref(db, 'categories');
-// NEU: Orders Pfad
-const ordersRef = ref(db, 'orders');
 
 /* ---------- Globals & elements ---------- */
 const ADMIN_PASSWORD = 'admin123';
@@ -317,21 +287,10 @@ const newCategoryInput = document.getElementById('newCategoryInput');
 const addCategoryBtn = document.getElementById('addCategoryBtn');
 const categoriesList = document.getElementById('categoriesList');
 
-const orderCodeInput = document.getElementById('orderCodeInput');
-const loadOrderBtn = document.getElementById('loadOrderBtn');
-const orderDetails = document.getElementById('orderDetails');
-const orderItems = document.getElementById('orderItems');
-const orderUserName = document.getElementById('orderUserName');
-const orderPhone = document.getElementById('orderPhone');
-const saveOrderUserBtn = document.getElementById('saveOrderUserBtn');
-const markOrderResetBtn = document.getElementById('markOrderResetBtn');
-const ordersList = document.getElementById('ordersList');
-
 let products = [];
 let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48', categories: [] };
 let categories = [];
 let cart = []; // array of {key, name, resourcesMap, qty}
-let allOrders = []; // geladen aus Firebase
 
 /* ---------- Modal helpers ---------- */
 function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
@@ -665,210 +624,11 @@ function renderCartView(){
   });
   const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
   cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
-
-  // ensure UI (Button + Code display) vorhanden
-  ensureOrderUiInCart();
-  // update button state
-  if(saveOrderBtnEl) saveOrderBtnEl.disabled = (cart.length === 0);
-  // if no cart items, show hint; otherwise show code area as-is (keeps last code visible)
 }
 
 /* Shop/Cart toggle */
 btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
 btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); renderCartView(); });
-
-/* ---------- BESTELLUNG (4-stelliger Code) ---------- */
-
-// Hilfsfunktion: 4-stelliger numerischer Code
-function generate4DigitCode(){
-  return Math.floor(1000 + Math.random() * 9000).toString();
-}
-
-// Element-Refs für Bestell-UI (wird erzeugt)
-let saveOrderBtnEl = null;
-let orderCodeDisplayEl = null;
-
-// Erstelle UI im Warenkorb (Button + Anzeige)
-function ensureOrderUiInCart(){
-  if(saveOrderBtnEl) return; // schon erzeugt
-
-  // Container unter dem cartSummary
-  const parent = cartView;
-
-  // Wrapper Div
-  const wrapper = document.createElement('div');
-  wrapper.style.marginTop = '12px';
-
-  // Save Button
-  saveOrderBtnEl = document.createElement('button');
-  saveOrderBtnEl.className = 'btn';
-  saveOrderBtnEl.textContent = 'Bestellung speichern (Code erzeugen)';
-  saveOrderBtnEl.onclick = saveCartAsOrder;
-  wrapper.appendChild(saveOrderBtnEl);
-
-  // Anzeige des Codes
-  orderCodeDisplayEl = document.createElement('div');
-  orderCodeDisplayEl.style.marginTop = '8px';
-  orderCodeDisplayEl.style.fontWeight = '700';
-  orderCodeDisplayEl.style.fontSize = '1.05rem';
-  orderCodeDisplayEl.className = 'kv';
-  orderCodeDisplayEl.textContent = ''; // leer bis gespeichert
-  wrapper.appendChild(orderCodeDisplayEl);
-
-  // Copy-Button
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'btn small-btn';
-  copyBtn.style.marginLeft = '8px';
-  copyBtn.textContent = 'Kopieren';
-  copyBtn.onclick = ()=> {
-    const txt = orderCodeDisplayEl.textContent.replace('Bestellcode: ','').trim();
-    if(!txt) return alert('Kein Bestellcode vorhanden');
-    navigator.clipboard?.writeText(txt).then(()=> alert('Code kopiert')).catch(()=> alert('Kopieren nicht möglich'));
-  };
-
-  // kleines flex für code + copy
-  const codeWrap = document.createElement('div');
-  codeWrap.style.display = 'flex';
-  codeWrap.style.alignItems = 'center';
-  codeWrap.style.gap = '8px';
-  codeWrap.appendChild(orderCodeDisplayEl);
-  codeWrap.appendChild(copyBtn);
-
-  // replace wrapper's last child with codeWrap instead of raw display
-  wrapper.removeChild(orderCodeDisplayEl);
-  wrapper.appendChild(codeWrap);
-
-  parent.appendChild(wrapper);
-}
-
-// Speichere Warenkorb als Bestellung (Firebase) und zeige Code in Warenkorb (keine Popup)
-async function saveCartAsOrder(){
-  if(cart.length === 0) return alert('Warenkorb ist leer.');
-
-  // Generiere 4-stelligen Code
-  const code = generate4DigitCode();
-
-  // Struktur der Bestellung (du kannst hier beliebig Felder ergänzen)
-  const orderData = {
-    code: code,
-    createdAt: Date.now(),
-    items: cart,
-    status: 'offen',
-    userName: '',
-    phone: ''
-  };
-
-  try {
-    const pushed = await push(ordersRef, orderData);
-    // code nur im Warenkorb anzeigen (nicht als Popup)
-    if(!orderCodeDisplayEl) ensureOrderUiInCart();
-    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
-    // Warenkorb leeren
-    cart = [];
-    renderCartView();
-  } catch (e) {
-    console.error(e);
-    alert('Fehler beim Speichern der Bestellung.');
-  }
-}
-
-/* ---------- BESTELLUNGEN ADMIN-LOGIK ---------- */
-
-// Lade alle Bestellungen und render Liste
-onValue(ordersRef, snapshot => {
-  allOrders = [];
-  snapshot.forEach(child => {
-    const o = child.val(); o.key = child.key;
-    allOrders.push(o);
-  });
-  renderOrdersList();
-});
-
-// Rendern der Bestellungenliste im Admin-Tab
-function renderOrdersList() {
-  ordersList.innerHTML = '';
-  if(allOrders.length === 0){
-    ordersList.innerHTML = '<div class="kv">Keine Bestellungen vorhanden.</div>';
-    return;
-  }
-
-  allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
-
-  allOrders.forEach(o=>{
-    const div = document.createElement('div');
-    div.className = 'category-item';
-    const name = o.userName || '— unbekannt —';
-    const phone = o.phone || '';
-    const total = o.items?.length || 0;
-    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
-    div.innerHTML = `
-      <div>
-        <strong>${o.code}</strong> (${date})<br>
-        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
-      </div>
-      <div style="display:flex;gap:6px">
-        <button class="btn small-btn" data-view="${o.code}">👁️</button>
-        <button class="btn small-btn" data-del="${o.key}" style="background:#ef4444">🗑️</button>
-      </div>`;
-    ordersList.appendChild(div);
-
-    div.querySelector('[data-del]').onclick = ()=> {
-      if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key));
-    };
-    div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
-  });
-}
-
-// Suche/Lade Bestellung per Code (Input in Admin-Tab)
-loadOrderBtn.addEventListener('click', ()=> {
-  const code = (orderCodeInput.value||'').trim().toUpperCase();
-  if(!code) return alert('Code eingeben.');
-  loadOrderByCode(code);
-});
-
-function loadOrderByCode(code){
-  const order = allOrders.find(o=> (o.code||'').toString().toUpperCase() === code.toString().toUpperCase());
-  if(!order) return alert('Keine Bestellung mit diesem Code gefunden.');
-
-  orderDetails.style.display = '';
-  orderItems.innerHTML = '';
-  (order.items || []).forEach(i=>{
-    const div = document.createElement('div');
-    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML = `<div style="margin-bottom:6px"><b>${escapeHtml(i.name)}</b> — ${i.qty}x</div><div class="kv">${escapeHtml(resText)}</div>`;
-    orderItems.appendChild(div);
-  });
-
-  orderUserName.value = order.userName || '';
-  orderPhone.value = order.phone || '';
-
-  // Speichern der Kundendaten für diese Bestellung
-  saveOrderUserBtn.onclick = async ()=> {
-    try {
-      await update(ref(db,'orders/'+order.key), {
-        userName: (orderUserName.value||'').trim(),
-        phone: (orderPhone.value||'').trim()
-      });
-      alert('Kundendaten gespeichert.');
-    } catch(e){ console.error(e); alert('Fehler beim Speichern.'); }
-  };
-
-  // Markieren / Reset (z.B. Zustand ändern oder löschen)
-  markOrderResetBtn.onclick = async ()=> {
-    if(!confirm('Bestellung als bearbeitet markieren und Einträge zurücksetzen?')) return;
-    try {
-      await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' });
-      alert('Bestellung markiert.');
-    } catch(e){ console.error(e); alert('Fehler.'); }
-  };
-}
-
-/* ---------- INIT ---------- */
-// ensure UI im Warenkorb vorbereitet
-ensureOrderUiInCart();
-
-// initial render
-renderCartView();
 
 </script>
 </body>

@@ -243,94 +243,6 @@ body {
   overflow-y: auto;
 }
 
-/* Mobile Styles */
-@media (max-width: 768px) {
-  .container {
-    padding: 8px;
-  }
-  
-  .card {
-    padding: 12px;
-  }
-  
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .product-image {
-    height: 120px;
-  }
-  
-  .flex.gap-2 {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  
-  .tab-btn {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    flex: 1;
-    text-align: center;
-  }
-  
-  .table-container {
-    overflow-x: auto;
-  }
-  
-  .table {
-    font-size: 0.8rem;
-    min-width: 500px;
-  }
-  
-  .btn {
-    padding: 0.4rem 0.7rem;
-    font-size: 0.85rem;
-  }
-  
-  .orders-layout {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .shop-header {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start !important;
-  }
-  
-  .shop-filter {
-    width: 100% !important;
-  }
-  
-  .admin-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .admin-actions .btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .grid {
-    gap: 10px;
-  }
-  
-  .product-image {
-    height: 100px;
-  }
-  
-  .container {
-    padding: 6px;
-  }
-  
-  .card {
-    padding: 10px;
-  }
-}
-
 /* FIX: Text-Optimierungen für bessere Darstellung auf allen Geräten */
 .mobile-optimized-text {
   word-break: break-word;
@@ -356,958 +268,2108 @@ body {
   overflow-wrap: break-word;
   white-space: normal !important;
 }
-</style>
+
+/* MOBILE FIXES - Nur für Handys */
+@media (max-width: 768px) {
+  .container {
+    padding: 8px;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  /* FIX: Kleinere Bilder auf Mobilgeräten */
+  .product-image {
+    height: 100px !important;
+    max-height: 100px !important;
+    object-fit: contain !important;
+  }
+  
+  /* FIX: Kleinere Schriftgrößen für bessere Lesbarkeit */
+  .mobile-optimized-text {
+    font-size: 0.9rem !important;
+  }
+  
+  h1.mobile-optimized-text {
+    font-size: 1.2rem !important;
+  }
+  
+  h2.mobile-optimized-text {
+    font-size: 1.1rem !important;
+  }
+  
+  .product-card-text {
+    font-size: 0.85rem !important;
+  }
+  
+  .small-muted {
+    font-size: 0.8rem !important;
+  }
+  
+  .flex.gap-2 {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .tab-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    font-size: 0.8rem;
+    min-width: 500px;
+  }
+  
+  .table th, .table td {
+    padding: 6px 4px;
+    font-size: 0.8rem;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  
+  .orders-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .shop-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start !important;
+  }
+  
+  .shop-filter {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .admin-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .admin-actions .btn {
+    width: 100%;
+  }
+  
+  /* FIX: Bessere Anpassung für Produktkarten auf Mobilgeräten */
+  #productsGrid .card {
+    min-height: auto;
+    padding: 10px;
+  }
+  
+  /* FIX: Modal-Anpassungen für Mobile */
+  .modal-box {
+    padding: 12px;
+    margin: 10px;
+  }
+  
+  /* FIX: Input-Felder auf Mobile */
+  .input, textarea, select {
+    font-size: 16px; /* Verhindert Zoom auf iOS */
+    padding: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    gap: 8px;
+  }
+  
+  .product-image {
+    height: 90px !important;
+    max-height: 90px !important;
+  }
+  
+  .container {
+    padding: 6px;
+  }
+  
+  .card {
+    padding: 8px;
+  }
+  
+  .btn {
+    padding: 0.35rem 0.6rem;
+    font-size0.6rem;
+    font-size: 0.8rem: 0.8rem;
+  }
+  
+;
+  }
+  
+  .mobile-optimized  .mobile-optimized-text {
+-text {
+    font    font-size: 0-size: 0.85.85rem !rem !important;
+  }
+  
+  h1important;
+  }
+  
+ .mobile-optimized-text h1.mobile-optimized-text {
+    font {
+    font-size: 1.1-size: 1.rem !important;
+  }
+  
+  h2.m1rem !important;
+  }
+  
+  h2.mobile-obile-optimized-text {
+optimized-text {
+    font-size: 1    font-size: 1rem !important;
+rem !important;
+  }
+}
+
+/*  }
+}
+
+/* Desktop Desktop Styles - Normal Styles - Normal */
+@media (min-width:  */
+@media (min-width: 769px769px) {
+  .product-image {
+   ) {
+  .product-image {
+    height:  height: 130px;
+    object-fit:130px;
+    object-fit: cover;
+  }
+ cover;
+  }
+  
+  .mobile-optimized-text  
+  .mobile-optimized-text {
+    {
+    font-size font-size: inherit: inherit;
+  }
+}
+;
+  }
+}
+</style</style>
+</>
 </head>
+<bodyhead>
 <body>
-  <div class="container">
-    <header class="card shadow-soft mb-6 flex items-center justify-between fade-in">
-      <div class="flex items-center gap-4">
-        <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
+ >
+  <div class <div class="container="container">
+    <header">
+    <header class=" class="card shadowcard shadow-soft-soft mb-6 mb-6 flex items-center flex items-center justify-between justify-between fade-in">
+ fade-in">
+      <div      <div class=" class="flex items-center gapflex items-center gap-4-4">
+       ">
+        <img <img id="header id="headerLogo" srcLogo" src="https://via="https://via.placeholder.com/48".placeholder.com/48" alt="Logo" alt="Logo" style=" style="width:width:48px;48px;height:48height:48px;px;object-fit:object-fit:cover;bordercover;border-radius:-radius:8px8px">
+       ">
         <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">Bullet Farm v2</h1>
-          <div class="small-muted mobile-optimized-text">Shop</div>
+          <div>
+          <h <h1 id="1 id="pagepageTitleTitle" style" style="font-size:1="font-size:1.4rem;.4rem;font-weightfont-weight:700;color:#22:700;color:#22c55e;c55e;margin:margin:0" class="0" class="mobile-optimizedmobile-optimized-text">Bul-text">Bullet Farm v2</h1>
+         let Farm v2</h <div class="1>
+          <div class="small-muted mobile-optimsmall-muted mobile-optimized-text">Shopized-text">Shop</div>
+       </div>
         </div>
+ </div>
       </div>
       <div class="flex items-center gap-2">
+        <button id="btnShop" class      </div>
+      <div class="flex items-center gap-2">
         <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">Warenkorb</button>
-        <button id="openSettingsBtn" class="btn">⚙️</button>
-      </div>
+="btn">Shop</button>
+        <button        <button id=" id="btnCart"btnCart" class="btn class="btn">W">Warenkorb</button>
+       arenkorb</button>
+        <button id <button id="openSettingsBtn" class="btn="openSettingsBtn" class="btn">⚙">⚙️</button️</button>
+     >
+      </div </div>
+    </header>
     </header>
 
-    <main id="mainContent">
-      <section id="shopView" class="card mb-6 fade-in">
-        <div class="shop-header flex items-center justify-between mb-4">
-          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
-            <h2 style="font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
-            <div class="kv mobile-optimized-text" style="white-space: nowrap;">Filter:</div>
-            <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
-              <option value="">— Alle Kategorien —</option>
+   >
+
+    <main <main id="main id="mainContent">
+     Content">
+      <section <section id="shop id="shopView" classView" class="card="card mb-6 mb-6 fade-in">
+ fade-in">
+               <div class <div class="shop-header="shop-header flex items-center justify flex items-center justify-between mb-4">
+-between mb-4">
+                   <div class <div class="flex="flex items-center gap- items-center gap-3"3" style="flex style="flex-wrap: wrap-wrap: wrap;">
+           ;">
+            <h2 style="font <h2 style="font-weight:700;color:#22c55e;margin:0" class="mobile-weight:700;color:#22c55e;margin:0" class="mobile-optim-optimized-textized-text">🛒">🛒 Produkte Produkte</h</h2>
+           2>
+            <div <div class="kv class="kv mobile- mobile-optimized-textoptimized-text" style="" style="white-spacewhite-space: nowrap: nowrap;">Filter:</div>
+           ;">Filter:</div>
+            <select id="shop <select id="shopCategoryFilterCategoryFilter" class" class="input shop="input shop-filter" style-filter" style="width="width:200px:200px; min-width; min-width: : 150px;">
+              <option value="">150px;">
+              <option value="">— Alle Kategor— Alle Kategorien —</option>
+           ien —</option>
             </select>
+          </div </select>
           </div>
-          <div class="kv mobile-optimized-text" id="productsCount" style="white-space: nowrap;">Produkte anzeigen</div>
-        </div>
-        <div id="productsGrid" class="grid"></div>
+          <>
+          <div class="kv mobile-optimdiv class="kv mobile-optimized-text" idized-text" id="="productsCount"productsCount" style="white style="white-space: nowrap-space: nowrap;">;">Produkte anzeProdukte anzeigen</igen</div>
+       div>
+        </ </div>
+       div>
+        <div id <div id="productsGrid"="productsGrid" class="grid"></ class="grid"></divdiv>
       </section>
 
-      <section id="cartView" class="card mb-6 hidden-el fade-in">
-        <div class="flex items-center justify-between mb-4">
-          <h2 style="font-weight:700;color:#22c55e" class="mobile-optimized-text">🛍️ Warenkorb</h2>
-          <div class="kv mobile-optimized-text">Ressourcen & Anzahl</div>
+>
+      </section>
+
+           <section id="cart <section id="cartView" class="View" class="card mbcard mb-6 hidden-el-6 hidden-el fade-in">
+        fade-in">
+        <div <div class="flex items class="flex items-center justify-between mb-center justify-between mb-4-4">
+          <h">
+          <h22 style="font style="font-weight:-weight:700;700;color:#22color:#22c55ec55e" class" class="mobile-optim="mobile-optimizedized-text">🛍-text">🛍️ Warenk️ Warenkorb</orb</h2>
+         h2>
+          < <div class="div class="kv mobilekv mobile-optimized-text-optimized-text">">RessourRessourcen &cen & Anzahl</div>
+ Anzahl</div>
         </div>
-        <div class="table-container">
-          <table class="table" id="cartTable">
-            <thead>
+               </div>
+        <div class="table <div class="table-container">
+-container">
+          <table class="table" id          <table class="table" id="cartTable">
+="cartTable">
+                       <thead>
               <tr>
-                <th class="mobile-optimized-text">Produkt</th>
-                <th class="mobile-optimized-text">Ressourcen</th>
-                <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+                <th <thead>
+              <tr>
+                <th class class="mobile="mobile-optim-optimized-text">Produkt</thized-text">Produkt</th>
+>
+                <th class="mobile-optimized                <th class="mobile-optimized-text">-text">Ressourcen</th>
+                <Ressourcen</th>
+                <th styleth style="text-align:right" class="mobile-="text-align:right" class="mobile-optimizedoptimized-text">Anzahl-text">Anzahl</th</th>
               </tr>
             </thead>
+              </tr>
+            </thead>
+            <tbody>
             <tbody></tbody>
           </table>
+></tbody>
+          </table>
         </div>
-        <div style="margin-top:12px;font-weight:700" id="cartSummary" class="mobile-optimized-text">Gesamt Ressourcen: keine</div>
+               </div>
+        <div style="margin-top <div style="margin-top:12px;:12px;font-weight:700"font-weight:700" id id="cartSummary" class="cartSummary" class="="mobile-optimmobile-optimizedized-text">Gesamt-text">Gesamt Ressour Ressourcen: keine</cen: keine</divdiv>
+      </section>
+>
       </section>
     </main>
-  </div>
+     </main>
+  </ </div>
 
-  <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
-    <div class="modal-box">
-      <div class="flex items-start justify-between mb-4">
+ div>
+
+  <div id="settings <div id="settingsModal"Modal" class="modal-over class="modal-overlay hidden-el" arialay hidden-el" aria-hidden-hidden="true">
+   ="true">
+    <div <div class="modal-box class="modal-box">
+      <div">
+      <div class=" class="flex items-startflex items-start justify-between mb justify-between mb-4-4">
+       ">
         <div>
-          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0" class="mobile-optimized-text">⚙️ Einstellungen</h3>
-          <div class="kv mobile-optimized-text">Passwortgeschützt — Admin Funktionen</div>
+          <div>
+          <h <h3 style="font3 style="font-size:-size:1.1.1515rem;font-weight:rem;font-weight:700;700;color:#color:#94a94a3b8;3b8;margin:margin:0" class0" class="mobile-="mobile-optimizedoptimized-text">-text">⚙️⚙️ Einstell Einstellungen</ungen</h3h3>
+          <div>
+          <div class=" class="kv mobilekv mobile-optimized-optimized-text">Pass-text">Passwortgeschwortgeschützt —ützt — Admin Funktionen</div>
+        </ Admin Funktionen</div>
         </div>
-        <div class="flex gap-2 items-center">
-          <button id="settingsCloseBtn" class="btn">✖</button>
+div>
+        <div class        <div class="flex="flex gap-2 items gap-2 items-center-center">
+         ">
+          <button <button id="settingsCloseBtn id="settingsCloseBtn" class" class="btn">="btn">✖✖</button</button>
+       >
         </div>
       </div>
 
-      <div id="settingsLoginArea">
-        <label class="kv mb-2 mobile-optimized-text">Admin Passwort</label>
-        <div class="flex items-center gap-2 mb-3">
-          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
-          <button id="settingsUnlockBtn" class="btn">Einloggen</button>
-        </div>
-        <div id="settingsLoginError" class="error kv mobile-optimized-text" style="display:none">❌ Falsches Passwort</div>
+      </div>
       </div>
 
-      <div id="settingsEditor" class="hidden-el">
-        <div class="mb-4">
-          <div class="flex gap-2">
-            <button class="tab-btn active" data-tab="products">Produkte</button>
-            <button class="tab-btn" data-tab="categories">Kategorien</button>
-            <button class="tab-btn" data-tab="general">Allgemein</button>
-            <button class="tab-btn" data-tab="orders">Bestellungen</button>
-            <button class="tab-btn" data-tab="users">Nutzer</button>
-          </div>
+      <div id=" <div id="settingsLoginArea">
+settingsLoginArea">
+               <label class=" <label class="kv mbkv mb-2 mobile--2 mobile-optimized-text">Admin Passoptimized-text">Admin Passwort</label>
+        <div class="flex items-center gap-2 mbwort</label>
+        <div class="flex items-center gap-2 mb-3-3">
+          <input">
+          <input id="settings id="settingsPassword" typePassword" type="password" class="password" class="input="input" placeholder" placeholder="Pass="Passwort (admin123wort (admin123)"/>
+)"/>
+          <          <button idbutton id="settingsUnlock="settingsUnlockBtn"Btn" class="btn"> class="btn">Einloggen</button>
+        </div>
+       Einloggen</button>
+        </div>
+        <div id="settings <div id="settingsLoginError" class="errorLoginError" class="error kv mobile- kv mobile-optimized-text" style="displayoptimized-text" style="display:none">❌ Falsches Passwort</:none">❌ Falsches Passwort</div>
+      </div>
+
+div>
+      </div>
+
+      <div id="settingsEditor      <div id="settingsEditor" class="hidden-el">
+       " class="hidden-el">
+ <div class="mb-4">
+          <div        <div class="mb-4">
+          < class="flex gapdiv class="flex gap-2">
+           -2">
+            <button class=" <button class="tab-btntab-btn active" data active" data-tab="-tab="products">products">Produkte</Produkte</button>
+           button>
+            <button <button class="tab-btn" data class="tab-btn" data-tab-tab="categories="categories">Kategor">Kategorien</buttonien</button>
+           >
+            <button <button class="tab class="tab-btn" data-btn" data-tab-tab="general">="general">AllgemeinAllgemein</button</button>
+            <button class=">
+            <button class="tab-btn" datatab-btn" data-t-tab="ordersab="orders">Bestellungen</button">Bestellungen</button>
+            <button>
+            <button class="tab-btn" class="tab-btn" data-tab data-tab="users">Nutzer</button>
+="users">Nutzer</button>
+          </          </div>
+        </div>
         </div>
 
-        <div id="tabProducts" class="tab-panel">
-          <div class="flex items-center justify-between mb-3 admin-actions">
-            <h4 style="font-weight:700" class="mobile-optimized-text">Produkte verwalten</h4>
-            <div class="flex gap-2">
-              <button id="btnNewProduct" class="btn">Neues Produkt</button>
-              <button id="btnReloadProducts" class="btn">Neu laden</button>
+div>
+
+        <        <div iddiv id="tabProducts"="tabProducts" class=" class="tabtab-panel">
+-panel">
+          <div class          <div class="flex="flex items-center items-center justify-between mb justify-between mb-3 admin-3 admin-actions">
+            <h-actions">
+            <h4 style="font4 style="font-weight:700" class="-weight:700" class="mobile-optimizedmobile-optimized-text">Produkte verwal-text">Produkte verwalten</h4>
+           ten</h4>
+            <div class=" <div class="flexflex gap-2 gap-2">
+              <button id="">
+              <button id="btnNewProduct" class="btnNewProduct" class="btn">Neues Produktbtn">Neues Produkt</button>
+              <</button>
+              <button id="btnRelbutton id="btnReloadProducts" class="oadProducts" class="btn">Neu laden</btn">Neu laden</button>
+            </div>
+button>
             </div>
           </div>
 
-          <div id="productFormCard" class="card mb-3 hidden-el">
+          </div>
+
+          <div id="product          <div id="productFormCard" classFormCard" class="="card mb-3 hiddencard mb-3 hidden-el">
+            <-el">
             <form id="productForm">
-              <input id="prodId" type="hidden"/>
-              <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+form id="productForm">
+              <input id="prod              <input id="prodId" type="hiddenId" type="hidden"/>
+              <div style"/>
+              <div style="display:grid;="display:grid;gridgrid-template-columns-template-columns:1fr 120px;:1fr 120px;gap:10px;gap:10px;marginmargin-bottom:10px-bottom:10px">
                 <div>
-                  <input id="prodName" class="input mobile-optimized-text" placeholder="Name" required />
-                  <input id="prodImg" class="input mobile-optimized-text" placeholder="Bild-URL" style="margin-top:8px"/>
+                 ">
+                <div>
+                  <input id=" <input id="prodName" class="inputprodName" class="input mobile-optimized-text" placeholder="Name" mobile-optimized-text" required />
+                  <input id placeholder="Name" required />
+                  <input id="prodImg"="prodImg" class class="input mobile-optimized-text" placeholder="Bild-URL="input mobile-optimized-text" placeholder="Bild-URL" style="margin-top:8px"/>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:8px">
+                <" style="margin-top:8px"/>
+                </div>
+               div style="display:flex; <div style="display:flex;flex-direction:column;gap:flex-direction:column;gap:8px">
+                  <label class="kv mobile-8px">
                   <label class="kv mobile-optimized-text">Vorschau</label>
-                  <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
+                  <imgoptimized-text">Vorschau</label>
+                  <img id="prodPreview id="prodPreview" src="https://via" src="https://via.placeholder.com/150.placeholder.com/150x100" alt="x100" alt="Vorschau" style="Vorschau" style="width:100%;heightwidth:100%;:80px;objectheight:80px;object-fit:cover;border-radius-fit:cover;border-radius:6px;:6px;border:1px solidborder:1px solid rgba rgba(255,255(255,255,255,0.03,255,0.03)">
+                </div>
+)">
                 </div>
               </div>
 
-              <textarea id="prodDesc" class="input mobile-optimized-text" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
+                           </div>
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
-                <select id="prodCategorySelect" class="input mobile-optimized-text">
-                  <option value="">— Keine Kategorie —</option>
-                </select>
-                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                  <label class="kv mobile-optimized-text">Name-Farbe</label>
-                  <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
-                  <label class="kv mobile-optimized-text">Anzahl-Farbe</label>
-                  <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
+              <textarea id="prod <textarea id="prodDescDesc" class="input" class="input mobile-optimized-text mobile-optimized-text"" rows="2" rows="2" placeholder="Beschreibung ( placeholder="Beschreibung (optionaloptional)" style="margin)" style="margin-bottom-bottom:8px"></textarea:8px"></textarea>
+
+              <div>
+
+              <div style="display:grid; style="display:grid;grid-template-columns:grid-template-columns:1fr 1fr1fr 1fr;gap:10;gap:10px;margin-bottom:8px;margin-bottom:8px">
+                <select idpx">
+                <select id="prodCategorySelect"="prodCategorySelect" class="input mobile- class="input mobile-optimized-text">
+                 optimized-text">
+                  <option value="">— <option value="">— Keine Kategorie —</ Keine Kategorie —</option>
+                </option>
+                </selectselect>
+                <div>
+                <div style="display:flex;gap style="display:flex;gap:8px;:8px;align-itemsalign-items:center;flex:center;flex-wrap:-wrap:wrap;">
+                 wrap;">
+                  <label class="kv <label class="kv mobile- mobile-optimized-text">optimized-text">Name-Farbe</Name-Farbe</label>
+label>
+                  <                  <input idinput id="colorNameInput" type="color"="colorNameInput" type="color" class="color class="color-input"-input" value="#22 value="#22c55c55e">
+                  <label class="e">
+                  <label class="kv mobilekv mobile-optimized-text-optimized-text">Anzahl-Farbe">Anzahl-Farbe</label>
+                  <input id="colorQuantityInput" type="color" class</label>
+                  <input id="colorQuantityInput" type="color="color-input" value" class="color-input" value="#3b82f="#3b82f6">
+                </6">
                 </div>
               </div>
 
-              <div id="resourceTableContainer" style="margin-bottom:8px">
-                <h5 style="margin:0 0 8px 0;font-weight:700" class="mobile-optimized-text">Ressourcen (Name:Anzahl:Farbe)</h5>
-                <div class="table-container">
-                  <table class="table" id="resourceTable">
-                    <thead>
+div>
+              </div>
+
+              <div id="resourceTableContainer              <div id="resource" style="marginTableContainer" style="margin-bottom:8px-bottom:8px">
+                <h5 style">
+                <h5="margin:0 0 style="margin:0 8px  0 8px 0;font-weight:7000;font-weight:700" class="mobile" class="mobile-optimized-text">R-optimized-text">essourcen (Name:Ressourcen (Anzahl:FarName:Anzahl:be)</h5>
+               Farbe)</h5>
+                <div class=" <div class="table-container">
+                  <tabletable-container">
+                  < class="table" idtable class="table"="resourceTable">
+                    id="resourceTable">
+ <thead>
+                      <tr                    <thead>
                       <tr>
-                        <th class="mobile-optimized-text">Ressource</th>
-                        <th style="width:120px;text-align:right" class="mobile-optimized-text">Anzahl</th>
-                        <th style="width:120px" class="mobile-optimized-text">Farbe</th>
-                        <th style="width:60px" class="mobile-optimized-text">Aktion</th>
+                        <th>
+                        <th class=" class="mobile-optimmobile-optimizedized-text-text">Ressource</th>
+">Ressource</th>
+                        <                        <th style="widthth style="width:120:120px;textpx;text-align-align:right" class:right" class="mobile="mobile-optimized-text-optimized-text">An">Anzahl</th>
+zahl</th>
+                        <th style                        <th style="width="width:120px:120px" class="" class="mobile-mobile-optimized-text">optimized-text">FarFarbe</th>
+                       be</th>
+                        <th style="width <th style="width::6060px" classpx" class="mobile-optimized-text">Aktion</="mobile-optimized-text">Aktion</th>
+                      </tr>
+                    </thead>
+th>
                       </tr>
                     </thead>
                     <tbody style="background:transparent"></tbody>
+                    <tbody style="background:transparent"></tbody                  </table>
+                </div>
+                <div style="margin>
                   </table>
                 </div>
-                <div style="margin-top:8px">
-                  <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
-                </div>
+                <div style="-top:8px">
+                 margin-top:8px">
+                  <button id="addResource <button id="addResourceBtn" type="buttonBtn" type="button"" class="btn"> class="btn">RessRessource hinzufüource hinzufügen</gen</button>
+button>
+                </                </div>
+              </div>
               </div>
 
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button type="submit" class="btn" style="background:#10b981">✅ Speichern</button>
-                <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">❌ Abbrechen</button>
+div>
+
+              <              <div style="div style="display:flexdisplay:flex;gap;gap:8px;:8px;flex-wrapflex-wrap:wrap:wrap;">
+               ;">
+                <button type=" <button type="submit"submit" class="btn class="btn"" style="background:# style="background:#10b10b981">✅ Spe981">✅ Speicichern</buttonhern</button>
+                <button id="cancelProductBtn" type=">
+                <button id="cancelProductBtn" type="button"button" class="btn" class="btn" style=" style="background:#background:#ef4444">❌ Abbrechen</button>
+ef4444">❌ Abbrechen</button>
               </div>
-            </form>
+            </              </div>
+           form>
           </div>
 
-          <div class="card" style="max-height:46vh;overflow:auto">
-            <div class="table-container">
-              <table class="table" style="width:100%">
+ </form>
+          </          <div classdiv>
+
+          <div="card" style="max class="card" style="max-height:-height:46vh;overflow:auto">
+           46vh;overflow:auto">
+            <div class=" <div class="table-containertable-container">
+              <table">
+              <table class="table" class="table" style=" style="width:100%width:100%">
                 <thead>
-                  <tr>
-                    <th class="mobile-optimized-text">Vorschau</th>
-                    <th class="mobile-optimized-text">Name</th>
-                    <th class="mobile-optimized-text">Kategorie</th>
-                    <th class="mobile-optimized-text">Ressourcen</th>
-                    <th style="width:140px" class="mobile-optimized-text">Aktionen</th>
-                  </tr>
+                 ">
+                <thead>
+ <tr>
+                    <                  <tr>
+                    <th class="mobile-th class="mobile-optimized-text">optimized-text">VorschVorschau</th>
+au</th>
+                                       <th class <th class="mobile="mobile-optimized-text-optimized-text">Name">Name</th</th>
+                   >
+                    <th class=" <th class="mobile-mobile-optimized-text">optimized-text">Kategorie</thKategorie</th>
+                   >
+                    <th class="mobile <th-optimized-text">Ressourcen</th class="mobile-optimized-text">Ressourcen</th>
+                    <th style="width:140px" class="mobile>
+                    <th style="width:140px" class="mobile-optimized-text-optimized-text">Aktionen</th>
+">Aktionen</th>
+                  </                  </tr>
                 </thead>
-                <tbody id="productsTableBody"></tbody>
+                <tbody id="productsTableBody"></tbodytr>
+                </thead>
+               >
               </table>
             </div>
-          </div>
+          <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
+          </div </div>
+        </div>
         </div>
 
-        <div id="tabCategories" class="tab-panel hidden-el">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-            <h4 style="font-weight:700" class="mobile-optimized-text">Kategorien verwalten</h4>
-            <div style="display:flex;gap:8px;width:100%;max-width:360px;">
-              <input id="newCategoryInput" class="input mobile-optimized-text" placeholder="Neue Kategorie" />
-              <button id="addCategoryBtn" class="btn">Hinzufügen</button>
+        <div id>
+
+        <div id="tab="tabCategories" classCategories" class="tab="tab-panel hidden-el-panel hidden-el">
+         ">
+          <div <div style=" style="display:flexdisplay:flex;justify;justify-content:-content:space-betweenspace-between;align-items;align-items:center;:center;marginmargin-bottom:10-bottom:10px;flex-wrappx;flex-wrap:wrap:wrap;gap:;gap:8px;">
+8px;">
+                       <h4 style=" <h4 style="font-weightfont-weight:700:700" class" class="mobile-="mobile-optimizedoptimized-text">K-text">Kategorienategorien verwalten</ verwalten</h4h4>
+           >
+            <div <div style="display:flex;gap:8 style="display:flex;gap:8px;widthpx;width:100:100%;max-width:%;max-width:360px360px;">
+             ;">
+              <input <input id="newCategory id="newCategoryInput"Input" class="input class="input mobile mobile-optimized-text-optimized-text" placeholder="Neue Kategorie"" placeholder="Neue Kategorie" />
+              < />
+              <button id="addCategorybutton id="addCategoryBtn" class="btn">Btn" class="btn">Hinzufügen</button>
             </div>
           </div>
-          <div id="categoriesList" class="card" style="max-height:36vh;overflow:auto;padding:12px"></div>
+         Hinzufügen</button>
+            </div>
+          </div>
+          <div id="categoriesList" class="card" style <div id="categoriesList" class="card" style="="maxmax-height:-height:36vh;overflow36vh;overflow:auto;padding:12px:auto;padding:12px"></div>
+       "></div>
+        </div </div>
+
+       >
+
+        <div id <div id="tabGeneral="tabGeneral" class" class="tab="tab-panel hidden-el-panel hidden-el">
+         ">
+          <h <h4 style="font4 style="font-weight:-weight:700;700;margin-bottom:margin-bottom:8px"8px" class="mobile- class="mobile-optimized-text">Alloptimized-text">Allgemegemein</h4in</h4>
+         >
+          <label <label class="kv mb-2 class="kv mb-2 mobile- mobile-optimized-text">optimized-text">Titel</labelTitel</label>
+         >
+          <input id=" <input id="settingsettingTitle" class="inputTitle" class="input mobile-optimized mobile-optimized-text"-text" placeholder="Seiten placeholder="Seiten-Titel"/>
+          <-Titel"/>
+          <labellabel class="kv mb class="kv mb--2 mobile-optimized2 mobile-optimized-text" style="-text" style="margin-topmargin-top:8px">:8px">HeaderHeader Bild URL (48 Bild URL (48x48 empfohlen)</label>
+          <input id="x48 empfohlen)</label>
+          <input id="settingHeadersettingHeaderImage"Image" class="input mobile class="input mobile-optim-optimized-textized-text" placeholder="Bild-" placeholder="Bild-URL"/>
+URL"/>
+          <          <div style="displaydiv style="display:flex:flex;gap;gap:8px;:8px;margin-topmargin-top:10:10px;px;flex-wrap:wrapflex-wrap:wrap;">
+           ;">
+            <button id <button id="saveGeneralBtn" class="btn" style="background="saveGeneralBtn" class="btn" style="background:#10b981">:#10b981">✅ Speichern</button>
+            <button✅ Speichern</button>
+            <button id=" id="resetGeneralBtn"resetGeneralBtn" class=" class="btn" style="background:#ef444btn" style="background:#ef4444">4">❌ Zur❌ Zurücksetzen</ücksetzen</button>
+button>
+          </          </div>
+       div>
         </div>
 
-        <div id="tabGeneral" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Allgemein</h4>
-          <label class="kv mb-2 mobile-optimized-text">Titel</label>
-          <input id="settingTitle" class="input mobile-optimized-text" placeholder="Seiten-Titel"/>
-          <label class="kv mb-2 mobile-optimized-text" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
-          <input id="settingHeaderImage" class="input mobile-optimized-text" placeholder="Bild-URL"/>
-          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-            <button id="saveGeneralBtn" class="btn" style="background:#10b981">✅ Speichern</button>
-            <button id="resetGeneralBtn" class="btn" style="background:#ef4444">❌ Zurücksetzen</button>
-          </div>
-        </div>
+ </div>
 
-        <div id="tabOrders" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Bestellungen verwalten</h4>
+        <div id="tabOrders"        <div id="tabOrders" class=" class="tab-panel hiddentab-panel hidden-el-el">
+         ">
+          <h4 <h4 style="font-weight style="font-weight:700:700;margin;margin-bottom:-bottom:8px" class8px" class="mobile="mobile-optim-optimized-textized-text">Bestellungen">Bestellungen verwal verwalten</hten</h4>
 
-          <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
-            <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
-            <button id="loadOrderBtn" class="btn">Laden</button>
+         4>
+
+          <div <div class=" class="flex items-center gapflex items-center gap-2- mb-3"2 mb-3" style="flex-wrap:wrap style="flex-wrap:wrap;">
+            <input;">
+            <input id="orderCodeInput" id="orderCodeInput" class="input mobile class="input mobile-optim-optimized-text" placeholderized-text" placeholder="Bestellcode eing="Bestellcode eingeben (z. Beben (z. B. 4272. 4272)" style)" style="width:200="width:200px;min-width:px;min-width:150150px;">
+           px;">
+            <button id="load <button id="loadOrderBtn" class="btnOrderBtn" class="btn">L">Laden</button>
+aden</button>
           </div>
 
-          <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
-            <h5 style="margin:0 0 8px 0" class="mobile-optimized-text">Bestelldetails</h5>
-            <div id="orderItems" class="kv mobile-optimized-text"></div>
-            <div style="margin-top:8px">
-              <input id="orderUserName" class="input mobile-optimized-text" placeholder="Name des Kunden" style="margin-top:6px">
-              <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
-              <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
-                <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
+          </div>
+
+                   <div id="order <div id="orderDetailsDetails" class="" class="card"card" style="margin-bottom style="margin-bottom::12px;display:n12px;display:none">
+           one">
+            <h <h5 style="margin:5 style="margin:0 0 8px0 0  0" class="8px 0" class="mobile-optimmobile-optimized-textized-text">Best">Bestelelldetails</h5>
+           ldetails</h5>
+            <div id=" <div id="orderItems" class="kvorderItems" class="kv mobile mobile-optimized-optimized-text"></div-text"></div>
+            <div>
+            <div style="margin-top: style="margin-top:8px">
+              <8px">
+              <input id="orderinput id="orderUserName" class="inputUserName" class="input mobile-optim mobile-optimized-text" placeholderized-text" placeholder="Name des Kunden="Name des Kunden" style="margin-top:6px" style="margin-top:6px">
+              <input id">
+              <input id="orderPhone" class="orderPhone" class="="input mobile-optimizedinput mobile-optimized-text" placeholder="-text" placeholder="TelefonTelefonnummer"nummer" style="margin-top style="margin-top:6:6px">
+px">
+              <div style              <div style="="display:flex;display:flex;gapgap:8px;:8px;margin-topmargin-top:8px;:8px;flex-wrap:wrap;">
+flex-wrap:wrap;">
+                <button                <button id="saveOrderUserBtn" class id="saveOrderUserBtn" class="btn" style="btn" style="background:#10b981">✅ Daten speichern</button>
+                <button="background:#10b981">✅ Daten speichern</button>
+                <button id="markOrder id="markOrderResetResetBtn" class="Btn" class="btn" stylebtn" style="background="background:#ef4444:#ef4444">">❌ Als bear❌ Als bearbeitbeitet /et / zurücksetzen</button zurücksetzen</button>
+              </>
               </div>
             </div>
+            </div>
+div>
           </div>
 
-          <h5 style="margin-top:10px" class="mobile-optimized-text">Alle Bestellungen</h5>
-          <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
+          </div>
+
+                   <h5 <h5 style=" style="margin-top:10margin-top:10px"px" class="mobile- class="mobile-optimoptimized-text">ized-text">Alle BestAlle Bestellungenellungen</h</h5>
+5>
+                   <div id="orders <div id="ordersList"List" class="card class="card" style" style="max-height="max-height:40:40vh;overflow:vh;overflow:auto;auto;padding:12padding:12px"></divpx"></div>
+       >
         </div>
 
-        <div id="tabUsers" class="tab-panel hidden-el">
-          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Nutzer & Bestellungen</h4>
-          <div class="kv mb-3 mobile-optimized-text">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
+ </div>
+
+        <div        <div id=" id="tabUserstabUsers" class="" class="tab-paneltab-panel hidden-el">
+          hidden-el">
+          <h <h4 style4 style="font-weight:="font-weight:700;700;margin-bottom:8px"margin-bottom:8px class="mobile-optimized" class="mobile--text">Nutzer &optimized-text">Nutzer & Bestellungen Bestellungen</</h4>
+          <div class="kv mb-h4>
+          <div class="kv mb-3 mobile-optimized-text3 mobile-optimized-text">Klicke">Klicke auf einen Nutzer, um auf einen Nutzer, um alle seine Bestell alle seine Bestellungen zuungen zu sehen</div>
+ sehen</div>
           
-          <div class="orders-layout">
-            <div class="orders-column">
-              <h5 class="mobile-optimized-text">📞 Nutzer</h5>
-              <div id="usersList" class="card user-orders-list" style="padding:12px">
-                <div class="kv mobile-optimized-text">Lade Nutzer...</div>
+          
+          <div class="          <div class="orders-layout">
+orders-layout">
+                       <div class="orders <div class="orders-column">
+-column">
+                           <h5 class="mobile-optimized <h5 class="mobile-optimized-text">📞-text">📞 Nutzer Nutzer</h</h5>
+             5>
+              <div id <div id="usersList"="usersList" class="card user class="card user-orders-orders-list" style="-list" style="padding:padding:12px">
+12px">
+                               <div class=" <div class="kv mobilekv mobile-optimized-text-optimized-text">">Lade NutzerLade Nutzer...</...</div>
               </div>
+              </div>
+div>
+            </div>
             </div>
             
-            <div class="orders-column">
-              <h5 class="mobile-optimized-text">📋 Bestellungen des Nutzers</h5>
-              <div id="userOrdersDetails" class="card order-details-container" style="padding:12px">
-                <div class="kv mobile-optimized-text">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
-              </div>
+            <div            
+            <div class=" class="orders-column">
+             orders-column">
+              < <h5 classh5 class="mobile="mobile-optimized-text-optimized-text">">📋 Bestellungen📋 Bestellungen des Nutzers</ des Nutzers</h5>
+              <divh5>
+              <div id=" id="userOrdersDetails"userOrdersDetails" class="card order class="card order-details-details-container" style-container" style="="padding:padding:12px">
+               12px">
+                <div class="kv mobile-optimized-text">Wähle einen Nutzer <div class="kv mobile-optimized-text">W aus, um seine Bestellungen zu sehenähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
+             </div>
+              </ </div>
+            </divdiv>
             </div>
           </div>
+          </div>
+        </div>
+     >
         </div>
       </div>
     </div>
   </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+ </div>
+    </div>
+import { initializeApp  </ } from "https://wwwdiv>
 
-const firebaseConfig = { 
-  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-  authDomain: "khusland-b7d13.firebaseapp.com",
-  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-  projectId: "khusland-b7d13",
-  storageBucket: "khusland-b7d13.firebasestorage.app",
-  messagingSenderId: "69573193613",
-  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-  measurementId: "G-JSCWR4207G"
+<script type="module">
+import { initializeApp } from "https://www.gstatic.gstatic.com/firebasejs/12.4.0/f.com/firebasejs/12.4.0/firebase-app.js";
+importirebase-app.js";
+import { getDatabase, ref, { getDatabase, ref, push, onValue push, onValue,, remove, update, get remove, update, get } from "https } from "https://www://www.gstatic.com.gstatic.com/fire/firebasejs/12basejs/12..4.0/f4.0/firebaseirebase-database.js";
+
+-database.js";
+
+const fireconst firebasebaseConfig = { 
+  apiKeyConfig = { 
+  apiKey: "AI: "AIzaSyCw4zaSyCw4nadHCnadHCIRcouTJJoIRcouTJJoQ3ElToQ3ElToiVViVVFr5RufFr5Rufo",
+  authDomaino",
+  authDomain:: "khusland "khusland-b7d13.firebase-b7d13.firebaseapp.com",
+ app.com",
+  databaseURL: "https:// databaseURL: "https://khusland-bkhusland-b7d13-default7d13-default-rtdb.firebaseio-rtdb.firebaseio.com",
+  projectId:.com",
+  projectId: "khusland-b "khusland-b7d13",
+ 7d13",
+  storageBucket: storageBucket: "khusland-b7d "khusland-b7d13.firebasestorage.app13.firebasestorage.app",
+  messagingSender",
+  messagingSenderId:Id: "695731 "69573193693613",
+  app13",
+  appId: "1:695Id: "1:69573173193613:web:93613:web:86c4d86c4d839281b1e343839281b1e343cdcd7c47c4",
+ ",
+  measurementId: " measurementId: "G-JG-JSCWRSCWR4207G4207G"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const productsRef = ref(db, 'products');
+const"
+};
+
+const app = app = initializeApp(fire initializeApp(firebasebaseConfig);
+constConfig);
+const db = db = getDatabase(app);
+ getDatabase(app);
+const productsconst productsRef = refRef = ref(db(db,, ' 'products');
+const settingsRef = ref(db, 'settingsproducts');
 const settingsRef = ref(db, 'settings');
+const categoriesRef = ref(db, 'categories');
+');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
 
+constconst ordersRef = ref(db, 'orders');
+
 const ADMIN_PASSWORD = 'admin123';
 
+// DOM Element ADMIN_PASSWORD = 'admin123';
+
 // DOM Elemente
+const elementse
 const elements = {
-  openSettingsBtn: document.getElementById('openSettingsBtn'),
-  settingsModal: document.getElementById('settingsModal'),
-  settingsCloseBtn: document.getElementById('settingsCloseBtn'),
-  settingsPassword: document.getElementById('settingsPassword'),
-  settingsUnlockBtn: document.getElementById('settingsUnlockBtn'),
-  settingsLoginError: document.getElementById('settingsLoginError'),
-  settingsLoginArea: document.getElementById('settingsLoginArea'),
-  settingsEditor: document.getElementById('settingsEditor'),
-  tabBtns: document.querySelectorAll('.tab-btn'),
-  tabPanels: document.querySelectorAll('.tab-panel'),
-  btnNewProduct: document.getElementById('btnNewProduct'),
-  productFormCard: document.getElementById('productFormCard'),
-  productForm: document.getElementById('productForm'),
-  cancelProductBtn: document.getElementById('cancelProductBtn'),
-  prodId: document.getElementById('prodId'),
-  prodName: document.getElementById('prodName'),
-  prodImg: document.getElementById('prodImg'),
-  prodPreview: document.getElementById('prodPreview'),
-  prodDesc: document.getElementById('prodDesc'),
-  prodCategorySelect: document.getElementById('prodCategorySelect'),
+  openSettingsBtn = {
+  openSettingsBtn: document.getElementById('openSettings: document.getElementById('openSettingsBtn'),
+  settingsModalBtn'),
+  settingsModal:: document.getElementById('settingsModal'),
+ document.getElementById('settingsModal'),
+  settingsCloseBtn: document.getElementById('settingsClose  settingsCloseBtn: document.getElementById('settingsCloseBtn'),
+ Btn'),
+  settingsPassword: settingsPassword: document.getElementById('settings document.getElementById('settingsPassword'),
+Password  settingsUnlock'),
+  settingsUnlockBtn: document.getElementById('settingsBtn: document.getElementById('settingsUnlockBtn'),
+UnlockBtn'),
+  settings  settingsLoginError: documentLoginError: document.getElementById.getElementById('settingsLoginError'),
+('settingsLoginError'),
+  settingsLoginArea: document.getElementById  settingsLoginArea: document('settingsLoginArea'),
+.getElementById('settingsLoginArea'),
+  settingsEditor:  settingsEditor: document.getElementById document.getElementById('settingsEditor'),
+('settingsEditor'),
+  tabBtns: document.querySelectorAll('.tab  tabBtns: document.querySelectorAll('.tab-btn'),
+  tab-btn'),
+  tabPanelsPanels: document.querySelector: document.querySelectorAll('.tabAll('.tab-panel-panel'),
+ '),
+  btnNewProduct: btnNewProduct: document.getElementById('btnNewProduct'),
+ document.getElementById('btnNewProduct'),
+   productFormCard: productFormCard: document.getElementById(' document.getElementById('productproductFormCard'),
+ FormCard'),
+  productForm productForm: document: document.getElementById('productForm.getElementById('productForm'),
+ '),
+  cancelProduct cancelProductBtn: document.getElementByIdBtn: document.getElementById('cancel('cancelProductBtnProductBtn'),
+  prod'),
+  prodId: documentId: document.getElementById('.getElementById('prodId'),
+ prodId'),
+  prodName prodName: document.getElementById(': document.getElementById('prodName'),
+ prodName'),
+  prodImg prodImg: document.getElementById: document.getElementById('('prodImg'),
+prodImg'),
+  prodPreview  prodPreview: document.getElementById(': document.getElementById('prodPreviewprodPreview'),
+  prodDesc'),
+  prodDesc: document: document.getElementById('.getElementById('prodprodDesc'),
+  prodCategoryDesc'),
+  prodCategorySelectSelect: document.getElementById('prodCategorySelect: document.getElementById('prodCategorySelect'),
+  colorNameInput: document.getElementById('color'),
   colorNameInput: document.getElementById('colorNameInput'),
-  colorQuantityInput: document.getElementById('colorQuantityInput'),
-  addResourceBtn: document.getElementById('addResourceBtn'),
-  resourceTable: document.querySelector('#resourceTable tbody'),
-  productsTableBody: document.getElementById('productsTableBody'),
-  btnReloadProducts: document.getElementById('btnReloadProducts'),
-  settingTitle: document.getElementById('settingTitle'),
-  settingHeaderImage: document.getElementById('settingHeaderImage'),
-  saveGeneralBtn: document.getElementById('saveGeneralBtn'),
-  resetGeneralBtn: document.getElementById('resetGeneralBtn'),
-  pageTitle: document.getElementById('pageTitle'),
+ NameInput'),
+  colorQuantityInput: document.getElementById colorQuantityInput: document.getElementById('colorQuantityInput('colorQuantityInput'),
+  addResourceBtn:'),
+  addResourceBtn: document.getElementById('addResource document.getElementById('addResourceBtn'),
+  resourceTableBtn'),
+  resourceTable: document.querySelector('#resourceTable: document.querySelector('#resourceTable tbody'),
+  tbody'),
+  productsTableBody: document.getElementById productsTableBody: document.getElementById('productsTableBody'),
+('productsTableBody'),
+  btnReloadProducts  btnReloadProducts: document: document.getElementById('btnRel.getElementById('btnReloadProductsoadProducts'),
+ '),
+  settingTitle: document.getElementById(' settingTitle: document.getElementByIdsettingTitle'),
+  setting('settingTitle'),
+ HeaderImage: document.getElementById settingHeaderImage: document.getElementById('settingHeaderImage'),
+('settingHeaderImage'),
+  saveGeneralBtn:  saveGeneralBtn: document.getElementById('save document.getElementById('saveGeneralBtn'),
+  resetGeneralGeneralBtn'),
+  resetGeneralBtn: documentBtn: document.getElementById('resetGeneralBtn'),
+ .getElementById('resetGeneralBtn'),
+  page pageTitle: document.getElementById('pageTitleTitle: document.getElementById('pageTitle'),
+  header'),
   headerLogo: document.getElementById('headerLogo'),
-  productsGrid: document.getElementById('productsGrid'),
-  shopView: document.getElementById('shopView'),
+  productsGridLogo: document.getElementById('headerLogo'),
+  products: document.getElementById('productsGrid'),
+  shopViewGrid: document.getElementById('productsGrid'),
+  shop: document.getElementById('shopView'),
+  cartView: documentView: document.getElementById('shopView'),
   cartView: document.getElementById('cartView'),
-  btnShop: document.getElementById('btnShop'),
-  btnCart: document.getElementById('btnCart'),
-  cartTableBody: document.querySelector('#cartTable tbody'),
-  cartSummary: document.getElementById('cartSummary'),
-  shopCategoryFilter: document.getElementById('shopCategoryFilter'),
-  newCategoryInput: document.getElementById('newCategoryInput'),
+  btnShop.getElementById('cartView'),
+  btnShop: document: document.getElementById('btnShop.getElementById('btnShop'),
+ '),
+  btnCart: document btnCart: document.getElementById('btnCart.getElementById('btnCart'),
+ '),
+  cartTableBody cartTableBody:: document.querySelector('#cart document.querySelector('#cartTable tTable tbody'),
+body'),
+  cartSummary: document  cartSummary: document.getElementById('cart.getElementById('cartSummary'),
+  shopSummary'),
+  shopCategoryFilter: document.getElementByIdCategoryFilter: document.getElementById('('shopCategoryFilter'),
+shopCategoryFilter'),
+  new  newCategoryInput: documentCategoryInput: document.getElementById('newCategoryInput.getElementById('newCategoryInput'),
+  addCategoryBtn: document'),
   addCategoryBtn: document.getElementById('addCategoryBtn'),
-  categoriesList: document.getElementById('categoriesList'),
-  orderCodeInput: document.getElementById('orderCodeInput'),
-  loadOrderBtn: document.getElementById('loadOrderBtn'),
-  orderDetails: document.getElementById('orderDetails'),
-  orderItems: document.getElementById('orderItems'),
-  orderUserName: document.getElementById('orderUserName'),
-  orderPhone: document.getElementById('orderPhone'),
-  saveOrderUserBtn: document.getElementById('saveOrderUserBtn'),
-  markOrderResetBtn: document.getElementById('markOrderResetBtn'),
-  ordersList: document.getElementById('ordersList'),
-  productsCount: document.getElementById('productsCount'),
+.getElementById('addCategoryBtn'),
+   categories categoriesList: document.getElementById('categoriesList'),
+  orderCodeInput: document.getElementByIdList: document.getElementById('categoriesList'),
+  orderCodeInput: document.getElementById('orderCode('orderCodeInput'),
+Input'),
+  load  loadOrderBtn: documentOrderBtn: document.getElementById('.getElementById('loadOrderloadOrderBtn'),
+Btn'),
+  orderDetails:  orderDetails: document.getElementById document.getElementById('order('orderDetails'),
+  orderDetails'),
+  orderItems:Items: document.getElementById document.getElementById('orderItems'),
+('orderItems'),
+  order  orderUserName:UserName: document.getElementById document.getElementById('orderUserName'),
+('orderUserName'),
+  order  orderPhone: documentPhone: document.getElementById('order.getElementById('orderPhone'),
+Phone'),
+  save  saveOrderUserBtn:OrderUserBtn: document.getElementById('save document.getElementById('saveOrderUserBtn'),
+  markOrderUserBtn'),
+  markOrderResetBtn:OrderResetBtn: document.getElementById('markOrderReset document.getElementById('markOrderResetBtn'),
+  ordersListBtn'),
+  ordersList:: document.getElementById('orders document.getElementById('ordersList'),
+  productsCount:List'),
+  productsCount: document.getElementById('products document.getElementById('productsCount'),
+  usersList:Count'),
   usersList: document.getElementById('usersList'),
-  userOrdersDetails: document.getElementById('userOrdersDetails')
+ document.getElementById('usersList'),
+  userOrdersDetails  userOrdersDetails: document.getElementById('userOrdersDetails')
 };
 
-let products = [];
-let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' };
+let: document.getElementById('userOrdersDetails')
+};
+
+ products = [];
+let settings =let products = [];
+let settings = { title: 'Bul { title: 'Bullet Farm', headerImagelet Farm', headerImage: 'https://via.: 'https://via.placeholder.com/48'placeholder.com/48' };
+let categories = [];
+ };
 let categories = [];
 let cart = [];
 let allOrders = [];
-let saveOrderBtnEl = null;
-let orderCodeDisplayEl = null;
-let selectedUserId = null;
+letlet cart = [];
+let allOrders = [];
+let saveOrderBtnEl = null saveOrderBtnEl = null;
+;
+let orderCodeDisplayEllet orderCodeDisplayEl = null;
+let = null;
+let selectedUserId selectedUserId = null;
 
-function showModal() { 
-  elements.settingsModal.classList.remove('hidden-el'); 
-  setTimeout(() => elements.settingsModal.classList.add('active'), 10); 
-  document.body.style.overflow = 'hidden'; 
+function = null;
+
+function showModal showModal() {() { 
+ 
+  elements.s  elements.settingsModalettingsModal.classList.remove('hidden.classList.remove('hidden-el-el'); 
+  setTimeout'); 
+  setTimeout(() => elements(() => elements.settings.settingsModal.classListModal.classList.add('.add('active'), 10active'), 10); 
+); 
+  document.body  document.body.style..style.overflow = 'overflow = 'hidden'; 
+}
+
+hidden'; 
 }
 
 function hideModal() { 
-  elements.settingsModal.classList.remove('active'); 
-  document.body.style.overflow = ''; 
-  setTimeout(() => elements.settingsModal.classList.add('hidden-el'), 240); 
+ function hideModal() { 
+  elements.settingsModal.classList.remove(' elements.settingsModal.classList.remove('active');active'); 
+  document.body.style. 
+  document.body.style.overflowoverflow = ''; = ''; 
+  
+  setTimeout(() => elements setTimeout(() => elements.settings.settingsModal.classList.addModal.classList.add('('hidden-el'), hidden-el'), 240);240); 
 }
 
-elements.openSettingsBtn.addEventListener('click', () => {
-  elements.settingsPassword.value = '';
-  elements.settingsLoginError.style.display = 'none';
+elements.open 
+}
+
+elements.openSettingsSettingsBtn.addEventListener('click',Btn.addEventListener('click', () => {
+  () => {
+  elements.s elements.settingsPassword.value =ettingsPassword.value = '';
+  elements.settingsLogin '';
+  elements.settingsError.style.display = 'LoginError.style.display = 'none';
+  elements.settingsLoginArea.stylenone';
   elements.settingsLoginArea.style.display = '';
-  elements.settingsEditor.classList.add('hidden-el');
+  elements.display = '';
+  elements.s.settingsEditor.classList.addettingsEditor.classList.add('hidden-el');
   showModal();
 });
 
-elements.settingsCloseBtn.addEventListener('click', hideModal);
-elements.settingsModal.addEventListener('click', (e) => { 
-  if(e.target === elements.settingsModal) hideModal(); 
+elements.s('hidden-el');
+  showModal();
 });
 
-document.addEventListener('keydown', (e) => { 
-  if(e.key === 'Escape' && !elements.settingsModal.classList.contains('hidden-el')) hideModal(); 
+elements.settingsCloseettingsCloseBtn.addEventListenerBtn.addEventListener('('click', hideModal);
+elements.sclick', hideModal);
+elements.settingsettingsModal.addEventListener('click', (e) =>Modal.addEventListener('click', (e) => { 
+ { 
+  if(e.target === elements.settingsModal  if(e.target === elements.settingsModal) hide) hideModal(); 
 });
 
-elements.tabBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    elements.tabBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const tabName = btn.dataset.tab;
-    elements.tabPanels.forEach(p => p.classList.add('hidden-el'));
-    document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
-    if (tabName === 'users') renderUsersList();
+document.addEventListenerModal(); 
+});
+
+document.addEventListener('key('keydown', (edown', (e) => { 
+  if) => { 
+  if(e.key === '(e.key === 'EscapeEscape' &&' && !elements.settingsModal !elements.settingsModal.classList.contains('.classList.contains('hidden-el')) hidehidden-el')) hideModal();Modal(); 
+});
+
+ 
+});
+
+elements.telements.tabBtns.forEachabBtns.forEach(btn(btn => {
+ => {
+  btn.addEventListener('click', () =>  btn.addEventListener('click', {
+    elements.tab () => {
+    elements.tBtns.forEach(b => babBtns.forEach(b => b.classList.remove('.classList.remove('active'));
+active'));
+    btn.classList.add    btn.classList.add('active');
+('active');
+    const tabName    const tabName = btn.dat = btn.dataset.tab;
+aset.tab;
+    elements.t    elements.tabPanabPanelsels.forEach(p => p.classList.add.forEach(p => p.classList.add('hidden('hidden-el'));
+   -el'));
+    document.getElementById document.getElementById(`tab${(`tab${tabName.charAt(0).tabName.charAt(0).toUpperCase() + tabNametoUpperCase.slice(1)}`).classList.remove('hidden() + tabName.slice(1)}`).-el');
+    if (classList.remove('hidden-el');
+    if (tabName === 'tabName === 'users')users') renderUsersList renderUsersList();
+ ();
   });
 });
 
-onValue(settingsRef, snapshot => {
-  const val = snapshot.val();
-  if(val){
-    settings.title = val.title || settings.title;
-    settings.headerImage = val.headerImage || settings.headerImage;
+on });
+});
+
+onValue(Value(settingsRef, snapshotsettingsRef, snapshot => {
+ => {
+  const  const val = snapshot val = snapshot.val();
+.val();
+  if(val  if(val){
+   ){
+    settings.title = val settings.title = val.title ||.title || settings.title;
+    settings.headerImage = settings.title;
+    settings.header val.headerImage || settingsImage = val.headerImage || settings.headerImage;
+  }
+  apply.headerImage;
   }
   applySettings();
+Settings();
 });
 
 function applySettings(){
-  elements.pageTitle.innerText = settings.title || 'Bullet Farm';
-  elements.headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
-  if(elements.settingTitle) elements.settingTitle.value = settings.title || '';
-  if(elements.settingHeaderImage) elements.settingHeaderImage.value = settings.headerImage || '';
+  elements.page});
+
+function applySettings(){
+  elements.pageTitle.innerText =Title.innerText = settings settings.title || 'Bullet.title || 'Bullet Farm Farm';
+  elements.header';
+  elements.headerLogoLogo.src = settings.header.src = settings.headerImage || 'https://viaImage || 'https://via.placeholder.com/48';
+.placeholder.com/  if(elements48';
+  if(elements.settingTitle) elements.set.settingTitle) elements.settingTitle.value =tingTitle.value = settings.title || '';
+  if settings.title || '';
+  if(elements.settingHeader(elements.settingHeaderImage) elements.settingImage) elements.settingHeaderImage.valueHeaderImage.value = = settings.headerImage || '';
 }
 
-elements.saveGeneralBtn.addEventListener('click', async () => {
-  const title = (elements.settingTitle.value || '').trim() || 'Bullet Farm';
-  const image = (elements.settingHeaderImage.value || '').trim() || 'https://via.placeholder.com/48';
+ settings.headerImage || '';
+}
+
+elements.saveGeneralBtn.addEventListener('elements.saveGeneralBtn.addEventListenerclick', async ()('click', async () => {
+  const title = => {
+  const title = (elements.settingTitle.value (elements.settingTitle.value || ''). || '').trim() || 'Bullet Farmtrim() || 'Bullet Farm';
+  const image = (';
+  const image = (elements.settingHeaderelements.settingHeaderImage.valueImage.value || '').trim || '').trim()() || 'https || 'https://via.placeholder.com/48://via.placeholder.com/48';
   try{ 
-    await update(settingsRef, { title, headerImage: image }); 
-    alert('✅ Allgemeine Einstellungen gespeichert'); 
-  } catch(e){ console.error(e); alert('❌ Fehler beim Speichern'); }
+';
+  try{ 
+    await update(    await update(settingsRefsettingsRef, {, { title, headerImage: image } title, headerImage: image }); 
+    alert('); 
+    alert('✅ Allgemeine Einstell✅ Allgemeine Einstellungen gespeichertungen gespeichert');'); 
+  } 
+  } catch(e){ console.error(e); catch(e){ console.error(e); alert(' alert('❌ Fehler beim Speichern'); }
+❌ Fehler beim Speichern'); }
 });
+
+elements.resetGeneralBtn.addEventListener('click', async});
 
 elements.resetGeneralBtn.addEventListener('click', async () => {
+  if(!confirm('Auf Standard zurücks () => {
   if(!confirm('Auf Standard zurücksetzen?')) return;
+  try{etzen?')) return;
   try{ 
-    await update(settingsRef, { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' }); 
-    alert('✅ Zurückgesetzt'); 
-  } catch(e){ console.error(e); alert('❌ Fehler'); }
+    await update(settings 
+    await update(settingsRef, { titleRef, { title: 'Bullet Farm',: 'Bullet Farm', headerImage: 'https:// headerImage: 'https://via.placeholder.com/via.placeholder.com/48' }); 
+48' }); 
+    alert('✅ Zurück    alert('✅ Zurgesetzt'); 
+  }ückgesetzt'); 
+  } catch(e){ console.error(e); alert('❌ Fehler'); catch(e){ console.error(e); alert('❌ Fehler'); }
 });
 
-onValue(categoriesRef, snapshot => {
+onValue }
+});
+
+onValue(categories(categoriesRef, snapshotRef, snapshot => => {
+  categories = {
   categories = [];
-  snapshot.forEach(child => {
-    const data = child.val(); 
-    data.key = child.key; 
+  [];
+  snapshot.forEach(child => snapshot.forEach(child => {
+    const data = child {
+    const data = child.val();.val(); 
+    data 
+    data.key = child.key = child.key;.key; 
+    categories.push 
     categories.push(data);
+(data);
   });
+   });
   renderCategoriesList();
+  populateCategory renderCategoriesList();
   populateCategorySelects();
 });
 
-function renderCategoriesList(){
-  elements.categoriesList.innerHTML = '';
-  if(categories.length === 0){ 
-    elements.categoriesList.innerHTML = '<div class="kv mobile-optimized-text">Keine Kategorien vorhanden.</div>'; 
+Selects();
+});
+
+function renderfunction renderCategoriesListCategoriesList(){
+ (){
+  elements.categoriesList elements.categoriesList.innerHTML.innerHTML = '';
+  = '';
+  if(categories.length === 0){ if(categories.length === 0){ 
+    elements 
+    elements.categories.categoriesList.innerHTML =List.innerHTML = '<div '<div class="kv mobile class="kv mobile-optimized-text">Ke-optimized-textine Kategorien vorhanden">Keine Kategorien.</div>'; vorhanden.</div>'; 
     return; 
+    return; 
+  
   }
   
+  categories }
+  
   categories.forEach(category => {
-    const div = document.createElement('div');
-    div.className = 'category-item fade-in';
+   .forEach(category => {
+    const div = document const div = document.createElement('.createElement('div');
+div');
+    div    div.className = '.className = 'category-item fade-in';
+   category-item fade-in div.innerHTML = `
+     ';
     div.innerHTML = `
-      <div class="mobile-optimized-text">${escapeHtml(category.name)}</div>
-      <div style="display:flex;gap:6px">
-        <button class="btn small-btn" data-edit="${category.key}">✏️</button>
-        <button class="btn small-btn" data-del="${category.key}" style="background:#ef4444">🗑️ Löschen</button>
-      </div>`;
-    elements.categoriesList.appendChild(div);
+      <div class=" <div class="mobilemobile-optimized-text-optimized-text">${escape">${escapeHtml(categoryHtml.name)}(category.name)}</div>
+      <div</div>
+      <div style="display:flex style="display:flex;gap:6px;gap:6px">
+       ">
+        <button class <button class="btn small="btn small-btn" data-edit="${category.key-btn" data-edit="${category.key}">}">✏✏️</button️</button>
+       >
+        <button class="btn small-btn" <button class="btn small-btn" data-del="${ data-del="${category.keycategory.key}" style="background}" style="background:#ef:#ef44444444">🗑️ Löschen</button">🗑️ Löschen</button>
+      </>
+      </divdiv>`;
+    elements>`;
+    elements.categoriesList.appendChild.categoriesList.appendChild(div);
+(div);
     
-    div.querySelector('[data-del]').onclick = async () => {
-      if(!confirm('Kategorie wirklich löschen?')) return;
-      try{ await remove(ref(db, 'categories/' + category.key)); } 
-      catch(e){ console.error(e); alert('❌ Fehler beim Löschen'); }
+    div.querySelector('[data-del]    
+    div.querySelector('[data-del').onclick = async]').onclick = async () => {
+      if(! () => {
+      if(!confirm('Kategorieconfirm('Kategorie wirklich wirklich löschen?')) return löschen?')) return;
+      try{ await remove;
+      try{ await remove(ref(db, '(ref(db, 'categories/' + category.key));categories/' + category.key)); } 
+      catch } 
+      catch(e){ console.error(e);(e){ console.error(e); alert('❌ Fe alert('❌ Fehlerhler beim Löschen'); beim Löschen'); }
     };
     
-    div.querySelector('[data-edit]').onclick = () => {
-      const newName = prompt('Neuer Kategorie-Name', category.name);
-      if(newName && newName.trim()){
-        update(ref(db, 'categories/' + category.key), { name: newName.trim() })
-          .catch(() => alert('❌ Fehler beim Umbenennen'));
+ }
+    };
+    
+    div.querySelector('[data-edit]    div.querySelector('[data-edit]').onclick =').onclick = () => {
+      () => {
+      const newName = prompt(' const newName = prompt('Neuer Kategorie-NameNeuer Kategorie-Name', category.name);
+', category.name);
+      if      if(newName && new(newName && newName.trim()){
+       Name.trim()){
+        update(ref(db, update(ref '(db, 'categories/' + category.key), { name: newNamecategories/' + category.key), { name: newName.trim() })
+          .catch(().trim() })
+          .catch(() => alert => alert('❌ Fehler beim Umbenennen'));
+     ('❌ Fehler beim Umbenennen'));
       }
+    }
     };
+  });
+}
+
+elements.addCategoryBtn.addEventListener };
   });
 }
 
 elements.addCategoryBtn.addEventListener('click', async () => {
-  const name = (elements.newCategoryInput.value || '').trim();
-  if(!name) return alert('❌ Bitte Namen eingeben');
+  const name =('click', async () => {
+  const name = (elements (elements.newCategory.newCategoryInput.value || '').trimInput.value || '').trim();
+  if(!name)();
+  if(!name) return alert return alert('❌ Bitte Namen eingeben('❌ Bitte Namen eingeben');
   try{
-    await push(categoriesRef, { name });
-    elements.newCategoryInput.value = '';
-  } catch(e){ console.error(e); alert('❌ Fehler beim Anlegen'); }
+');
+  try{
+    await    await push(categories push(categoriesRef, { name });
+Ref, { name });
+    elements    elements.newCategoryInput.value = '';
+  } catch(e.newCategoryInput.value = '';
+  } catch(e){ console){ console.error(e); alert('❌.error(e); alert('❌ Fehler beim Fehler beim Anlegen Anlegen'); }
+});
+
+function'); }
 });
 
 function populateCategorySelects(){
-  elements.prodCategorySelect.innerHTML = '<option value="">— Keine Kategorie —</option>';
-  elements.shopCategoryFilter.innerHTML = '<option value="">— Alle Kategorien —</option>';
+  populateCategorySelects(){
+  elements.prodCategory elements.prodCategorySelect.innerHTMLSelect.innerHTML = '<option value = '<option value="">— Keine K="">— Keine Kategorie —</option>';
+ ategorie —</option>';
+  elements.shop elements.shopCategoryFilterCategoryFilter.innerHTML = '<option.innerHTML = '<option value=""> value="">— Alle Kategorien —</option— Alle Kategorien —</option>';
 
-  categories.forEach(category => {
-    const option1 = document.createElement('option');
-    option1.value = category.name;
-    option1.textContent = category.name;
-    option1.className = 'mobile-optimized-text';
-    elements.prodCategorySelect.appendChild(option1);
+>';
+
+  categories.forEach(c  categories.forEach(category => {
+    const optionategory => {
+    const option1 = document1 = document.createElement('option.createElement('option');
+   ');
+    option1.value option1.value = category.name = category.name;
+    option1.textContent = category;
+    option1.text.name;
+    optionContent = category.name;
+    option1.className = 'mobile-optimized1.className = 'mobile-optimized-text-text';
+    elements.pro';
+    elements.prodCategorySelect.appendChild(dCategorySelect.appendChild(option1);
     
-    const option2 = document.createElement('option');
-    option2.value = category.name;
-    option2.textContent = category.name;
-    option2.className = 'mobile-optimized-text';
-    elements.shopCategoryFilter.appendChild(option2);
+    const optionoption1);
+    
+    const option2 = document.createElement2 = document.createElement('option('option');
+    option');
+    option2.value =2.value = category.name;
+ category.name;
+    option2.textContent = category.name    option2.textContent = category.name;
+    option;
+    option2.class2.className =Name = 'mobile-optim 'mobile-optimized-text';
+    elements.shopized-text';
+    elements.shopCategoryFilter.appendChildCategoryFilter.appendChild(option(option2);
+2);
   });
 }
 
-onValue(productsRef, snapshot => {
+  });
+}
+
+onValue(productsRef, snapshot =>onValue(productsRef {
   products = [];
-  snapshot.forEach(child => {
+, snapshot => {
+  products = [];
+  snapshot  snapshot.forEach(child => {
+    const data =.forEach(child => {
     const data = child.val(); 
     data.key = child.key; 
     products.push(data);
   });
-  products.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-  renderProductsTable();
+  child.val(); 
+    data.key = child.key; 
+    products.push(data);
+  });
+  products.sort products.sort((a((a, b) => (b, b) => (b.updatedAt || 0.updatedAt || 0) - (a) - (a.updatedAt || .updatedAt || 00));
+  renderProducts));
+  renderProductsTableTable();
+  renderProductsGrid();
   renderProductsGrid();
 });
 
+function escape();
+});
+
 function escapeHtml(text) {
+  ifHtml(text) {
   if(!text) return '';
-  const div = document.createElement('div');
+(!text) return '';
+   const div = document const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
 elements.shopCategoryFilter.addEventListener('change', renderProductsGrid);
 
+.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+elements.shopCategoryFilter.addEventListener('change', renderfunction renderProductsGrid(){
+ ProductsGrid);
+
 function renderProductsGrid(){
-  const filter = (elements.shopCategoryFilter.value || '').trim();
+  const const filter = (elements.s filter = (elements.shopCategoryFilter.valuehopCategoryFilter.value || '').trim || '').trim();
+  elements.productsGrid.innerHTML =();
   elements.productsGrid.innerHTML = '';
-  const visibleProducts = products.filter(p => !filter || (p.category || '') === filter);
+  const visible '';
+  const visibleProducts =Products = products.filter(p products.filter(p => !filter || ( => !filter || (p.category || '') ===p.category || '') === filter);
   
-  elements.productsCount.textContent = `${visibleProducts.length} Produkt${visibleProducts.length !== 1 ? 'e' : ''} angezeigt`;
+  filter);
   
-  if(visibleProducts.length === 0){ 
-    elements.productsGrid.innerHTML = '<div class="kv p-4 mobile-optimized-text">Keine Produkte verfügbar.</div>'; 
+  elements.productsCount.textContent elements.productsCount.textContent = `${visibleProducts.length} = `${visibleProducts.length} Produkt${visible Produkt${visibleProducts.length !== 1 ?Products.length !== 1 ? 'e' : '' 'e' : ''}} angezeigt`;
+  
+ angezeigt`;
+  
+  if(visibleProducts.length  if(visibleProducts.length === 0){ 
+    === 0){ 
+    elements.productsGrid elements.productsGrid.innerHTML = '<div.innerHTML = '<div class="kv p-4 class="kv p-4 mobile-optimized mobile-optimized-text">-text">Keine ProdukteKeine Produkte verfügbar.</div> verfügbar.</div>'; 
+    return'; 
     return; 
+; 
   }
   
+   }
+  
   visibleProducts.forEach(product => {
-    const card = document.createElement('div');
+ visibleProducts.forEach(product => {
+    const card    const card = document.createElement = document.createElement('div');
+    card.className('div');
     card.className = 'card fade-in';
     
-    const img = document.createElement('img');
-    img.src = product.image || 'https://via.placeholder.com/300x120';
-    img.className = 'product-image';
-    img.alt = product.name || 'Produktbild';
+ = 'card fade-in';
     
-    const title = document.createElement('div');
-    title.className = 'mobile-optimized-text product-card-text';
-    title.style.fontWeight = '700';
-    title.style.fontSize = '1rem';
-    title.style.marginTop = '8px';
-    title.style.color = product.colorName || '#22c55e';
-    title.textContent = product.name || '';
+    const img =    const img = document.createElement('img');
+    img.src = product.image || document.createElement('img');
+    img.src = product.image || 'https:// 'https://via.placeholdervia.placeholder.com/.com/300x300x120';
+    img.className =120';
+    img.className 'product-image';
+    img = 'product-image';
+    img.alt =.alt = product.name || 'Produktbild';
+ product.name || 'Produktbild';
     
-    const desc = document.createElement('div');
-    desc.className = 'small-muted mobile-optimized-text product-card-text';
-    desc.textContent = product.description || '';
+       
+    const title const title = document.createElement('div');
+    title.class = document.createElement('div');
+    title.classNameName = 'mobile- = 'mobile-optimizedoptimized-text product-card-text';
+    title.style-text product-card-text';
+    title.style.fontWeight.fontWeight = '700 = '700';
+    title';
+    title.style.font.style.fontSize = '1rem';
+    titleSize = '1rem';
+    title.style.marginTop = '.style.marginTop = '8px';
+   8px';
+    title.style title.style.color = product.color.color = product.colorName || '#22c55Name || '#22c55e';
+    titlee';
+    title.textContent = product.name.textContent = product.name || '';
     
-    card.appendChild(img);
+    const desc = || '';
+    
+    const desc = document.createElement('div document.createElement('div');
+    desc.class');
+    desc.className = 'small-mutedName = 'small-muted mobile-optimized mobile-optimized-text product-card-text';
+   -text product-card-text';
+    desc.textContent = product.description desc.textContent = product.description || '';
+    
+    || '';
+    
+    card.appendChild card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(desc(img);
     card.appendChild(title);
     card.appendChild(desc);
 
+    if(product.resources);
+
     if(product.resources){
-      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
-      if(pairs.length > 0){
-        const table = document.createElement('table');
-        table.className = 'table';
-        table.style.marginTop = '8px';
+      const pairs = product){
+      const pairs = product.resources.split(';.resources.split(';').').map(xmap(x => x.trim()).filter(Boolean);
+ => x.trim()).filter(Boolean);
+      if(pairs      if(pairs.length >.length > 0){
+        0){
+        const table = document.createElement(' const table = document.createElement('table');
+        tabletable');
+        table.className = '.className = 'table';
+        table.style.mtable';
+        table.style.marginTop =arginTop = '8px '8px';
+        table.innerHTML = `
+          <thead>
+           ';
         table.innerHTML = `
           <thead>
             <tr>
-              <th class="mobile-optimized-text">Ressource</th>
-              <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+ <tr>
+              <th class="mobile              <th class="mobile-optimized-text-optimized-text">Ressource</th">Ressource</th>
+              <th style=">
+              <th style="text-align:righttext-align:right" class="mobile-optim" class="mobile-optimized-text">Anzahl</ized-text">Anzahl</th>
+            </th>
             </tr>
           </thead>
+tr>
+          </thead>
+          <tbody>
           <tbody>
             ${pairs.map(resource => {
-              const [name, value, color] = resource.split(':');
+              const            ${pairs.map(resource => {
+              const [name, value [name, value,, color] = color] = resource.split(': resource.split(':');
               return `
                 <tr>
-                  <td style="color:${color || '#facc15'}" class="mobile-optimized-text resource-text-fix">${escapeHtml(name)}</td>
-                  <td style="text-align:right;color:${product.colorQuantity || '#3b82f6'}" class="mobile-optimized-text">
-                    ${Number(value).toLocaleString('de-DE')}
-                  </td>
+');
+              return `
+                <tr>
+                                   <td style="color <td style="color:${color || '#facc15:${color || '#facc15''}" class="}" class="mobile-optimized-text resource-text-fmobile-optimized-text resource-text-fix">${escapeix">${escapeHtml(nameHtml(name)}</)}</td>
+td>
+                  <td style="text-align:right;color:${product.colorQuantity                  <td style="text-align:right;color:${product.colorQuantity || '#3b82f6' || '#3b82f6'}" class="mobile-optim}" class="mobile-optimized-text">
+                    ${ized-text">
+                    ${NumberNumber(value).toLocaleString('de-DE')(value).toLocaleString('de-DE')}
+}
+                  </td                  </td>
+                </tr>`;
+           >
                 </tr>`;
             }).join('')}
+          </tbody> }).join('')}
           </tbody>`;
-        card.appendChild(table);
+`;
+        card.appendChild        card.appendChild(table);
       }
     }
 
-    if(product.category) {
-      const categoryDiv = document.createElement('div');
-      categoryDiv.className = 'kv mobile-optimized-text product-card-text';
-      categoryDiv.style.marginTop = '8px';
-      categoryDiv.textContent = 'Kategorie: ' + product.category;
-      card.appendChild(categoryDiv);
+(table);
+      }
     }
 
-    const addButton = document.createElement('button');
+    if(product.category    if(product.category) {
+) {
+      const categoryDiv      const categoryDiv = document.createElement('div');
+ = document.createElement('div');
+      categoryDiv.class      categoryDiv.className =Name = 'kv mobile-optim 'kv mobile-optimized-text product-cardized-text product-card-text';
+      category-text';
+      categoryDiv.style.marginTop =Div.style.marginTop = ' '8px8px';
+      categoryDiv.textContent = 'Kategorie: '';
+      categoryDiv.textContent = 'Kategorie: ' + product.category;
+ + product.category;
+      card      card.appendChild(categoryDiv.appendChild(categoryDiv);
+    }
+
+    const add);
+    }
+
+    const addButton = document.createElementButton = document.createElement('button('button');
+    addButton.className = '');
     addButton.className = 'btn';
-    addButton.style.background = '#10b981';
-    addButton.style.marginTop = '8px';
-    addButton.textContent = '✅ In den Warenkorb';
-    addButton.onclick = () => { 
-      addToCartByProductKey(product.key); 
-      alert(`✅ "${product.name}" zum Warenkorb hinzugefügt`); 
+btn';
+    addButton    addButton.style.background = '#10b.style.background = '#10b981';
+    add981';
+    addButton.styleButton.style.marginTop = '8px';
+.marginTop = '8px';
+    add    addButton.textContentButton.textContent = '✅ In den Waren = '✅ In den Warenkorb';
+korb';
+    add    addButton.onclickButton.onclick = () => { 
+      = () => { 
+      addToCartBy addToCartByProductKeyProductKey(product.key); 
+(product.key); 
+      alert(`✅ "${product      alert(`✅ "${product.name}".name}" zum Warenkorb hinzugefügt`); 
+    zum Warenkorb hinzugefügt`); 
     };
+    card.appendChild };
     card.appendChild(addButton);
 
-    elements.productsGrid.appendChild(card);
+    elements.(addButton);
+
+    elements.productsGrid.appendChildproductsGrid.appendChild(card);
+  });
+}
+
+function(card);
   });
 }
 
 function renderProductsTable(){
-  elements.productsTableBody.innerHTML = '';
-  products.forEach(product => {
-    const resourcesText = product.resources ? 
-      product.resources.split(';').map(resource => {
-        const [name, value] = resource.split(':');
-        return `${name}: ${value}`;
+  renderProductsTable(){
+  elements.productsTableBody elements.productsTableBody.innerHTML = '';
+  products.innerHTML = '';
+ .forEach(product => {
+    products.forEach(product => {
+    const resourcesText = const resourcesText = product.resources ? 
+      product.resources ? 
+      product.resources.split product.resources.split(';').map(';').map(resource => {
+        const [(resource => {
+        const [name, value] =name, value] = resource.split(':');
+        resource.split(':');
+        return return `${name}: ${value}`;
+      }).join `${name}: ${value}`;
       }).join(', ') : '';
+(', ') : '';
     
+    const row = document    
     const row = document.createElement('tr');
+.createElement('tr');
     row.className = 'fade-in';
+       row.className = 'fade-in';
     row.innerHTML = `
-      <td style="padding:8px">
-        <img src="${product.image || 'https://via.placeholder.com/80'}" 
-             class="product-image-admin" 
-             alt="${escapeHtml(product.name || '')}">
+      row.innerHTML = `
+      <td style="padding: <td style="padding:8px">
+8px">
+               <img src="${product <img src="${product.image || 'https://via.placeholder.com/80.image || 'https://via.placeholder.com/80'}" 
+             class="'}" 
+             class="product-image-admin"product-image-admin" 
+ 
+             alt="${             alt="${escapeHtml(product.name ||escapeHtml(product.name '')}">
       </td>
-      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.name || '')}</td>
-      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.category || '')}</td>
-      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(resourcesText)}</td>
-      <td style="padding:8px">
-        <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
-        <button class="btn small-btn" data-del="${product.key}" style="background:#ef4444">🗑️ Löschen</button>
+      <td style=" || '')}">
+      </td>
+      <td style="padding:padding:8px8px" class="mobile-optimized-text" class="mobile-optimized-text table-text table-text-fix">${-fix">${escapeHtmlescapeHtml(product.name || '')}</td>
+(product.name || '')}</td>
+           <td style="padding:8px" <td style="padding:8px" class="mobile-optimized-text table class="mobile-optimized-text table-text-f-text-fix">${escapeix">${escapeHtml(product.category || '')Html(product.category || '')}</td>
+     }</td>
+      <td style="padding: <td style="padding:8px" class8px" class="mobile-optimized-text table-text-fix">${="mobile-optimized-text table-text-fix">${escapeHtmlescapeHtml(resourcesText)}</td>
+      <td(resourcesText)}</td>
+      <td style="padding: style="padding:8px8px">
+        <button class="btn small">
+        <button class="-btn" data-btn small-btn" data-edit="${product.keyedit="${product.key}" style="margin-right:}" style="margin-right:6px">6px">✏️ Bearbeiten</button✏️ Bearbeiten</button>
+>
+        <button class        <button class="btn small-btn" data-del="${="btn small-btn" data-del="${product.key}"product.key}" style="background:#ef4444"> style="background:#ef4444">🗑️ Löschen</button>
       </td>`;
-    elements.productsTableBody.appendChild(row);
+   🗑️ Löschen</button>
+      </td>`;
+    elements.products elements.productsTableTableBody.appendChild(row);
+Body.appendChild(row);
     
-    row.querySelector('[data-edit]').onclick = () => openProductForm(product);
-    row.querySelector('[data-del]').onclick = () => { 
+    row.querySelector('[data-edit]').onclick    
+    row.querySelector('[data-edit]').onclick = () => open = () => openProductForm(product);
+    rowProductForm(product);
+    row.querySelector('[data-del.querySelector('[data-del]]').onclick =').onclick = () => { 
+      if(confirm('Produkt wirklich löschen?')) () => { 
       if(confirm('Produkt wirklich löschen?')) {
-        remove(ref(db, 'products/' + product.key))
-          .catch(() => alert('❌ Fehler beim Löschen'));
+        remove(ref(db {
+        remove(ref(db, 'products/' + product, 'products/' + product.key))
+          ..key))
+          .catch(() => alert('catch(() => alert('❌ Fehler beim Löschen'));
+      }
+   ❌ Fehler beim Löschen'));
       }
     };
+  };
   });
 }
 
-elements.btnNewProduct.addEventListener('click', () => openProductForm());
+elements.btn });
+}
+
+elements.btnNewProduct.addEventListener('click',NewProduct.addEventListener('click', () => openProduct () => openProductFormForm());
 
 function openProductForm(product = null){
-  elements.productFormCard.classList.remove('hidden-el');
-  elements.resourceTable.innerHTML = '';
+());
+
+function openProductForm(product = null){
+  elements.productFormCard.classList.remove('  elements.productFormCard.classList.remove('hidden-el');
+hidden-el');
+  elements.resourceTable.innerHTML =  elements.resourceTable.innerHTML = '';
+  
+  '';
   
   if(product){
-    elements.prodId.value = product.key || '';
-    elements.prodName.value = product.name || '';
-    elements.prodImg.value = product.image || '';
-    elements.prodPreview.src = product.image || 'https://via.placeholder.com/150x100';
-    elements.prodDesc.value = product.description || '';
-    elements.prodCategorySelect.value = product.category || '';
-    elements.colorNameInput.value = product.colorName || '#22c55e';
-    elements.colorQuantityInput.value = product.colorQuantity || '#3b82f6';
+    elements.prod if(product){
+    elements.prodId.value = productId.value = product.key.key || '';
+    || '';
+    elements.prodName.value = product elements.prodName.value = product.name || '';
+.name || '';
+    elements.prodImg.value = product    elements.prodImg.value = product.image || '';
+   .image || '';
+    elements.prodPreview.src = elements.prodPreview.src = product.image || ' product.image || 'https://via.placeholder.comhttps://via.placeholder.com/150x100/150x100';
+    elements.prodDesc';
+    elements.prodDesc.value = product.description.value = product.description || '';
+    elements.prod || '';
+    elements.prodCategorySelect.value =CategorySelect.value = product product.category || '';
+    elements.category || '';
+    elements.colorNameInput.value.colorNameInput.value = product.colorName = product.colorName || '#22c55e';
+ || '#22c55e    elements.colorQuantityInput.value = product.colorQuantity ||';
+    elements.colorQuantityInput.value = product.colorQuantity '#3b82f || '#3b82f6';
+6';
     
     if(product.resources){
-      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
+         
+    if(product.resources){
+      const pairs = product const pairs = product.resources.split(';')..resources.split(';').map(x => x.trimmap(x => x.trim()).filter(Boolean);
+      pairs.forEach(resource()).filter(Boolean);
       pairs.forEach(resource => {
-        const [name, value, color] = resource.split(':');
-        addResourceRow(name, value, color || '#facc15');
+        const => {
+        const [name, [name, value, value, color] = resource.split(':');
+        addResourceRow(name, value, color color] = resource.split(':');
+        addResourceRow(name, value, color || || '#facc15 '#facc15');
+      });
+    }
+ ');
       });
     }
   } else {
-    elements.prodId.value = '';
+    } else {
+    elements.prodId.value = elements.prodId.value = '';
+    elements.product '';
     elements.productForm.reset();
-    elements.prodPreview.src = 'https://via.placeholder.com/150x100';
-    elements.colorNameInput.value = '#22c55e';
-    elements.colorQuantityInput.value = '#3b82f6';
+    elements.proForm.reset();
+    elements.prodPreview.src = 'httpsdPreview.src = 'https://via.placeholder.com/://via.placeholder.com/150x100';
+150x100';
+    elements.colorNameInput.value    elements.colorNameInput.value = '#22 = '#c55e';
+    elements.color22c55e';
+    elements.colorQuantityInput.value =QuantityInput.value = '#3 '#3b82f6';
   }
 }
 
-function addResourceRow(name = '', value = '', color = '#facc15'){
+b82f6';
+  }
+}
+
+function addResourceRow(name = '', value = '', color =function addResourceRow(name = '', value = '', color = '#facc15 '#facc15'){
+  const row ='){
   const row = document.createElement('tr');
+ document.createElement('tr');
   row.className = 'fade-in';
-  row.innerHTML = `
-    <td><input class="input mobile-optimized-text" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
-    <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="0" /></td>
-    <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
-    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:#ef4444">❌ Löschen</button></td>`;
+  row.className = 'fade-in';
+  row.innerHTML =  row.innerHTML = `
+    <td `
+    <td><input class="input mobile><input class="input mobile-optimized-text" value="${-optimized-text" value="${escapeHtml(nameescapeHtml(name)}" placeholder="Ressour)}" placeholder="Ressourcenname"cenname" /></td /></td>
+    <td style="text-align:>
+    <td style="text-align:rightright"><input type=""><input type="number" min="0"number" min="0" class="input mobile-optimized-text" value class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="${escapeHtml(value)}" placeholder="0" /></td>
+    <="0" /></td>
+   td><input type="color" <td><input type="color class="color-input" value="${escapeHtml(color)}" /></td>
+    <td" class="color-input" value="${escapeHtml(color)}" /></td>
+    <td style=" style="text-align:center"><button class="text-align:center"><button class="btn small-btn"btn small-btn" type=" type="button"button" style="background:#ef4444">❌ style="background:#ef4444">❌ Löschen</button></td>`;
+ Löschen</button></td>`;
   
+  const delete  
   const deleteButton = row.querySelector('button');
-  deleteButton.onclick = () => row.remove();
+  deleteButton.onButton = row.querySelector('button');
+  deleteButton.onclick = ()click = () => row => row.remove();
   elements.resourceTable.appendChild(row);
 }
 
-elements.addResourceBtn.addEventListener('click', () => addResourceRow());
+elements.add.remove();
+  elements.resourceTable.appendChild(row);
+}
+
+elements.addResourceBtn.addEventListener('click', ()ResourceBtn.addEventListener('click', () => addResourceRow());
+elements.prodImg.addEventListener('input => addResourceRow());
 elements.prodImg.addEventListener('input', () => {
-  elements.prodPreview.src = elements.prodImg.value || 'https://via.placeholder.com/150x100';
+', () => {
+   elements.prodPreview.src = elements.prod elements.prodPreview.src = elements.prodImg.valueImg.value || 'https://via || 'https://via.placeholder.com/150x100.placeholder.com/150x100';
 });
-elements.cancelProductBtn.addEventListener('click', () => {
-  elements.productFormCard.classList.add('hidden-el');
+elements.cancelProductBtn.addEventListener';
+});
+elements.cancelProductBtn.addEventListener('click', ()('click', () => {
+  elements.productFormCard.classList.add(' => {
+  elements.productFormCard.classList.add('hiddenhidden-el');
+  elements.product-el');
   elements.productForm.reset();
+  elements.prodId.value =Form.reset();
   elements.prodId.value = '';
 });
 
+elements.productForm.addEventListener '';
+});
+
 elements.productForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+ ('submit', async (e) => {
+  e.preventDefault e.preventDefault();
   
-  const rows = Array.from(elements.resourceTable.querySelectorAll('tr'));
-  const resources = rows.map(row => {
-    const name = row.children[0].querySelector('input').value.trim();
-    const quantity = row.children[1].querySelector('input').value.trim();
-    const color = row.children[2].querySelector('input').value;
-    return name && quantity ? `${name}:${quantity}:${color}` : '';
+  const();
+  
+  const rows = Array.from rows = Array.from(elements.res(elements.resourceTable.querySelectorAll('tr'));
+ourceTable.querySelectorAll('tr'));
+  const resources =  const resources = rows.map(row => rows.map(row => {
+    const name = row {
+    const name = row.children[0].querySelector.children[0].querySelector('input').value('input').value.trim();
+    const quantity =.trim();
+    const quantity = row.children[1 row.children[1].querySelector('input').].querySelector('input').value.trimvalue.trim();
+    const color();
+    const color = row.children[2 = row.children[2].querySelector('input].querySelector('input').value;
+    return').value;
+    return name && quantity ? `${ name && quantity ? `${name}:${quantity}:${name}:${quantity}:${colorcolor}`}` : '';
+  }).filter(Boolean : '';
   }).filter(Boolean).join(';');
 
+  const payload).join(';');
+
   const payload = {
-    name: (elements.prodName.value || '').trim(),
-    image: (elements.prodImg.value || '').trim(),
-    description: (elements.prodDesc.value || '').trim(),
-    category: (elements.prodCategorySelect.value || '').trim(),
+    name: = {
+    name: (elements (elements.prodName.value || '').trim(),
+   .prodName.value || '').trim(),
+    image: (elements.prodImg.value || '').trim image: (elements.prodImg.value || '').trim(),
+    description: (elements.pro(),
+    description: (elements.proddDesc.value || ''Desc.value || '').trim(),
+    category:).trim(),
+    category: (elements.pro (elements.prodCategorySelect.value ||dCategorySelect.value || '').trim(),
+    resources: resources '').trim(),
     resources: resources,
-    colorName: elements.colorNameInput.value || '#22c55e',
-    colorQuantity: elements.colorQuantityInput.value || '#3b82f6',
-    updatedAt: Date.now()
+    colorName,
+    colorName: elements: elements.colorNameInput.value.colorNameInput.value || '# || '#22c55e',
+    colorQuantity: elements22c55e',
+    colorQuantity: elements.colorQuantityInput.value.colorQuantityInput.value || '#3b || '#3b82f6',
+    updated82f6',
+    updatedAt: Date.nowAt: Date.now()
+  };
+
+ ()
   };
 
   try{
-    if(elements.prodId.value){
+ try{
+    if(elements.prodId.value    if(elements.prodId.value){
+      await update(ref(db, 'products/' + elements.prod){
       await update(ref(db, 'products/' + elements.prodId.value), payload);
-      alert('✅ Produkt aktualisiert');
+      alert('Id.value), payload);
+      alert('✅ Produkt aktualisiert✅ Produkt aktualisiert');
     } else {
-      await push(productsRef, payload);
+');
+    } else {
+      await push(products      await push(productsRef, payload);
+Ref, payload);
       alert('✅ Produkt angelegt');
+      alert('✅ Produkt angelegt    }
+    elements.productFormCard.classList.add('hidden');
     }
     elements.productFormCard.classList.add('hidden-el');
+    elements-el');
     elements.productForm.reset();
-    elements.prodId.value = '';
-  } catch(error){ console.error(error); alert('❌ Fehler beim Speichern des Produkts'); }
+   .productForm.reset();
+    elements.prodId.value elements.prodId.value = '';
+  } catch(error = '';
+  } catch){ console.error(error); alert(error){ console.error(error); alert('❌ Fehler beim('❌ Fehler beim Speichern des Produkts'); }
 });
 
-elements.btnReloadProducts.addEventListener('click', () => {
+ Speichern des Produkts'); }
+});
+
+elements.btnReloadelements.btnReloadProducts.addEventListener('clickProducts.addEventListener('click', () => {
   get(productsRef)
-    .then(() => alert('✅ Produkte neu geladen'))
-    .catch(() => alert('❌ Laden fehlgeschlagen'));
+    .then', () => {
+  get(productsRef)
+    .then(() => alert(() => alert('✅ Produkte neu geladen('✅ Produkte neu geladen'))
+'))
+    .catch(() => alert    .catch(() => alert('❌ Laden('❌ Laden fehl fehlgeschlagen'));
 });
 
-elements.settingsUnlockBtn.addEventListener('click', () => {
-  const password = (elements.settingsPassword.value || '').trim();
+geschlagen'));
+});
+
+elements.settingsUnelements.settingsUnlockBtn.addEventListener('click', () => {
+ lockBtn.addEventListener('click', () => {
+  const password = ( const password = (elements.settingsPassword.value ||elements.settingsPassword.value || '').trim();
+  if(password === ADMIN_P '').trim();
   if(password === ADMIN_PASSWORD){
-    elements.settingsLoginError.style.display = 'none';
+ASSWORD){
+    elements.settings    elements.settingsLoginErrorLoginError.style.display = 'none';
+    elements.style.display = '.settingsLoginArea.style.displaynone';
     elements.settingsLoginArea.style.display = 'none';
-    elements.settingsEditor.classList.remove('hidden-el');
-    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
-    elements.tabBtns[0].classList.add('active');
-    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
-    document.getElementById('tabProducts').classList.remove('hidden-el');
+    elements = 'none';
+    elements.settingsEditor.classList.settingsEditor.classList.remove('hidden-el');
+   .remove('hidden-el');
+    elements.tabBt elements.tabBtns.forEach(btn => btn.classList.removens.forEach(btn => btn.classList.remove('active('active'));
+   '));
+    elements.tabBt elements.tabBtns[0].ns[0].classList.add('active');
+   classList.add('active');
+    elements.tab elements.tabPanels.forEach(panel => panelPanels.forEach(panel => panel.classList.add.classList.add('hidden-el'));
+   ('hidden-el'));
+    document.getElementById('tabProducts').class document.getElementById('tabProducts').classList.remove('hidden-el');
+ List.remove('hidden-el');
   } else {
-    elements.settingsLoginError.style.display = '';
+    } else {
+    elements.settingsLogin elements.settingsLoginError.style.display =Error.style.display = '';
   }
 });
 
-function resourcesToMap(resourcesString){
+function resources '';
+  }
+});
+
+function resourcesToMap(resourcesToMap(resourcesString){
+  const map =String){
   const map = {};
+  if(! {};
   if(!resourcesString) return map;
-  const pairs = resourcesString.split(';').map(x => x.trim()).filter(Boolean);
-  pairs.forEach(resource => {
+resourcesString) return map;
+  const pairs = resourcesString.split  const pairs = resourcesString.split(';').(';').map(x => x.trim()).filtermap(x => x.trim()).filter(Boolean);
+  pairs.forEach(resource(Boolean);
+  pairs.forEach(res => {
     const [name, value] = resource.split(':');
-    if(name && value) map[name] = (map[name] || 0) + Number(value);
-  });
+    if(nameource => {
+    const [name, value] = resource.split(':');
+    if(name && value && value) map[name] = (map[name] || 0) + Number(value);
+) map[name] = (map[name] || 0) + Number(value);
+   });
   return map;
 }
 
-function addToCartByProductKey(productKey){
-  const product = products.find(p => p.key === productKey);
+function });
+  return map;
+}
+
+function add addToCartByProductKey(productToCartByProductKey(productKey){
+  const product = productsKey){
+  const product = products.find.find(p => p.key === product(p => p.key === productKey);
   if(!product) return;
+ Key);
+  if(! const resourceMap = resourcesToMap(productproduct) return;
   const resourceMap = resourcesToMap(product.resources);
+  const existingIndex = cart.find.resources);
   const existingIndex = cart.findIndex(item => item.key === productKey);
+  if(existingIndexIndex(item => item.key === productKey);
   if(existingIndex === -1){
-    cart.push({ key: productKey, name: product.name, resources: {...resourceMap}, quantity: 1 });
+ === -1){
+    cart.push({ key: productKey, name:    cart.push({ key: productKey, name: product.name, resources: product.name, resources: {...resourceMap}, quantity: {...resourceMap}, quantity: 1 });
   } else {
-    cart[existingIndex].quantity += 1;
-    for(const resource in resourceMap) {
-      cart[existingIndex].resources[resource] = (cart[existingIndex].resources[resource] || 0) + resourceMap[resource];
+    cart 1 });
+  } else {
+    cart[existingIndex].quantity[existingIndex].quantity += 1;
+ += 1;
+    for(const resource    for(const resource in resourceMap) {
+      in resourceMap) {
+      cart[existingIndex cart[existingIndex].resources[resource] =].resources[resource] = (cart[ (cart[existingIndex].resources[resourceexistingIndex].resources[resource] || 0)] || 0) + resourceMap[resource];
+ + resourceMap[resource];
+    }
+  }
     }
   }
   renderCartView();
 }
 
-function renderCartView(){
-  elements.cartTableBody.innerHTML = '';
-  const totalResources = {};
-  cart.forEach(entry => {
-    const tr = document.createElement('tr');
-    const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
-    tr.innerHTML = `<td class="mobile-optimized-text">${escapeHtml(entry.name)}</td><td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td><td style="text-align:right" class="mobile-optimized-text">${entry.quantity}</td>`;
-    elements.cartTableBody.appendChild(tr);
-    for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
-  });
-  const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
-  cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
-  ensureOrderUiInCart();
-  if(saveOrderBtnEl) saveOrderBtnEl.disabled = (cart.length === 0);
+  renderCartView();
 }
 
-elements.btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
-elements.btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); renderCartView(); });
+function renderfunction renderCartView(){
+  elements.cartTableBody.innerHTMLCartView(){
+  elements.cartTableBody.innerHTML = '';
+  const = '';
+  const totalResources = totalResources = {};
+  cart.forEach(entry => {
+    {};
+  cart.forEach(entry => {
+    const tr = document.createElement('tr');
+    const const tr = document.createElement('tr');
+    const resText = resText = Object. Object.entries(entry.resources).map(([k,v]entries(entry.resources).map(([k,v)=>`${k}: ${v}`).join(',])=>`${k}: ${v}`).join(', ');
+    tr.innerHTML ');
+    tr.innerHTML = `<td class="mobile = `<td class="mobile-optimized-text">${escapeHtml(-optimized-text">${escapeHtml(entryentry.name)}.name)}</td><td class="mobile-</td><td class="mobile-optimized-text resource-textoptimized-text resource-text-fix">-fix">${escapeHtml(resText)}${escapeHtml(resText)}</td><td style="text-align:right" class="mobile</td><td style="text-align:right" class="mobile-optimized-text">${-optimized-text">${entry.quantity}</td>`;
+   entry.quantity}</td>`;
+    elements.cartTable elements.cartTableBodyBody.appendChild(tr);
+    for(const k in.appendChild(tr);
+    for(const k in entry.res entry.resources) totalResources[k] = (ources) totalResources[k] = (totalResources[k]totalResources[k]||0) + entry||0) + entry.resources[k];
+ .resources[k];
+  });
+  const summary });
+  const summary = Object.entries(totalResources).map(([k,v])=> = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}``${k}: ${v}`).join(', ')).join(', ') || 'keine';
+  cart || 'keine';
+  cartSummary.innerText = 'GesSummary.innerText = 'Gesamt Ressourcen: 'amt Ressourcen: ' + summary;
+  + summary;
+  ensureOrderUiInCart();
+ ensureOrderUiInCart();
+  if(save  if(saveOrderBtnEl) saveOrderOrderBtnEl) saveOrderBtnEl.disBtnEl.disabled = (cart.length === abled = (cart.length === 0);
+}
 
-function generate4DigitCode(){ return Math.floor(1000 + Math.random() * 9000).toString(); }
+elements0);
+}
 
-function ensureOrderUiInCart(){
+elements.btnShop.addEventListener('click',.btnShop.addEventListener('click', ()= ()=>{ shopView.classList.remove('>{ shopView.classList.remove('hidden-el'); carthidden-el'); cartView.classListView.classList.add.add('hidden-el'); });
+elements.btnCart.addEventListener('click('hidden-el'); });
+elements.btnCart.addEventListener('click', ()=>{ shopView', ()=>{ shopView.classList.add.classList.add('hidden-el'); cart('hidden-el'); cartView.classList.remove('hidden-el'); renderCartView.classList.remove('hidden-el'); renderCartView(); });
+
+functionView(); });
+
+function generate4Digit generate4DigitCode(){ return Math.floorCode(){ return Math.floor(1000 + Math(1000 + Math.random() * 900.random() * 9000).toString(); }
+
+0).toString(); }
+
+function ensureOrderUiInfunction ensureOrderUiInCart(){
+  if(saveOrderBtnCart(){
   if(saveOrderBtnEl) return;
+  const wrapper = document.createElementEl) return;
   const wrapper = document.createElement('div');
-  wrapper.style.marginTop = '12px';
-  saveOrderBtnEl = document.createElement('button');
-  saveOrderBtnEl.className = 'btn';
-  saveOrderBtnEl.style.background = '#10b981';
-  saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
-  saveOrderBtnEl.onclick = saveCartAsOrder;
+  wrapper.style.m('div');
+  wrapper.style.marginToparginTop = '12px';
+ = '12px';
+  saveOrderBtnEl =  saveOrderBtnEl = document.createElement('button');
+ document.createElement('button');
+  saveOrderBtnEl  saveOrderBtnEl.className = 'btn';
+.className = 'btn';
+  saveOrderBtn  saveOrderBtnEl.style.background = '#El.style.background = '#10b981';
+10b981';
+  saveOrderBtnEl.text  saveOrderBtnEl.textContent = '✅Content = '✅ Bestellung Bestellung speichern (Code er speichern (Code erzeugen)';
+  saveOrderBtnEl.onzeugen)';
+  saveOrderBtnEl.onclick = saveCartAsOrderclick = saveCartAsOrder;
+  wrapper.appendChild(save;
   wrapper.appendChild(saveOrderBtnEl);
-  orderCodeDisplayEl = document.createElement('div');
-  orderCodeDisplayEl.style.marginTop = '8px';
-  orderCodeDisplayEl.style.fontWeight = '700';
-  orderCodeDisplayEl.style.fontSize = '1.05rem';
-  orderCodeDisplayEl.className = 'success mobile-optimized-text';
-  orderCodeDisplayEl.textContent = '';
+  orderCodeDisplayEl =OrderBtnEl);
+  orderCodeDisplayEl = document.createElement('div document.createElement('div');
+  orderCodeDisplayEl');
+  orderCodeDisplayEl.style.marginTop.style.marginTop = '8px';
+  orderCode = '8px';
+  orderCodeDisplayEl.style.fontDisplayEl.style.fontWeight = '700';
+ Weight = '700';
+  order orderCodeDisplayEl.style.fontSize = '1CodeDisplayEl.style.fontSize = '1.05rem';
+  order.05rem';
+  orderCodeDisplayEl.classNameCodeDisplayEl.className = 'success mobile- = 'success mobile-optimized-text';
+  orderCodeDisplayoptimized-text';
+  orderCodeDisplayEl.textContent =El.textContent = '';
+  const copyBtn = document '';
   const copyBtn = document.createElement('button');
+  copyBtn.className.createElement('button');
   copyBtn.className = 'btn small-btn';
+ = 'btn small-btn';
   copyBtn.style.marginLeft = '8px';
-  copyBtn.textContent = '📋 Kopieren';
-  copyBtn.onclick = ()=> {
-    const txt = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ','').trim();
-    if(!txt) return alert('Kein Bestellcode vorhanden');
-    navigator.clipboard?.writeText(txt).then(()=> alert('Code kopiert')).catch(()=> alert('Kopieren nicht möglich'));
+  copyBtn  copyBtn.style.marginLeft = '8px';
+  copyBtn.textContent = '📋 Kopieren.textContent = '📋 Kopieren';
+  copy';
+  copyBtn.onBtn.onclick = ()=> {
+    const txt = (click = ()=> {
+    const txt = (orderCodeDisplayElorderCodeDisplayEl.textContent || '').replace.textContent || '').replace('Best('Bestellcode: ','').trim();
+   ellcode: ','').trim();
+    if(!txt) return alert(' if(!txt) return alert('Kein BestKein Bestellcode vorhanden');
+    navigellcode vorhanden');
+    navigator.clipator.clipboard?.writeText(txtboard?.writeText(txt).then(()).then(()=> alert('Code kopiert')).catch(()=> alert('Code kopiert')).catch(()=> alert('Kopieren=> alert('Kopieren nicht möglich'));
   };
-  const codeWrap = document.createElement('div');
-  codeWrap.style.display = 'flex';
-  codeWrap.style.alignItems = 'center';
-  codeWrap.style.gap = '8px';
-  codeWrap.appendChild(orderCodeDisplayEl);
+  nicht möglich'));
+  };
+  const codeWrap = const codeWrap = document.createElement('div');
+  document.createElement('div');
+  codeWrap.style.display codeWrap.style.display = 'flex';
+  codeWrap.style = 'flex';
+  codeWrap.style.align.alignItems = 'center';
+Items = 'center';
+  codeWrap.style.gap = '8  codeWrap.style.gap = '8px';
+px';
+  codeWrap.appendChild(orderCode  codeWrap.appendChild(orderCodeDisplayEl);
+  codeWrap.appendChild(copyDisplayEl);
   codeWrap.appendChild(copyBtn);
+ Btn);
   wrapper.appendChild(codeWrap);
-  cartView.appendChild(wrapper);
+  cartView wrapper.appendChild(codeWrap);
+  cartView.appendChild(w.appendChild(wrapper);
+}
+
+async function saveCartAsrapper);
 }
 
 async function saveCartAsOrder(){
-  if(cart.length === 0) return alert('❌ Warenkorb ist leer');
-  const code = generate4DigitCode();
-  const orderData = { code: code, createdAt: Date.now(), items: cart, status: 'offen', userName: '', phone: '' };
+Order(){
+  if(cart  if(cart.length === 0.length === 0) return alert('❌ W) return alert('❌ Warenkorbarenkorb ist leer ist leer');
+');
+  const code = generate4Digit  const code = generate4DigitCode();
+  const orderData = { code:Code();
+  const orderData = { code: code, createdAt: Date.now code, createdAt: Date.now(), items: cart, status:(), items: cart, status: 'offen', userName: '', phone: 'offen', userName: '', phone: '' };
+  try '' };
   try {
+    await push(ordersRef, {
     await push(ordersRef, orderData);
-    if(!orderCodeDisplayEl) ensureOrderUiInCart();
-    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
+    orderData);
+    if(!orderCodeDisplayEl if(!orderCode) ensureOrderUiInCart();
+    orderCodeDisplayEl) ensureOrderUiInCart();
+    orderDisplayEl.textContent =CodeDisplayEl.textContent = 'Bestellcode: 'Bestellcode: ' + code;
     cart = [];
     renderCartView();
-  } catch (e) { console.error(e); alert('❌ Fehler beim Speichern der Bestellung'); }
+  } catch ' + code;
+    cart = [];
+    renderCartView();
+  } catch (e) { console (e) { console.error.error(e); alert('(e); alert('❌ Fehler beim❌ Fehler beim Speichern der Bestellung Speichern der Bestellung'); }
+}
+
+onValue'); }
 }
 
 onValue(ordersRef, snapshot => {
+  allOrders(ordersRef, snapshot => {
   allOrders = [];
-  snapshot.forEach(child => { const o = child.val(); o.key = child.key; allOrders.push(o); });
+  snapshot.forEach(child = [];
+  snapshot.forEach(child => { const o = child.val(); => { const o = child.val(); o.key = child.key; o.key = child.key; allOrders.push(o allOrders.push(o);); });
   renderOrdersList();
 });
 
+function renderOrdersList });
+  renderOrdersList();
+});
+
+() {
+  elements.ordersList.innerHTML = '';
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
-  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; return; }
-  allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
-  allOrders.forEach(o=>{
+  if  if(allOrders.length === 0){ elements(allOrders.length === 0){ elements.ordersList.innerHTML =.ordersList.innerHTML = '<div class '<div class="kv mobile-optimized-text">="kv mobile-optimized-text">Keine Bestellungen vorhanden.</Keine Bestellungen vorhanden.</divdiv>'; return; }
+  allOrders.sort>'; return; }
+  allOrders.sort((a,b((a,b)=> (b.createdAt||0)=> (b.createdAt||0) - (a.createdAt||0));
+ ) - (a.createdAt||0));
+  allOrders allOrders.forEach.forEach(o=>{
     const div = document.createElement('div');
-    div.className = 'category-item fade-in';
-    const name = o.userName || '— unbekannt —';
+   (o=>{
+    const div = document.createElement('div');
+    div.class div.className = 'categoryName = 'category-item fade-in';
+    const name = o.userName || '—-item fade-in';
+    const name = o.user unbekannt —';
+    const phone =Name || '— unbekannt —';
     const phone = o.phone || '';
-    const total = o.items?.length || 0;
-    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    const o.phone || '';
+    const total = total = o.items?.length ||  o.items?.length || 0;
+    const0;
+    const date = o.created date = o.createdAt ? new DateAt ? new Date(o(o.createdAt).toLocaleString('.createdAt).toLocaleString('de-DE') : '-';
+    div.innerHTML =de-DE') : '-';
     div.innerHTML = `
-      <div class="mobile-optimized-text">
-        <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
-        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
-        ${o.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
+      <div class=" `
+      <div class="mobile-mobile-optimized-text">
+        <strong class="${o.status === 'bearbeitet' ? 'successoptimized-text">
+        <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${' : 'warning'}">${escapeHtml(o.codeescapeHtml(o.code)}</strong> (${)}</strong> (escapeHtml(date)})<br>
+        ${${escapeHtml(date)})<br>
+       escapeHtml(name)} ${phone ? '📞 '+escape ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} —Html(phone) : ''} — ${total} Artikel
+        ${total} Artikel
+        ${o.status === 'bear ${o.status === 'bearbeitetbeitet' ? '<span class="success' ? '<span class="success">✓ Bearbeitet</span">✓ Bearbeitet</span>' : '<span>' : '<span class="warning">● Offen</span>'}
+      class="warning">● Offen</span>'}
       </div>
-      <div style="display:flex;gap:6px">
-        <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
-        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444">🗑️ Löschen</button>
+      </div>
+      <div style=" <div style="display:flex;gap:6px">
+        <buttondisplay:flex;gap:6px">
+        <button class="btn small class="btn small-btn" data-view="${escape-btn" data-view="${escapeHtml(o.code)}">👁️ AnsehenHtml(o.code)}">👁️ Ansehen</</button>
+button>
+        <button class="btn small-btn" data-del="${        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444escapeHtml(o.key)}" style="background:#ef4444">🗑️">🗑️ Löschen</button>
+      Löschen</button>
       </div>`;
-    elements.ordersList.appendChild(div);
-    div.querySelector('[data-del]').onclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key)); };
-    div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
+ </div>`;
+    elements.ordersList.appendChild(    elements.ordersdiv);
+    div.querySelector('[data-del]').onList.appendChild(div);
+    div.querySelector('[data-del]click = ()=> { if(confirm('Bestellung wirklich löschen?'').onclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o)) remove(ref(db,'orders/'+o.key));.key)); };
+    div.querySelector('[data-view]'). };
+    div.querySelector('[data-view]').onclick = ()=> loadOrderonclick =ByCode(o.code);
+  });
+}
+
+elements.loadOrder ()=> loadOrderByCode(o.code);
   });
 }
 
 elements.loadOrderBtn.addEventListener('click', ()=> {
-  const code = (orderCodeInput.value||'').trim();
-  if(!code) return alert('❌ Code eingeben.');
+ Btn.addEventListener('click', ()=> {
+  const code const code = (orderCodeInput.value||'' = (orderCodeInput.value).trim();
+  if(!code) return alert||'').trim();
+  if(!code)('❌ Code eingeben.');
+  loadOrder return alert('❌ Code eingeben.');
   loadOrderByCode(code);
 });
 
+function loadOrderByCode(code);
+});
+
 function loadOrderByCode(code){
-  const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
-  if(!order) return alert('❌ Keine Bestellung mit diesem Code gefunden.');
+ByCode(code){
+  const order = allOrders  const order = allOrders.find(o=> (.find(o=> (o.codeo.code||'').toString() === code.toString());
+ ||'').toString() === code.toString());
+  if(!order) return alert('❌ Ke if(!order) return alert('❌ Keine Bestellung mit diesemine Bestellung mit diesem Code Code gefunden.');
   orderDetails.style.display = '';
-  orderItems.innerHTML = '';
+ gefunden.');
+  orderDetails.style.display = '';
+  orderItems.innerHTML =  orderItems.innerHTML '';
+  (order.items || []).forEach(i=> = '';
   (order.items || []).forEach(i=>{
     const div = document.createElement('div');
-    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
+{
+    const div = document.createElement('div');
+    const resText = Object    const resText = Object.entries(i.res.entries(i.resources || {}).map((ources || {}).map(([k,v])=>`[k,v])=>`${k${k}:}: ${v}`).join ${v}`).join(', ');
+    div.innerHTML = `<div style="margin-bottom:6(', ');
+    div.innerHTML = `<div style="margin-bottom:6px" class="px" class="mobile-optimized-textmobile-optimized-text"><b>${escapeHtml(i.name)}</b"><b>${escapeHtml(i> — ${escapeHtml(String(i.quantity)).name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div}x</div><div class="kv mobile class="kv mobile-optimized-text">${escape-optimized-text">${escapeHtml(resText)}Html(resText)}</div>`;
+    orderItems</div>`;
     orderItems.appendChild(div);
   });
-  orderUserName.value = order.userName || '';
+  order.appendChild(div);
+  });
+  orderUserName.valueUserName.value = order.userName || '';
+  orderPhone.value = order.userName || '';
   orderPhone.value = order.phone || '';
-  saveOrderUserBtn.onclick = async ()=> {
-    try { await update(ref(db,'orders/'+order.key), { userName: (orderUserName.value||'').trim(), phone: (orderPhone.value||'').trim() }); alert('✅ Kundendaten gespeichert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler beim Speichern.'); }
+  saveOrderUserBtn.on = order.phone || '';
+  saveOrderUserBtn.onclick = async (click = async ()=> {
+)=> {
+    try { await update(ref(db,'orders/'    try { await update(ref(db,'orders/'+order.key),+order.key), { userName: (orderUserName { userName: (orderUserName.value||'').trim(), phone: (orderPhone.value||'').trim.value||'').trim(), phone: (orderPhone.value||'').trim() }() }); alert('✅ Kundendaten ges); alert('✅ Kundendaten gespeicherpeichert.'); }
+t.'); }
+    catch(e    catch(e){ console.error(e); alert('❌ Fehler beim Speichern.');){ console.error(e); alert('❌ Fehler beim Speichern.'); }
   };
-  markOrderResetBtn.onclick = async ()=> {
-    if(!confirm('Bestellung als bearbeitet markieren?')) return;
-    try { await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' }); alert('✅ Bestellung markiert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler.'); }
+  }
+  };
+  markOrderResetBtn.onclick markOrderResetBtn.onclick = async ()=> {
+    if(!confirm('Bestellung als bear = async ()=> {
+    if(!confirm('Bestellung als bearbeitet markierenbeitet markieren?')) return;
+    try { await?')) return;
+    try { await update(ref(db,'orders/'+order update(ref(db,'orders/'+order.key), { status: 'bearbeit.key), { status: 'bearbeitet' });et' }); alert('✅ Bestellung mark alert('✅ Bestellung markiert.'); }
+    catch(e){iert.'); }
+    catch(e){ console.error console.error(e); alert('❌ Fehler.'); }
+(e); alert('❌ Fehler.'); }
   };
 }
 
 function renderUsersList() {
-  const usersMap = new Map();
+  };
+}
+
+function renderUsersList() {
+  const usersMap = new  const usersMap = new Map();
+  all Map();
   allOrders.forEach(order => {
-    if (order.phone && order.userName) {
-      const userKey = `${order.phone}-${order.userName}`;
-      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
+    if (order.phone &&Orders.forEach(order => {
+    if (order.phone && order.userName) order.userName) {
+      const userKey = {
+      const userKey = `${order.phone `${order.phone}-${order.userName}`}-${order.userName}`;
+      if (!users;
+      if (!usersMapMap.has(userKey)) usersMap.set(userKey, { phone: order.has(userKey)) usersMap.set(userKey,.phone, userName: order { phone: order.phone, userName: order.userName, orders: [] });
+      usersMap.get(user.userName, orders:Key).orders.push(order);
+    }
+  });
+  [] });
       usersMap.get(userKey).orders.push(order);
     }
   });
-  const users = Array.from(usersMap.values());
+  const users = Array.from(usersMap.values const users = Array.from(usersMap.values());
+  elements.usersList.innerHTML());
   elements.usersList.innerHTML = '';
-  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
+  if = '';
+  if (users.length === 0) { (users.length === 0) { elements.users elements.usersList.innerHTML = '<div class="kvList.innerHTML = '<div class="kv mobile-optimized-text">Keine mobile-optimized-text">Keine Nutzer Nutzer mit Telefonnummern gefunden.</div mit Telefonnummern gefunden.</div>'; return; }
+  users>'; return; }
   users.forEach(user => {
+    const userItem.forEach(user => {
     const userItem = document.createElement('div');
+    user = document.createElement('div');
     userItem.className = 'user-order-item fade-in';
-    if (selectedUserId === user.phone) userItem.classList.add('active');
-    userItem.innerHTML = `<div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div><div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div><div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
-    userItem.onclick = () => {
-      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+    ifItem.className = 'user-order-item fade-in';
+    if (selectedUserId === user (selectedUserId === user.phone) user.phone) userItem.classList.add('active');
+    userItem.innerHTMLItem.classList.add('active');
+    userItem.innerHTML = `<div style = `<div style="font-weight="font-weight:700" class="mobile-:700" class="mobile-optimized-text">${escapeoptimized-text">${escapeHtml(user.userName)}</Html(user.userName)}</div><div classdiv><div class="kv mobile-optimized-text">📞="kv mobile-optimized-text">📞 ${ ${escapeHtml(user.phone)}</div><divescapeHtml(user.phone)}</div><div class="kv mobile-optimized class="kv mobile-optimized-text">${user-text">${user.orders.length} Bestellung.orders.length} Bestellung${user.orders.length${user.orders.length !== 1 ? 'en' : ''}</div !== 1 ? 'en' : ''}</div>`;
+    userItem.on>`;
+    userItem.onclick = () =>click = () => {
+      document.querySelectorAll('. {
+      document.querySelectorAll('.user-order-item').forEach(item => item.classListuser-order-item').forEach(item => item.classList.remove('active.remove('active'));
+      userItem.classList.add('active'));
       userItem.classList.add('active');
+      selectedUserId = user.');
       selectedUserId = user.phone;
+     phone;
       renderUserOrders(user);
     };
+    renderUserOrders(user);
+    };
     elements.usersList.appendChild(userItem);
+  });
+ elements.usersList.appendChild(userItem}
+
+function renderUserOrders(user) {
+  elements.user);
   });
 }
 
 function renderUserOrders(user) {
   elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
-  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+ OrdersDetails.innerHTML = '';
+  if (!user || !user.orders if (!user || !user.orders.length).length) { elements.userOrdersDetails.innerHTML = '< { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimizeddiv class="kv mobile-optimized-text">Keine-text">Keine Bestellungen für diesen Nut Bestellungen für diesen Nutzer gefunden.</div>'; returnzer gefunden.</div>'; return; }
+  const sortedOrders = user; }
+  const sortedOrders = user.orders.sort.orders.sort((a, b) => (((a, b) => (b.createdAtb.createdAt || 0) || 0) - (a.createdAt || 0));
+  sorted - (a.createdAt || 0Orders.forEach(order => {
+    const orderCard = document));
   sortedOrders.forEach(order => {
     const orderCard = document.createElement('div');
-    orderCard.className = 'card fade-in';
+    order.createElement('div');
+    orderCard.className = 'Card.className = 'card fade-in';
+    orderCard.style.margincard fade-in';
     orderCard.style.marginBottom = '12px';
-    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
-    const status = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>';
-    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div class="mobile-optimized-text"><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div class="mobile-optimized-text">${status}</div></div>`;
+    const date = order.createdBottom = '12px';
+    const date = order.createdAt ? new DateAt ? new Date(order.createdAt).toLocale(order.createdAt).toLocaleString('de-DString('de-DE') : '-';
+    const statusE') : '-';
+    const status = order.status === 'bearbeitet' ? '< = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warningspan class="success">✓ Bearbeitet</span>' : '<span class="warning">">● Offen</span>';
+    orderCard.innerHTML = `<div style="display:flex;● Offen</span>';
+    orderCard.innerHTML = `<div style="display:flex;justifyjustify-content:space-between;align-items:start;margin-bottom:8px"><div class="-content:space-between;align-items:start;margin-bottom:8px"><div class="mobile-optimized-textmobile-optimized-text"><strong>Bestellcode"><strong>Bestellcode: ${escapeHtml(order.code: ${escapeHtml(order.code)}</strong><br><div class=")}</strong><br><div class="kv">${escapeHtml(date)}</kv">${escapeHtml(date)}</div></divdiv></div><div class="mobile-><div class="mobile-optimized-text">${status}</div></div>optimized-text">${`;
+    if (order.items && order.items.lengthstatus}</div></div>`;
     if (order.items && order.items.length > 0) {
-      const itemsList = document.createElement('div');
-      itemsList.style.marginTop = '8px';
+      > 0) {
+      const itemsList = const itemsList = document.createElement('div');
+      document.createElement('div');
+      itemsList.style.marginTop = '8px itemsList.style.marginTop = '8px';
+      order.items.forEach(item';
       order.items.forEach(item => {
-        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
-        const itemDiv = document.createElement('div');
+        const => {
+        const resourceText = Object.entries resourceText = Object.entries(item.resources || {}).map(([name(item.resources || {}).map(([name,, value]) => `${name}: ${value}` value]) => `${name}: ${value}`).join(', ');
+        const item).join(', ');
+        const itemDiv = documentDiv = document.createElement('div');
+        itemDiv.style.createElement('div');
         itemDiv.style.marginBottom = '6px';
+.marginBottom = '6        itemDiv.style.padding = '6pxpx';
         itemDiv.style.padding = '6px';
-        itemDiv.style.background = 'rgba(255,255,255,0.02)';
-        itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `<div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemDiv.style.background = '';
+        itemDiv.style.background = 'rgba(255,rgba(255,255,255,0.255,255,0.02)';
+        item02)';
+        itemDiv.style.borderDiv.style.borderRadiusRadius = = '4px';
+ '4px';
+        itemDiv.innerHTML = `<        itemDiv.innerHTML = `<div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-text">${escapequantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemsList.appendChild(itemDiv);
+Html(resourceText)}</div>`;
         itemsList.appendChild(itemDiv);
       });
       orderCard.appendChild(itemsList);
     }
-    elements.userOrdersDetails.appendChild(orderCard);
+      });
+      orderCard.appendChild(itemsList);
+    }
+    elements.userOrdersDetails    elements.userOrdersDetails.appendChild(orderCard);
+  });
+}
+
+ensureOrderUiInCart();
+renderCartView.appendChild(orderCard);
   });
 }
 
@@ -1315,10 +2377,18 @@ ensureOrderUiInCart();
 renderCartView();
 applySettings();
 
-elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
-elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
+elements.s();
+applySettings();
+
+elements.settingsPassword.addEventListener('ettingsPassword.addEventListener('keypress', (e)keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
+elements.new(); });
+elements.newCategoryInput.addEventListener('keypressCategoryInput.addEventListener('keypress', (e) => { if(e.key ===', (e) => { if(e.key === 'Enter') elements.addCategory 'Enter') elements.addCategoryBtn.click(); });
+
+console.log('🚀 BulBtn.click(); });
 
 console.log('🚀 Bullet Farm v2 Shop initialisiert');
 </script>
 </body>
+let Farm v2 Shop initialisiert');
+</script>
 </html>

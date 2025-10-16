@@ -1,3 +1,4 @@
+<!-- Teil 1: HTML + Head + Shop/Warenkorb bleiben unverändert -->
 <!doctype html>
 <html lang="de">
 <head>
@@ -7,360 +8,251 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root{--bg:#0f1724;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
-body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:#071025;color:#e6eef8;margin:0}
-.container{max-width:1100px;margin:0 auto;padding:20px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:16px}
-.shadow-soft{box-shadow:0 8px 30px rgba(2,6,23,0.6)}
-.small-muted{color:var(--muted);font-size:0.85rem;margin-top:4px}
-.btn{transition:all .12s ease;border-radius:8px;padding:.45rem .8rem;cursor:pointer;background:#111827;color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
-.btn:hover{transform:translateY(-2px)}
-.hidden-el{display:none !important}
-.product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
-.product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
-#productsGrid .card{max-width:220px;margin:0 auto}
-.modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
-.modal-overlay.active{opacity:1;pointer-events:all}
-.modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
-.modal-overlay.active .modal-box{transform:translateY(0)}
-.tab-btn{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
-.tab-btn.active{background:linear-gradient(90deg,#94a3b8,#06b6d4);color:#041628;font-weight:700}
-.table {width:100%;border-collapse:collapse}
-.table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:0.92rem}
-.kv{font-size:0.9rem;color:var(--muted)}
-.category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
-.input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
-.color-input{width:48px;height:36px;padding:0;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#fff}
-.small-btn{padding:.35rem .6rem;border-radius:6px}
-.flex-row{display:flex;gap:8px;align-items:center}
-.right{margin-left:auto}
+/* ... dein gesamtes CSS bleibt unverändert ... */
 </style>
 </head>
 <body>
-<div class="container">
-<header class="card shadow-soft mb-6 flex items-center justify-between">
-<div class="flex items-center gap-4">
-<img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
-<div>
-<h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">Bullet Farm v2</h1>
-<div class="small-muted">Shop</div>
-</div>
-</div>
-<div class="flex items-center gap-2">
-<button id="btnShop" class="btn">Shop</button>
-<button id="btnCart" class="btn">Warenkorb</button>
-<button id="openSettingsBtn" class="btn">⚙️</button>
-</div>
-</header>
+  <div class="container">
+    <header class="card shadow-soft mb-6 flex items-center justify-between">
+      <!-- Header unverändert -->
+    </header>
 
-<main id="mainContent">
-<section id="shopView" class="card mb-6">
-<div class="flex items-center justify-between mb-4">
-<div style="display:flex;gap:10px;align-items:center">
-<h2 style="font-weight:700;color:#22c55e;margin:0">🛒 Produkte</h2>
-<div class="kv">Filter:</div>
-<select id="shopCategoryFilter" class="input" style="width:200px">
-<option value="">— Alle Kategorien —</option>
-</select>
-</div>
-<div class="kv">Produkte anzeigen</div>
-</div>
-<div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
-</section>
+    <main id="mainContent">
+      <!-- Shop + Warenkorb unverändert -->
+    </main>
+  </div>
 
-<section id="cartView" class="card mb-6 hidden-el">
-<div class="flex items-center justify-between mb-4">
-<h2 style="font-weight:700;color:#22c55e">🛍️ Warenkorb</h2>
-<div class="kv">Ressourcen & Anzahl</div>
-</div>
-<table class="table" id="cartTable">
-<thead><tr><th>Produkt</th><th>Ressourcen</th><th style="text-align:right">Anzahl</th></tr></thead>
-<tbody></tbody>
-</table>
-<div style="margin-top:12px;font-weight:700" id="cartSummary">Gesamt Ressourcen: keine</div>
-</section>
-</main>
-</div>
+  <!-- Settings Modal unverändert -->
+  <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
+    <div class="modal-box">
+      <!-- Settings Login + Editor unverändert -->
+      <div id="settingsEditor" class="hidden-el">
+        <!-- Tabs + Products/Categories/General unverändert -->
+        <div id="tabOrders" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px">Bestellungen verwalten</h4>
+          <div class="flex items-center gap-2 mb-3">
+            <input id="orderCodeInput" class="input" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px">
+            <button id="loadOrderBtn" class="btn">Laden</button>
+          </div>
+          <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
+            <!-- Bestelldetails unverändert -->
+          </div>
 
-<div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
-<div class="modal-box">
-<div class="flex items-start justify-between mb-4">
-<div>
-<h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
-<div class="kv">Passwortgeschützt — Admin Funktionen</div>
-</div>
-<div class="flex gap-2 items-center">
-<button id="settingsCloseBtn" class="btn">✖</button>
-</div>
-</div>
+          <h5 style="margin-top:10px">Alle Bestellungen</h5>
+          <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
 
-<div id="settingsLoginArea">
-<label class="kv mb-2">Admin Passwort</label>
-<div class="flex items-center gap-2 mb-3">
-<input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
-<button id="settingsUnlockBtn" class="btn">Einloggen</button>
-</div>
-<div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
-</div>
-
-<div id="settingsEditor" class="hidden-el">
-<div class="mb-4">
-<div class="flex gap-2">
-<button class="tab-btn active" data-tab="products">Produkte</button>
-<button class="tab-btn" data-tab="categories">Kategorien</button>
-<button class="tab-btn" data-tab="general">Allgemein</button>
-<button class="tab-btn" data-tab="orders">Bestellungen</button>
-<button class="tab-btn" data-tab="users">Nutzer</button>
-</div>
-</div>
-
-<div id="tabProducts" class="tab-panel">
-<!-- Produkte Tab wie gehabt -->
-</div>
-<div id="tabCategories" class="tab-panel hidden-el">
-<!-- Kategorien Tab wie gehabt -->
-</div>
-<div id="tabGeneral" class="tab-panel hidden-el">
-<!-- Allgemein Tab wie gehabt -->
-</div>
-<div id="tabOrders" class="tab-panel hidden-el">
-<!-- Bestellungen Tab wie gehabt -->
-</div>
-<div id="tabUsers" class="tab-panel hidden-el">
-<h4 style="font-weight:700;margin-bottom:8px">Nutzer verwalten</h4>
-<div id="usersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
-</div>
-</div>
-</div>
-</div>
+          <!-- NEU: Nutzerliste neben Bestellungen -->
+          <h5 style="margin-top:10px">Nutzer</h5>
+          <div id="usersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-/* ---------- Firebase Config ---------- */
-const firebaseConfig = { /* DEINE CONFIG HIER */ };
+/* ---------- Config & Firebase ---------- */
+const firebaseConfig = { 
+  apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+  authDomain:"khusland-b7d13.firebaseapp.com",
+  databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com",
+  projectId:"khusland-b7d13",
+  storageBucket:"khusland-b7d13.firebasestorage.app",
+  messagingSenderId:"69573193613",
+  appId:"1:69573193613:web:86c4d839281b1e343cd7c4",
+  measurementId:"G-JSCWR4207G"
+};
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+/* ---------- Firebase-Refs ---------- */
 const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
-const usersRef = ref(db, 'users');
+const usersRef = ref(db, 'users'); // NEU: Nutzer-Tabelle
 
 /* ---------- Globals ---------- */
-const ADMIN_PASSWORD = 'admin123';
-let products = [], categories = [], cart = [], allOrders = [], allUsers = [];
+let products = [];
+let categories = [];
+let cart = [];
+let allOrders = [];
+let allUsers = []; // NEU: Nutzer-Array
 
 /* ---------- Elemente ---------- */
-const openSettingsBtn = document.getElementById('openSettingsBtn');
-const settingsModal = document.getElementById('settingsModal');
-const settingsCloseBtn = document.getElementById('settingsCloseBtn');
-const settingsPassword = document.getElementById('settingsPassword');
-const settingsUnlockBtn = document.getElementById('settingsUnlockBtn');
-const settingsLoginError = document.getElementById('settingsLoginError');
-const settingsLoginArea = document.getElementById('settingsLoginArea');
-const settingsEditor = document.getElementById('settingsEditor');
-const tabBtns = document.querySelectorAll('.tab-btn');
-const tabPanels = document.querySelectorAll('.tab-panel');
-const shopView = document.getElementById('shopView');
-const cartView = document.getElementById('cartView');
-const btnShop = document.getElementById('btnShop');
-const btnCart = document.getElementById('btnCart');
-const cartSummary = document.getElementById('cartSummary');
 const ordersList = document.getElementById('ordersList');
 const usersList = document.getElementById('usersList');
 const orderCodeInput = document.getElementById('orderCodeInput');
 const loadOrderBtn = document.getElementById('loadOrderBtn');
+const orderDetails = document.getElementById('orderDetails');
+const orderUserName = document.getElementById('orderUserName');
+const orderPhone = document.getElementById('orderPhone');
+const saveOrderUserBtn = document.getElementById('saveOrderUserBtn');
+const markOrderResetBtn = document.getElementById('markOrderResetBtn');
 
-/* ---------- Modal Helper ---------- */
-function showModal(){ settingsModal.classList.remove('hidden-el'); setTimeout(()=>settingsModal.classList.add('active'),10); document.body.style.overflow='hidden'; }
-function hideModal(){ settingsModal.classList.remove('active'); document.body.style.overflow=''; setTimeout(()=>settingsModal.classList.add('hidden-el'),240); }
-
-/* ---------- Tab Switching ---------- */
-tabBtns.forEach(btn=>{
-btn.addEventListener('click', ()=>{
-tabBtns.forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-const t = btn.dataset.tab;
-tabPanels.forEach(p=>p.classList.add('hidden-el'));
-document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.remove('hidden-el');
-});
-});
-
-/* ---------- Admin Login ---------- */
-settingsUnlockBtn.addEventListener('click', ()=>{
-const pw = (settingsPassword.value||'').trim();
-if(pw===ADMIN_PASSWORD){
-settingsLoginError.style.display='none';
-settingsLoginArea.style.display='none';
-settingsEditor.classList.remove('hidden-el');
-tabBtns.forEach(b=>b.classList.remove('active'));
-tabBtns[0].classList.add('active');
-tabPanels.forEach(p=>p.classList.add('hidden-el'));
-document.getElementById('tabProducts').classList.remove('hidden-el');
-}else{ settingsLoginError.style.display=''; }
+/* ---------- Hilfsfunktionen ---------- */
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c])); }
+function generate4DigitCode(){ return Math.floor(1000 + Math.random() * 9000).toString(); }
+    /* ---------- USERS / NUTZER ---------- */
+onValue(usersRef, snapshot => {
+  allUsers = [];
+  snapshot.forEach(child => {
+    const u = child.val(); u.key = child.key;
+    allUsers.push(u);
+  });
+  renderUsersList();
 });
 
-/* ---------- Helpers ---------- */
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function renderUsersList() {
+  usersList.innerHTML = '';
+  if(allUsers.length === 0){
+    usersList.innerHTML = '<div class="kv">Keine Nutzer vorhanden.</div>';
+    return;
+  }
 
-</script>
-<script type="module">
+  allUsers.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
 
-/* ---------- Firebase Listeners ---------- */
+  allUsers.forEach(u=>{
+    const div = document.createElement('div');
+    div.className = 'category-item';
+    const name = u.name || '— unbekannt —';
+    const phone = u.phone || '';
+    div.innerHTML = `
+      <div>
+        <strong>${escapeHtml(name)}</strong> ${phone ? '📞 '+escapeHtml(phone) : ''}
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn small-btn" data-view="${escapeHtml(u.key)}">👁️</button>
+        <button class="btn small-btn" data-del="${escapeHtml(u.key)}" style="background:#ef4444">🗑️</button>
+      </div>`;
+    usersList.appendChild(div);
 
-// Produkte laden
-onValue(productsRef, snapshot=>{
-    products = snapshot.val() ? Object.values(snapshot.val()) : [];
-    renderProducts();
-});
-
-// Kategorien laden
-onValue(categoriesRef, snapshot=>{
-    categories = snapshot.val() ? Object.values(snapshot.val()) : [];
-    renderCategories();
-    populateCategoryFilter();
-});
-
-// Bestellungen laden
-onValue(ordersRef, snapshot=>{
-    const data = snapshot.val() || {};
-    allOrders = Object.values(data);
-    renderOrders();
-    renderUsers(); // Update Nutzer-Tabelle bei neuen Bestellungen
-});
-
-// Nutzer laden
-onValue(usersRef, snapshot=>{
-    allUsers = snapshot.val() ? Object.values(snapshot.val()) : [];
-    renderUsers();
-});
-
-/* ---------- Produkte Rendern ---------- */
-function renderProducts(){
-    const grid = document.getElementById('productsGrid');
-    grid.innerHTML='';
-    const filterCat = document.getElementById('shopCategoryFilter').value;
-    const filtered = filterCat ? products.filter(p=>p.category===filterCat) : products;
-    filtered.forEach(p=>{
-        const card = document.createElement('div');
-        card.className='card shadow-soft';
-        card.innerHTML=`
-            <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" class="product-image">
-            <h3 style="font-weight:600;margin:6px 0">${escapeHtml(p.name)}</h3>
-            <div class="kv">${escapeHtml(p.category)}</div>
-            <div class="flex items-center justify-between mt-2">
-                <div class="kv">${escapeHtml(p.resources)}</div>
-                <button class="btn small-btn" onclick="addToCart('${escapeHtml(p.name)}')">+ Warenkorb</button>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
+    div.querySelector('[data-del]').onclick = ()=> {
+      if(confirm('Nutzer wirklich löschen?')) remove(ref(db,'users/'+u.key));
+    };
+    div.querySelector('[data-view]').onclick = ()=> loadOrdersByUser(u.key);
+  });
 }
 
-/* ---------- Kategorien Filter ---------- */
-function populateCategoryFilter(){
-    const filter = document.getElementById('shopCategoryFilter');
-    filter.innerHTML='<option value="">— Alle Kategorien —</option>';
-    categories.forEach(c=>{
-        const opt=document.createElement('option'); opt.value=c.name; opt.textContent=c.name;
-        filter.appendChild(opt);
-    });
-}
-document.getElementById('shopCategoryFilter').addEventListener('change', renderProducts);
-
-/* ---------- Warenkorb ---------- */
-function addToCart(productName){
-    const prod = products.find(p=>p.name===productName);
-    if(!prod) return;
-    cart.push(prod);
-    renderCart();
-}
-function renderCart(){
-    const tbody = document.querySelector('#cartTable tbody');
-    tbody.innerHTML='';
-    let totalResources={};
-    cart.forEach((item,i)=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML=`<td>${escapeHtml(item.name)}</td><td>${escapeHtml(item.resources)}</td><td style="text-align:right">1</td>`;
-        tbody.appendChild(tr);
-        // Summen
-        if(item.resources){
-            item.resources.split(',').forEach(r=>{
-                const [res,qty] = r.split(':').map(s=>s.trim());
-                if(res && qty){ totalResources[res]=(totalResources[res]||0)+parseInt(qty); }
-            });
-        }
-    });
-    const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
-    cartSummary.textContent='Gesamt Ressourcen: '+summary;
+/* ---------- LOAD ORDERS BY USER ---------- */
+function loadOrdersByUser(userKey){
+  const user = allUsers.find(u=>u.key===userKey);
+  if(!user) return alert('Nutzer nicht gefunden.');
+  const userOrders = allOrders.filter(o=>o.userKey === userKey);
+  if(userOrders.length === 0) return alert('Keine Bestellungen von diesem Nutzer.');
+  
+  let text = `Bestellungen von ${user.name} (${user.phone || '–'}):\n\n`;
+  userOrders.forEach(o=>{
+    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    const total = o.items?.length || 0;
+    text += `${o.code} – ${date} – ${total} Artikel\n`;
+  });
+  alert(text);
 }
 
-/* ---------- Ansicht wechseln ---------- */
-btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
-btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); });
+/* ---------- SAVE CART AS ORDER (mit Nutzer-Handling) ---------- */
+async function saveCartAsOrder(){
+  if(cart.length === 0) return alert('Warenkorb ist leer.');
 
-/* ---------- Settings Modal ---------- */
-openSettingsBtn.addEventListener('click', showModal);
-settingsCloseBtn.addEventListener('click', hideModal);
+  let code = generate4DigitCode();
 
-/* ---------- Bestellungen erstellen ---------- */
-async function createOrder(userName,userPhone){
-    if(!userName || !userPhone || cart.length===0) return;
-    const orderId = Math.floor(1000+Math.random()*9000).toString(); // 4-stelliger Code
-    const newOrder = {id:orderId,user:{name:userName,phone:userPhone},items:cart.map(c=>({name:c.name,resources:c.resources})),date:Date.now()};
-    await push(ordersRef,newOrder);
+  const orderData = {
+    code: code,
+    createdAt: Date.now(),
+    items: cart,
+    status: 'offen',
+    userName: '',
+    phone: '',
+    userKey: ''
+  };
 
-    // Nutzer einmalig speichern
-    const existing = allUsers.find(u=>u.name===userName && u.phone===userPhone);
-    if(!existing){
-        await push(usersRef,{name:userName,phone:userPhone});
+  // Prüfe, ob Name + Telefonnummer bereits existieren
+  const name = (orderUserName?.value||'').trim();
+  const phone = (orderPhone?.value||'').trim();
+  if(name && phone){
+    let user = allUsers.find(u => u.name === name && u.phone === phone);
+    if(!user){
+      // NEUEN Nutzer anlegen
+      const newUserRef = await push(usersRef, { name, phone, createdAt: Date.now() });
+      user = { key: newUserRef.key, name, phone };
+      allUsers.push(user);
+      renderUsersList();
+    }
+    orderData.userKey = user.key;
+    orderData.userName = user.name;
+    orderData.phone = user.phone;
+  }
+
+  try {
+    await push(ordersRef, orderData);
+    if(!orderCodeDisplayEl) ensureOrderUiInCart();
+    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
+    cart = [];
+    renderCartView();
+  } catch (e) {
+    console.error(e);
+    alert('Fehler beim Speichern der Bestellung.');
+  }
+}
+
+/* ---------- LOAD ORDER BY CODE (Admin) ---------- */
+function loadOrderByCode(code){
+  const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
+  if(!order) return alert('Keine Bestellung mit diesem Code gefunden.');
+
+  orderDetails.style.display = '';
+  orderItems.innerHTML = '';
+  (order.items || []).forEach(i=>{
+    const div = document.createElement('div');
+    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div style="margin-bottom:6px"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.qty))}x</div><div class="kv">${escapeHtml(resText)}</div>`;
+    orderItems.appendChild(div);
+  });
+
+  orderUserName.value = order.userName || '';
+  orderPhone.value = order.phone || '';
+
+  saveOrderUserBtn.onclick = async ()=> {
+    const name = (orderUserName.value||'').trim();
+    const phone = (orderPhone.value||'').trim();
+    if(!name || !phone) return alert('Name und Telefonnummer angeben.');
+
+    // Prüfe ob Nutzer existiert
+    let user = allUsers.find(u=>u.name===name && u.phone===phone);
+    if(!user){
+      const newUserRef = await push(usersRef, { name, phone, createdAt: Date.now() });
+      user = { key: newUserRef.key, name, phone };
+      allUsers.push(user);
+      renderUsersList();
     }
 
-    cart=[]; renderCart();
-    alert(`Bestellung ${orderId} erfolgreich erstellt!`);
+    // Update Bestellung
+    try{
+      await update(ref(db,'orders/'+order.key), { userName: name, phone, userKey: user.key });
+      alert('Kundendaten gespeichert.');
+    }catch(e){ console.error(e); alert('Fehler beim Speichern.'); }
+  };
+
+  markOrderResetBtn.onclick = async ()=> {
+    if(!confirm('Bestellung als bearbeitet markieren?')) return;
+    try {
+      await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' });
+      alert('Bestellung markiert.');
+    } catch(e){ console.error(e); alert('Fehler.'); }
+  };
 }
 
-/* ---------- Nutzer Tabelle rendern ---------- */
-function renderUsers(){
-    if(!usersList) return;
-    usersList.innerHTML='';
-    allUsers.forEach(user=>{
-        const userOrders = allOrders.filter(o=>o.user.name===user.name && o.user.phone===user.phone);
-        const div = document.createElement('div');
-        div.className='category-item';
-        div.innerHTML=`
-            <div>
-                <strong>${escapeHtml(user.name)}</strong> <span class="kv">(${escapeHtml(user.phone)})</span>
-            </div>
-            <div class="flex gap-2">
-                <span class="kv">${userOrders.length} Bestellungen</span>
-                <button class="btn small-btn" onclick="showUserOrders('${escapeHtml(user.name)}','${escapeHtml(user.phone)}')">👁️</button>
-            </div>
-        `;
-        usersList.appendChild(div);
-    });
-}
+/* ---------- INITIAL LOAD ---------- */
+onValue(ordersRef, snapshot => {
+  allOrders = [];
+  snapshot.forEach(child => {
+    const o = child.val(); o.key = child.key;
+    allOrders.push(o);
+  });
+  renderOrdersList();
+});
 
-/* ---------- Modal für User Bestellungen ---------- */
-function showUserOrders(name,phone){
-    const orders = allOrders.filter(o=>o.user.name===name && o.user.phone===phone);
-    let html = `<h4 style="margin-bottom:8px">Bestellungen von ${escapeHtml(name)} (${escapeHtml(phone)})</h4>`;
-    if(orders.length===0){ html+='<div class="kv">Keine Bestellungen</div>'; }
-    else{
-        orders.forEach(o=>{
-            html+=`<div class="card mb-2 p-2"><strong>${o.id}</strong> - ${new Date(o.date).toLocaleString()}<br>Items: ${o.items.map(i=>i.name).join(', ')}</div>`;
-        });
-    }
-    const modal = document.createElement('div');
-    modal.className='modal-overlay active';
-    modal.innerHTML=`<div class="modal-box">${html}<div class="flex justify-end mt-4"><button class="btn" id="closeUserOrders">Schließen</button></div></div>`;
-    document.body.appendChild(modal);
-    document.body.style.overflow='hidden';
-    modal.querySelector('#closeUserOrders').addEventListener('click', ()=>{
-        document.body.removeChild(modal);
-        document.body.style.overflow='';
-    });
-}
-
-</script>
+ensureOrderUiInCart();
+renderCartView();

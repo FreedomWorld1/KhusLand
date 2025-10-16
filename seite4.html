@@ -243,6 +243,90 @@ body {
   overflow-y: auto;
 }
 
+/* VERBESSERUNGEN: Warenkorb & Bestellungen */
+.cart-item-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cart-quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quantity-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  cursor: pointer;
+  border: none;
+  color: #e6eef8;
+  font-size: 0.9rem;
+}
+
+.quantity-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.cart-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.order-status-badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-open {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.status-completed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.order-code-display {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: rgba(6, 182, 212, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: inline-block;
+  margin: 8px 0;
+}
+
+.user-order-details {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.order-item-card {
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-left: 3px solid #06b6d4;
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .container {
@@ -311,6 +395,15 @@ body {
   .admin-actions .btn {
     width: 100%;
   }
+  
+  .cart-actions {
+    flex-direction: column;
+  }
+  
+  .cart-item-actions {
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -370,7 +463,7 @@ body {
       </div>
       <div class="flex items-center gap-2">
         <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">Warenkorb</button>
+        <button id="btnCart" class="btn">Warenkorb <span id="cartBadge" class="hidden-el" style="background:#ef4444;color:white;border-radius:50%;width:18px;height:18px;font-size:0.7rem;display:flex;align-items:center;justify-content:center;margin-left:4px;">0</span></button>
         <button id="openSettingsBtn" class="btn">⚙️</button>
       </div>
     </header>
@@ -384,6 +477,7 @@ body {
             <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
               <option value="">— Alle Kategorien —</option>
             </select>
+            <input id="shopSearch" class="input" placeholder="🔍 Produkte suchen..." style="width:200px; min-width: 150px;">
           </div>
           <div class="kv mobile-optimized-text" id="productsCount" style="white-space: nowrap;">Produkte anzeigen</div>
         </div>
@@ -402,12 +496,28 @@ body {
                 <th class="mobile-optimized-text">Produkt</th>
                 <th class="mobile-optimized-text">Ressourcen</th>
                 <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+                <th style="width:120px" class="mobile-optimized-text">Aktionen</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
         <div style="margin-top:12px;font-weight:700" id="cartSummary" class="mobile-optimized-text">Gesamt Ressourcen: keine</div>
+        
+        <!-- VERBESSERTE WARENKORB-AKTIONEN -->
+        <div class="cart-actions">
+          <button id="saveOrderBtn" class="btn" style="background:#10b981">✅ Bestellung speichern (Code erzeugen)</button>
+          <button id="clearCartBtn" class="btn" style="background:#ef4444">🗑️ Warenkorb leeren</button>
+          <button id="continueShoppingBtn" class="btn">🛒 Weiter einkaufen</button>
+        </div>
+        
+        <div id="orderCodeSection" style="display:none; margin-top: 16px;">
+          <div class="order-code-display success mobile-optimized-text" id="orderCodeDisplay"></div>
+          <div class="flex gap-2" style="margin-top: 8px;">
+            <button id="copyOrderCodeBtn" class="btn small-btn">📋 Code kopieren</button>
+            <button id="newOrderBtn" class="btn small-btn">🆕 Neue Bestellung</button>
+          </div>
+        </div>
       </section>
     </main>
   </div>
@@ -565,6 +675,7 @@ body {
               <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
               <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
                 <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
+                <button id="markOrderCompletedBtn" class="btn" style="background:#10b981">✅ Als erledigt markieren</button>
                 <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
               </div>
             </div>
@@ -588,7 +699,7 @@ body {
             
             <div class="orders-column">
               <h5 class="mobile-optimized-text">📋 Bestellungen des Nutzers</h5>
-              <div id="userOrdersDetails" class="card order-details-container" style="padding:12px">
+              <div id="userOrdersDetails" class="card order-details-container user-order-details" style="padding:12px">
                 <div class="kv mobile-optimized-text">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
               </div>
             </div>
@@ -664,6 +775,7 @@ const elements = {
   cartTableBody: document.querySelector('#cartTable tbody'),
   cartSummary: document.getElementById('cartSummary'),
   shopCategoryFilter: document.getElementById('shopCategoryFilter'),
+  shopSearch: document.getElementById('shopSearch'),
   newCategoryInput: document.getElementById('newCategoryInput'),
   addCategoryBtn: document.getElementById('addCategoryBtn'),
   categoriesList: document.getElementById('categoriesList'),
@@ -674,21 +786,39 @@ const elements = {
   orderUserName: document.getElementById('orderUserName'),
   orderPhone: document.getElementById('orderPhone'),
   saveOrderUserBtn: document.getElementById('saveOrderUserBtn'),
+  markOrderCompletedBtn: document.getElementById('markOrderCompletedBtn'),
   markOrderResetBtn: document.getElementById('markOrderResetBtn'),
   ordersList: document.getElementById('ordersList'),
   productsCount: document.getElementById('productsCount'),
   usersList: document.getElementById('usersList'),
-  userOrdersDetails: document.getElementById('userOrdersDetails')
+  userOrdersDetails: document.getElementById('userOrdersDetails'),
+  cartBadge: document.getElementById('cartBadge'),
+  saveOrderBtn: document.getElementById('saveOrderBtn'),
+  clearCartBtn: document.getElementById('clearCartBtn'),
+  continueShoppingBtn: document.getElementById('continueShoppingBtn'),
+  orderCodeSection: document.getElementById('orderCodeSection'),
+  orderCodeDisplay: document.getElementById('orderCodeDisplay'),
+  copyOrderCodeBtn: document.getElementById('copyOrderCodeBtn'),
+  newOrderBtn: document.getElementById('newOrderBtn')
 };
 
 let products = [];
 let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' };
 let categories = [];
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let allOrders = [];
-let saveOrderBtnEl = null;
-let orderCodeDisplayEl = null;
 let selectedUserId = null;
+
+// VERBESSERUNG: Cart Badge aktualisieren
+function updateCartBadge() {
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  if (totalItems > 0) {
+    elements.cartBadge.textContent = totalItems;
+    elements.cartBadge.classList.remove('hidden-el');
+  } else {
+    elements.cartBadge.classList.add('hidden-el');
+  }
+}
 
 function showModal() { 
   elements.settingsModal.classList.remove('hidden-el'); 
@@ -856,11 +986,21 @@ function escapeHtml(text) {
 }
 
 elements.shopCategoryFilter.addEventListener('change', renderProductsGrid);
+elements.shopSearch.addEventListener('input', renderProductsGrid);
 
 function renderProductsGrid(){
-  const filter = (elements.shopCategoryFilter.value || '').trim();
+  const categoryFilter = (elements.shopCategoryFilter.value || '').trim();
+  const searchFilter = (elements.shopSearch.value || '').trim().toLowerCase();
+  
   elements.productsGrid.innerHTML = '';
-  const visibleProducts = products.filter(p => !filter || (p.category || '') === filter);
+  const visibleProducts = products.filter(p => {
+    const matchesCategory = !categoryFilter || (p.category || '') === categoryFilter;
+    const matchesSearch = !searchFilter || 
+      (p.name && p.name.toLowerCase().includes(searchFilter)) ||
+      (p.description && p.description.toLowerCase().includes(searchFilter)) ||
+      (p.category && p.category.toLowerCase().includes(searchFilter));
+    return matchesCategory && matchesSearch;
+  });
   
   elements.productsCount.textContent = `${visibleProducts.length} Produkt${visibleProducts.length !== 1 ? 'e' : ''} angezeigt`;
   
@@ -1112,211 +1252,483 @@ function addToCartByProductKey(productKey){
   const resourceMap = resourcesToMap(product.resources);
   const existingIndex = cart.findIndex(item => item.key === productKey);
   if(existingIndex === -1){
-    cart.push({ key: productKey, name: product.name, resources: {...resourceMap}, quantity: 1 });
+    cart.push({ 
+      key: productKey, 
+      name: product.name, 
+      resources: {...resourceMap}, 
+      quantity: 1,
+      image: product.image,
+      colorName: product.colorName
+    });
   } else {
     cart[existingIndex].quantity += 1;
     for(const resource in resourceMap) {
       cart[existingIndex].resources[resource] = (cart[existingIndex].resources[resource] || 0) + resourceMap[resource];
     }
   }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartBadge();
   renderCartView();
+}
+
+function removeFromCart(productKey) {
+  const existingIndex = cart.findIndex(item => item.key === productKey);
+  if (existingIndex !== -1) {
+    cart.splice(existingIndex, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    renderCartView();
+  }
+}
+
+function updateCartQuantity(productKey, newQuantity) {
+  const product = products.find(p => p.key === productKey);
+  if (!product) return;
+  
+  const resourceMap = resourcesToMap(product.resources);
+  const existingIndex = cart.findIndex(item => item.key === productKey);
+  
+  if (existingIndex !== -1) {
+    if (newQuantity <= 0) {
+      removeFromCart(productKey);
+      return;
+    }
+    
+    // Berechne die Differenz für die Ressourcen
+    const oldQuantity = cart[existingIndex].quantity;
+    const quantityDiff = newQuantity - oldQuantity;
+    
+    cart[existingIndex].quantity = newQuantity;
+    
+    // Aktualisiere Ressourcen basierend auf der Mengendifferenz
+    for(const resource in resourceMap) {
+      cart[existingIndex].resources[resource] = 
+        (cart[existingIndex].resources[resource] || 0) + (resourceMap[resource] * quantityDiff);
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    renderCartView();
+  }
 }
 
 function renderCartView(){
   elements.cartTableBody.innerHTML = '';
   const totalResources = {};
+  
+  if (cart.length === 0) {
+    elements.cartTableBody.innerHTML = `
+      <tr>
+        <td colspan="4" class="text-center kv mobile-optimized-text" style="text-align:center;padding:20px">
+          Dein Warenkorb ist leer
+        </td>
+      </tr>`;
+    elements.cartSummary.innerText = 'Gesamt Ressourcen: keine';
+    elements.saveOrderBtn.disabled = true;
+    return;
+  }
+  
   cart.forEach(entry => {
     const tr = document.createElement('tr');
     const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
-    tr.innerHTML = `<td class="mobile-optimized-text">${escapeHtml(entry.name)}</td><td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td><td style="text-align:right" class="mobile-optimized-text">${entry.quantity}</td>`;
+    
+    tr.innerHTML = `
+      <td class="mobile-optimized-text">
+        <div style="display:flex;align-items:center;gap:8px">
+          <img src="${entry.image || 'https://via.placeholder.com/40'}" 
+               style="width:40px;height:40px;object-fit:cover;border-radius:6px" 
+               alt="${escapeHtml(entry.name)}">
+          <div>${escapeHtml(entry.name)}</div>
+        </div>
+      </td>
+      <td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td>
+      <td style="text-align:right" class="mobile-optimized-text">
+        <div class="cart-quantity-control">
+          <button class="quantity-btn" data-action="decrease" data-key="${entry.key}">-</button>
+          <span>${entry.quantity}</span>
+          <button class="quantity-btn" data-action="increase" data-key="${entry.key}">+</button>
+        </div>
+      </td>
+      <td>
+        <div class="cart-item-actions">
+          <button class="btn small-btn" data-remove="${entry.key}" style="background:#ef4444">🗑️</button>
+        </div>
+      </td>`;
+    
     elements.cartTableBody.appendChild(tr);
+    
+    // Event-Listener für Quantity-Buttons
+    tr.querySelector('[data-action="decrease"]').onclick = () => {
+      updateCartQuantity(entry.key, entry.quantity - 1);
+    };
+    
+    tr.querySelector('[data-action="increase"]').onclick = () => {
+      updateCartQuantity(entry.key, entry.quantity + 1);
+    };
+    
+    tr.querySelector('[data-remove"]').onclick = () => {
+      removeFromCart(entry.key);
+    };
+    
     for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
   });
+  
   const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
-  cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
-  ensureOrderUiInCart();
-  if(saveOrderBtnEl) saveOrderBtnEl.disabled = (cart.length === 0);
+  elements.cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
+  elements.saveOrderBtn.disabled = false;
 }
 
-elements.btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
-elements.btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); renderCartView(); });
+// VERBESSERTE BESTELLFUNKTIONALITÄT
+elements.saveOrderBtn.addEventListener('click', saveCartAsOrder);
+elements.clearCartBtn.addEventListener('click', () => {
+  if (cart.length === 0) return;
+  if (confirm('Möchtest du den Warenkorb wirklich leeren?')) {
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    renderCartView();
+    elements.orderCodeSection.style.display = 'none';
+  }
+});
 
-function generate4DigitCode(){ return Math.floor(1000 + Math.random() * 9000).toString(); }
+elements.continueShoppingBtn.addEventListener('click', () => {
+  elements.shopView.classList.remove('hidden-el');
+  elements.cartView.classList.add('hidden-el');
+});
 
-function ensureOrderUiInCart(){
-  if(saveOrderBtnEl) return;
-  const wrapper = document.createElement('div');
-  wrapper.style.marginTop = '12px';
-  saveOrderBtnEl = document.createElement('button');
-  saveOrderBtnEl.className = 'btn';
-  saveOrderBtnEl.style.background = '#10b981';
-  saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
-  saveOrderBtnEl.onclick = saveCartAsOrder;
-  wrapper.appendChild(saveOrderBtnEl);
-  orderCodeDisplayEl = document.createElement('div');
-  orderCodeDisplayEl.style.marginTop = '8px';
-  orderCodeDisplayEl.style.fontWeight = '700';
-  orderCodeDisplayEl.style.fontSize = '1.05rem';
-  orderCodeDisplayEl.className = 'success mobile-optimized-text';
-  orderCodeDisplayEl.textContent = '';
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'btn small-btn';
-  copyBtn.style.marginLeft = '8px';
-  copyBtn.textContent = '📋 Kopieren';
-  copyBtn.onclick = ()=> {
-    const txt = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ','').trim();
-    if(!txt) return alert('Kein Bestellcode vorhanden');
-    navigator.clipboard?.writeText(txt).then(()=> alert('Code kopiert')).catch(()=> alert('Kopieren nicht möglich'));
-  };
-  const codeWrap = document.createElement('div');
-  codeWrap.style.display = 'flex';
-  codeWrap.style.alignItems = 'center';
-  codeWrap.style.gap = '8px';
-  codeWrap.appendChild(orderCodeDisplayEl);
-  codeWrap.appendChild(copyBtn);
-  wrapper.appendChild(codeWrap);
-  cartView.appendChild(wrapper);
+elements.copyOrderCodeBtn.addEventListener('click', () => {
+  const code = elements.orderCodeDisplay.textContent.replace('Bestellcode: ', '').trim();
+  if (!code) return;
+  
+  navigator.clipboard.writeText(code)
+    .then(() => alert('✅ Bestellcode kopiert!'))
+    .catch(() => {
+      // Fallback für ältere Browser
+      const textArea = document.createElement('textarea');
+      textArea.value = code;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('✅ Bestellcode kopiert!');
+    });
+});
+
+elements.newOrderBtn.addEventListener('click', () => {
+  cart = [];
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartBadge();
+  renderCartView();
+  elements.orderCodeSection.style.display = 'none';
+  elements.shopView.classList.remove('hidden-el');
+  elements.cartView.classList.add('hidden-el');
+});
+
+elements.btnShop.addEventListener('click', ()=>{ 
+  elements.shopView.classList.remove('hidden-el'); 
+  elements.cartView.classList.add('hidden-el'); 
+});
+
+elements.btnCart.addEventListener('click', ()=>{ 
+  elements.shopView.classList.add('hidden-el'); 
+  elements.cartView.classList.remove('hidden-el'); 
+  renderCartView(); 
+});
+
+function generate4DigitCode(){ 
+  return Math.floor(1000 + Math.random() * 9000).toString(); 
 }
 
 async function saveCartAsOrder(){
   if(cart.length === 0) return alert('❌ Warenkorb ist leer');
+  
   const code = generate4DigitCode();
-  const orderData = { code: code, createdAt: Date.now(), items: cart, status: 'offen', userName: '', phone: '' };
+  const orderData = { 
+    code: code, 
+    createdAt: Date.now(), 
+    items: cart, 
+    status: 'offen', 
+    userName: '', 
+    phone: '' 
+  };
+  
   try {
     await push(ordersRef, orderData);
-    if(!orderCodeDisplayEl) ensureOrderUiInCart();
-    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
-    cart = [];
-    renderCartView();
-  } catch (e) { console.error(e); alert('❌ Fehler beim Speichern der Bestellung'); }
+    elements.orderCodeDisplay.textContent = 'Bestellcode: ' + code;
+    elements.orderCodeSection.style.display = 'block';
+    
+    // Scroll to order code section
+    elements.orderCodeSection.scrollIntoView({ behavior: 'smooth' });
+    
+    // Cart wird nicht automatisch geleert, falls der Nutzer noch etwas ändern möchte
+  } catch (e) { 
+    console.error(e); 
+    alert('❌ Fehler beim Speichern der Bestellung'); 
+  }
 }
 
 onValue(ordersRef, snapshot => {
   allOrders = [];
-  snapshot.forEach(child => { const o = child.val(); o.key = child.key; allOrders.push(o); });
+  snapshot.forEach(child => { 
+    const o = child.val(); 
+    o.key = child.key; 
+    allOrders.push(o); 
+  });
   renderOrdersList();
 });
 
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
-  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; return; }
+  if(allOrders.length === 0){ 
+    elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; 
+    return; 
+  }
+  
   allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
-  allOrders.forEach(o=>{
+  
+  allOrders.forEach(o => {
     const div = document.createElement('div');
     div.className = 'category-item fade-in';
     const name = o.userName || '— unbekannt —';
     const phone = o.phone || '';
-    const total = o.items?.length || 0;
+    const totalItems = o.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
     const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    
+    if (o.status === 'bearbeitet') {
+      statusClass = 'status-completed';
+      statusText = '✓ Bearbeitet';
+    } else if (o.status === 'erledigt') {
+      statusClass = 'status-completed';
+      statusText = '✓ Erledigt';
+    } else if (o.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
     div.innerHTML = `
       <div class="mobile-optimized-text">
-        <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
-        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
-        ${o.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
+        <strong class="${statusClass}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
+        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${totalItems} Artikel
+        <span class="order-status-badge ${statusClass}">${statusText}</span>
       </div>
       <div style="display:flex;gap:6px">
         <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
         <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444">🗑️ Löschen</button>
       </div>`;
+    
     elements.ordersList.appendChild(div);
-    div.querySelector('[data-del]').onclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key)); };
-    div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
+    
+    div.querySelector('[data-del]').onclick = () => { 
+      if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key)); 
+    };
+    
+    div.querySelector('[data-view]').onclick = () => loadOrderByCode(o.code);
   });
 }
 
-elements.loadOrderBtn.addEventListener('click', ()=> {
-  const code = (orderCodeInput.value||'').trim();
+elements.loadOrderBtn.addEventListener('click', () => {
+  const code = (elements.orderCodeInput.value||'').trim();
   if(!code) return alert('❌ Code eingeben.');
   loadOrderByCode(code);
 });
 
 function loadOrderByCode(code){
-  const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
+  const order = allOrders.find(o => (o.code||'').toString() === code.toString());
   if(!order) return alert('❌ Keine Bestellung mit diesem Code gefunden.');
-  orderDetails.style.display = '';
-  orderItems.innerHTML = '';
-  (order.items || []).forEach(i=>{
-    const div = document.createElement('div');
+  
+  elements.orderDetails.style.display = '';
+  elements.orderItems.innerHTML = '';
+  
+  (order.items || []).forEach(i => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'order-item-card';
     const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
-    orderItems.appendChild(div);
+    itemDiv.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <img src="${i.image || 'https://via.placeholder.com/40'}" 
+             style="width:40px;height:40px;object-fit:cover;border-radius:6px" 
+             alt="${escapeHtml(i.name)}">
+        <div>
+          <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(i.name)}</div>
+          <div class="kv mobile-optimized-text">${escapeHtml(String(i.quantity))}x</div>
+        </div>
+      </div>
+      <div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
+    elements.orderItems.appendChild(itemDiv);
   });
-  orderUserName.value = order.userName || '';
-  orderPhone.value = order.phone || '';
-  saveOrderUserBtn.onclick = async ()=> {
-    try { await update(ref(db,'orders/'+order.key), { userName: (orderUserName.value||'').trim(), phone: (orderPhone.value||'').trim() }); alert('✅ Kundendaten gespeichert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler beim Speichern.'); }
+  
+  elements.orderUserName.value = order.userName || '';
+  elements.orderPhone.value = order.phone || '';
+  
+  elements.saveOrderUserBtn.onclick = async () => {
+    try { 
+      await update(ref(db,'orders/'+order.key), { 
+        userName: (elements.orderUserName.value||'').trim(), 
+        phone: (elements.orderPhone.value||'').trim() 
+      }); 
+      alert('✅ Kundendaten gespeichert.'); 
+    } catch(e){ console.error(e); alert('❌ Fehler beim Speichern.'); }
   };
-  markOrderResetBtn.onclick = async ()=> {
+  
+  elements.markOrderCompletedBtn.onclick = async () => {
+    if(!confirm('Bestellung als erledigt markieren?')) return;
+    try { 
+      await update(ref(db,'orders/'+order.key), { status: 'erledigt' }); 
+      alert('✅ Bestellung als erledigt markiert.'); 
+    } catch(e){ console.error(e); alert('❌ Fehler.'); }
+  };
+  
+  elements.markOrderResetBtn.onclick = async () => {
     if(!confirm('Bestellung als bearbeitet markieren?')) return;
-    try { await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' }); alert('✅ Bestellung markiert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler.'); }
+    try { 
+      await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' }); 
+      alert('✅ Bestellung markiert.'); 
+    } catch(e){ console.error(e); alert('❌ Fehler.'); }
   };
 }
 
 function renderUsersList() {
   const usersMap = new Map();
+  
   allOrders.forEach(order => {
     if (order.phone && order.userName) {
       const userKey = `${order.phone}-${order.userName}`;
-      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
+      if (!usersMap.has(userKey)) {
+        usersMap.set(userKey, { 
+          phone: order.phone, 
+          userName: order.userName, 
+          orders: [] 
+        });
+      }
       usersMap.get(userKey).orders.push(order);
     }
   });
+  
   const users = Array.from(usersMap.values());
   elements.usersList.innerHTML = '';
-  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
+  
+  if (users.length === 0) { 
+    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
+    return; 
+  }
+  
+  // Sortiere Nutzer nach Anzahl der Bestellungen (absteigend)
+  users.sort((a, b) => b.orders.length - a.orders.length);
+  
   users.forEach(user => {
     const userItem = document.createElement('div');
     userItem.className = 'user-order-item fade-in';
     if (selectedUserId === user.phone) userItem.classList.add('active');
-    userItem.innerHTML = `<div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div><div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div><div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
+    
+    // Berechne die Gesamtanzahl der Artikel für diesen Nutzer
+    const totalItems = user.orders.reduce((sum, order) => {
+      return sum + (order.items?.reduce((itemSum, item) => itemSum + item.quantity, 0) || 0);
+    }, 0);
+    
+    userItem.innerHTML = `
+      <div>
+        <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
+        <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
+        <div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''} • ${totalItems} Artikel</div>
+      </div>`;
+    
     userItem.onclick = () => {
       document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
       userItem.classList.add('active');
       selectedUserId = user.phone;
       renderUserOrders(user);
     };
+    
     elements.usersList.appendChild(userItem);
   });
 }
 
 function renderUserOrders(user) {
   elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
+  
+  if (!user || !user.orders.length) { 
+    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
+    return; 
+  }
+  
   const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  
   sortedOrders.forEach(order => {
     const orderCard = document.createElement('div');
     orderCard.className = 'card fade-in';
     orderCard.style.marginBottom = '12px';
+    
     const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
-    const status = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>';
-    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div class="mobile-optimized-text"><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div class="mobile-optimized-text">${status}</div></div>`;
+    const totalItems = order.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    
+    if (order.status === 'bearbeitet') {
+      statusClass = 'status-completed';
+      statusText = '✓ Bearbeitet';
+    } else if (order.status === 'erledigt') {
+      statusClass = 'status-completed';
+      statusText = '✓ Erledigt';
+    } else if (order.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    orderCard.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+        <div class="mobile-optimized-text">
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong><br>
+          <div class="kv">${escapeHtml(date)}</div>
+          <div class="kv">${totalItems} Artikel</div>
+        </div>
+        <div class="order-status-badge ${statusClass} mobile-optimized-text">${statusText}</div>
+      </div>`;
+    
     if (order.items && order.items.length > 0) {
       const itemsList = document.createElement('div');
       itemsList.style.marginTop = '8px';
+      
       order.items.forEach(item => {
         const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
         const itemDiv = document.createElement('div');
-        itemDiv.style.marginBottom = '6px';
-        itemDiv.style.padding = '6px';
-        itemDiv.style.background = 'rgba(255,255,255,0.02)';
-        itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `<div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemDiv.className = 'order-item-card';
+        itemDiv.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <img src="${item.image || 'https://via.placeholder.com/30'}" 
+                 style="width:30px;height:30px;object-fit:cover;border-radius:6px" 
+                 alt="${escapeHtml(item.name)}">
+            <div>
+              <div style="font-weight:700;font-size:0.9rem" class="mobile-optimized-text">${escapeHtml(item.name)}</div>
+              <div class="kv mobile-optimized-text" style="font-size:0.8rem">${item.quantity}x</div>
+            </div>
+          </div>
+          <div class="kv mobile-optimized-text" style="font-size:0.8rem">${escapeHtml(resourceText)}</div>`;
         itemsList.appendChild(itemDiv);
       });
+      
       orderCard.appendChild(itemsList);
     }
+    
     elements.userOrdersDetails.appendChild(orderCard);
   });
 }
 
-ensureOrderUiInCart();
+// Initialisierung
+updateCartBadge();
 renderCartView();
 applySettings();
 
-elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
-elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
+elements.settingsPassword.addEventListener('keypress', (e) => { 
+  if(e.key === 'Enter') elements.settingsUnlockBtn.click(); 
+});
+
+elements.newCategoryInput.addEventListener('keypress', (e) => { 
+  if(e.key === 'Enter') elements.addCategoryBtn.click(); 
+});
 
 console.log('🚀 Bullet Farm v2 Shop initialisiert');
 </script>

@@ -24,7 +24,7 @@ body {
 .container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 12px;
 }
 
 .card {
@@ -53,6 +53,7 @@ body {
   color: #e6eef8;
   border: 1px solid rgba(255,255,255,0.03);
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .btn:hover {
@@ -100,6 +101,7 @@ body {
   transition: opacity 0.22s ease;
   z-index: 80;
   backdrop-filter: blur(4px);
+  padding: 12px;
 }
 
 .modal-overlay.active {
@@ -108,11 +110,11 @@ body {
 }
 
 .modal-box {
-  width: 96%;
+  width: 100%;
   max-width: 980px;
   background: linear-gradient(180deg, #0b1220, #0f1724);
   border-radius: 12px;
-  padding: 18px;
+  padding: 16px;
   border: 1px solid rgba(255,255,255,0.04);
   box-shadow: 0 20px 60px rgba(2,6,23,0.7);
   transform: translateY(-8px);
@@ -132,6 +134,8 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
@@ -185,6 +189,7 @@ body {
   border-radius: 8px;
   width: 100%;
   transition: border-color 0.2s ease;
+  font-size: 16px; /* Verhindert Zoom auf iOS */
 }
 
 .input:focus, textarea:focus, select:focus {
@@ -224,8 +229,8 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
 }
 
 .fade-in {
@@ -285,6 +290,202 @@ body {
   max-height: 50vh;
   overflow-y: auto;
 }
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 8px;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .modal-box {
+    padding: 12px;
+    margin: 8px;
+  }
+  
+  /* Header mobile optimieren */
+  header.card {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  header .flex.items-center.gap-4 {
+    justify-content: center;
+  }
+  
+  /* Produkt Grid für Mobile */
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  
+  #productsGrid .card {
+    max-width: none;
+  }
+  
+  .product-image {
+    height: 100px;
+  }
+  
+  /* Tabs für Mobile */
+  .flex.gap-2 {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .tab-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+  }
+  
+  /* Tabellen für Mobile */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    font-size: 0.8rem;
+    min-width: 500px;
+  }
+  
+  .table th, .table td {
+    padding: 6px 4px;
+  }
+  
+  /* Formulare für Mobile */
+  .flex.items-center.gap-2 {
+    flex-wrap: wrap;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  
+  /* Bestellungen Layout für Mobile */
+  .orders-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .orders-column {
+    gap: 8px;
+  }
+  
+  /* Produkt Formular für Mobile */
+  .product-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  
+  .color-inputs {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+  
+  .color-inputs label {
+    min-width: 80px;
+  }
+  
+  /* Shop Filter für Mobile */
+  .shop-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start !important;
+  }
+  
+  .shop-filter {
+    width: 100% !important;
+  }
+  
+  /* Warenkorb für Mobile */
+  #cartTable {
+    min-width: 400px;
+  }
+  
+  /* Admin Buttons für Mobile */
+  .admin-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .admin-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  
+  .product-image {
+    height: 80px;
+  }
+  
+  .btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .tab-btn {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .container {
+    padding: 6px;
+  }
+  
+  .card {
+    padding: 10px;
+  }
+}
+
+/* Größere Screens */
+@media (min-width: 769px) {
+  #productsGrid .card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .category-item:hover {
+    background: rgba(255,255,255,0.04);
+  }
+  
+  .user-order-item:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-2px);
+  }
+}
+
+/* Touch Device Optimierungen */
+@media (hover: none) {
+  .btn:hover {
+    transform: none;
+    background: #111827;
+  }
+  
+  #productsGrid .card:hover {
+    transform: none;
+  }
+  
+  .category-item:hover {
+    background: rgba(255,255,255,0.02);
+  }
+  
+  .user-order-item:hover {
+    background: rgba(255,255,255,0.02);
+    transform: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -306,15 +507,15 @@ body {
 
     <main id="mainContent">
       <section id="shopView" class="card mb-6 fade-in">
-        <div class="flex items-center justify-between mb-4">
-          <div style="display:flex;gap:10px;align-items:center">
+        <div class="shop-header flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
             <h2 style="font-weight:700;color:#22c55e;margin:0">🛒 Produkte</h2>
-            <div class="kv">Filter:</div>
-            <select id="shopCategoryFilter" class="input" style="width:200px">
+            <div class="kv" style="white-space: nowrap;">Filter:</div>
+            <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
               <option value="">— Alle Kategorien —</option>
             </select>
           </div>
-          <div class="kv" id="productsCount">Produkte anzeigen</div>
+          <div class="kv" id="productsCount" style="white-space: nowrap;">Produkte anzeigen</div>
         </div>
         <div id="productsGrid" class="grid"></div>
       </section>
@@ -324,16 +525,18 @@ body {
           <h2 style="font-weight:700;color:#22c55e">🛍️ Warenkorb</h2>
           <div class="kv">Ressourcen & Anzahl</div>
         </div>
-        <table class="table" id="cartTable">
-          <thead>
-            <tr>
-              <th>Produkt</th>
-              <th>Ressourcen</th>
-              <th style="text-align:right">Anzahl</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-container">
+          <table class="table" id="cartTable">
+            <thead>
+              <tr>
+                <th>Produkt</th>
+                <th>Ressourcen</th>
+                <th style="text-align:right">Anzahl</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
         <div style="margin-top:12px;font-weight:700" id="cartSummary">Gesamt Ressourcen: keine</div>
       </section>
     </main>
@@ -372,7 +575,7 @@ body {
         </div>
 
         <div id="tabProducts" class="tab-panel">
-          <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center justify-between mb-3 admin-actions">
             <h4 style="font-weight:700">Produkte verwalten</h4>
             <div class="flex gap-2">
               <button id="btnNewProduct" class="btn">Neues Produkt</button>
@@ -383,7 +586,7 @@ body {
           <div id="productFormCard" class="card mb-3 hidden-el">
             <form id="productForm">
               <input id="prodId" type="hidden"/>
-              <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+              <div class="product-form-grid" style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
                 <div>
                   <input id="prodName" class="input" placeholder="Name" required />
                   <input id="prodImg" class="input" placeholder="Bild-URL" style="margin-top:8px"/>
@@ -400,33 +603,35 @@ body {
                 <select id="prodCategorySelect" class="input">
                   <option value="">— Keine Kategorie —</option>
                 </select>
-                <div style="display:flex;gap:8px;align-items:center">
+                <div class="color-inputs" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                   <label class="kv">Name-Farbe</label>
                   <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
-                  <label class="kv" style="margin-left:8px">Anzahl-Farbe</label>
+                  <label class="kv">Anzahl-Farbe</label>
                   <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
                 </div>
               </div>
 
               <div id="resourceTableContainer" style="margin-bottom:8px">
                 <h5 style="margin:0 0 8px 0;font-weight:700">Ressourcen (Name:Anzahl:Farbe)</h5>
-                <table class="table" id="resourceTable">
-                  <thead>
-                    <tr>
-                      <th>Ressource</th>
-                      <th style="width:120px;text-align:right">Anzahl</th>
-                      <th style="width:120px">Farbe</th>
-                      <th style="width:60px">Aktion</th>
-                    </tr>
-                  </thead>
-                  <tbody style="background:transparent"></tbody>
-                </table>
+                <div class="table-container">
+                  <table class="table" id="resourceTable">
+                    <thead>
+                      <tr>
+                        <th>Ressource</th>
+                        <th style="width:120px;text-align:right">Anzahl</th>
+                        <th style="width:120px">Farbe</th>
+                        <th style="width:60px">Aktion</th>
+                      </tr>
+                    </thead>
+                    <tbody style="background:transparent"></tbody>
+                  </table>
+                </div>
                 <div style="margin-top:8px">
                   <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
                 </div>
               </div>
 
-              <div style="display:flex;gap:8px">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
                 <button type="submit" class="btn" style="background:#10b981">✅ Speichern</button>
                 <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">❌ Abbrechen</button>
               </div>
@@ -434,25 +639,27 @@ body {
           </div>
 
           <div class="card" style="max-height:46vh;overflow:auto">
-            <table class="table" style="width:100%">
-              <thead>
-                <tr>
-                  <th>Vorschau</th>
-                  <th>Name</th>
-                  <th>Kategorie</th>
-                  <th>Ressourcen</th>
-                  <th style="width:140px">Aktionen</th>
-                </tr>
-              </thead>
-              <tbody id="productsTableBody"></tbody>
-            </table>
+            <div class="table-container">
+              <table class="table" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Vorschau</th>
+                    <th>Name</th>
+                    <th>Kategorie</th>
+                    <th>Ressourcen</th>
+                    <th style="width:140px">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <div id="tabCategories" class="tab-panel hidden-el">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
             <h4 style="font-weight:700">Kategorien verwalten</h4>
-            <div style="display:flex;gap:8px;width:360px">
+            <div style="display:flex;gap:8px;width:100%;max-width:360px;">
               <input id="newCategoryInput" class="input" placeholder="Neue Kategorie" />
               <button id="addCategoryBtn" class="btn">Hinzufügen</button>
             </div>
@@ -466,7 +673,7 @@ body {
           <input id="settingTitle" class="input" placeholder="Seiten-Titel"/>
           <label class="kv mb-2" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
           <input id="settingHeaderImage" class="input" placeholder="Bild-URL"/>
-          <div style="display:flex;gap:8px;margin-top:10px">
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
             <button id="saveGeneralBtn" class="btn" style="background:#10b981">✅ Speichern</button>
             <button id="resetGeneralBtn" class="btn" style="background:#ef4444">❌ Zurücksetzen</button>
           </div>
@@ -475,8 +682,8 @@ body {
         <div id="tabOrders" class="tab-panel hidden-el">
           <h4 style="font-weight:700;margin-bottom:8px">Bestellungen verwalten</h4>
 
-          <div class="flex items-center gap-2 mb-3">
-            <input id="orderCodeInput" class="input" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px">
+          <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
+            <input id="orderCodeInput" class="input" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
             <button id="loadOrderBtn" class="btn">Laden</button>
           </div>
 
@@ -486,7 +693,7 @@ body {
             <div style="margin-top:8px">
               <input id="orderUserName" class="input" placeholder="Name des Kunden" style="margin-top:6px">
               <input id="orderPhone" class="input" placeholder="Telefonnummer" style="margin-top:6px">
-              <div style="display:flex;gap:8px;margin-top:8px">
+              <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
                 <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
                 <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
               </div>

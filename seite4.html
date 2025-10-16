@@ -6,78 +6,307 @@
 <title>Bullet Farm v2 — Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-/* Dein kompletter CSS-Code von vorher hier */
 :root{--bg:#0f1724;--card:#0b1220;--muted:#9ca3af;--accent:#06b6d4}
 body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;background:#071025;color:#e6eef8;margin:0}
-/* ... Rest deines CSS wie zuvor ... */
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:16px}
+.shadow-soft{box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+.small-muted{color:var(--muted);font-size:0.85rem;margin-top:4px}
+.btn{transition:all .12s ease;border-radius:8px;padding:.45rem .8rem;cursor:pointer;background:#111827;color:#e6eef8;border:1px solid rgba(255,255,255,0.03)}
+.btn:hover{transform:translateY(-2px)}
+.hidden-el{display:none !important}
+.product-image{width:100%;height:130px;object-fit:cover;border-radius:8px}
+.product-image-admin{width:80px;height:50px;object-fit:cover;border-radius:6px}
+#productsGrid .card{max-width:220px;margin:0 auto}
+.modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,6,11,0.6);opacity:0;pointer-events:none;transition:opacity .22s ease;z-index:80}
+.modal-overlay.active{opacity:1;pointer-events:all}
+.modal-box{width:96%;max-width:980px;background:linear-gradient(180deg,#0b1220,#0f1724);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(2,6,23,0.7);transform:translateY(-8px);transition:transform .22s ease}
+.modal-overlay.active .modal-box{transform:translateY(0)}
+.tab-btn{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
+.tab-btn.active{background:linear-gradient(90deg,#94a3b8,#06b6d4);color:#041628;font-weight:700}
+.table {width:100%;border-collapse:collapse}
+.table th,.table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:0.92rem}
+.kv{font-size:0.9rem;color:var(--muted)}
+.category-item{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;margin-bottom:6px}
+.input,textarea,select{background:#071224;border:1px solid rgba(255,255,255,0.04);color:#e6eef8;padding:.5rem;border-radius:8px;width:100%}
+.color-input{width:48px;height:36px;padding:0;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:#fff}
+.small-btn{padding:.35rem .6rem;border-radius:6px}
+.flex-row{display:flex;gap:8px;align-items:center}
+.right{margin-left:auto}
 </style>
 </head>
 <body>
 <div class="container">
-  <!-- Header -->
-  <header class="card shadow-soft mb-6 flex items-center justify-between">
-    <div class="flex items-center gap-4">
-      <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
-      <div>
-        <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">Bullet Farm v2</h1>
-        <div class="small-muted">Shop</div>
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <button id="btnShop" class="btn">Shop</button>
-      <button id="btnCart" class="btn">Warenkorb</button>
-      <button id="openSettingsBtn" class="btn">⚙️</button>
-    </div>
-  </header>
+<header class="card shadow-soft mb-6 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
+<div>
+<h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0">Bullet Farm v2</h1>
+<div class="small-muted">Shop</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button id="btnShop" class="btn">Shop</button>
+<button id="btnCart" class="btn">Warenkorb</button>
+<button id="openSettingsBtn" class="btn">⚙️</button>
+</div>
+</header>
 
-  <!-- Main -->
-  <main id="mainContent">
-    <section id="shopView" class="card mb-6">
-      <div class="flex items-center justify-between mb-4">
-        <div style="display:flex;gap:10px;align-items:center">
-          <h2 style="font-weight:700;color:#22c55e;margin:0">🛒 Produkte</h2>
-          <div class="kv">Filter:</div>
-          <select id="shopCategoryFilter" class="input" style="width:200px">
-            <option value="">— Alle Kategorien —</option>
-          </select>
-        </div>
-        <div class="kv">Produkte anzeigen</div>
-      </div>
-      <div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
-    </section>
+<main id="mainContent">
+<section id="shopView" class="card mb-6">
+<div class="flex items-center justify-between mb-4">
+<div style="display:flex;gap:10px;align-items:center">
+<h2 style="font-weight:700;color:#22c55e;margin:0">🛒 Produkte</h2>
+<div class="kv">Filter:</div>
+<select id="shopCategoryFilter" class="input" style="width:200px">
+<option value="">— Alle Kategorien —</option>
+</select>
+</div>
+<div class="kv">Produkte anzeigen</div>
+</div>
+<div id="productsGrid" class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px"></div>
+</section>
 
-    <section id="cartView" class="card mb-6 hidden-el">
-      <div class="flex items-center justify-between mb-4">
-        <h2 style="font-weight:700;color:#22c55e">🛍️ Warenkorb</h2>
-        <div class="kv">Ressourcen & Anzahl</div>
-      </div>
-      <table class="table" id="cartTable">
-        <thead><tr><th>Produkt</th><th>Ressourcen</th><th style="text-align:right">Anzahl</th></tr></thead>
-        <tbody></tbody>
-      </table>
-      <div style="margin-top:12px;font-weight:700" id="cartSummary">Gesamt Ressourcen: keine</div>
-    </section>
-  </main>
+<section id="cartView" class="card mb-6 hidden-el">
+<div class="flex items-center justify-between mb-4">
+<h2 style="font-weight:700;color:#22c55e">🛍️ Warenkorb</h2>
+<div class="kv">Ressourcen & Anzahl</div>
+</div>
+<table class="table" id="cartTable">
+<thead><tr><th>Produkt</th><th>Ressourcen</th><th style="text-align:right">Anzahl</th></tr></thead>
+<tbody></tbody>
+</table>
+<div style="margin-top:12px;font-weight:700" id="cartSummary">Gesamt Ressourcen: keine</div>
+</section>
+</main>
 </div>
 
-<!-- Settings Modal -->
 <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
-  <div class="modal-box">
-    <!-- Dein kompletter Modal HTML-Code -->
-  </div>
+<div class="modal-box">
+<div class="flex items-start justify-between mb-4">
+<div>
+<h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0">⚙️ Einstellungen</h3>
+<div class="kv">Passwortgeschützt — Admin Funktionen</div>
+</div>
+<div class="flex gap-2 items-center">
+<button id="settingsCloseBtn" class="btn">✖</button>
+</div>
 </div>
 
-<!-- JS -->
-<script type="module">
-/* Dein kompletter JS-Code aus deiner Datei */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+<div id="settingsLoginArea">
+<label class="kv mb-2">Admin Passwort</label>
+<div class="flex items-center gap-2 mb-3">
+<input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+<button id="settingsUnlockBtn" class="btn">Einloggen</button>
+</div>
+<div id="settingsLoginError" class="kv" style="color:#ff7b7b;display:none">❌ Falsches Passwort</div>
+</div>
 
-/* ---------- Config ---------- */
-const firebaseConfig = { apiKey:"AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo", authDomain:"khusland-b7d13.firebaseapp.com", databaseURL:"https://khusland-b7d13-default-rtdb.firebaseio.com", projectId:"khusland-b7d13", storageBucket:"khusland-b7d13.firebasestorage.app", messagingSenderId:"69573193613", appId:"1:69573193613:web:86c4d839281b1e343cd7c4", measurementId:"G-JSCWR4207G" };
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-/* Restlicher JS-Code unverändert aus deiner Datei */
+<div id="settingsEditor" class="hidden-el">
+<div class="mb-4">
+<div class="flex gap-2">
+<button class="tab-btn active" data-tab="products">Produkte</button>
+<button class="tab-btn" data-tab="categories">Kategorien</button>
+<button class="tab-btn" data-tab="general">Allgemein</button>
+<button class="tab-btn" data-tab="orders">Bestellungen</button>
+</div>
+</div>
+
+<script type="module">
+// ----------------- DATEN -----------------
+let products = [
+  {id:1,name:"AK-47",category:"Waffen",resources:5,img:"https://via.placeholder.com/150"},
+  {id:2,name:"Medkit",category:"Medizin",resources:2,img:"https://via.placeholder.com/150"},
+  {id:3,name:"Rucksack",category:"Ausrüstung",resources:3,img:"https://via.placeholder.com/150"}
+];
+let categories = ["Waffen","Medizin","Ausrüstung"];
+let cart = [];
+let orders = [];
+
+// ----------------- HELPER -----------------
+function renderProducts(filter="") {
+  const grid = document.getElementById("productsGrid");
+  grid.innerHTML = "";
+  products.filter(p=>!filter||p.category===filter).forEach(p=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${p.img}" class="product-image"/>
+      <h4 style="margin:6px 0 2px 0;font-weight:700">${p.name}</h4>
+      <div class="kv">Ressourcen: ${p.resources}</div>
+      <button class="btn small-btn mt-2" onclick="addToCart(${p.id})">In Warenkorb</button>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderCategories() {
+  const select = document.getElementById("shopCategoryFilter");
+  select.innerHTML=`<option value="">— Alle Kategorien —</option>`;
+  categories.forEach(c=>{
+    const opt=document.createElement("option");
+    opt.value=c; opt.textContent=c;
+    select.appendChild(opt);
+  });
+}
+
+function renderCart() {
+  const tbody = document.querySelector("#cartTable tbody");
+  tbody.innerHTML="";
+  cart.forEach(item=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${item.name}</td><td>${item.resources}</td><td style="text-align:right">${item.count}</td>`;
+    tbody.appendChild(tr);
+  });
+  const total = cart.reduce((acc,i)=>acc+i.resources*i.count,0);
+  document.getElementById("cartSummary").textContent = total ? `Gesamt Ressourcen: ${total}` : "Gesamt Ressourcen: keine";
+}
+
+// ----------------- SHOP & CART -----------------
+function addToCart(id){
+  const p = products.find(x=>x.id===id);
+  const c = cart.find(x=>x.id===id);
+  if(c) c.count++; else cart.push({...p,count:1});
+  renderCart();
+}
+
+// ----------------- NAVIGATION -----------------
+document.getElementById("btnShop").addEventListener("click",()=>{
+  document.getElementById("shopView").classList.remove("hidden-el");
+  document.getElementById("cartView").classList.add("hidden-el");
+});
+document.getElementById("btnCart").addEventListener("click",()=>{
+  document.getElementById("cartView").classList.remove("hidden-el");
+  document.getElementById("shopView").classList.add("hidden-el");
+});
+
+document.getElementById("shopCategoryFilter").addEventListener("change",(e)=>{
+  renderProducts(e.target.value);
+});
+
+// ----------------- SETTINGS MODAL -----------------
+const settingsModal = document.getElementById("settingsModal");
+const settingsLoginArea = document.getElementById("settingsLoginArea");
+const settingsEditor = document.getElementById("settingsEditor");
+
+document.getElementById("openSettingsBtn").addEventListener("click",()=>{
+  settingsModal.classList.add("active");
+  settingsModal.classList.remove("hidden-el");
+});
+document.getElementById("settingsCloseBtn").addEventListener("click",()=>{
+  settingsModal.classList.remove("active");
+  setTimeout(()=>settingsModal.classList.add("hidden-el"),250);
+});
+
+// ----------------- LOGIN -----------------
+document.getElementById("settingsUnlockBtn").addEventListener("click",()=>{
+  const pw = document.getElementById("settingsPassword").value;
+  if(pw==="admin123"){
+    settingsLoginArea.classList.add("hidden-el");
+    settingsEditor.classList.remove("hidden-el");
+    renderAdminProducts();
+  } else {
+    document.getElementById("settingsLoginError").style.display="block";
+  }
+});
+
+// ----------------- ADMIN TABS -----------------
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll("#settingsEditor > section").forEach(s=>s.classList.add("hidden-el"));
+    const tab = btn.getAttribute("data-tab");
+    if(tab==="products") renderAdminProducts();
+    if(tab==="categories") renderAdminCategories();
+  });
+});
+
+// ----------------- ADMIN RENDER -----------------
+function renderAdminProducts(){
+  let sec = document.getElementById("adminProductsSection");
+  if(!sec){
+    sec = document.createElement("section");
+    sec.id="adminProductsSection";
+    settingsEditor.appendChild(sec);
+  }
+  sec.innerHTML="";
+  products.forEach(p=>{
+    const div = document.createElement("div");
+    div.className="category-item";
+    div.innerHTML=`${p.name} (${p.category}) — Ressourcen: ${p.resources} 
+    <button class="small-btn" onclick="deleteProduct(${p.id})">Löschen</button>`;
+    sec.appendChild(div);
+  });
+  const addBtn = document.createElement("button");
+  addBtn.className="btn mt-3";
+  addBtn.textContent="Neues Produkt hinzufügen";
+  addBtn.onclick = ()=>{
+    const name=prompt("Produktname:");
+    const category=prompt("Kategorie:");
+    const resources=parseInt(prompt("Ressourcen:"),10);
+    if(name && category && resources){
+      const id=Math.max(0,...products.map(p=>p.id))+1;
+      products.push({id,name,category,resources,img:"https://via.placeholder.com/150"});
+      if(!categories.includes(category)) categories.push(category);
+      renderAdminProducts();
+      renderCategories();
+      renderProducts();
+    }
+  };
+  sec.appendChild(addBtn);
+}
+
+function deleteProduct(id){
+  if(confirm("Produkt wirklich löschen?")){
+    products = products.filter(p=>p.id!==id);
+    renderAdminProducts();
+    renderProducts();
+  }
+}
+
+function renderAdminCategories(){
+  let sec = document.getElementById("adminCategoriesSection");
+  if(!sec){
+    sec = document.createElement("section");
+    sec.id="adminCategoriesSection";
+    settingsEditor.appendChild(sec);
+  }
+  sec.innerHTML="";
+  categories.forEach(c=>{
+    const div=document.createElement("div");
+    div.className="category-item";
+    div.innerHTML=`${c} <button class="small-btn" onclick="deleteCategory('${c}')">Löschen</button>`;
+    sec.appendChild(div);
+  });
+  const addBtn=document.createElement("button");
+  addBtn.className="btn mt-3";
+  addBtn.textContent="Neue Kategorie hinzufügen";
+  addBtn.onclick=()=>{
+    const name=prompt("Kategorie Name:");
+    if(name && !categories.includes(name)){
+      categories.push(name);
+      renderAdminCategories();
+      renderCategories();
+    }
+  };
+  sec.appendChild(addBtn);
+}
+
+function deleteCategory(c){
+  if(confirm("Kategorie wirklich löschen?")){
+    categories = categories.filter(x=>x!==c);
+    products = products.filter(p=>p.category!==c);
+    renderAdminCategories();
+    renderCategories();
+    renderProducts();
+  }
+}
+
+// ----------------- INITIAL -----------------
+renderProducts();
+renderCategories();
+renderCart();
 </script>
 </body>
 </html>

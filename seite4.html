@@ -607,14 +607,6 @@ body {
       </div>
 
       <div id="settingsEditor" class="hidden-el">
-        <!-- Suchfunktion für Einstellungen -->
-        <div class="settings-search-container">
-          <div class="search-input">
-            <div class="search-icon">🔍</div>
-            <input id="settingsSearch" type="text" class="input" placeholder="In Einstellungen suchen..." style="padding-left:36px">
-          </div>
-        </div>
-
         <div class="mb-4">
           <div class="flex gap-2">
             <button class="tab-btn active" data-tab="products">Produkte</button>
@@ -731,6 +723,14 @@ body {
         </div>
 
         <div id="tabOrders" class="tab-panel hidden-el">
+          <!-- Suchfunktion nur für Bestellungen -->
+          <div class="settings-search-container">
+            <div class="search-input">
+              <div class="search-icon">🔍</div>
+              <input id="ordersSearch" type="text" class="input" placeholder="Bestellungen suchen (Code, Name, Telefon, Status)..." style="padding-left:36px">
+            </div>
+          </div>
+
           <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Bestellungen verwalten</h4>
 
           <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
@@ -760,6 +760,14 @@ body {
         </div>
 
         <div id="tabUsers" class="tab-panel hidden-el">
+          <!-- Suchfunktion nur für Nutzer -->
+          <div class="settings-search-container">
+            <div class="search-input">
+              <div class="search-icon">🔍</div>
+              <input id="usersSearch" type="text" class="input" placeholder="Nutzer suchen (Name, Telefon)..." style="padding-left:36px">
+            </div>
+          </div>
+
           <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Nutzer & Bestellungen</h4>
           <div class="kv mb-3 mobile-optimized-text">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
           
@@ -873,7 +881,8 @@ const elements = {
   productSearch: document.getElementById('productSearch'),
   refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
   orderCodeDisplay: document.getElementById('orderCodeDisplay'),
-  settingsSearch: document.getElementById('settingsSearch')
+  ordersSearch: document.getElementById('ordersSearch'),
+  usersSearch: document.getElementById('usersSearch')
 };
 
 let products = [];
@@ -1310,146 +1319,108 @@ elements.btnReloadProducts.addEventListener('click', () => {
     .catch(() => showToast('Laden fehlgeschlagen', 'error'));
 });
 
-// Suchfunktion für Einstellungen
-elements.settingsSearch.addEventListener('input', searchInSettings);
+// Suchfunktion für Bestellungen
+elements.ordersSearch.addEventListener('input', searchOrders);
 
-function searchInSettings() {
-  const searchTerm = (elements.settingsSearch.value || '').trim().toLowerCase();
+function searchOrders() {
+  const searchTerm = (elements.ordersSearch.value || '').trim().toLowerCase();
   
   if (!searchTerm) {
-    // Suche zurücksetzen - alles anzeigen
-    elements.tabPanels.forEach(panel => {
-      panel.style.display = '';
-      const noResults = panel.querySelector('.no-search-results');
-      if (noResults) noResults.remove();
-      
-      // Alle Elemente wieder anzeigen
-      panel.querySelectorAll('.fade-in, .category-item, .order-card, .user-order-item, #productsTableBody tr').forEach(el => {
-        el.style.display = '';
-      });
+    // Suche zurücksetzen - alle Bestellungen anzeigen
+    const orders = elements.ordersList.querySelectorAll('.order-card');
+    orders.forEach(order => {
+      order.style.display = '';
     });
+    const noResults = elements.ordersList.querySelector('.no-search-results');
+    if (noResults) noResults.remove();
     return;
   }
   
-  let hasAnyMatches = false;
+  const orders = elements.ordersList.querySelectorAll('.order-card');
+  let hasMatches = false;
   
-  elements.tabPanels.forEach(panel => {
-    let hasMatches = false;
-    const noResults = panel.querySelector('.no-search-results');
-    if (noResults) noResults.remove();
-    
-    switch(panel.id) {
-      case 'tabProducts':
-        const productRows = panel.querySelectorAll('#productsTableBody tr');
-        productRows.forEach(row => {
-          const text = row.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
-            row.style.display = '';
-            hasMatches = true;
-            hasAnyMatches = true;
-          } else {
-            row.style.display = 'none';
-          }
-        });
-        break;
-        
-      case 'tabCategories':
-        const categories = panel.querySelectorAll('.category-item');
-        categories.forEach(cat => {
-          const text = cat.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
-            cat.style.display = '';
-            hasMatches = true;
-            hasAnyMatches = true;
-          } else {
-            cat.style.display = 'none';
-          }
-        });
-        break;
-        
-      case 'tabOrders':
-        const orders = panel.querySelectorAll('.order-card');
-        orders.forEach(order => {
-          const text = order.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
-            order.style.display = '';
-            hasMatches = true;
-            hasAnyMatches = true;
-          } else {
-            order.style.display = 'none';
-          }
-        });
-        break;
-        
-      case 'tabUsers':
-        const users = panel.querySelectorAll('.user-order-item');
-        users.forEach(user => {
-          const text = user.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
-            user.style.display = '';
-            hasMatches = true;
-            hasAnyMatches = true;
-          } else {
-            user.style.display = 'none';
-          }
-        });
-        
-        const userOrders = panel.querySelectorAll('.order-card');
-        userOrders.forEach(order => {
-          const text = order.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
-            order.style.display = '';
-            hasMatches = true;
-            hasAnyMatches = true;
-          } else {
-            order.style.display = 'none';
-          }
-        });
-        break;
-        
-      case 'tabGeneral':
-        // Allgemein Tab immer anzeigen bei Suche
-        hasMatches = true;
-        hasAnyMatches = true;
-        break;
-    }
-    
-    if (!hasMatches && panel.id !== 'tabGeneral') {
-      const noResultsMsg = document.createElement('div');
-      noResultsMsg.className = 'no-search-results';
-      noResultsMsg.textContent = 'Keine Ergebnisse gefunden';
-      panel.appendChild(noResultsMsg);
+  orders.forEach(order => {
+    const text = order.textContent.toLowerCase();
+    if (text.includes(searchTerm)) {
+      order.style.display = '';
+      hasMatches = true;
+    } else {
+      order.style.display = 'none';
     }
   });
   
-  // Automatisch zum ersten Tab mit Ergebnissen wechseln
-  if (hasAnyMatches) {
-    const firstTabWithResults = Array.from(elements.tabPanels).find(panel => {
-      if (panel.id === 'tabGeneral') return true;
-      const noResults = panel.querySelector('.no-search-results');
-      return panel.style.display !== 'none' && !noResults;
-    });
-    
-    if (firstTabWithResults) {
-      const tabName = firstTabWithResults.id.replace('tab', '').toLowerCase();
-      const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-      if (tabBtn && !tabBtn.classList.contains('active')) {
-        tabBtn.click();
-      }
+  // "Keine Ergebnisse" Meldung anzeigen
+  const noResults = elements.ordersList.querySelector('.no-search-results');
+  if (!hasMatches) {
+    if (!noResults) {
+      const noResultsMsg = document.createElement('div');
+      noResultsMsg.className = 'no-search-results';
+      noResultsMsg.textContent = 'Keine Bestellungen gefunden';
+      elements.ordersList.appendChild(noResultsMsg);
     }
+  } else if (noResults) {
+    noResults.remove();
   }
 }
 
-// Suchfeld zurücksetzen wenn Modal geschlossen wird
+// Suchfunktion für Nutzer
+elements.usersSearch.addEventListener('input', searchUsers);
+
+function searchUsers() {
+  const searchTerm = (elements.usersSearch.value || '').trim().toLowerCase();
+  
+  if (!searchTerm) {
+    // Suche zurücksetzen - alle Nutzer anzeigen
+    const users = elements.usersList.querySelectorAll('.user-order-item');
+    users.forEach(user => {
+      user.style.display = '';
+    });
+    const noResults = elements.usersList.querySelector('.no-search-results');
+    if (noResults) noResults.remove();
+    return;
+  }
+  
+  const users = elements.usersList.querySelectorAll('.user-order-item');
+  let hasMatches = false;
+  
+  users.forEach(user => {
+    const text = user.textContent.toLowerCase();
+    if (text.includes(searchTerm)) {
+      user.style.display = '';
+      hasMatches = true;
+    } else {
+      user.style.display = 'none';
+    }
+  });
+  
+  // "Keine Ergebnisse" Meldung anzeigen
+  const noResults = elements.usersList.querySelector('.no-search-results');
+  if (!hasMatches) {
+    if (!noResults) {
+      const noResultsMsg = document.createElement('div');
+      noResultsMsg.className = 'no-search-results';
+      noResultsMsg.textContent = 'Keine Nutzer gefunden';
+      elements.usersList.appendChild(noResultsMsg);
+    }
+  } else if (noResults) {
+    noResults.remove();
+  }
+}
+
+// Suchfelder zurücksetzen wenn Modal geschlossen wird
 elements.settingsCloseBtn.addEventListener('click', () => {
-  elements.settingsSearch.value = '';
-  searchInSettings();
+  elements.ordersSearch.value = '';
+  elements.usersSearch.value = '';
+  searchOrders();
+  searchUsers();
 });
 
 elements.settingsModal.addEventListener('click', (e) => { 
   if(e.target === elements.settingsModal) {
-    elements.settingsSearch.value = '';
-    searchInSettings();
+    elements.ordersSearch.value = '';
+    elements.usersSearch.value = '';
+    searchOrders();
+    searchUsers();
   }
 });
 

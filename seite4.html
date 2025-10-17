@@ -492,21 +492,6 @@ body {
   }
 }
 
-/* Loading Spinner */
-.loading {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255,255,255,.3);
-  border-radius: 50%;
-  border-top-color: #fff;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
 /* Search Input */
 .search-input {
   position: relative;
@@ -522,6 +507,35 @@ body {
   top: 50%;
   transform: translateY(-50%);
   color: var(--muted);
+}
+
+/* Autocomplete */
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: none;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #0b1220;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.autocomplete-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.autocomplete-active {
+  background: rgba(6, 182, 212, 0.2);
 }
 </style>
 </head>
@@ -724,7 +738,10 @@ body {
           <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Bestellungen verwalten</h4>
 
           <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
-            <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
+            <div class="search-input" style="position:relative;width:200px;min-width:150px;">
+              <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben" autocomplete="off"/>
+              <div id="orderCodeAutocomplete" class="autocomplete-items hidden-el"></div>
+            </div>
             <button id="loadOrderBtn" class="btn">Laden</button>
             <button id="refreshOrdersBtn" class="btn">🔄 Aktualisieren</button>
           </div>
@@ -745,7 +762,7 @@ body {
             </div>
           </div>
 
-          <h5 style="margin-top:10px" class="mobile-optimized-text">Alle Bestellungen</h5>
+          <h5 style="margin-top:10px" class="mobile-optimized-text">Offene Bestellungen</h5>
           <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
         </div>
 
@@ -846,6 +863,7 @@ const elements = {
   addCategoryBtn: document.getElementById('addCategoryBtn'),
   categoriesList: document.getElementById('categoriesList'),
   orderCodeInput: document.getElementById('orderCodeInput'),
+  orderCodeAutocomplete: document.getElementById('orderCodeAutocomplete'),
   loadOrderBtn: document.getElementById('loadOrderBtn'),
   orderDetails: document.getElementById('orderDetails'),
   orderItems: document.getElementById('orderItems'),
@@ -874,6 +892,7 @@ let saveOrderBtnEl = null;
 let orderCodeDisplayEl = null;
 let selectedUserId = null;
 let selectedOrder = null;
+let currentAutocompleteIndex = -1;
 
 // Toast Funktionen
 function showToast(message, type = 'info', duration = 4000) {
@@ -1471,10 +1490,20 @@ async function saveCartAsOrder(){
     items: cart, 
     status: 'offen', 
     userName: '', 
-    phone: ''
+    phone: '',
+    orderType: 'lifetime' // Standardmäßig Lifetime-Bestellung
   };
   try {
     await push(ordersRef, orderData);
+    
+    // Automatisch auch als Rtime-Bestellung speichern
+    const rtimeOrderData = {
+      ...orderData,
+      orderType: 'rtime',
+      originalCode: code // Referenz zur Lifetime-Bestellung
+    };
+    await push(ordersRef, rtimeOrderData);
+    
     if(!orderCodeDisplayEl) ensureOrderUiInCart();
     orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
     cart = [];
@@ -1494,31 +1523,23 @@ onValue(ordersRef, snapshot => {
     allOrders.push(o); 
   });
   renderOrdersList();
+  updateOrderCodeAutocomplete();
 });
 
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
-  if(allOrders.length === 0){ 
-    elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; 
+  
+  // Nur offene Bestellungen anzeigen (nicht bearbeitete oder stornierte)
+  const openOrders = allOrders.filter(o => o.status === 'offen');
+  
+  if(openOrders.length === 0){ 
+    elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine offenen Bestellungen vorhanden.</div>'; 
     return; 
   }
   
-  // Sort by status and date
-  allOrders.sort((a,b)=> {
-    // First by status (open first, then processed, then cancelled)
-    const statusOrder = { 'offen': 0, 'bearbeitet': 1, 'storniert': 2 };
-    const statusA = statusOrder[a.status] || 0;
-    const statusB = statusOrder[b.status] || 0;
-    
-    if (statusA !== statusB) {
-      return statusA - statusB;
-    }
-    
-    // Then by date (newest first)
-    return (b.createdAt||0) - (a.createdAt||0);
-  });
+  openOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
   
-  allOrders.forEach(o=>{
+  openOrders.forEach(o=>{
     const div = document.createElement('div');
     div.className = 'order-card fade-in';
     const name = o.userName || '— unbekannt —';
@@ -1526,25 +1547,20 @@ function renderOrdersList() {
     const total = o.items?.length || 0;
     const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
     
-    let statusClass = 'status-open';
-    let statusText = '● Offen';
-    if (o.status === 'bearbeitet') {
-      statusClass = 'status-processed';
-      statusText = '✓ Bearbeitet';
-    } else if (o.status === 'storniert') {
-      statusClass = 'status-cancelled';
-      statusText = '✗ Storniert';
-    }
+    // Bestellungstyp anzeigen
+    const orderTypeBadge = o.orderType === 'rtime' ? 
+      '<span class="status-badge rtime-badge" style="margin-left:6px">Rtime</span>' : 
+      '<span class="status-badge lifetime-badge" style="margin-left:6px">Lifetime</span>';
     
     div.innerHTML = `
       <div class="order-card-header">
         <div class="mobile-optimized-text">
-          <strong>${escapeHtml(o.code)}</strong><br>
+          <strong>${escapeHtml(o.code)}</strong>${orderTypeBadge}<br>
           <div class="kv">${escapeHtml(date)}</div>
           ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''}
         </div>
         <div>
-          <span class="status-badge ${statusClass}">${statusText}</span>
+          <span class="status-badge status-open">● Offen</span>
           <div class="kv mobile-optimized-text" style="text-align:right;margin-top:4px">${total} Artikel</div>
         </div>
       </div>
@@ -1565,6 +1581,91 @@ function renderOrdersList() {
   });
 }
 
+function updateOrderCodeAutocomplete() {
+  // Autocomplete für Bestellcodes aktualisieren
+  const openOrders = allOrders.filter(o => o.status === 'offen');
+  const orderCodes = [...new Set(openOrders.map(o => o.code))];
+  
+  elements.orderCodeAutocomplete.innerHTML = '';
+  
+  if (orderCodes.length > 0) {
+    orderCodes.forEach(code => {
+      const item = document.createElement('div');
+      item.className = 'autocomplete-item';
+      item.textContent = code;
+      item.onclick = () => {
+        elements.orderCodeInput.value = code;
+        elements.orderCodeAutocomplete.classList.add('hidden-el');
+        loadOrderByCode(code);
+      };
+      elements.orderCodeAutocomplete.appendChild(item);
+    });
+  }
+}
+
+// Autocomplete-Funktionalität für Bestellcode-Eingabe
+elements.orderCodeInput.addEventListener('input', function() {
+  const val = this.value;
+  const items = elements.orderCodeAutocomplete.querySelectorAll('.autocomplete-item');
+  
+  if (val.length === 0) {
+    elements.orderCodeAutocomplete.classList.add('hidden-el');
+    return;
+  }
+  
+  let hasMatches = false;
+  items.forEach(item => {
+    if (item.textContent.includes(val)) {
+      item.style.display = 'block';
+      hasMatches = true;
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  
+  if (hasMatches) {
+    elements.orderCodeAutocomplete.classList.remove('hidden-el');
+  } else {
+    elements.orderCodeAutocomplete.classList.add('hidden-el');
+  }
+  
+  currentAutocompleteIndex = -1;
+});
+
+elements.orderCodeInput.addEventListener('keydown', function(e) {
+  const items = elements.orderCodeAutocomplete.querySelectorAll('.autocomplete-item:not([style*="display: none"])');
+  
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    currentAutocompleteIndex = (currentAutocompleteIndex + 1) % items.length;
+    updateAutocompleteActive(items);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    currentAutocompleteIndex = (currentAutocompleteIndex - 1 + items.length) % items.length;
+    updateAutocompleteActive(items);
+  } else if (e.key === 'Enter' && currentAutocompleteIndex > -1) {
+    e.preventDefault();
+    items[currentAutocompleteIndex].click();
+  }
+});
+
+function updateAutocompleteActive(items) {
+  items.forEach((item, index) => {
+    if (index === currentAutocompleteIndex) {
+      item.classList.add('autocomplete-active');
+    } else {
+      item.classList.remove('autocomplete-active');
+    }
+  });
+}
+
+// Klick außerhalb schließt Autocomplete
+document.addEventListener('click', function(e) {
+  if (!elements.orderCodeInput.contains(e.target) && !elements.orderCodeAutocomplete.contains(e.target)) {
+    elements.orderCodeAutocomplete.classList.add('hidden-el');
+  }
+});
+
 elements.refreshOrdersBtn.addEventListener('click', () => {
   get(ordersRef)
     .then(() => showToast('Bestellungen aktualisiert', 'success'))
@@ -1583,7 +1684,7 @@ function loadOrderByCode(code){
   
   selectedOrder = order;
   elements.orderDetails.style.display = '';
-  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code}`;
+  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code} (${order.orderType === 'rtime' ? 'Rtime' : 'Lifetime'})`;
   elements.orderItems.innerHTML = '';
   
   (order.items || []).forEach(i=>{
@@ -1620,6 +1721,9 @@ elements.markOrderProcessedBtn.addEventListener('click', async ()=> {
   try { 
     await update(ref(db,'orders/'+selectedOrder.key), { status: 'bearbeitet' }); 
     showToast('Bestellung als bearbeitet markiert', 'success'); 
+    elements.orderDetails.style.display = 'none';
+    renderOrdersList();
+    updateOrderCodeAutocomplete();
   }
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
@@ -1630,6 +1734,8 @@ elements.markOrderOpenBtn.addEventListener('click', async ()=> {
   try { 
     await update(ref(db,'orders/'+selectedOrder.key), { status: 'offen' }); 
     showToast('Bestellung als offen markiert', 'success'); 
+    renderOrdersList();
+    updateOrderCodeAutocomplete();
   }
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
@@ -1640,21 +1746,44 @@ elements.markOrderCancelledBtn.addEventListener('click', async ()=> {
   try { 
     await update(ref(db,'orders/'+selectedOrder.key), { status: 'storniert' }); 
     showToast('Bestellung storniert', 'success'); 
+    elements.orderDetails.style.display = 'none';
+    renderOrdersList();
+    updateOrderCodeAutocomplete();
   }
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
 
 function renderUsersList() {
   const usersMap = new Map();
+  
+  // Gruppiere Bestellungen nach Telefonnummer und Namen
   allOrders.forEach(order => {
     if (order.phone && order.userName) {
-      const userKey = `${order.phone}-${order.userName}`;
-      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
-      usersMap.get(userKey).orders.push(order);
+      const userKey = order.phone;
+      
+      if (!usersMap.has(userKey)) {
+        usersMap.set(userKey, {
+          phone: order.phone,
+          userName: order.userName,
+          lifetimeOrders: [],
+          rtimeOrders: []
+        });
+      }
+      
+      const user = usersMap.get(userKey);
+      
+      // Bestellung zum entsprechenden Typ hinzufügen
+      if (order.orderType === 'lifetime') {
+        user.lifetimeOrders.push(order);
+      } else if (order.orderType === 'rtime') {
+        user.rtimeOrders.push(order);
+      }
     }
   });
+  
   const users = Array.from(usersMap.values());
   elements.usersList.innerHTML = '';
+  
   if (users.length === 0) { 
     elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
     return; 
@@ -1668,20 +1797,17 @@ function renderUsersList() {
     userItem.className = 'user-order-item fade-in';
     if (selectedUserId === user.phone) userItem.classList.add('active');
     
-    // Count orders by status
-    const openOrders = user.orders.filter(o => o.status === 'offen').length;
-    const processedOrders = user.orders.filter(o => o.status === 'bearbeitet').length;
-    const cancelledOrders = user.orders.filter(o => o.status === 'storniert').length;
+    // Zähle Bestellungen nach Status
+    const lifetimeCount = user.lifetimeOrders.length;
+    const rtimeCount = user.rtimeOrders.length;
     
     userItem.innerHTML = `
       <div>
         <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
         <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
         <div class="kv mobile-optimized-text" style="margin-top:4px">
-          ${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}
-          ${openOrders > 0 ? `<span class="status-badge status-open" style="margin-left:6px">${openOrders} offen</span>` : ''}
-          ${processedOrders > 0 ? `<span class="status-badge status-processed" style="margin-left:6px">${processedOrders} bearbeitet</span>` : ''}
-          ${cancelledOrders > 0 ? `<span class="status-badge status-cancelled" style="margin-left:6px">${cancelledOrders} storniert</span>` : ''}
+          <span class="status-badge lifetime-badge">Lifetime: ${lifetimeCount}</span>
+          <span class="status-badge rtime-badge" style="margin-left:6px">Rtime: ${rtimeCount}</span>
         </div>
       </div>`;
     
@@ -1697,59 +1823,108 @@ function renderUsersList() {
 
 function renderUserOrders(user) {
   elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { 
-    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
+  if (!user) { 
+    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Kein Nutzer ausgewählt.</div>'; 
     return; 
   }
   
-  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-  sortedOrders.forEach(order => {
-    const orderCard = document.createElement('div');
-    orderCard.className = 'order-card fade-in';
+  // Übersicht anzeigen
+  const summaryCard = document.createElement('div');
+  summaryCard.className = 'card fade-in';
+  summaryCard.style.marginBottom = '12px';
+  summaryCard.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="mobile-optimized-text">
+        <strong>Bestellübersicht für ${escapeHtml(user.userName)}</strong>
+      </div>
+      <div class="mobile-optimized-text">
+        <span class="status-badge lifetime-badge">Lifetime: ${user.lifetimeOrders.length}</span>
+        <span class="status-badge rtime-badge" style="margin-left:6px">Rtime: ${user.rtimeOrders.length}</span>
+      </div>
+    </div>`;
+  elements.userOrdersDetails.appendChild(summaryCard);
+  
+  // Lifetime-Bestellungen anzeigen
+  if (user.lifetimeOrders.length > 0) {
+    const lifetimeHeader = document.createElement('h5');
+    lifetimeHeader.className = 'mobile-optimized-text';
+    lifetimeHeader.style.marginTop = '16px';
+    lifetimeHeader.style.marginBottom = '8px';
+    lifetimeHeader.innerHTML = '<span class="status-badge lifetime-badge">Lifetime Bestellungen</span>';
+    elements.userOrdersDetails.appendChild(lifetimeHeader);
     
-    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    const sortedLifetimeOrders = user.lifetimeOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    sortedLifetimeOrders.forEach(order => {
+      renderOrderCard(order, elements.userOrdersDetails);
+    });
+  }
+  
+  // Rtime-Bestellungen anzeigen
+  if (user.rtimeOrders.length > 0) {
+    const rtimeHeader = document.createElement('h5');
+    rtimeHeader.className = 'mobile-optimized-text';
+    rtimeHeader.style.marginTop = '16px';
+    rtimeHeader.style.marginBottom = '8px';
+    rtimeHeader.innerHTML = '<span class="status-badge rtime-badge">Rtime Bestellungen</span>';
+    elements.userOrdersDetails.appendChild(rtimeHeader);
     
-    let statusClass = 'status-open';
-    let statusText = '● Offen';
-    if (order.status === 'bearbeitet') {
-      statusClass = 'status-processed';
-      statusText = '✓ Bearbeitet';
-    } else if (order.status === 'storniert') {
-      statusClass = 'status-cancelled';
-      statusText = '✗ Storniert';
-    }
-    
-    orderCard.innerHTML = `
-      <div class="order-card-header">
-        <div class="mobile-optimized-text">
-          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
-          <div class="kv">${escapeHtml(date)}</div>
-        </div>
-        <div>
-          <span class="status-badge ${statusClass}">${statusText}</span>
-        </div>
-      </div>`;
-    
-    if (order.items && order.items.length > 0) {
-      const itemsList = document.createElement('div');
-      itemsList.style.marginTop = '8px';
-      order.items.forEach(item => {
-        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
-        const itemDiv = document.createElement('div');
-        itemDiv.style.marginBottom = '6px';
-        itemDiv.style.padding = '6px';
-        itemDiv.style.background = 'rgba(255,255,255,0.02)';
-        itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `
-          <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
-          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
-        itemsList.appendChild(itemDiv);
-      });
-      orderCard.appendChild(itemsList);
-    }
-    
-    elements.userOrdersDetails.appendChild(orderCard);
-  });
+    const sortedRtimeOrders = user.rtimeOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    sortedRtimeOrders.forEach(order => {
+      renderOrderCard(order, elements.userOrdersDetails);
+    });
+  }
+  
+  if (user.lifetimeOrders.length === 0 && user.rtimeOrders.length === 0) {
+    elements.userOrdersDetails.innerHTML += '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>';
+  }
+}
+
+function renderOrderCard(order, container) {
+  const orderCard = document.createElement('div');
+  orderCard.className = 'order-card fade-in';
+  
+  const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+  
+  let statusClass = 'status-open';
+  let statusText = '● Offen';
+  if (order.status === 'bearbeitet') {
+    statusClass = 'status-processed';
+    statusText = '✓ Bearbeitet';
+  } else if (order.status === 'storniert') {
+    statusClass = 'status-cancelled';
+    statusText = '✗ Storniert';
+  }
+  
+  orderCard.innerHTML = `
+    <div class="order-card-header">
+      <div class="mobile-optimized-text">
+        <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
+        <div class="kv">${escapeHtml(date)}</div>
+      </div>
+      <div>
+        <span class="status-badge ${statusClass}">${statusText}</span>
+      </div>
+    </div>`;
+  
+  if (order.items && order.items.length > 0) {
+    const itemsList = document.createElement('div');
+    itemsList.style.marginTop = '8px';
+    order.items.forEach(item => {
+      const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
+      const itemDiv = document.createElement('div');
+      itemDiv.style.marginBottom = '6px';
+      itemDiv.style.padding = '6px';
+      itemDiv.style.background = 'rgba(255,255,255,0.02)';
+      itemDiv.style.borderRadius = '4px';
+      itemDiv.innerHTML = `
+        <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
+        <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+      itemsList.appendChild(itemDiv);
+    });
+    orderCard.appendChild(itemsList);
+  }
+  
+  container.appendChild(orderCard);
 }
 
 // Make functions globally available for onclick handlers
@@ -1764,7 +1939,7 @@ elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'En
 elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
 elements.orderCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
 
-console.log('🚀 Bullet Farm v3 Shop initialisiert');
+console.log('🚀 Bullet Farm v3 Shop mit Lifetime/Rtime System initialisiert');
 </script>
 </body>
 </html>

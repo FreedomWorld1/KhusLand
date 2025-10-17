@@ -1199,113 +1199,227 @@ onValue(ordersRef, snapshot => {
 
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
-  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; return; }
-  allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+OrdersList() {
+  elements.ordersList.innerHTML = '';
+  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestell="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; return; }
+  allungen vorhanden.</div>'; return; }
+  allOrders.sort((a,b)=>Orders.sort((a,b)=> (b.createdAt||0) - (a.createdAt (b.createdAt||0) - (a.createdAt||0));
+  allOrders||0));
   allOrders.forEach(o=>{
-    const div = document.createElement('div');
-    div.className = 'category-item fade-in';
-    const name = o.userName || '— unbekannt —';
+    const.forEach(o=>{
+    const div = document.createElement div = document.createElement('div');
+    div.className =('div');
+    div.className = 'category-item fade 'category-item fade-in';
+    const name = o.user-in';
+    const name = o.userName || '— unbekannt —Name || '— unbekannt —';
+    const phone = o.phone || '';
+    const total = o.items';
     const phone = o.phone || '';
     const total = o.items?.length || 0;
-    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    const date = o.created?.length || 0;
+    const date = o.createdAt ? new DateAt ? new Date(o(o.created.createdAtAt).toLocale).toLocaleString('de-DE') : '-';
+    div.innerHTMLString('de-DE') : '-';
     div.innerHTML = `
       <div class="mobile-optimized-text">
-        <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
-        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
-        ${o.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
+        < = `
+      <div class="mobile-optimized-text">
+        <strong class="${o.status === 'bearbeitet' ?strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escape 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})Html(o.code)}</strong> (${escapeHtml(date)})<br>
+        ${escapeHtml(name)} ${phone<br>
+        ${escapeHtml(name)} ${phone ? ' ? '📞 '+escapeHtml(phone) : ''📞 '+escapeHtml(phone) : ''} —} — ${total} Artikel
+        ${o.status === ${total} Artikel
+        ${o.status === 'bear 'bearbeitet' ? '<span class="success">beitet' ? '<span class="success">✓ Bearbeitet</span>' :✓ Bearbeitet</span>' : '<span class=" '<span class="warning">● Offen</span>'}
       </div>
-      <div style="display:flex;gap:6px">
-        <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
-        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444">🗑️ Löschen</button>
+     warning">● Offen</span>'}
+      </div>
+      <div style=" <div style="display:display:flex;gap:6px">
+        <buttonflex;gap:6px">
+        <button class="btn small-btn" data-view class="btn small-btn" data-view="${escapeHtml(o="${escapeHtml(o.code)}">👁️ Ansehen</button>
+        <button.code)}">👁️ Ansehen</button>
+        <button class="btn small class="btn small-btn" data-del="${escapeHtml(o-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444.key)}" style="background:#ef4444">🗑️ Löschen</button">🗑️ Löschen</button>
+      </div>
       </div>`;
-    elements.ordersList.appendChild(div);
-    div.querySelector('[data-del]').onclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key)); };
-    div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
+    elements.ordersList.appendChild>`;
+    elements.orders(div);
+    div.querySelector('[data-del]').onList.appendChild(div);
+    div.querySelector('[data-del]').onclick = ()=> { ifclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key(db,'orders/'+o.key)); };
+    div.querySelector)); };
+    div.querySelector('[data-view]').onclick =('[data-view]').onclick = ()=> loadOrder ()=> loadOrderByCode(o.code);
+  });
+}
+
+elements.loadOrderBtn.addEventListenerByCode(o.code);
   });
 }
 
 elements.loadOrderBtn.addEventListener('click', ()=> {
-  const code = (orderCodeInput.value||'').trim();
-  if(!code) return alert('❌ Code eingeben.');
-  loadOrderByCode(code);
+  const code('click', ()=> {
+  const code = (orderCodeInput.value||'').trim = (orderCodeInput.value||'').trim();
+  if(!();
+  if(!code) returncode) return alert('❌ Code eingeben.');
+  loadOrderByCode(code alert('❌ Code eingeben.');
+  loadOrderByCode);
+});
+
+function loadOrderByCode(code){
+  const order = allOrders.find(o=> (o.code||'').toString()(code);
 });
 
 function loadOrderByCode(code){
   const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
-  if(!order) return alert('❌ Keine Bestellung mit diesem Code gefunden.');
+  === code.toString());
+  if(!order) return alert(' if(!order) return alert('❌ Keine Bestellung mit diesem Code gefunden❌ Keine Bestellung mit diesem Code gefunden.');
   orderDetails.style.display = '';
+.');
+  orderDetails.style.display =  orderItems.innerHTML = '';
+  (order.items || '';
   orderItems.innerHTML = '';
-  (order.items || []).forEach(i=>{
+  (order.items || []).forEach(i=> []).forEach(i=>{
     const div = document.createElement('div');
-    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
+    const{
+    const div = document.createElement('div');
+    const resText = Object.entries(i resText = Object.entries(i.resources || {})..resources || {}).map(([k,v])=>map(([k,v])=>`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div style`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div="margin-bottom:6px" class="mobile-optimized style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml</b> — ${escapeHtml(String(i.quantity))}(String(i.quantity))}x</div><div class="x</div><div class="kv mobile-optimizedkv mobile-optimized-text-text">${escapeHtml">${escapeHtml(resText)}</div>`;
+    orderItems.appendChild(div);
+(resText)}</div>`;
     orderItems.appendChild(div);
   });
+  orderUserName.value = order.userName  });
   orderUserName.value = order.userName || '';
-  orderPhone.value = order.phone || '';
-  saveOrderUserBtn.onclick = async ()=> {
-    try { await update(ref(db,'orders/'+order.key), { userName: (orderUserName.value||'').trim(), phone: (orderPhone.value||'').trim() }); alert('✅ Kundendaten gespeichert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler beim Speichern.'); }
+  orderPhone.value = order || '';
+  orderPhone.value.phone || '';
+  save = order.phone || '';
+  saveOrderUserBtn.onclick = async ()=>OrderUserBtn.onclick = async ()=> {
+    try { await update(ref(db,'orders/'+order.key), { userName: {
+    try { await update(ref(db,'orders/'+order.key), { userName: (orderUserName.value||'' (orderUserName.value||'').trim(), phone: ().trim(), phone: (orderPhone.value||'').orderPhone.value||'').trim() }); alert('trim() }); alert('✅ Kundendaten gespeichert.'); }
+✅ Kundendaten gespeichert.'); }
+    catch(e){ console.error(e); alert    catch(e){ console.error('❌ Fehler beim Speichern.'); }
+ (e); alert('❌ Fehler beim Speichern.'); }
   };
   markOrderResetBtn.onclick = async ()=> {
-    if(!confirm('Bestellung als bearbeitet markieren?')) return;
-    try { await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' }); alert('✅ Bestellung markiert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler.'); }
+    if(!confirm };
+  markOrderResetBtn.onclick = async ()=> {
+    if(!confirm('Bestellung als bearbeitet markieren('Bestellung als bearbeitet?')) return;
+    try { await update(ref(db,' markieren?')) return;
+    try { await update(ref(db,'orders/'+order.key), { status: 'orders/'+order.key), { status: 'bearbeitet' }); alert('bearbeitet' }); alert('✅ Bestellung mark✅ Bestellung markiert.'); }
+    catch(e){iert.'); }
+    catch(e){ console.error(e); alert('❌ Fehler console.error(e); alert('.'); }
+  };
+}
+
+function renderUsersList()❌ Fehler.'); }
   };
 }
 
 function renderUsersList() {
   const usersMap = new Map();
+ {
+  const usersMap = new Map();
   allOrders.forEach(order => {
-    if (order.phone && order.userName) {
+    if (  allOrders.forEach(order => {
+    if (order.phone && order.userName)order.phone && order.user {
+      const userKey = `${order.phoneName) {
       const userKey = `${order.phone}-${order.userName}`;
-      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
+      if (!usersMap}-${order.userName}`;
+     .has(userKey)) usersMap.set(userKey, { phone if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order: order.phone.phone, userName: order.userName, userName: order, orders: [] });
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  const users =.userName, orders: [] });
       usersMap.get(userKey).orders.push(order);
     }
   });
   const users = Array.from(usersMap.values());
   elements.usersList.innerHTML = '';
-  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
+ Array.from(usersMap.values());
+  elements.usersList.innerHTML = '';
+  if (users.length ===   if (users.length ===0) { elements.usersList.innerHTML 0) { elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummer mit Telefonnummern gefunden.</div>'; returnn gefunden.</div>'; return; }
   users.forEach(user => {
-    const userItem = document.createElement('div');
-    userItem.className = 'user-order-item fade-in';
+    const; }
+  users.forEach(user => {
+    const userItem userItem = document.createElement('div');
+    userItem.class = document.createElement('div');
+    userItem.className =Name = 'user-order-item fade-in';
+    if (selectedUserId === user.phone) userItem.classList.add 'user-order-item fade-in';
     if (selectedUserId === user.phone) userItem.classList.add('active');
-    userItem.innerHTML = `<div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div><div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div><div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
+    userItem.innerHTML('active');
+    userItem.innerHTML = = `<div style="font-weight:700" class `<div style="font-weight:700" class="mobile-optimized-text">${escapeHtml="mobile-optimized-text">${escapeHtml(user.userName)}</div><div class="kv(user.userName)}</div><div class="kv mobile-optimized mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div-text">📞 ${escapeHtml(user.phone)}</><div class="kv mobile-optimized-text">${user.orders.length} Bestellungdiv><div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders${user.orders.length !== 1 ? 'en'.length !== 1 ? 'en' : ''}</div>`;
+    userItem.on : ''}</div>`;
     userItem.onclick = () => {
-      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      document.querySelectorclick = () => {
+     All('.user-order-item').forEach(item => item.classList.remove document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      userItem.classList.add('('active'));
       userItem.classList.add('active');
+      selectedUserId = user.active');
       selectedUserId = user.phone;
       renderUserOrders(user);
     };
+phone;
+      renderUserOrders(user);
+    };
+    elements.usersList.appendChild(userItem);
     elements.usersList.appendChild(userItem);
   });
 }
 
+function  });
+}
+
 function renderUserOrders(user) {
-  elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
-  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  elements renderUserOrders(user) {
+  elements.userOrdersDetails.userOrdersDetails.innerHTML = '';
+  if (!user || !user.orders.length.innerHTML = '';
+  if (!user || !user.orders.length) { elements.userOrdersDetails) { elements.userOrdersDetails.innerHTML = '<div class="kv.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</ für diesen Nutzer gefunden.</div>'; returndiv>'; return; }
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (; }
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createda.createdAt || 0));
+  sortedOrders.forEachAt || 0));
   sortedOrders.forEach(order => {
     const orderCard = document.createElement('div');
-    orderCard.className = 'card fade-in';
-    orderCard.style.marginBottom = '12px';
-    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
-    const status = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>';
-    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div class="mobile-optimized-text"><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div class="mobile-optimized-text">${status}</div></div>`;
-    if (order.items && order.items.length > 0) {
-      const itemsList = document.createElement('div');
+    orderCard.className =(order => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'card fade-in 'card fade-in';
+   ';
+    orderCard.style.marginBottom = ' orderCard.style.marginBottom = '12px';
+    const date = order.createdAt ? new12px';
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de Date(order.createdAt).toLocaleString('de-DE-DE') : '-';
+    const status = order.status === 'bearbeitet' ?') : '-';
+    const status = order.status === 'bearbeitet' ? '<span class="success '<span class="success">✓">✓ Bearbeitet</span>' : '<span class="warning">● Offen Bearbeitet</span>' : '<span class="warning">● Offen</span</span>';
+    orderCard.innerHTML = `<div>';
+    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align style="display:flex;justify-content:space-between;align-items:start;-items:start;margin-bottom:8px"><margin-bottom:8px"><div class="mobile-optimized-text"><strong>Bestdiv class="mobile-optimized-text"><strong>Bestellcode: ${escapeHtml(order.codeellcode: ${escapeHtml(order.code)}</strong><br><div class="kv)}</strong><br><div class="kv">${escapeHtml(date)}</div">${escapeHtml(date)}</div></div><div></div><div class=" class="mobile-optimized-text">${status}</div></div>`;
+    ifmobile-optimized-text">${status}</div></div>`;
+    if (order.items && order.items.length > (order.items && order.items.length > 0) {
+      const itemsList 0) {
+      const = document.createElement('div');
+      itemsList.style itemsList = document.createElement('div');
       itemsList.style.marginTop = '8px';
+      order.items.marginTop = '8px';
       order.items.forEach(item => {
-        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
-        const itemDiv = document.createElement('div');
-        itemDiv.style.marginBottom = '6px';
+        const resourceText = Object..forEach(item => {
+        const resourceText = Object.entries(item.resources || {}).entries(item.resources || {}).map(([name, value]) => `${name}:map(([name, value]) => `${name}: ${value}`).join(', ');
+ ${value}`).join(', ');
+        const itemDiv =        const itemDiv = document.createElement('div');
+        itemDiv.style.m document.createElement('div');
+        itemDiv.style.marginBottom = '6arginBottom = '6px';
+        itemDiv.style.ppx';
         itemDiv.style.padding = '6px';
-        itemDiv.style.background = 'rgba(255,255,255,0.02)';
+        itemadding = '6px';
+        itemDiv.style.background = 'rgba(255Div.style.background = 'rgba(255,255,255,255,0.02)';
+        itemDiv.style.borderRadius =,255,0.02)';
         itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `<div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemDiv.innerHTML '4px';
+        itemDiv.innerHTML = `<div class = `<div class="mobile="mobile-optimized-text"><b>${escapeHtml(item.name-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-textquantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}">${escapeHtml(resourceText)}</div>`;
+</div>`;
         itemsList.appendChild(itemDiv);
+             itemsList.appendChild(itemDiv);
       });
+      orderCard });
       orderCard.appendChild(itemsList);
+    }
+    elements.userOrdersDetails.appendChild(orderCard);
+  });
+}
+
+ensureOrderUi.appendChild(itemsList);
     }
     elements.userOrdersDetails.appendChild(orderCard);
   });
@@ -1315,10 +1429,18 @@ ensureOrderUiInCart();
 renderCartView();
 applySettings();
 
-elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
-elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
+elementsInCart();
+renderCartView();
+applySettings();
+
+elements.settingsPassword.addEventListener.settingsPassword.addEventListener('keypress', (e) => { if(e.key === '('keypress', (e) => { if(e.keyEnter') elements.settingsUnlockBtn.click(); });
+elements === 'Enter') elements.settingsUnlockBtn.click(); });
+elements.newCategoryInput.addEventListener('keypress', (e) =>.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === ' { if(e.key === 'Enter') elements.addCategoryBtnEnter') elements.addCategoryBtn.click(); });
+
+console.log('🚀 Bullet Farm v.click(); });
 
 console.log('🚀 Bullet Farm v2 Shop initialisiert');
+</2 Shop initialisiert');
 </script>
 </body>
 </html>

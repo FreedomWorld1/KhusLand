@@ -525,6 +525,44 @@ body {
   color: var(--muted);
   font-style: italic;
 }
+
+/* User Stats */
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.stat-card {
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-lifetime {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.stat-resettime {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.stat-lifetime .stat-value {
+  color: #10b981;
+}
+
+.stat-resettime .stat-value {
+  color: #f59e0b;
+}
 </style>
 </head>
 <body>
@@ -815,6 +853,7 @@ const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
+const userStatsRef = ref(db, 'userStats');
 
 const ADMIN_PASSWORD = 'admin123';
 
@@ -1424,6 +1463,241 @@ elements.settingsModal.addEventListener('click', (e) => {
   }
 });
 
+// Funktion zum Laden der User-Statistiken
+async function loadUserStats(user) {
+  try {
+    const userStatsRef = ref(db, `userStats/${user.phone}`);
+    const snapshot = await get(userStatsRef);
+    
+    if (snapshot.exists()) {
+      const stats = snapshot.val();
+      return {
+        lifeTime: user.orders.length,
+        resetTime: stats.resetTime || 0,
+        lastReset: stats.lastReset || null
+      };
+    } else {
+      // Erstelle neue Stats wenn nicht vorhanden
+      const initialStats = {
+        lifeTime: user.orders.length,
+        resetTime: user.orders.length, // Startet mit aktueller Bestellanzahl
+        lastReset: null
+      };
+      
+      // Speichere initiale Stats
+      await update(userStatsRef, initialStats);
+      return initialStats;
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der User-Statistiken:', error);
+    return {
+      lifeTime: user.orders.length,
+      resetTime: user.orders.length,
+      lastReset: null
+    };
+  }
+}
+
+// Neue Funktion zum Zurücksetzen der ResetTime
+async function resetUserTime(user) {
+  if (!confirm(`ResetTime für ${user.userName} wirklich auf 0 zurücksetzen?`)) return;
+  
+  try {
+    const userStatsRef = ref(db, `userStats/${user.phone}`);
+    await update(userStatsRef, {
+      userName: user.userName,
+      phone: user.phone,
+      lastReset: Date.now(),
+      resetTime: 0
+    });
+    
+    showToast(`ResetTime für ${user.userName} zurückgesetzt`, 'success');
+    
+    // UI aktualisieren
+    renderUsersList();
+    if (selectedUserId === user.phone) {
+      renderUserOrders(user);
+    }
+    
+  } catch (error) {
+    console.error('Fehler beim Zurücksetzen:', error);
+    showToast('Fehler beim Zurücksetzen', 'error');
+  }
+}
+
+// Verbesserte renderUsersList mit LifeTime/ResetTime
+async function renderUsersList() {
+  const usersMap = new Map();
+  
+  // Sammle alle Nutzer
+  allOrders.forEach(order => {
+    if (order.phone && order.userName) {
+      const userKey = `${order.phone}-${order.userName}`;
+      if (!usersMap.has(userKey)) {
+        usersMap.set(userKey, { 
+          phone: order.phone, 
+          userName: order.userName, 
+          orders: []
+        });
+      }
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  
+  const users = Array.from(usersMap.values());
+  elements.usersList.innerHTML = '';
+  
+  if (users.length === 0) { 
+    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
+    return; 
+  }
+  
+  // Sort users by name
+  users.sort((a, b) => a.userName.localeCompare(b.userName));
+  
+  // Lade Statistiken für jeden Nutzer
+  for (const user of users) {
+    const stats = await loadUserStats(user);
+    user.lifeTime = stats.lifeTime;
+    user.resetTime = stats.resetTime;
+    user.lastReset = stats.lastReset;
+    
+    const userItem = document.createElement('div');
+    userItem.className = 'user-order-item fade-in';
+    if (selectedUserId === user.phone) userItem.classList.add('active');
+    
+    const lastResetText = user.lastReset ? 
+      `(Zuletzt: ${new Date(user.lastReset).toLocaleString('de-DE')})` : 
+      '(Noch nie zurückgesetzt)';
+    
+    userItem.innerHTML = `
+      <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
+      <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
+      <div class="kv mobile-optimized-text" style="margin-top: 8px;">
+        <div>🔄 LifeTime: ${user.lifeTime} Bestellung${user.lifeTime !== 1 ? 'en' : ''}</div>
+        <div>⏰ ResetTime: ${user.resetTime} Bestellung${user.resetTime !== 1 ? 'en' : ''}</div>
+        <div class="kv" style="font-size: 0.7rem; margin-top: 4px;">${lastResetText}</div>
+      </div>
+      <div style="margin-top: 8px; display: flex; gap: 6px;">
+        <button class="btn small-btn reset-btn" style="background: #f59e0b;">🔄 ResetTime zurücksetzen</button>
+        <button class="btn small-btn details-btn" style="background: #3b82f6;">📋 Details anzeigen</button>
+      </div>`;
+    
+    elements.usersList.appendChild(userItem);
+    
+    // Reset-Button Event
+    const resetBtn = userItem.querySelector('.reset-btn');
+    resetBtn.onclick = (e) => {
+      e.stopPropagation();
+      resetUserTime(user);
+    };
+    
+    // Details-Button Event
+    const detailsBtn = userItem.querySelector('.details-btn');
+    detailsBtn.onclick = (e) => {
+      e.stopPropagation();
+      userItem.click();
+    };
+    
+    // Klick auf User Item
+    userItem.onclick = () => {
+      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      userItem.classList.add('active');
+      selectedUserId = user.phone;
+      renderUserOrders(user);
+    };
+  }
+}
+
+// Erweiterte renderUserOrders Funktion mit Reset-Funktionalität
+function renderUserOrders(user) {
+  elements.userOrdersDetails.innerHTML = '';
+  
+  if (!user || !user.orders.length) { 
+    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
+    return; 
+  }
+  
+  // Header mit Statistiken
+  const headerCard = document.createElement('div');
+  headerCard.className = 'order-card';
+  headerCard.innerHTML = `
+    <div class="order-card-header">
+      <div class="mobile-optimized-text">
+        <strong>📊 Statistiken für ${escapeHtml(user.userName)}</strong>
+        <div class="kv">📞 ${escapeHtml(user.phone)}</div>
+      </div>
+    </div>
+    <div class="user-stats-grid">
+      <div class="stat-card stat-lifetime">
+        <div class="stat-value">${user.lifeTime}</div>
+        <div class="kv">LifeTime Bestellungen</div>
+      </div>
+      <div class="stat-card stat-resettime">
+        <div class="stat-value">${user.resetTime}</div>
+        <div class="kv">ResetTime Bestellungen</div>
+      </div>
+    </div>
+    <div style="margin-top: 12px;">
+      <button class="btn" style="background: #f59e0b; width: 100%;" onclick="resetUserTime(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+        🔄 ResetTime zurücksetzen
+      </button>
+    </div>`;
+  
+  elements.userOrdersDetails.appendChild(headerCard);
+  
+  // Bestellungen anzeigen
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  
+  sortedOrders.forEach(order => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'order-card fade-in';
+    
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (order.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (order.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    orderCard.innerHTML = `
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
+          <div class="kv">${escapeHtml(date)}</div>
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+        </div>
+      </div>`;
+    
+    if (order.items && order.items.length > 0) {
+      const itemsList = document.createElement('div');
+      itemsList.style.marginTop = '8px';
+      order.items.forEach(item => {
+        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
+        const itemDiv = document.createElement('div');
+        itemDiv.style.marginBottom = '6px';
+        itemDiv.style.padding = '6px';
+        itemDiv.style.background = 'rgba(255,255,255,0.02)';
+        itemDiv.style.borderRadius = '4px';
+        itemDiv.innerHTML = `
+          <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
+          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemsList.appendChild(itemDiv);
+      });
+      orderCard.appendChild(itemsList);
+    }
+    
+    elements.userOrdersDetails.appendChild(orderCard);
+  });
+}
+
 elements.settingsUnlockBtn.addEventListener('click', () => {
   const password = (elements.settingsPassword.value || '').trim();
   if(password === ADMIN_PASSWORD){
@@ -1769,115 +2043,10 @@ elements.markOrderCancelledBtn.addEventListener('click', async ()=> {
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
 
-function renderUsersList() {
-  const usersMap = new Map();
-  allOrders.forEach(order => {
-    if (order.phone && order.userName) {
-      const userKey = `${order.phone}-${order.userName}`;
-      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
-      usersMap.get(userKey).orders.push(order);
-    }
-  });
-  const users = Array.from(usersMap.values());
-  elements.usersList.innerHTML = '';
-  if (users.length === 0) { 
-    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
-    return; 
-  }
-  
-  // Sort users by name
-  users.sort((a, b) => a.userName.localeCompare(b.userName));
-  
-  users.forEach(user => {
-    const userItem = document.createElement('div');
-    userItem.className = 'user-order-item fade-in';
-    if (selectedUserId === user.phone) userItem.classList.add('active');
-    
-    // Count orders by status
-    const openOrders = user.orders.filter(o => o.status === 'offen').length;
-    const processedOrders = user.orders.filter(o => o.status === 'bearbeitet').length;
-    const cancelledOrders = user.orders.filter(o => o.status === 'storniert').length;
-    
-    userItem.innerHTML = `
-      <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
-      <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
-      <div class="kv mobile-optimized-text">
-        ${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}
-        ${openOrders > 0 ? `<span class="status-badge status-open" style="margin-left:6px">${openOrders} offen</span>` : ''}
-        ${processedOrders > 0 ? `<span class="status-badge status-processed" style="margin-left:6px">${processedOrders} bearbeitet</span>` : ''}
-        ${cancelledOrders > 0 ? `<span class="status-badge status-cancelled" style="margin-left:6px">${cancelledOrders} storniert</span>` : ''}
-      </div>`;
-    
-    userItem.onclick = () => {
-      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
-      userItem.classList.add('active');
-      selectedUserId = user.phone;
-      renderUserOrders(user);
-    };
-    elements.usersList.appendChild(userItem);
-  });
-}
-
-function renderUserOrders(user) {
-  elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { 
-    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
-    return; 
-  }
-  
-  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-  sortedOrders.forEach(order => {
-    const orderCard = document.createElement('div');
-    orderCard.className = 'order-card fade-in';
-    
-    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
-    
-    let statusClass = 'status-open';
-    let statusText = '● Offen';
-    if (order.status === 'bearbeitet') {
-      statusClass = 'status-processed';
-      statusText = '✓ Bearbeitet';
-    } else if (order.status === 'storniert') {
-      statusClass = 'status-cancelled';
-      statusText = '✗ Storniert';
-    }
-    
-    orderCard.innerHTML = `
-      <div class="order-card-header">
-        <div class="mobile-optimized-text">
-          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
-          <div class="kv">${escapeHtml(date)}</div>
-        </div>
-        <div>
-          <span class="status-badge ${statusClass}">${statusText}</span>
-        </div>
-      </div>`;
-    
-    if (order.items && order.items.length > 0) {
-      const itemsList = document.createElement('div');
-      itemsList.style.marginTop = '8px';
-      order.items.forEach(item => {
-        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
-        const itemDiv = document.createElement('div');
-        itemDiv.style.marginBottom = '6px';
-        itemDiv.style.padding = '6px';
-        itemDiv.style.background = 'rgba(255,255,255,0.02)';
-        itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `
-          <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
-          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
-        itemsList.appendChild(itemDiv);
-      });
-      orderCard.appendChild(itemsList);
-    }
-    
-    elements.userOrdersDetails.appendChild(orderCard);
-  });
-}
-
 // Make functions globally available for onclick handlers
 window.updateCartQuantity = updateCartQuantity;
 window.removeFromCart = removeFromCart;
+window.resetUserTime = resetUserTime;
 
 ensureOrderUiInCart();
 renderCartView();

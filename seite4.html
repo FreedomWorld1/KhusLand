@@ -753,11 +753,6 @@ body {
           <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Nutzer & Bestellungen</h4>
           <div class="kv mb-3 mobile-optimized-text">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
           
-          <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
-            <button id="resetRtimeBtn" class="btn" style="background:#ef4444">🔄 Rtime für alle Nutzer zurücksetzen</button>
-            <button id="refreshUsersBtn" class="btn">🔄 Aktualisieren</button>
-          </div>
-          
           <div class="orders-layout">
             <div class="orders-column">
               <h5 class="mobile-optimized-text">📞 Nutzer</h5>
@@ -802,7 +797,6 @@ const productsRef = ref(db, 'products');
 const settingsRef = ref(db, 'settings');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
-const usersRef = ref(db, 'users');
 
 const ADMIN_PASSWORD = 'admin123';
 
@@ -868,9 +862,7 @@ const elements = {
   cartCount: document.getElementById('cartCount'),
   productSearch: document.getElementById('productSearch'),
   refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
-  orderCodeDisplay: document.getElementById('orderCodeDisplay'),
-  resetRtimeBtn: document.getElementById('resetRtimeBtn'),
-  refreshUsersBtn: document.getElementById('refreshUsersBtn')
+  orderCodeDisplay: document.getElementById('orderCodeDisplay')
 };
 
 let products = [];
@@ -878,7 +870,6 @@ let settings = { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.
 let categories = [];
 let cart = [];
 let allOrders = [];
-let allUsers = [];
 let saveOrderBtnEl = null;
 let orderCodeDisplayEl = null;
 let selectedUserId = null;
@@ -1480,20 +1471,10 @@ async function saveCartAsOrder(){
     items: cart, 
     status: 'offen', 
     userName: '', 
-    phone: '',
-    orderType: 'lifetime' // Standardmäßig Lifetime-Bestellung
+    phone: ''
   };
   try {
     await push(ordersRef, orderData);
-    
-    // Automatisch auch als Rtime-Bestellung speichern
-    const rtimeOrderData = {
-      ...orderData,
-      orderType: 'rtime',
-      originalCode: code // Referenz zur Lifetime-Bestellung
-    };
-    await push(ordersRef, rtimeOrderData);
-    
     if(!orderCodeDisplayEl) ensureOrderUiInCart();
     orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
     cart = [];
@@ -1505,7 +1486,6 @@ async function saveCartAsOrder(){
   }
 }
 
-// Benutzer und Bestellungen verwalten
 onValue(ordersRef, snapshot => {
   allOrders = [];
   snapshot.forEach(child => { 
@@ -1514,57 +1494,7 @@ onValue(ordersRef, snapshot => {
     allOrders.push(o); 
   });
   renderOrdersList();
-  updateUsersFromOrders();
 });
-
-onValue(usersRef, snapshot => {
-  allUsers = [];
-  snapshot.forEach(child => {
-    const data = child.val();
-    data.key = child.key;
-    allUsers.push(data);
-  });
-  renderUsersList();
-});
-
-function updateUsersFromOrders() {
-  const usersMap = new Map();
-  
-  allOrders.forEach(order => {
-    if (order.phone && order.userName) {
-      const userKey = order.phone;
-      
-      if (!usersMap.has(userKey)) {
-        usersMap.set(userKey, {
-          phone: order.phone,
-          userName: order.userName,
-          lifetimeOrders: [],
-          rtimeOrders: [],
-          lastRtimeReset: null
-        });
-      }
-      
-      const user = usersMap.get(userKey);
-      
-      // Bestellung zum entsprechenden Typ hinzufügen
-      if (order.orderType === 'lifetime') {
-        user.lifetimeOrders.push(order);
-      } else if (order.orderType === 'rtime') {
-        user.rtimeOrders.push(order);
-      }
-    }
-  });
-  
-  // Benutzer in der Datenbank aktualisieren
-  usersMap.forEach(async (user, phone) => {
-    const userRef = ref(db, `users/${phone}`);
-    try {
-      await update(userRef, user);
-    } catch (error) {
-      console.error('Fehler beim Aktualisieren des Benutzers:', error);
-    }
-  });
-}
 
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
@@ -1606,15 +1536,10 @@ function renderOrdersList() {
       statusText = '✗ Storniert';
     }
     
-    // Bestellungstyp anzeigen
-    const orderTypeBadge = o.orderType === 'rtime' ? 
-      '<span class="status-badge rtime-badge" style="margin-left:6px">Rtime</span>' : 
-      '<span class="status-badge lifetime-badge" style="margin-left:6px">Lifetime</span>';
-    
     div.innerHTML = `
       <div class="order-card-header">
         <div class="mobile-optimized-text">
-          <strong>${escapeHtml(o.code)}</strong>${orderTypeBadge}<br>
+          <strong>${escapeHtml(o.code)}</strong><br>
           <div class="kv">${escapeHtml(date)}</div>
           ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''}
         </div>
@@ -1658,7 +1583,7 @@ function loadOrderByCode(code){
   
   selectedOrder = order;
   elements.orderDetails.style.display = '';
-  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code} (${order.orderType === 'rtime' ? 'Rtime' : 'Lifetime'})`;
+  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code}`;
   elements.orderItems.innerHTML = '';
   
   (order.items || []).forEach(i=>{
@@ -1719,102 +1644,50 @@ elements.markOrderCancelledBtn.addEventListener('click', async ()=> {
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
 
-// Rtime zurücksetzen
-elements.resetRtimeBtn.addEventListener('click', async () => {
-  if(!confirm('Möchten Sie wirklich alle Rtime-Bestellungen zurücksetzen? Dies kann nicht rückgängig gemacht werden.')) return;
-  
-  try {
-    // Alle Rtime-Bestellungen löschen
-    const updates = {};
-    allOrders.forEach(order => {
-      if (order.orderType === 'rtime') {
-        updates[order.key] = null; // Löschen
-      }
-    });
-    
-    await update(ref(db, 'orders'), updates);
-    
-    // Rtime-Reset-Zeitstempel für alle Benutzer aktualisieren
-    const userUpdates = {};
-    allUsers.forEach(user => {
-      userUpdates[`${user.phone}/lastRtimeReset`] = Date.now();
-      userUpdates[`${user.phone}/rtimeOrders`] = []; // Rtime-Bestellungen leeren
-    });
-    
-    if (Object.keys(userUpdates).length > 0) {
-      await update(ref(db, 'users'), userUpdates);
-    }
-    
-    showToast('Rtime-Bestellungen wurden zurückgesetzt', 'success');
-  } catch (error) {
-    console.error('Fehler beim Zurücksetzen der Rtime-Bestellungen:', error);
-    showToast('Fehler beim Zurücksetzen', 'error');
-  }
-});
-
-elements.refreshUsersBtn.addEventListener('click', () => {
-  get(usersRef)
-    .then(() => showToast('Nutzerliste aktualisiert', 'success'))
-    .catch(() => showToast('Aktualisieren fehlgeschlagen', 'error'));
-});
-
 function renderUsersList() {
+  const usersMap = new Map();
+  allOrders.forEach(order => {
+    if (order.phone && order.userName) {
+      const userKey = `${order.phone}-${order.userName}`;
+      if (!usersMap.has(userKey)) usersMap.set(userKey, { phone: order.phone, userName: order.userName, orders: [] });
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  const users = Array.from(usersMap.values());
   elements.usersList.innerHTML = '';
-  if (allUsers.length === 0) { 
-    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer gefunden.</div>'; 
+  if (users.length === 0) { 
+    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
     return; 
   }
   
   // Sort users by name
-  allUsers.sort((a, b) => (a.userName || '').localeCompare(b.userName || ''));
+  users.sort((a, b) => (a.userName || '').localeCompare(b.userName || ''));
   
-  allUsers.forEach(user => {
+  users.forEach(user => {
     const userItem = document.createElement('div');
     userItem.className = 'user-order-item fade-in';
     if (selectedUserId === user.phone) userItem.classList.add('active');
     
-    // Bestellungen zählen
-    const lifetimeCount = user.lifetimeOrders ? user.lifetimeOrders.length : 0;
-    const rtimeCount = user.rtimeOrders ? user.rtimeOrders.length : 0;
-    
-    // Letzter Rtime-Reset
-    const lastReset = user.lastRtimeReset ? 
-      new Date(user.lastRtimeReset).toLocaleDateString('de-DE') : 
-      'Nie zurückgesetzt';
+    // Count orders by status
+    const openOrders = user.orders.filter(o => o.status === 'offen').length;
+    const processedOrders = user.orders.filter(o => o.status === 'bearbeitet').length;
+    const cancelledOrders = user.orders.filter(o => o.status === 'storniert').length;
     
     userItem.innerHTML = `
       <div>
-        <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName || 'Unbekannt')}</div>
-        || 'Unbekannt')}</div>
-        <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
-        <div class>
-        <div class="kv="kv mobile-optimized-text" style="margin-top:4px">
- mobile-optimized-text" style="margin-top:4px">
-          <span class="status-badge lifetime-badge">Lifetime: ${lifetimeCount}</span>
-          <          <span class="status-badge lifetime-badge">Lifetime: ${lifetimeCount}</span>
-          <span class="status-badge rtime-bspan class="status-badge rtime-badge" style="margin-left:6px">Rtime: ${rtimeadge" style="margin-left:6px">Rtime: ${rtimeCount}</span>
-Count}</span>
-        </div>
-        <div class="kv mobile-optimized-text" style="margin        </div>
-        <div class="kv mobile-optimized-text" style="margin-top:4px;font-size:-top:4px;font-size:0.0.75rem">
-          Letzter Reset: ${lastReset}
-        </div>
-     75rem">
-          Letzter Reset: ${lastReset}
+        <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
+        <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
+        <div class="kv mobile-optimized-text" style="margin-top:4px">
+          ${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}
+          ${openOrders > 0 ? `<span class="status-badge status-open" style="margin-left:6px">${openOrders} offen</span>` : ''}
+          ${processedOrders > 0 ? `<span class="status-badge status-processed" style="margin-left:6px">${processedOrders} bearbeitet</span>` : ''}
+          ${cancelledOrders > 0 ? `<span class="status-badge status-cancelled" style="margin-left:6px">${cancelledOrders} storniert</span>` : ''}
         </div>
       </div>`;
     
-    userItem.onclick </div>`;
-    
     userItem.onclick = () => {
-      document.querySelectorAll('.user = () => {
-      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('-order-item').forEach(item => item.classList.remove('active'));
-active'));
-      userItem.classList.add('      userItem.classList.add('active');
-      selectedUserId = user.phone;
-      renderUserOrders(user);
-    };
-   active');
+      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      userItem.classList.add('active');
       selectedUserId = user.phone;
       renderUserOrders(user);
     };
@@ -1822,171 +1695,55 @@ active'));
   });
 }
 
-function renderUser elements.usersList.appendChild(userItem);
-  });
-}
-
 function renderUserOrders(user) {
-  elements.userOrdersOrders(user) {
   elements.userOrdersDetails.innerHTML = '';
-  if (!user) { 
-   Details.innerHTML = '';
-  if (!user) { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Kein 
-    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Kein Nutzer ausgewählt.</div> Nutzer ausgewählt.</div>'; 
-'; 
+  if (!user || !user.orders.length) { 
+    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
     return; 
   }
   
-  // Lifetime und Rtime Bestellungen kombinieren und sortieren    return; 
-  }
-  
-  // Lifetime und Rtime Bestellungen kombinieren und sortieren
-  const allUserOrders =
-  const allUserOrders = [
-    ...(user.lifetimeOrders || []).map [
-    ...(user.lifetimeOrders || [](o => ({...o, isLifetime: true})),
-    ...(user.rtime).map(o => ({...o, isLifetime: true})),
-    ...(user.rtimeOrders || []).map(o => ({...oOrders || []).map(o => ({...o, isLifetime: false}))
-  ].sort((a, b) => (b.createdAt, isLifetime: false}))
-  ].sort((a, b) => (b.createdAt || 0) - (a.createdAt ||  || 0) - (a.createdAt || 0));
-  
-  if (allUserOrders.length === 0) { 
-    elements.userOrders0));
-  
-  if (allUserOrders.length === 0) { 
-    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimizedDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
-    return Nutzer gefunden.</div>'; 
-    return; 
-  }
-  
-  // Übers; 
-  }
-  
-  // Übersicht anzeigen
-  const summaryCard = documenticht anzeigen
-  const summaryCard = document.createElement('div');
-.createElement('div');
-  summaryCard.className = 'card fade-in';
-  summaryCard.style.m  summaryCard.className = 'card fade-in';
-  summaryCard.style.marginBottom = '12px';
-  summaryCard.innerHTML = `
-arginBottom = '12px';
-  summaryCard.innerHTML = `
-    <div style="display:flex;justify-content    <div style="display:flex;justify-content:space-between;align-items:space-between;align-items:center">
-      <div class="mobile-optimized-text:center">
-      <div class="mobile-optimized-text">
-        <strong>Bestellübersicht">
-        <strong>Bestellübersicht</strong>
-      </div>
-      <div class="mobile-optimized-text">
-        <span</strong>
-      </div>
-      <div class="mobile-optimized-text">
-        <span class="status-badge lifetime-b class="status-badge lifetime-badge">Lifetime: ${user.lifetimeOrders ? user.lifetimeOrdersadge">Lifetime: ${user.lifetimeOrders ? user.lifetimeOrders.length : 0}</span>
-        <span class="status-badge rtime-badge" style="margin-left:6px">Rtime: ${.length : 0}</span>
-        <span class="status-badge rtime-badge" style="margin-left:6px">Rtime: ${user.rtimeOrders ? user.rtimeOrders.length : 0}</span>
-user.rtimeOrders ? user.rtimeOrders.length : 0}</span>
-           </div>
-    </div>`;
-  elements.userOrdersDetails.appendChild(summaryCard);
-  
-  // Ein </div>
-    </div>`;
-  elements.userOrdersDetails.appendChild(summaryCard);
-  
-  // Einzelne Bestellungen anzeigen
-  allUserOrders.forEach(order => {
-    const orderzelne Bestellungen anzeigen
-  allUserOrders.forEach(order => {
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  sortedOrders.forEach(order => {
     const orderCard = document.createElement('div');
-    orderCard.className = 'Card = document.createElement('div');
     orderCard.className = 'order-card fade-in';
     
-    const date = orderorder-card fade-in';
-    
-    const date =.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '- order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
     
     let statusClass = 'status-open';
     let statusText = '● Offen';
-    
-    let statusClass = 'status-open';
-    let statusText = '● Offen';
-    if (order.status === 'bearbeitet') {
-     ';
     if (order.status === 'bearbeitet') {
       statusClass = 'status-processed';
-      statusText = statusClass = 'status-processed';
-      status '✓ Bearbeitet';
+      statusText = '✓ Bearbeitet';
     } else if (order.status === 'storniert') {
-Text = '✓ Bearbeitet';
-    } else if (order.status === 'storniert') {
-      statusClass = 'status-canc      statusClass = 'status-cancelled';
+      statusClass = 'status-cancelled';
       statusText = '✗ Storniert';
     }
-    
-    const orderTypeBadgeelled';
-      statusText = '✗ Storniert';
-    }
-    
-    const orderTypeBadge = order.isLifetime ? 
-      '<span class="status-badge lifetime = order.isLifetime ? 
-      '<span class="status-badge lifetime-badge">Lifetime</span-badge">Lifetime</span>' : 
-      '<span class=">' : 
-      '<span class="status-badge rtime-badge">Rtime</span>';
-    
-    orderstatus-badge rtime-badge">Rtime</span>';
     
     orderCard.innerHTML = `
-      <div class="orderCard.innerHTML = `
       <div class="order-card-header">
-        <div class="mobile-optimized-card-header">
         <div class="mobile-optimized-text">
--text">
-          <strong>          <strong>Bestellcode: ${escapeBestellcode: ${escapeHtml(order.codeHtml(order.code)})}</strong><br>
-          <div class="</strong><br>
-          <div class="kv">${kv">${escapeHtml(date)}</div>
-          ${orderTypeBadescapeHtml(date)}</div>
-          ${orderTypeBadge}
-        </div>
-ge}
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
+          <div class="kv">${escapeHtml(date)}</div>
         </div>
         <div>
           <span class="status-badge ${statusClass}">${statusText}</span>
         </div>
       </div>`;
     
-    if (        <div>
-          <span class="status-badge ${statusClass}">${statusText}</span>
-        </div>
-      </div>`;
-    
-    if (order.items && order.items.lengthorder.items && order.items.length > 0) {
+    if (order.items && order.items.length > 0) {
       const itemsList = document.createElement('div');
       itemsList.style.marginTop = '8px';
       order.items.forEach(item => {
- > 0) {
-      const itemsList = document.createElement('div');
-      itemsList.style.marginTop = '8px';
-      order.items.forEach(item => {
-        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
+        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
         const itemDiv = document.createElement('div');
         itemDiv.style.marginBottom = '6px';
-        itemDiv.style.padding
-        const itemDiv = document.createElement('div');
-        itemDiv.style.marginBottom = '6px';
- = '6px';
-        itemDiv.style.background = 'rgba(255,255,        itemDiv.style.padding = '6px';
+        itemDiv.style.padding = '6px';
         itemDiv.style.background = 'rgba(255,255,255,0.02)';
         itemDiv.style.borderRadius = '4px';
         itemDiv.innerHTML = `
-          <div class="255,0.02)';
-        itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTMLmobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
-          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
-        = `
           <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
           <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
-        itemsList.appendChild(itemDiv itemsList.appendChild(itemDiv);
+        itemsList.appendChild(itemDiv);
       });
       orderCard.appendChild(itemsList);
     }
@@ -2003,34 +1760,11 @@ ensureOrderUiInCart();
 renderCartView();
 applySettings();
 
-elements.settingsPassword.addEventListener('keypress', (e) =>);
-      });
-      orderCard.appendChild(itemsList);
-    }
-    
-    elements.userOrdersDetails.appendChild(orderCard);
-  });
-}
-
-// Make functions globally available for onclick handlers
-window.updateCartQuantity = updateCartQuantity { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
-elements.newCategoryInput.addEventListener('keypress;
-window.removeFromCart = removeFromCart;
-
-ensureOrderUiInCart();
-renderCartView();
-applySettings();
-
 elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
 elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
-elements.orderCodeInput', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
 elements.orderCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
 
-console.log.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
-
-console('🚀 Bullet Farm v3 Shop mit Lifetime/Rtime Tracking initialisiert');
-</script>
-.log('🚀 Bullet Farm v3 Shop mit Lifetime/Rtime Tracking initialisiert');
+console.log('🚀 Bullet Farm v3 Shop initialisiert');
 </script>
 </body>
 </html>

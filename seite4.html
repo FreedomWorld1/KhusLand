@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Bullet Farm v2 — Shop</title>
+<title>Bullet Farm v3 — Shop</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root {
@@ -61,6 +61,16 @@ body {
   background: #1f2937;
 }
 
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .hidden-el {
   display: none !important;
 }
@@ -82,6 +92,10 @@ body {
 #productsGrid .card {
   margin: 0 auto;
   transition: transform 0.2s ease;
+}
+
+#productsGrid .card:hover {
+  transform: translateY(-5px);
 }
 
 .modal-overlay {
@@ -177,6 +191,11 @@ body {
   font-size: 16px;
 }
 
+.input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(6, 182, 212, 0.5);
+}
+
 .color-input {
   width: 48px;
   height: 36px;
@@ -196,6 +215,7 @@ body {
 .success { color: #10b981; }
 .warning { color: #f59e0b; }
 .error { color: #ef4444; }
+.info { color: #3b82f6; }
 
 .grid {
   display: grid;
@@ -231,6 +251,11 @@ body {
   padding: 12px;
   border: 1px solid rgba(255,255,255,0.03);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-order-item:hover {
+  background: rgba(255,255,255,0.04);
 }
 
 .user-order-item.active {
@@ -241,6 +266,50 @@ body {
 .user-orders-list, .order-details-container {
   max-height: 50vh;
   overflow-y: auto;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-open {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.status-processed {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.order-card {
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.order-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 /* Mobile Styles */
@@ -311,6 +380,15 @@ body {
   .admin-actions .btn {
     width: 100%;
   }
+  
+  .order-card-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .order-card-actions {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 480px) {
@@ -356,6 +434,85 @@ body {
   overflow-wrap: break-word;
   white-space: normal !important;
 }
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideInRight 0.3s ease;
+  max-width: 300px;
+}
+
+.toast-success {
+  background: #10b981;
+}
+
+.toast-error {
+  background: #ef4444;
+}
+
+.toast-warning {
+  background: #f59e0b;
+}
+
+.toast-info {
+  background: #3b82f6;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Loading Spinner */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Search Input */
+.search-input {
+  position: relative;
+}
+
+.search-input input {
+  padding-left: 36px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
 </style>
 </head>
 <body>
@@ -364,13 +521,13 @@ body {
       <div class="flex items-center gap-4">
         <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
         <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">Bullet Farm v2</h1>
-          <div class="small-muted mobile-optimized-text">Shop</div>
+          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">Bullet Farm v3</h1>
+          <div class="small-muted mobile-optimized-text">Shop System</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
         <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">Warenkorb</button>
+        <button id="btnCart" class="btn">Warenkorb <span id="cartCount" style="margin-left:4px;background:#3b82f6;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;"></span></button>
         <button id="openSettingsBtn" class="btn">⚙️</button>
       </div>
     </header>
@@ -385,7 +542,10 @@ body {
               <option value="">— Alle Kategorien —</option>
             </select>
           </div>
-          <div class="kv mobile-optimized-text" id="productsCount" style="white-space: nowrap;">Produkte anzeigen</div>
+          <div class="search-input" style="position:relative">
+            <div class="search-icon">🔍</div>
+            <input id="productSearch" type="text" class="input" placeholder="Produkte suchen..." style="padding-left:36px;width:200px">
+          </div>
         </div>
         <div id="productsGrid" class="grid"></div>
       </section>
@@ -402,6 +562,7 @@ body {
                 <th class="mobile-optimized-text">Produkt</th>
                 <th class="mobile-optimized-text">Ressourcen</th>
                 <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+                <th style="width:80px" class="mobile-optimized-text">Aktionen</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -555,17 +716,21 @@ body {
           <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
             <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
             <button id="loadOrderBtn" class="btn">Laden</button>
+            <button id="refreshOrdersBtn" class="btn">🔄 Aktualisieren</button>
           </div>
 
           <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
             <h5 style="margin:0 0 8px 0" class="mobile-optimized-text">Bestelldetails</h5>
+            <div id="orderCodeDisplay" class="kv mobile-optimized-text" style="margin-bottom:8px"></div>
             <div id="orderItems" class="kv mobile-optimized-text"></div>
             <div style="margin-top:8px">
               <input id="orderUserName" class="input mobile-optimized-text" placeholder="Name des Kunden" style="margin-top:6px">
               <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
               <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
                 <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
-                <button id="markOrderResetBtn" class="btn" style="background:#ef4444">❌ Als bearbeitet / zurücksetzen</button>
+                <button id="markOrderProcessedBtn" class="btn" style="background:#10b981">✅ Als bearbeitet</button>
+                <button id="markOrderOpenBtn" class="btn" style="background:#f59e0b">🔄 Als offen</button>
+                <button id="markOrderCancelledBtn" class="btn" style="background:#ef4444">❌ Stornieren</button>
               </div>
             </div>
           </div>
@@ -597,6 +762,9 @@ body {
       </div>
     </div>
   </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -674,21 +842,47 @@ const elements = {
   orderUserName: document.getElementById('orderUserName'),
   orderPhone: document.getElementById('orderPhone'),
   saveOrderUserBtn: document.getElementById('saveOrderUserBtn'),
-  markOrderResetBtn: document.getElementById('markOrderResetBtn'),
+  markOrderProcessedBtn: document.getElementById('markOrderProcessedBtn'),
+  markOrderOpenBtn: document.getElementById('markOrderOpenBtn'),
+  markOrderCancelledBtn: document.getElementById('markOrderCancelledBtn'),
   ordersList: document.getElementById('ordersList'),
   productsCount: document.getElementById('productsCount'),
   usersList: document.getElementById('usersList'),
-  userOrdersDetails: document.getElementById('userOrdersDetails')
+  userOrdersDetails: document.getElementById('userOrdersDetails'),
+  cartCount: document.getElementById('cartCount'),
+  productSearch: document.getElementById('productSearch'),
+  refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
+  orderCodeDisplay: document.getElementById('orderCodeDisplay')
 };
 
 let products = [];
-let settings = { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' };
+let settings = { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' };
 let categories = [];
 let cart = [];
 let allOrders = [];
 let saveOrderBtnEl = null;
 let orderCodeDisplayEl = null;
 let selectedUserId = null;
+let selectedOrder = null;
+
+// Toast Funktionen
+function showToast(message, type = 'info', duration = 4000) {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  
+  const container = document.getElementById('toastContainer');
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'slideInRight 0.3s ease reverse';
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, duration);
+}
 
 function showModal() { 
   elements.settingsModal.classList.remove('hidden-el'); 
@@ -727,6 +921,7 @@ elements.tabBtns.forEach(btn => {
     elements.tabPanels.forEach(p => p.classList.add('hidden-el'));
     document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
     if (tabName === 'users') renderUsersList();
+    if (tabName === 'orders') renderOrdersList();
   });
 });
 
@@ -740,27 +935,27 @@ onValue(settingsRef, snapshot => {
 });
 
 function applySettings(){
-  elements.pageTitle.innerText = settings.title || 'Bullet Farm';
+  elements.pageTitle.innerText = settings.title || 'Bullet Farm v3';
   elements.headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
   if(elements.settingTitle) elements.settingTitle.value = settings.title || '';
   if(elements.settingHeaderImage) elements.settingHeaderImage.value = settings.headerImage || '';
 }
 
 elements.saveGeneralBtn.addEventListener('click', async () => {
-  const title = (elements.settingTitle.value || '').trim() || 'Bullet Farm';
+  const title = (elements.settingTitle.value || '').trim() || 'Bullet Farm v3';
   const image = (elements.settingHeaderImage.value || '').trim() || 'https://via.placeholder.com/48';
   try{ 
     await update(settingsRef, { title, headerImage: image }); 
-    alert('✅ Allgemeine Einstellungen gespeichert'); 
-  } catch(e){ console.error(e); alert('❌ Fehler beim Speichern'); }
+    showToast('Allgemeine Einstellungen gespeichert', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
 });
 
 elements.resetGeneralBtn.addEventListener('click', async () => {
   if(!confirm('Auf Standard zurücksetzen?')) return;
   try{ 
-    await update(settingsRef, { title: 'Bullet Farm', headerImage: 'https://via.placeholder.com/48' }); 
-    alert('✅ Zurückgesetzt'); 
-  } catch(e){ console.error(e); alert('❌ Fehler'); }
+    await update(settingsRef, { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' }); 
+    showToast('Einstellungen zurückgesetzt', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Zurücksetzen', 'error'); }
 });
 
 onValue(categoriesRef, snapshot => {
@@ -794,15 +989,19 @@ function renderCategoriesList(){
     
     div.querySelector('[data-del]').onclick = async () => {
       if(!confirm('Kategorie wirklich löschen?')) return;
-      try{ await remove(ref(db, 'categories/' + category.key)); } 
-      catch(e){ console.error(e); alert('❌ Fehler beim Löschen'); }
+      try{ 
+        await remove(ref(db, 'categories/' + category.key)); 
+        showToast('Kategorie gelöscht', 'success');
+      } 
+      catch(e){ console.error(e); showToast('Fehler beim Löschen', 'error'); }
     };
     
     div.querySelector('[data-edit]').onclick = () => {
       const newName = prompt('Neuer Kategorie-Name', category.name);
       if(newName && newName.trim()){
         update(ref(db, 'categories/' + category.key), { name: newName.trim() })
-          .catch(() => alert('❌ Fehler beim Umbenennen'));
+          .then(() => showToast('Kategorie umbenannt', 'success'))
+          .catch(() => showToast('Fehler beim Umbenennen', 'error'));
       }
     };
   });
@@ -810,11 +1009,12 @@ function renderCategoriesList(){
 
 elements.addCategoryBtn.addEventListener('click', async () => {
   const name = (elements.newCategoryInput.value || '').trim();
-  if(!name) return alert('❌ Bitte Namen eingeben');
+  if(!name) return showToast('Bitte Namen eingeben', 'warning');
   try{
     await push(categoriesRef, { name });
     elements.newCategoryInput.value = '';
-  } catch(e){ console.error(e); alert('❌ Fehler beim Anlegen'); }
+    showToast('Kategorie hinzugefügt', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Anlegen', 'error'); }
 });
 
 function populateCategorySelects(){
@@ -856,16 +1056,24 @@ function escapeHtml(text) {
 }
 
 elements.shopCategoryFilter.addEventListener('change', renderProductsGrid);
+elements.productSearch.addEventListener('input', renderProductsGrid);
 
 function renderProductsGrid(){
   const filter = (elements.shopCategoryFilter.value || '').trim();
-  elements.productsGrid.innerHTML = '';
-  const visibleProducts = products.filter(p => !filter || (p.category || '') === filter);
+  const search = (elements.productSearch.value || '').trim().toLowerCase();
   
-  elements.productsCount.textContent = `${visibleProducts.length} Produkt${visibleProducts.length !== 1 ? 'e' : ''} angezeigt`;
+  elements.productsGrid.innerHTML = '';
+  
+  let visibleProducts = products.filter(p => 
+    (!filter || (p.category || '') === filter) &&
+    (!search || 
+      (p.name || '').toLowerCase().includes(search) || 
+      (p.description || '').toLowerCase().includes(search) ||
+      (p.category || '').toLowerCase().includes(search))
+  );
   
   if(visibleProducts.length === 0){ 
-    elements.productsGrid.innerHTML = '<div class="kv p-4 mobile-optimized-text">Keine Produkte verfügbar.</div>'; 
+    elements.productsGrid.innerHTML = '<div class="kv p-4 mobile-optimized-text">Keine Produkte gefunden.</div>'; 
     return; 
   }
   
@@ -938,7 +1146,7 @@ function renderProductsGrid(){
     addButton.textContent = '✅ In den Warenkorb';
     addButton.onclick = () => { 
       addToCartByProductKey(product.key); 
-      alert(`✅ "${product.name}" zum Warenkorb hinzugefügt`); 
+      showToast(`"${product.name}" zum Warenkorb hinzugefügt`, 'success'); 
     };
     card.appendChild(addButton);
 
@@ -976,7 +1184,8 @@ function renderProductsTable(){
     row.querySelector('[data-del]').onclick = () => { 
       if(confirm('Produkt wirklich löschen?')) {
         remove(ref(db, 'products/' + product.key))
-          .catch(() => alert('❌ Fehler beim Löschen'));
+          .then(() => showToast('Produkt gelöscht', 'success'))
+          .catch(() => showToast('Fehler beim Löschen', 'error'));
       }
     };
   });
@@ -1063,21 +1272,21 @@ elements.productForm.addEventListener('submit', async (e) => {
   try{
     if(elements.prodId.value){
       await update(ref(db, 'products/' + elements.prodId.value), payload);
-      alert('✅ Produkt aktualisiert');
+      showToast('Produkt aktualisiert', 'success');
     } else {
       await push(productsRef, payload);
-      alert('✅ Produkt angelegt');
+      showToast('Produkt angelegt', 'success');
     }
     elements.productFormCard.classList.add('hidden-el');
     elements.productForm.reset();
     elements.prodId.value = '';
-  } catch(error){ console.error(error); alert('❌ Fehler beim Speichern des Produkts'); }
+  } catch(error){ console.error(error); showToast('Fehler beim Speichern des Produkts', 'error'); }
 });
 
 elements.btnReloadProducts.addEventListener('click', () => {
   get(productsRef)
-    .then(() => alert('✅ Produkte neu geladen'))
-    .catch(() => alert('❌ Laden fehlgeschlagen'));
+    .then(() => showToast('Produkte neu geladen', 'success'))
+    .catch(() => showToast('Laden fehlgeschlagen', 'error'));
 });
 
 elements.settingsUnlockBtn.addEventListener('click', () => {
@@ -1122,26 +1331,91 @@ function addToCartByProductKey(productKey){
   renderCartView();
 }
 
+function removeFromCart(productKey) {
+  const index = cart.findIndex(item => item.key === productKey);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    renderCartView();
+    showToast('Produkt aus Warenkorb entfernt', 'success');
+  }
+}
+
+function updateCartQuantity(productKey, newQuantity) {
+  const item = cart.find(item => item.key === productKey);
+  if (item && newQuantity > 0) {
+    // Recalculate resources based on original product
+    const product = products.find(p => p.key === productKey);
+    if (product) {
+      const resourceMap = resourcesToMap(product.resources);
+      item.quantity = newQuantity;
+      // Reset and recalculate resources
+      item.resources = {};
+      for (let i = 0; i < newQuantity; i++) {
+        for (const resource in resourceMap) {
+          item.resources[resource] = (item.resources[resource] || 0) + resourceMap[resource];
+        }
+      }
+    }
+    renderCartView();
+  } else if (newQuantity <= 0) {
+    removeFromCart(productKey);
+  }
+}
+
 function renderCartView(){
   elements.cartTableBody.innerHTML = '';
   const totalResources = {};
-  cart.forEach(entry => {
-    const tr = document.createElement('tr');
-    const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
-    tr.innerHTML = `<td class="mobile-optimized-text">${escapeHtml(entry.name)}</td><td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td><td style="text-align:right" class="mobile-optimized-text">${entry.quantity}</td>`;
-    elements.cartTableBody.appendChild(tr);
-    for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
-  });
+  
+  if (cart.length === 0) {
+    elements.cartTableBody.innerHTML = '<tr><td colspan="4" class="kv mobile-optimized-text" style="text-align:center;padding:20px">Warenkorb ist leer</td></tr>';
+  } else {
+    cart.forEach(entry => {
+      const tr = document.createElement('tr');
+      const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
+      tr.innerHTML = `
+        <td class="mobile-optimized-text">${escapeHtml(entry.name)}</td>
+        <td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td>
+        <td style="text-align:right" class="mobile-optimized-text">
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px">
+            <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity - 1})">-</button>
+            <span>${entry.quantity}</span>
+            <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity + 1})">+</button>
+          </div>
+        </td>
+        <td style="text-align:center">
+          <button class="btn small-btn" style="background:#ef4444" onclick="removeFromCart('${entry.key}')">🗑️</button>
+        </td>`;
+      elements.cartTableBody.appendChild(tr);
+      for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
+    });
+  }
+  
   const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
   cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
+  
+  // Update cart count
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  elements.cartCount.textContent = totalItems > 0 ? totalItems : '';
+  elements.cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+  
   ensureOrderUiInCart();
   if(saveOrderBtnEl) saveOrderBtnEl.disabled = (cart.length === 0);
 }
 
-elements.btnShop.addEventListener('click', ()=>{ shopView.classList.remove('hidden-el'); cartView.classList.add('hidden-el'); });
-elements.btnCart.addEventListener('click', ()=>{ shopView.classList.add('hidden-el'); cartView.classList.remove('hidden-el'); renderCartView(); });
+elements.btnShop.addEventListener('click', ()=>{ 
+  elements.shopView.classList.remove('hidden-el'); 
+  elements.cartView.classList.add('hidden-el'); 
+});
 
-function generate4DigitCode(){ return Math.floor(1000 + Math.random() * 9000).toString(); }
+elements.btnCart.addEventListener('click', ()=>{ 
+  elements.shopView.classList.add('hidden-el'); 
+  elements.cartView.classList.remove('hidden-el'); 
+  renderCartView(); 
+});
+
+function generate4DigitCode(){ 
+  return Math.floor(1000 + Math.random() * 9000).toString(); 
+}
 
 function ensureOrderUiInCart(){
   if(saveOrderBtnEl) return;
@@ -1165,8 +1439,8 @@ function ensureOrderUiInCart(){
   copyBtn.textContent = '📋 Kopieren';
   copyBtn.onclick = ()=> {
     const txt = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ','').trim();
-    if(!txt) return alert('Kein Bestellcode vorhanden');
-    navigator.clipboard?.writeText(txt).then(()=> alert('Code kopiert')).catch(()=> alert('Kopieren nicht möglich'));
+    if(!txt) return showToast('Kein Bestellcode vorhanden', 'warning');
+    navigator.clipboard?.writeText(txt).then(()=> showToast('Code kopiert', 'success')).catch(()=> showToast('Kopieren nicht möglich', 'error'));
   };
   const codeWrap = document.createElement('div');
   codeWrap.style.display = 'flex';
@@ -1175,84 +1449,190 @@ function ensureOrderUiInCart(){
   codeWrap.appendChild(orderCodeDisplayEl);
   codeWrap.appendChild(copyBtn);
   wrapper.appendChild(codeWrap);
-  cartView.appendChild(wrapper);
+  elements.cartView.appendChild(wrapper);
 }
 
 async function saveCartAsOrder(){
-  if(cart.length === 0) return alert('❌ Warenkorb ist leer');
+  if(cart.length === 0) return showToast('Warenkorb ist leer', 'warning');
   const code = generate4DigitCode();
-  const orderData = { code: code, createdAt: Date.now(), items: cart, status: 'offen', userName: '', phone: '' };
+  const orderData = { 
+    code: code, 
+    createdAt: Date.now(), 
+    items: cart, 
+    status: 'offen', 
+    userName: '', 
+    phone: '' 
+  };
   try {
     await push(ordersRef, orderData);
     if(!orderCodeDisplayEl) ensureOrderUiInCart();
     orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
     cart = [];
     renderCartView();
-  } catch (e) { console.error(e); alert('❌ Fehler beim Speichern der Bestellung'); }
+    showToast(`Bestellung gespeichert mit Code: ${code}`, 'success');
+  } catch (e) { 
+    console.error(e); 
+    showToast('Fehler beim Speichern der Bestellung', 'error'); 
+  }
 }
 
 onValue(ordersRef, snapshot => {
   allOrders = [];
-  snapshot.forEach(child => { const o = child.val(); o.key = child.key; allOrders.push(o); });
+  snapshot.forEach(child => { 
+    const o = child.val(); 
+    o.key = child.key; 
+    allOrders.push(o); 
+  });
   renderOrdersList();
 });
 
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
-  if(allOrders.length === 0){ elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; return; }
-  allOrders.sort((a,b)=> (b.createdAt||0) - (a.createdAt||0));
+  if(allOrders.length === 0){ 
+    elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen vorhanden.</div>'; 
+    return; 
+  }
+  
+  // Sort by status and date
+  allOrders.sort((a,b)=> {
+    // First by status (open first, then processed, then cancelled)
+    const statusOrder = { 'offen': 0, 'bearbeitet': 1, 'storniert': 2 };
+    const statusA = statusOrder[a.status] || 0;
+    const statusB = statusOrder[b.status] || 0;
+    
+    if (statusA !== statusB) {
+      return statusA - statusB;
+    }
+    
+    // Then by date (newest first)
+    return (b.createdAt||0) - (a.createdAt||0);
+  });
+  
   allOrders.forEach(o=>{
     const div = document.createElement('div');
-    div.className = 'category-item fade-in';
+    div.className = 'order-card fade-in';
     const name = o.userName || '— unbekannt —';
     const phone = o.phone || '';
     const total = o.items?.length || 0;
     const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (o.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (o.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
     div.innerHTML = `
-      <div class="mobile-optimized-text">
-        <strong class="${o.status === 'bearbeitet' ? 'success' : 'warning'}">${escapeHtml(o.code)}</strong> (${escapeHtml(date)})<br>
-        ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''} — ${total} Artikel
-        ${o.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>'}
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>${escapeHtml(o.code)}</strong><br>
+          <div class="kv">${escapeHtml(date)}</div>
+          ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''}
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+          <div class="kv mobile-optimized-text" style="text-align:right;margin-top:4px">${total} Artikel</div>
+        </div>
       </div>
-      <div style="display:flex;gap:6px">
+      <div class="order-card-actions">
         <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
         <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444">🗑️ Löschen</button>
       </div>`;
     elements.ordersList.appendChild(div);
-    div.querySelector('[data-del]').onclick = ()=> { if(confirm('Bestellung wirklich löschen?')) remove(ref(db,'orders/'+o.key)); };
+    
+    div.querySelector('[data-del]').onclick = ()=> { 
+      if(confirm('Bestellung wirklich löschen?')) 
+        remove(ref(db,'orders/'+o.key))
+          .then(() => showToast('Bestellung gelöscht', 'success'))
+          .catch(() => showToast('Fehler beim Löschen', 'error')); 
+    };
+    
     div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
   });
 }
 
+elements.refreshOrdersBtn.addEventListener('click', () => {
+  get(ordersRef)
+    .then(() => showToast('Bestellungen aktualisiert', 'success'))
+    .catch(() => showToast('Aktualisieren fehlgeschlagen', 'error'));
+});
+
 elements.loadOrderBtn.addEventListener('click', ()=> {
-  const code = (orderCodeInput.value||'').trim();
-  if(!code) return alert('❌ Code eingeben.');
+  const code = (elements.orderCodeInput.value||'').trim();
+  if(!code) return showToast('Code eingeben', 'warning');
   loadOrderByCode(code);
 });
 
 function loadOrderByCode(code){
   const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
-  if(!order) return alert('❌ Keine Bestellung mit diesem Code gefunden.');
-  orderDetails.style.display = '';
-  orderItems.innerHTML = '';
+  if(!order) return showToast('Keine Bestellung mit diesem Code gefunden', 'error');
+  
+  selectedOrder = order;
+  elements.orderDetails.style.display = '';
+  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code}`;
+  elements.orderItems.innerHTML = '';
+  
   (order.items || []).forEach(i=>{
     const div = document.createElement('div');
     const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
     div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
-    orderItems.appendChild(div);
+    elements.orderItems.appendChild(div);
   });
-  orderUserName.value = order.userName || '';
-  orderPhone.value = order.phone || '';
-  saveOrderUserBtn.onclick = async ()=> {
-    try { await update(ref(db,'orders/'+order.key), { userName: (orderUserName.value||'').trim(), phone: (orderPhone.value||'').trim() }); alert('✅ Kundendaten gespeichert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler beim Speichern.'); }
-  };
-  markOrderResetBtn.onclick = async ()=> {
-    if(!confirm('Bestellung als bearbeitet markieren?')) return;
-    try { await update(ref(db,'orders/'+order.key), { status: 'bearbeitet' }); alert('✅ Bestellung markiert.'); }
-    catch(e){ console.error(e); alert('❌ Fehler.'); }
-  };
+  
+  elements.orderUserName.value = order.userName || '';
+  elements.orderPhone.value = order.phone || '';
+  
+  // Update status buttons
+  elements.markOrderProcessedBtn.disabled = order.status === 'bearbeitet';
+  elements.markOrderOpenBtn.disabled = order.status === 'offen';
+  elements.markOrderCancelledBtn.disabled = order.status === 'storniert';
 }
+
+elements.saveOrderUserBtn.addEventListener('click', async ()=> {
+  if (!selectedOrder) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { 
+      userName: (elements.orderUserName.value||'').trim(), 
+      phone: (elements.orderPhone.value||'').trim() 
+    }); 
+    showToast('Kundendaten gespeichert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
+});
+
+elements.markOrderProcessedBtn.addEventListener('click', async ()=> {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung als bearbeitet markieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'bearbeitet' }); 
+    showToast('Bestellung als bearbeitet markiert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+elements.markOrderOpenBtn.addEventListener('click', async ()=> {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung als offen markieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'offen' }); 
+    showToast('Bestellung als offen markiert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+elements.markOrderCancelledBtn.addEventListener('click', async ()=> {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung stornieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'storniert' }); 
+    showToast('Bestellung storniert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
 
 function renderUsersList() {
   const usersMap = new Map();
@@ -1265,12 +1645,34 @@ function renderUsersList() {
   });
   const users = Array.from(usersMap.values());
   elements.usersList.innerHTML = '';
-  if (users.length === 0) { elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; return; }
+  if (users.length === 0) { 
+    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
+    return; 
+  }
+  
+  // Sort users by name
+  users.sort((a, b) => a.userName.localeCompare(b.userName));
+  
   users.forEach(user => {
     const userItem = document.createElement('div');
     userItem.className = 'user-order-item fade-in';
     if (selectedUserId === user.phone) userItem.classList.add('active');
-    userItem.innerHTML = `<div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div><div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div><div class="kv mobile-optimized-text">${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>`;
+    
+    // Count orders by status
+    const openOrders = user.orders.filter(o => o.status === 'offen').length;
+    const processedOrders = user.orders.filter(o => o.status === 'bearbeitet').length;
+    const cancelledOrders = user.orders.filter(o => o.status === 'storniert').length;
+    
+    userItem.innerHTML = `
+      <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
+      <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
+      <div class="kv mobile-optimized-text">
+        ${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}
+        ${openOrders > 0 ? `<span class="status-badge status-open" style="margin-left:6px">${openOrders} offen</span>` : ''}
+        ${processedOrders > 0 ? `<span class="status-badge status-processed" style="margin-left:6px">${processedOrders} bearbeitet</span>` : ''}
+        ${cancelledOrders > 0 ? `<span class="status-badge status-cancelled" style="margin-left:6px">${cancelledOrders} storniert</span>` : ''}
+      </div>`;
+    
     userItem.onclick = () => {
       document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
       userItem.classList.add('active');
@@ -1283,15 +1685,39 @@ function renderUsersList() {
 
 function renderUserOrders(user) {
   elements.userOrdersDetails.innerHTML = '';
-  if (!user || !user.orders.length) { elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; return; }
+  if (!user || !user.orders.length) { 
+    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
+    return; 
+  }
+  
   const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   sortedOrders.forEach(order => {
     const orderCard = document.createElement('div');
-    orderCard.className = 'card fade-in';
-    orderCard.style.marginBottom = '12px';
+    orderCard.className = 'order-card fade-in';
+    
     const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
-    const status = order.status === 'bearbeitet' ? '<span class="success">✓ Bearbeitet</span>' : '<span class="warning">● Offen</span>';
-    orderCard.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px"><div class="mobile-optimized-text"><strong>Bestellcode: ${escapeHtml(order.code)}</strong><br><div class="kv">${escapeHtml(date)}</div></div><div class="mobile-optimized-text">${status}</div></div>`;
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (order.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (order.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    orderCard.innerHTML = `
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
+          <div class="kv">${escapeHtml(date)}</div>
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+        </div>
+      </div>`;
+    
     if (order.items && order.items.length > 0) {
       const itemsList = document.createElement('div');
       itemsList.style.marginTop = '8px';
@@ -1302,14 +1728,21 @@ function renderUserOrders(user) {
         itemDiv.style.padding = '6px';
         itemDiv.style.background = 'rgba(255,255,255,0.02)';
         itemDiv.style.borderRadius = '4px';
-        itemDiv.innerHTML = `<div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div><div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemDiv.innerHTML = `
+          <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
+          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
         itemsList.appendChild(itemDiv);
       });
       orderCard.appendChild(itemsList);
     }
+    
     elements.userOrdersDetails.appendChild(orderCard);
   });
 }
+
+// Make functions globally available for onclick handlers
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
 
 ensureOrderUiInCart();
 renderCartView();
@@ -1317,8 +1750,9 @@ applySettings();
 
 elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
 elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
+elements.orderCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
 
-console.log('🚀 Bullet Farm v2 Shop initialisiert');
+console.log('🚀 Bullet Farm v3 Shop initialisiert');
 </script>
 </body>
 </html>

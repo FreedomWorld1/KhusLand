@@ -513,6 +513,18 @@ body {
   transform: translateY(-50%);
   color: var(--muted);
 }
+
+/* Settings Search */
+.settings-search-container {
+  margin-bottom: 16px;
+}
+
+.no-search-results {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -595,6 +607,14 @@ body {
       </div>
 
       <div id="settingsEditor" class="hidden-el">
+        <!-- Suchfunktion für Einstellungen -->
+        <div class="settings-search-container">
+          <div class="search-input">
+            <div class="search-icon">🔍</div>
+            <input id="settingsSearch" type="text" class="input" placeholder="In Einstellungen suchen..." style="padding-left:36px">
+          </div>
+        </div>
+
         <div class="mb-4">
           <div class="flex gap-2">
             <button class="tab-btn active" data-tab="products">Produkte</button>
@@ -852,7 +872,8 @@ const elements = {
   cartCount: document.getElementById('cartCount'),
   productSearch: document.getElementById('productSearch'),
   refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
-  orderCodeDisplay: document.getElementById('orderCodeDisplay')
+  orderCodeDisplay: document.getElementById('orderCodeDisplay'),
+  settingsSearch: document.getElementById('settingsSearch')
 };
 
 let products = [];
@@ -1287,6 +1308,149 @@ elements.btnReloadProducts.addEventListener('click', () => {
   get(productsRef)
     .then(() => showToast('Produkte neu geladen', 'success'))
     .catch(() => showToast('Laden fehlgeschlagen', 'error'));
+});
+
+// Suchfunktion für Einstellungen
+elements.settingsSearch.addEventListener('input', searchInSettings);
+
+function searchInSettings() {
+  const searchTerm = (elements.settingsSearch.value || '').trim().toLowerCase();
+  
+  if (!searchTerm) {
+    // Suche zurücksetzen - alles anzeigen
+    elements.tabPanels.forEach(panel => {
+      panel.style.display = '';
+      const noResults = panel.querySelector('.no-search-results');
+      if (noResults) noResults.remove();
+      
+      // Alle Elemente wieder anzeigen
+      panel.querySelectorAll('.fade-in, .category-item, .order-card, .user-order-item, #productsTableBody tr').forEach(el => {
+        el.style.display = '';
+      });
+    });
+    return;
+  }
+  
+  let hasAnyMatches = false;
+  
+  elements.tabPanels.forEach(panel => {
+    let hasMatches = false;
+    const noResults = panel.querySelector('.no-search-results');
+    if (noResults) noResults.remove();
+    
+    switch(panel.id) {
+      case 'tabProducts':
+        const productRows = panel.querySelectorAll('#productsTableBody tr');
+        productRows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            row.style.display = '';
+            hasMatches = true;
+            hasAnyMatches = true;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        break;
+        
+      case 'tabCategories':
+        const categories = panel.querySelectorAll('.category-item');
+        categories.forEach(cat => {
+          const text = cat.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            cat.style.display = '';
+            hasMatches = true;
+            hasAnyMatches = true;
+          } else {
+            cat.style.display = 'none';
+          }
+        });
+        break;
+        
+      case 'tabOrders':
+        const orders = panel.querySelectorAll('.order-card');
+        orders.forEach(order => {
+          const text = order.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            order.style.display = '';
+            hasMatches = true;
+            hasAnyMatches = true;
+          } else {
+            order.style.display = 'none';
+          }
+        });
+        break;
+        
+      case 'tabUsers':
+        const users = panel.querySelectorAll('.user-order-item');
+        users.forEach(user => {
+          const text = user.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            user.style.display = '';
+            hasMatches = true;
+            hasAnyMatches = true;
+          } else {
+            user.style.display = 'none';
+          }
+        });
+        
+        const userOrders = panel.querySelectorAll('.order-card');
+        userOrders.forEach(order => {
+          const text = order.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            order.style.display = '';
+            hasMatches = true;
+            hasAnyMatches = true;
+          } else {
+            order.style.display = 'none';
+          }
+        });
+        break;
+        
+      case 'tabGeneral':
+        // Allgemein Tab immer anzeigen bei Suche
+        hasMatches = true;
+        hasAnyMatches = true;
+        break;
+    }
+    
+    if (!hasMatches && panel.id !== 'tabGeneral') {
+      const noResultsMsg = document.createElement('div');
+      noResultsMsg.className = 'no-search-results';
+      noResultsMsg.textContent = 'Keine Ergebnisse gefunden';
+      panel.appendChild(noResultsMsg);
+    }
+  });
+  
+  // Automatisch zum ersten Tab mit Ergebnissen wechseln
+  if (hasAnyMatches) {
+    const firstTabWithResults = Array.from(elements.tabPanels).find(panel => {
+      if (panel.id === 'tabGeneral') return true;
+      const noResults = panel.querySelector('.no-search-results');
+      return panel.style.display !== 'none' && !noResults;
+    });
+    
+    if (firstTabWithResults) {
+      const tabName = firstTabWithResults.id.replace('tab', '').toLowerCase();
+      const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      if (tabBtn && !tabBtn.classList.contains('active')) {
+        tabBtn.click();
+      }
+    }
+  }
+}
+
+// Suchfeld zurücksetzen wenn Modal geschlossen wird
+elements.settingsCloseBtn.addEventListener('click', () => {
+  elements.settingsSearch.value = '';
+  searchInSettings();
+});
+
+elements.settingsModal.addEventListener('click', (e) => { 
+  if(e.target === elements.settingsModal) {
+    elements.settingsSearch.value = '';
+    searchInSettings();
+  }
 });
 
 elements.settingsUnlockBtn.addEventListener('click', () => {

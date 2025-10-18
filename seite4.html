@@ -16,14 +16,17 @@
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
+  /* NEU: Hintergrundfarbe Variable */
+  --background-color: #0f1724;
 }
 
 body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
-  background: var(--bg);
+  background: var(--background-color);
   color: #e6eef8;
   margin: 0;
   line-height: 1.5;
+  transition: background-color 0.3s ease;
 }
 
 .container {
@@ -33,7 +36,7 @@ body {
 }
 
 .card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.01));
   border: 1px solid rgba(255,255,255,0.04);
   border-radius: 12px;
   padding: 16px;
@@ -126,7 +129,7 @@ body {
 .modal-box {
   width: 100%;
   max-width: 980px;
-  background: linear-gradient(180deg, #0b1220, #0f1724);
+  background: linear-gradient(180deg, var(--card), var(--background-color));
   border-radius: 12px;
   padding: 16px;
   border: 1px solid rgba(255,255,255,0.04);
@@ -860,7 +863,33 @@ body {
           <div class="kv mb-3 mobile-optimized-text">Ändere hier die Farben der gesamten Webseite</div>
           
           <div class="card" style="margin-bottom:16px">
-            <h5 style="margin:0 0 12px 0;font-weight:700" class="mobile-optimized-text">Hauptfarben</h5>
+            <h5 style="margin:0 0 12px 0;font-weight:700" class="mobile-optimized-text">Hintergrund & Karten</h5>
+            
+            <!-- NEU: Hintergrundfarbe Einstellung -->
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Hintergrundfarbe</div>
+                <div class="kv mobile-optimized-text">Haupt-Hintergrund der gesamten Webseite</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="backgroundColorPreview" style="background:var(--background-color)"></div>
+                <input type="color" id="backgroundColorInput" class="color-input-wide" value="#0f1724">
+              </div>
+            </div>
+            
+            <!-- NEU: Karten-Hintergrund Einstellung -->
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Karten-Hintergrund</div>
+                <div class="kv mobile-optimized-text">Hintergrundfarbe der Karten/Container</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="cardColorPreview" style="background:var(--card)"></div>
+                <input type="color" id="cardColorInput" class="color-input-wide" value="#0b1220">
+              </div>
+            </div>
+            
+            <h5 style="margin:20px 0 12px 0;font-weight:700" class="mobile-optimized-text">Hauptfarben</h5>
             
             <div class="color-setting-item">
               <div>
@@ -1026,12 +1055,15 @@ const elements = {
   orderCodeDisplay: document.getElementById('orderCodeDisplay'),
   ordersSearch: document.getElementById('ordersSearch'),
   usersSearch: document.getElementById('usersSearch'),
-  // Neue Farbelemente
+  // Farbelemente
   primaryColorInput: document.getElementById('primaryColorInput'),
   secondaryColorInput: document.getElementById('secondaryColorInput'),
   successColorInput: document.getElementById('successColorInput'),
   warningColorInput: document.getElementById('warningColorInput'),
   errorColorInput: document.getElementById('errorColorInput'),
+  // NEU: Hintergrund-Farbelemente
+  backgroundColorInput: document.getElementById('backgroundColorInput'),
+  cardColorInput: document.getElementById('cardColorInput'),
   saveColorsBtn: document.getElementById('saveColorsBtn'),
   resetColorsBtn: document.getElementById('resetColorsBtn'),
   applyColorsBtn: document.getElementById('applyColorsBtn')
@@ -1053,7 +1085,10 @@ const defaultColors = {
   secondary: '#3b82f6',
   success: '#10b981',
   warning: '#f59e0b',
-  error: '#ef4444'
+  error: '#ef4444',
+  // NEU: Hintergrundfarben
+  background: '#0f1724',
+  card: '#0b1220'
 };
 
 // Toast Funktionen
@@ -1092,6 +1127,9 @@ function applyColors(colors = null) {
   document.documentElement.style.setProperty('--success-color', colorSettings.success);
   document.documentElement.style.setProperty('--warning-color', colorSettings.warning);
   document.documentElement.style.setProperty('--error-color', colorSettings.error);
+  // NEU: Hintergrundfarben
+  document.documentElement.style.setProperty('--background-color', colorSettings.background);
+  document.documentElement.style.setProperty('--card', colorSettings.card);
   
   // Farbvorschau in Einstellungen aktualisieren
   if (elements.primaryColorInput) {
@@ -1113,6 +1151,15 @@ function applyColors(colors = null) {
   if (elements.errorColorInput) {
     elements.errorColorInput.value = colorSettings.error;
     document.getElementById('errorColorPreview').style.background = colorSettings.error;
+  }
+  // NEU: Hintergrundfarben Vorschau
+  if (elements.backgroundColorInput) {
+    elements.backgroundColorInput.value = colorSettings.background;
+    document.getElementById('backgroundColorPreview').style.background = colorSettings.background;
+  }
+  if (elements.cardColorInput) {
+    elements.cardColorInput.value = colorSettings.card;
+    document.getElementById('cardColorPreview').style.background = colorSettings.card;
   }
 }
 
@@ -1243,7 +1290,10 @@ elements.applyColorsBtn.addEventListener('click', () => {
     secondary: elements.secondaryColorInput.value,
     success: elements.successColorInput.value,
     warning: elements.warningColorInput.value,
-    error: elements.errorColorInput.value
+    error: elements.errorColorInput.value,
+    // NEU: Hintergrundfarben
+    background: elements.backgroundColorInput.value,
+    card: elements.cardColorInput.value
   };
   
   applyColors(currentColors);
@@ -1256,7 +1306,10 @@ elements.saveColorsBtn.addEventListener('click', async () => {
     secondary: elements.secondaryColorInput.value,
     success: elements.successColorInput.value,
     warning: elements.warningColorInput.value,
-    error: elements.errorColorInput.value
+    error: elements.errorColorInput.value,
+    // NEU: Hintergrundfarben
+    background: elements.backgroundColorInput.value,
+    card: elements.cardColorInput.value
   };
   
   try {

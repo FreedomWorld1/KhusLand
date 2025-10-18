@@ -11,12 +11,16 @@
   --card: #0b1220;
   --muted: #9ca3af;
   --accent: #06b6d4;
-  --category-color: #22c55e; /* Standard Kategorie-Farbe */
+  --primary-color: #22c55e;
+  --secondary-color: #3b82f6;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
 }
 
 body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
-  background: #071025;
+  background: var(--bg);
   color: #e6eef8;
   margin: 0;
   line-height: 1.5;
@@ -213,10 +217,10 @@ body {
   font-size: 0.8rem;
 }
 
-.success { color: #10b981; }
-.warning { color: #f59e0b; }
-.error { color: #ef4444; }
-.info { color: #3b82f6; }
+.success { color: var(--success-color); }
+.warning { color: var(--warning-color); }
+.error { color: var(--error-color); }
+.info { color: var(--secondary-color); }
 
 .grid {
   display: grid;
@@ -279,17 +283,17 @@ body {
 
 .status-open {
   background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
+  color: var(--warning-color);
 }
 
 .status-processed {
   background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
+  color: var(--success-color);
 }
 
 .status-cancelled {
   background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  color: var(--error-color);
 }
 
 .order-card {
@@ -457,19 +461,19 @@ body {
 }
 
 .toast-success {
-  background: #10b981;
+  background: var(--success-color);
 }
 
 .toast-error {
-  background: #ef4444;
+  background: var(--error-color);
 }
 
 .toast-warning {
-  background: #f59e0b;
+  background: var(--warning-color);
 }
 
 .toast-info {
-  background: #3b82f6;
+  background: var(--secondary-color);
 }
 
 @keyframes slideInRight {
@@ -558,31 +562,34 @@ body {
 }
 
 .stat-lifetime .stat-value {
-  color: #10b981;
+  color: var(--success-color);
 }
 
 .stat-resettime .stat-value {
-  color: #f59e0b;
+  color: var(--warning-color);
 }
 
-/* Kategorie-Farben */
-.category-color-preview {
-  width: 20px;
-  height: 20px;
+/* Color Settings */
+.color-setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.color-preview {
+  width: 24px;
+  height: 24px;
   border-radius: 4px;
-  display: inline-block;
-  margin-right: 8px;
   border: 1px solid rgba(255,255,255,0.1);
 }
 
-.category-color-input {
-  width: 60px;
+.color-input-wide {
+  width: 80px;
   height: 36px;
-  padding: 0;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.04);
-  background: #fff;
-  cursor: pointer;
 }
 </style>
 </head>
@@ -592,13 +599,13 @@ body {
       <div class="flex items-center gap-4">
         <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
         <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:var(--category-color);margin:0" class="mobile-optimized-text">Bullet Farm v3</h1>
+          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin:0" class="mobile-optimized-text">Bullet Farm v3</h1>
           <div class="small-muted mobile-optimized-text">Shop System</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
         <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">Warenkorb <span id="cartCount" style="margin-left:4px;background:#3b82f6;border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;"></span></button>
+        <button id="btnCart" class="btn">Warenkorb <span id="cartCount" style="margin-left:4px;background:var(--secondary-color);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;"></span></button>
         <button id="openSettingsBtn" class="btn">⚙️</button>
       </div>
     </header>
@@ -607,7 +614,7 @@ body {
       <section id="shopView" class="card mb-6 fade-in">
         <div class="shop-header flex items-center justify-between mb-4">
           <div class="flex items-center gap-3" style="flex-wrap: wrap;">
-            <h2 style="font-weight:700;color:var(--category-color);margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
+            <h2 style="font-weight:700;color:var(--primary-color);margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
             <div class="kv mobile-optimized-text" style="white-space: nowrap;">Filter:</div>
             <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
               <option value="">— Alle Kategorien —</option>
@@ -623,7 +630,7 @@ body {
 
       <section id="cartView" class="card mb-6 hidden-el fade-in">
         <div class="flex items-center justify-between mb-4">
-          <h2 style="font-weight:700;color:var(--category-color)" class="mobile-optimized-text">🛍️ Warenkorb</h2>
+          <h2 style="font-weight:700;color:var(--primary-color)" class="mobile-optimized-text">🛍️ Warenkorb</h2>
           <div class="kv mobile-optimized-text">Ressourcen & Anzahl</div>
         </div>
         <div class="table-container">
@@ -673,6 +680,7 @@ body {
             <button class="tab-btn" data-tab="general">Allgemein</button>
             <button class="tab-btn" data-tab="orders">Bestellungen</button>
             <button class="tab-btn" data-tab="users">Nutzer</button>
+            <button class="tab-btn" data-tab="colors">Farben</button>
           </div>
         </div>
 
@@ -734,8 +742,8 @@ body {
               </div>
 
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button type="submit" class="btn" style="background:#10b981">✅ Speichern</button>
-                <button id="cancelProductBtn" type="button" class="btn" style="background:#ef4444">❌ Abbrechen</button>
+                <button type="submit" class="btn" style="background:var(--success-color)">✅ Speichern</button>
+                <button id="cancelProductBtn" type="button" class="btn" style="background:var(--error-color)">❌ Abbrechen</button>
               </div>
             </form>
           </div>
@@ -761,9 +769,8 @@ body {
         <div id="tabCategories" class="tab-panel hidden-el">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
             <h4 style="font-weight:700" class="mobile-optimized-text">Kategorien verwalten</h4>
-            <div style="display:flex;gap:8px;width:100%;max-width:400px;">
+            <div style="display:flex;gap:8px;width:100%;max-width:360px;">
               <input id="newCategoryInput" class="input mobile-optimized-text" placeholder="Neue Kategorie" />
-              <input id="newCategoryColor" type="color" class="category-color-input" value="#22c55e" title="Kategorie-Farbe">
               <button id="addCategoryBtn" class="btn">Hinzufügen</button>
             </div>
           </div>
@@ -777,8 +784,8 @@ body {
           <label class="kv mb-2 mobile-optimized-text" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
           <input id="settingHeaderImage" class="input mobile-optimized-text" placeholder="Bild-URL"/>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-            <button id="saveGeneralBtn" class="btn" style="background:#10b981">✅ Speichern</button>
-            <button id="resetGeneralBtn" class="btn" style="background:#ef4444">❌ Zurücksetzen</button>
+            <button id="saveGeneralBtn" class="btn" style="background:var(--success-color)">✅ Speichern</button>
+            <button id="resetGeneralBtn" class="btn" style="background:var(--error-color)">❌ Zurücksetzen</button>
           </div>
         </div>
 
@@ -807,10 +814,10 @@ body {
               <input id="orderUserName" class="input mobile-optimized-text" placeholder="Name des Kunden" style="margin-top:6px">
               <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
               <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                <button id="saveOrderUserBtn" class="btn" style="background:#10b981">✅ Daten speichern</button>
-                <button id="markOrderProcessedBtn" class="btn" style="background:#10b981">✅ Als bearbeitet</button>
-                <button id="markOrderOpenBtn" class="btn" style="background:#f59e0b">🔄 Als offen</button>
-                <button id="markOrderCancelledBtn" class="btn" style="background:#ef4444">❌ Stornieren</button>
+                <button id="saveOrderUserBtn" class="btn" style="background:var(--success-color)">✅ Daten speichern</button>
+                <button id="markOrderProcessedBtn" class="btn" style="background:var(--success-color)">✅ Als bearbeitet</button>
+                <button id="markOrderOpenBtn" class="btn" style="background:var(--warning-color)">🔄 Als offen</button>
+                <button id="markOrderCancelledBtn" class="btn" style="background:var(--error-color)">❌ Stornieren</button>
               </div>
             </div>
           </div>
@@ -847,6 +854,80 @@ body {
             </div>
           </div>
         </div>
+
+        <div id="tabColors" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">🎨 Globale Farben verwalten</h4>
+          <div class="kv mb-3 mobile-optimized-text">Ändere hier die Farben der gesamten Webseite</div>
+          
+          <div class="card" style="margin-bottom:16px">
+            <h5 style="margin:0 0 12px 0;font-weight:700" class="mobile-optimized-text">Hauptfarben</h5>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Primärfarbe</div>
+                <div class="kv mobile-optimized-text">Titel, Überschriften, wichtige Elemente</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="primaryColorPreview" style="background:var(--primary-color)"></div>
+                <input type="color" id="primaryColorInput" class="color-input-wide" value="#22c55e">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Sekundärfarbe</div>
+                <div class="kv mobile-optimized-text">Warenkorb-Zähler, Buttons, sekundäre Elemente</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="secondaryColorPreview" style="background:var(--secondary-color)"></div>
+                <input type="color" id="secondaryColorInput" class="color-input-wide" value="#3b82f6">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Erfolgsfarbe</div>
+                <div class="kv mobile-optimized-text">Positive Aktionen, Bestätigungen</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="successColorPreview" style="background:var(--success-color)"></div>
+                <input type="color" id="successColorInput" class="color-input-wide" value="#10b981">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Warnfarbe</div>
+                <div class="kv mobile-optimized-text">Warnungen, Status "offen"</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="warningColorPreview" style="background:var(--warning-color)"></div>
+                <input type="color" id="warningColorInput" class="color-input-wide" value="#f59e0b">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Fehlerfarbe</div>
+                <div class="kv mobile-optimized-text">Fehler, Stornierungen, negative Aktionen</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="errorColorPreview" style="background:var(--error-color)"></div>
+                <input type="color" id="errorColorInput" class="color-input-wide" value="#ef4444">
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="saveColorsBtn" class="btn" style="background:var(--success-color)">✅ Farben speichern</button>
+            <button id="resetColorsBtn" class="btn" style="background:var(--error-color)">❌ Farben zurücksetzen</button>
+            <button id="applyColorsBtn" class="btn" style="background:var(--secondary-color)">🎨 Vorschau anwenden</button>
+          </div>
+          
+          <div class="kv mobile-optimized-text" style="margin-top:12px">
+            <strong>Tipp:</strong> Verwende "Vorschau anwenden" um die Änderungen zu testen, bevor du sie speicherst.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -876,6 +957,7 @@ const settingsRef = ref(db, 'settings');
 const categoriesRef = ref(db, 'categories');
 const ordersRef = ref(db, 'orders');
 const userStatsRef = ref(db, 'userStats');
+const colorsRef = ref(db, 'colors');
 
 const ADMIN_PASSWORD = 'T9"/TIF;9CGmSUzF]qafNT|/7j%]p';
 
@@ -922,7 +1004,6 @@ const elements = {
   cartSummary: document.getElementById('cartSummary'),
   shopCategoryFilter: document.getElementById('shopCategoryFilter'),
   newCategoryInput: document.getElementById('newCategoryInput'),
-  newCategoryColor: document.getElementById('newCategoryColor'),
   addCategoryBtn: document.getElementById('addCategoryBtn'),
   categoriesList: document.getElementById('categoriesList'),
   orderCodeInput: document.getElementById('orderCodeInput'),
@@ -944,7 +1025,16 @@ const elements = {
   refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
   orderCodeDisplay: document.getElementById('orderCodeDisplay'),
   ordersSearch: document.getElementById('ordersSearch'),
-  usersSearch: document.getElementById('usersSearch')
+  usersSearch: document.getElementById('usersSearch'),
+  // Neue Farbelemente
+  primaryColorInput: document.getElementById('primaryColorInput'),
+  secondaryColorInput: document.getElementById('secondaryColorInput'),
+  successColorInput: document.getElementById('successColorInput'),
+  warningColorInput: document.getElementById('warningColorInput'),
+  errorColorInput: document.getElementById('errorColorInput'),
+  saveColorsBtn: document.getElementById('saveColorsBtn'),
+  resetColorsBtn: document.getElementById('resetColorsBtn'),
+  applyColorsBtn: document.getElementById('applyColorsBtn')
 };
 
 let products = [];
@@ -956,6 +1046,15 @@ let saveOrderBtnEl = null;
 let orderCodeDisplayEl = null;
 let selectedUserId = null;
 let selectedOrder = null;
+
+// Standard Farben
+const defaultColors = {
+  primary: '#22c55e',
+  secondary: '#3b82f6',
+  success: '#10b981',
+  warning: '#f59e0b',
+  error: '#ef4444'
+};
 
 // Toast Funktionen
 function showToast(message, type = 'info', duration = 4000) {
@@ -978,34 +1077,43 @@ function showToast(message, type = 'info', duration = 4000) {
 
 // Funktion zur Behandlung von Bildfehlern
 function handleImageError(img) {
-  img.onerror = null; // Verhindere Endlosschleife
+  img.onerror = null;
   img.src = 'https://via.placeholder.com/300x120?text=Bild+nicht+verfügbar';
   img.style.opacity = '0.7';
 }
 
-// NEUE FUNKTION: Globale Kategorie-Farbe anwenden
-function applyCategoryColor(color) {
-  if (!color) return;
+// NEUE FUNKTION: Globale Farben anwenden
+function applyColors(colors = null) {
+  const colorSettings = colors || defaultColors;
   
-  // CSS Variable aktualisieren
-  document.documentElement.style.setProperty('--category-color', color);
+  // CSS Variablen aktualisieren
+  document.documentElement.style.setProperty('--primary-color', colorSettings.primary);
+  document.documentElement.style.setProperty('--secondary-color', colorSettings.secondary);
+  document.documentElement.style.setProperty('--success-color', colorSettings.success);
+  document.documentElement.style.setProperty('--warning-color', colorSettings.warning);
+  document.documentElement.style.setProperty('--error-color', colorSettings.error);
   
-  // Alle Elemente mit der Kategorie-Farbe aktualisieren
-  const elementsToUpdate = document.querySelectorAll('[style*="color:#22c55e"], [style*="color: #22c55e"]');
-  elementsToUpdate.forEach(el => {
-    if (el.style.color === 'rgb(34, 197, 94)' || el.style.color === '#22c55e') {
-      el.style.color = color;
-    }
-  });
-  
-  // Spezifische Elemente aktualisieren
-  const pageTitle = document.getElementById('pageTitle');
-  const shopTitle = document.querySelector('#shopView h2');
-  const cartTitle = document.querySelector('#cartView h2');
-  
-  if (pageTitle) pageTitle.style.color = color;
-  if (shopTitle) shopTitle.style.color = color;
-  if (cartTitle) cartTitle.style.color = color;
+  // Farbvorschau in Einstellungen aktualisieren
+  if (elements.primaryColorInput) {
+    elements.primaryColorInput.value = colorSettings.primary;
+    document.getElementById('primaryColorPreview').style.background = colorSettings.primary;
+  }
+  if (elements.secondaryColorInput) {
+    elements.secondaryColorInput.value = colorSettings.secondary;
+    document.getElementById('secondaryColorPreview').style.background = colorSettings.secondary;
+  }
+  if (elements.successColorInput) {
+    elements.successColorInput.value = colorSettings.success;
+    document.getElementById('successColorPreview').style.background = colorSettings.success;
+  }
+  if (elements.warningColorInput) {
+    elements.warningColorInput.value = colorSettings.warning;
+    document.getElementById('warningColorPreview').style.background = colorSettings.warning;
+  }
+  if (elements.errorColorInput) {
+    elements.errorColorInput.value = colorSettings.error;
+    document.getElementById('errorColorPreview').style.background = colorSettings.error;
+  }
 }
 
 // NEUE FUNKTION: User-Stats NUR bei "Als bearbeitet" erhöhen
@@ -1027,15 +1135,14 @@ async function incrementUserStatsOnProcessed(order) {
       currentStats = snapshot.val();
     }
     
-    // WICHTIG: Erhöhe beide Werte NUR bei "Als bearbeitet"
     const currentResetTime = currentStats.resetTime || 0;
     const currentLifeTime = currentStats.lifeTime || 0;
     
     const newStats = {
       userName: userName,
       phone: userPhone,
-      lifeTime: currentLifeTime + 1,    // LifeTime erhöhen
-      resetTime: currentResetTime + 1,  // ResetTime erhöhen
+      lifeTime: currentLifeTime + 1,
+      resetTime: currentResetTime + 1,
       lastReset: currentStats.lastReset || null
     };
     
@@ -1088,6 +1195,14 @@ elements.tabBtns.forEach(btn => {
   });
 });
 
+// NEUE FUNKTION: Farben aus Firebase laden
+onValue(colorsRef, snapshot => {
+  const colors = snapshot.val();
+  if (colors) {
+    applyColors(colors);
+  }
+});
+
 onValue(settingsRef, snapshot => {
   const val = snapshot.val();
   if(val){
@@ -1121,6 +1236,50 @@ elements.resetGeneralBtn.addEventListener('click', async () => {
   } catch(e){ console.error(e); showToast('Fehler beim Zurücksetzen', 'error'); }
 });
 
+// NEUE FUNKTIONEN: Farben verwalten
+elements.applyColorsBtn.addEventListener('click', () => {
+  const currentColors = {
+    primary: elements.primaryColorInput.value,
+    secondary: elements.secondaryColorInput.value,
+    success: elements.successColorInput.value,
+    warning: elements.warningColorInput.value,
+    error: elements.errorColorInput.value
+  };
+  
+  applyColors(currentColors);
+  showToast('Farbvorschau angewendet', 'info');
+});
+
+elements.saveColorsBtn.addEventListener('click', async () => {
+  const colors = {
+    primary: elements.primaryColorInput.value,
+    secondary: elements.secondaryColorInput.value,
+    success: elements.successColorInput.value,
+    warning: elements.warningColorInput.value,
+    error: elements.errorColorInput.value
+  };
+  
+  try {
+    await update(colorsRef, colors);
+    showToast('Farben gespeichert', 'success');
+  } catch (error) {
+    console.error('Fehler beim Speichern der Farben:', error);
+    showToast('Fehler beim Speichern der Farben', 'error');
+  }
+});
+
+elements.resetColorsBtn.addEventListener('click', async () => {
+  if(!confirm('Farben auf Standard zurücksetzen?')) return;
+  try {
+    await update(colorsRef, defaultColors);
+    applyColors(defaultColors);
+    showToast('Farben zurückgesetzt', 'success');
+  } catch (error) {
+    console.error('Fehler beim Zurücksetzen der Farben:', error);
+    showToast('Fehler beim Zurücksetzen der Farben', 'error');
+  }
+});
+
 onValue(categoriesRef, snapshot => {
   categories = [];
   snapshot.forEach(child => {
@@ -1132,7 +1291,6 @@ onValue(categoriesRef, snapshot => {
   populateCategorySelects();
 });
 
-// NEUE FUNKTION: Kategorien mit Farben rendern
 function renderCategoriesList(){
   elements.categoriesList.innerHTML = '';
   if(categories.length === 0){ 
@@ -1140,23 +1298,14 @@ function renderCategoriesList(){
     return; 
   }
   
-  // Standardfarbe setzen basierend auf erster Kategorie
-  if (categories.length > 0) {
-    const defaultColor = categories[0].color || '#22c55e';
-    applyCategoryColor(defaultColor);
-  }
-  
   categories.forEach(category => {
     const div = document.createElement('div');
     div.className = 'category-item fade-in';
     div.innerHTML = `
-      <div class="mobile-optimized-text">
-        <span class="category-color-preview" style="background-color: ${category.color || '#22c55e'}"></span>
-        ${escapeHtml(category.name)}
-      </div>
+      <div class="mobile-optimized-text">${escapeHtml(category.name)}</div>
       <div style="display:flex;gap:6px">
         <button class="btn small-btn" data-edit="${category.key}">✏️</button>
-        <button class="btn small-btn" data-del="${category.key}" style="background:#ef4444">🗑️ Löschen</button>
+        <button class="btn small-btn" data-del="${category.key}" style="background:var(--error-color)">🗑️ Löschen</button>
       </div>`;
     elements.categoriesList.appendChild(div);
     
@@ -1171,33 +1320,21 @@ function renderCategoriesList(){
     
     div.querySelector('[data-edit]').onclick = () => {
       const newName = prompt('Neuer Kategorie-Name', category.name);
-      const newColor = prompt('Neue Kategorie-Farbe (HEX Format, z.B. #22c55e)', category.color || '#22c55e');
-      
       if(newName && newName.trim()){
-        const updates = { name: newName.trim() };
-        if (newColor && /^#[0-9A-F]{6}$/i.test(newColor)) {
-          updates.color = newColor;
-          applyCategoryColor(newColor);
-        }
-        
-        update(ref(db, 'categories/' + category.key), updates)
-          .then(() => showToast('Kategorie aktualisiert', 'success'))
-          .catch(() => showToast('Fehler beim Aktualisieren', 'error'));
+        update(ref(db, 'categories/' + category.key), { name: newName.trim() })
+          .then(() => showToast('Kategorie umbenannt', 'success'))
+          .catch(() => showToast('Fehler beim Umbenennen', 'error'));
       }
     };
   });
 }
 
-// NEUE FUNKTION: Kategorie mit Farbe hinzufügen
 elements.addCategoryBtn.addEventListener('click', async () => {
   const name = (elements.newCategoryInput.value || '').trim();
-  const color = elements.newCategoryColor.value || '#22c55e';
-  
   if(!name) return showToast('Bitte Namen eingeben', 'warning');
   try{
-    await push(categoriesRef, { name, color });
+    await push(categoriesRef, { name });
     elements.newCategoryInput.value = '';
-    applyCategoryColor(color);
     showToast('Kategorie hinzugefügt', 'success');
   } catch(e){ console.error(e); showToast('Fehler beim Anlegen', 'error'); }
 });
@@ -1211,14 +1348,12 @@ function populateCategorySelects(){
     option1.value = category.name;
     option1.textContent = category.name;
     option1.className = 'mobile-optimized-text';
-    option1.style.color = category.color || '#22c55e';
     elements.prodCategorySelect.appendChild(option1);
     
     const option2 = document.createElement('option');
     option2.value = category.name;
     option2.textContent = category.name;
     option2.className = 'mobile-optimized-text';
-    option2.style.color = category.color || '#22c55e';
     elements.shopCategoryFilter.appendChild(option2);
   });
 }
@@ -1268,15 +1403,6 @@ function renderProductsGrid(){
     const card = document.createElement('div');
     card.className = 'card fade-in';
     
-    // Finde die Kategorie-Farbe
-    let categoryColor = '#22c55e';
-    if (product.category) {
-      const category = categories.find(c => c.name === product.category);
-      if (category && category.color) {
-        categoryColor = category.color;
-      }
-    }
-    
     const img = document.createElement('img');
     let imageUrl = product.image || 'https://via.placeholder.com/300x120';
     
@@ -1302,7 +1428,7 @@ function renderProductsGrid(){
     title.style.fontWeight = '700';
     title.style.fontSize = '1rem';
     title.style.marginTop = '8px';
-    title.style.color = product.colorName || categoryColor; // Verwende Kategorie-Farbe falls keine eigene Farbe
+    title.style.color = product.colorName || 'var(--primary-color)';
     title.textContent = product.name || '';
     
     const desc = document.createElement('div');
@@ -1332,7 +1458,7 @@ function renderProductsGrid(){
               return `
                 <tr>
                   <td style="color:${color || '#facc15'}" class="mobile-optimized-text resource-text-fix">${escapeHtml(name)}</td>
-                  <td style="text-align:right;color:${product.colorQuantity || '#3b82f6'}" class="mobile-optimized-text">
+                  <td style="text-align:right;color:${product.colorQuantity || 'var(--secondary-color)'}" class="mobile-optimized-text">
                     ${Number(value).toLocaleString('de-DE')}
                   </td>
                 </tr>`;
@@ -1346,14 +1472,13 @@ function renderProductsGrid(){
       const categoryDiv = document.createElement('div');
       categoryDiv.className = 'kv mobile-optimized-text product-card-text';
       categoryDiv.style.marginTop = '8px';
-      categoryDiv.style.color = categoryColor; // Kategorie-Farbe verwenden
       categoryDiv.textContent = 'Kategorie: ' + product.category;
       card.appendChild(categoryDiv);
     }
 
     const addButton = document.createElement('button');
     addButton.className = 'btn';
-    addButton.style.background = '#10b981';
+    addButton.style.background = 'var(--success-color)';
     addButton.style.marginTop = '8px';
     addButton.textContent = '✅ In den Warenkorb';
     addButton.onclick = () => { 
@@ -1388,7 +1513,7 @@ function renderProductsTable(){
       <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(resourcesText)}</td>
       <td style="padding:8px">
         <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
-        <button class="btn small-btn" data-del="${product.key}" style="background:#ef4444">🗑️ Löschen</button>
+        <button class="btn small-btn" data-del="${product.key}" style="background:var(--error-color)">🗑️ Löschen</button>
       </td>`;
     elements.productsTableBody.appendChild(row);
     
@@ -1442,7 +1567,7 @@ function addResourceRow(name = '', value = '', color = '#facc15'){
     <td><input class="input mobile-optimized-text" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
     <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="0" /></td>
     <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
-    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:#ef4444">❌ Löschen</button></td>`;
+    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:var(--error-color)">❌ Löschen</button></td>`;
   
   const deleteButton = row.querySelector('button');
   deleteButton.onclick = () => row.remove();
@@ -1736,8 +1861,8 @@ async function renderUsersList() {
         <div class="kv" style="font-size: 0.7rem; margin-top: 4px;">${lastResetText}</div>
       </div>
       <div style="margin-top: 8px; display: flex; gap: 6px;">
-        <button class="btn small-btn reset-btn" style="background: #f59e0b;">🔄 ResetTime zurücksetzen</button>
-        <button class="btn small-btn details-btn" style="background: #3b82f6;">📋 Details anzeigen</button>
+        <button class="btn small-btn reset-btn" style="background: var(--warning-color);">🔄 ResetTime zurücksetzen</button>
+        <button class="btn small-btn details-btn" style="background: var(--secondary-color);">📋 Details anzeigen</button>
       </div>`;
     
     elements.usersList.appendChild(userItem);
@@ -1802,7 +1927,7 @@ function renderUserOrders(user) {
       ${lastResetText}
     </div>
     <div style="margin-top:12px;">
-      <button class="btn" style="background:#f59e0b;width:100%;" onclick="resetUserTime(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+      <button class="btn" style="background:var(--warning-color);width:100%;" onclick="resetUserTime(${JSON.stringify(user).replace(/"/g, '&quot;')})">
         🔄 ResetTime auf 0 zurücksetzen
       </button>
     </div>`;
@@ -1859,7 +1984,7 @@ function renderUserOrders(user) {
     if (order.status === 'bearbeitet') {
       const openButton = document.createElement('button');
       openButton.className = 'btn small-btn';
-      openButton.style.background = '#3b82f6';
+      openButton.style.background = 'var(--secondary-color)';
       openButton.style.marginTop = '8px';
       openButton.textContent = '🔓 In Bestellungen öffnen';
       openButton.onclick = async () => {
@@ -1974,7 +2099,7 @@ function renderCartView(){
           </div>
         </td>
         <td style="text-align:center">
-          <button class="btn small-btn" style="background:#ef4444" onclick="removeFromCart('${entry.key}')">🗑️</button>
+          <button class="btn small-btn" style="background:var(--error-color)" onclick="removeFromCart('${entry.key}')">🗑️</button>
         </td>`;
       elements.cartTableBody.appendChild(tr);
       for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
@@ -2013,7 +2138,7 @@ function ensureOrderUiInCart(){
   wrapper.style.marginTop = '12px';
   saveOrderBtnEl = document.createElement('button');
   saveOrderBtnEl.className = 'btn';
-  saveOrderBtnEl.style.background = '#10b981';
+  saveOrderBtnEl.style.background = 'var(--success-color)';
   saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
   saveOrderBtnEl.onclick = saveCartAsOrder;
   wrapper.appendChild(saveOrderBtnEl);
@@ -2147,7 +2272,7 @@ function renderOrdersList() {
       </div>
       <div class="order-card-actions">
         <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
-        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:#ef4444">🗑️ Löschen</button>
+        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:var(--error-color)">🗑️ Löschen</button>
       </div>`;
     elements.ordersList.appendChild(div);
     

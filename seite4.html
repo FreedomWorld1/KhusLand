@@ -11,6 +11,7 @@
   --card: #0b1220;
   --muted: #9ca3af;
   --accent: #06b6d4;
+  --category-color: #22c55e; /* Standard Kategorie-Farbe */
 }
 
 body {
@@ -563,6 +564,26 @@ body {
 .stat-resettime .stat-value {
   color: #f59e0b;
 }
+
+/* Kategorie-Farben */
+.category-color-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-right: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.category-color-input {
+  width: 60px;
+  height: 36px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: #fff;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -571,7 +592,7 @@ body {
       <div class="flex items-center gap-4">
         <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px">
         <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">Bullet Farm v3</h1>
+          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:var(--category-color);margin:0" class="mobile-optimized-text">Bullet Farm v3</h1>
           <div class="small-muted mobile-optimized-text">Shop System</div>
         </div>
       </div>
@@ -586,7 +607,7 @@ body {
       <section id="shopView" class="card mb-6 fade-in">
         <div class="shop-header flex items-center justify-between mb-4">
           <div class="flex items-center gap-3" style="flex-wrap: wrap;">
-            <h2 style="font-weight:700;color:#22c55e;margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
+            <h2 style="font-weight:700;color:var(--category-color);margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
             <div class="kv mobile-optimized-text" style="white-space: nowrap;">Filter:</div>
             <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
               <option value="">— Alle Kategorien —</option>
@@ -602,7 +623,7 @@ body {
 
       <section id="cartView" class="card mb-6 hidden-el fade-in">
         <div class="flex items-center justify-between mb-4">
-          <h2 style="font-weight:700;color:#22c55e" class="mobile-optimized-text">🛍️ Warenkorb</h2>
+          <h2 style="font-weight:700;color:var(--category-color)" class="mobile-optimized-text">🛍️ Warenkorb</h2>
           <div class="kv mobile-optimized-text">Ressourcen & Anzahl</div>
         </div>
         <div class="table-container">
@@ -740,8 +761,9 @@ body {
         <div id="tabCategories" class="tab-panel hidden-el">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
             <h4 style="font-weight:700" class="mobile-optimized-text">Kategorien verwalten</h4>
-            <div style="display:flex;gap:8px;width:100%;max-width:360px;">
+            <div style="display:flex;gap:8px;width:100%;max-width:400px;">
               <input id="newCategoryInput" class="input mobile-optimized-text" placeholder="Neue Kategorie" />
+              <input id="newCategoryColor" type="color" class="category-color-input" value="#22c55e" title="Kategorie-Farbe">
               <button id="addCategoryBtn" class="btn">Hinzufügen</button>
             </div>
           </div>
@@ -900,6 +922,7 @@ const elements = {
   cartSummary: document.getElementById('cartSummary'),
   shopCategoryFilter: document.getElementById('shopCategoryFilter'),
   newCategoryInput: document.getElementById('newCategoryInput'),
+  newCategoryColor: document.getElementById('newCategoryColor'),
   addCategoryBtn: document.getElementById('addCategoryBtn'),
   categoriesList: document.getElementById('categoriesList'),
   orderCodeInput: document.getElementById('orderCodeInput'),
@@ -958,6 +981,31 @@ function handleImageError(img) {
   img.onerror = null; // Verhindere Endlosschleife
   img.src = 'https://via.placeholder.com/300x120?text=Bild+nicht+verfügbar';
   img.style.opacity = '0.7';
+}
+
+// NEUE FUNKTION: Globale Kategorie-Farbe anwenden
+function applyCategoryColor(color) {
+  if (!color) return;
+  
+  // CSS Variable aktualisieren
+  document.documentElement.style.setProperty('--category-color', color);
+  
+  // Alle Elemente mit der Kategorie-Farbe aktualisieren
+  const elementsToUpdate = document.querySelectorAll('[style*="color:#22c55e"], [style*="color: #22c55e"]');
+  elementsToUpdate.forEach(el => {
+    if (el.style.color === 'rgb(34, 197, 94)' || el.style.color === '#22c55e') {
+      el.style.color = color;
+    }
+  });
+  
+  // Spezifische Elemente aktualisieren
+  const pageTitle = document.getElementById('pageTitle');
+  const shopTitle = document.querySelector('#shopView h2');
+  const cartTitle = document.querySelector('#cartView h2');
+  
+  if (pageTitle) pageTitle.style.color = color;
+  if (shopTitle) shopTitle.style.color = color;
+  if (cartTitle) cartTitle.style.color = color;
 }
 
 // NEUE FUNKTION: User-Stats NUR bei "Als bearbeitet" erhöhen
@@ -1084,6 +1132,7 @@ onValue(categoriesRef, snapshot => {
   populateCategorySelects();
 });
 
+// NEUE FUNKTION: Kategorien mit Farben rendern
 function renderCategoriesList(){
   elements.categoriesList.innerHTML = '';
   if(categories.length === 0){ 
@@ -1091,11 +1140,20 @@ function renderCategoriesList(){
     return; 
   }
   
+  // Standardfarbe setzen basierend auf erster Kategorie
+  if (categories.length > 0) {
+    const defaultColor = categories[0].color || '#22c55e';
+    applyCategoryColor(defaultColor);
+  }
+  
   categories.forEach(category => {
     const div = document.createElement('div');
     div.className = 'category-item fade-in';
     div.innerHTML = `
-      <div class="mobile-optimized-text">${escapeHtml(category.name)}</div>
+      <div class="mobile-optimized-text">
+        <span class="category-color-preview" style="background-color: ${category.color || '#22c55e'}"></span>
+        ${escapeHtml(category.name)}
+      </div>
       <div style="display:flex;gap:6px">
         <button class="btn small-btn" data-edit="${category.key}">✏️</button>
         <button class="btn small-btn" data-del="${category.key}" style="background:#ef4444">🗑️ Löschen</button>
@@ -1113,21 +1171,33 @@ function renderCategoriesList(){
     
     div.querySelector('[data-edit]').onclick = () => {
       const newName = prompt('Neuer Kategorie-Name', category.name);
+      const newColor = prompt('Neue Kategorie-Farbe (HEX Format, z.B. #22c55e)', category.color || '#22c55e');
+      
       if(newName && newName.trim()){
-        update(ref(db, 'categories/' + category.key), { name: newName.trim() })
-          .then(() => showToast('Kategorie umbenannt', 'success'))
-          .catch(() => showToast('Fehler beim Umbenennen', 'error'));
+        const updates = { name: newName.trim() };
+        if (newColor && /^#[0-9A-F]{6}$/i.test(newColor)) {
+          updates.color = newColor;
+          applyCategoryColor(newColor);
+        }
+        
+        update(ref(db, 'categories/' + category.key), updates)
+          .then(() => showToast('Kategorie aktualisiert', 'success'))
+          .catch(() => showToast('Fehler beim Aktualisieren', 'error'));
       }
     };
   });
 }
 
+// NEUE FUNKTION: Kategorie mit Farbe hinzufügen
 elements.addCategoryBtn.addEventListener('click', async () => {
   const name = (elements.newCategoryInput.value || '').trim();
+  const color = elements.newCategoryColor.value || '#22c55e';
+  
   if(!name) return showToast('Bitte Namen eingeben', 'warning');
   try{
-    await push(categoriesRef, { name });
+    await push(categoriesRef, { name, color });
     elements.newCategoryInput.value = '';
+    applyCategoryColor(color);
     showToast('Kategorie hinzugefügt', 'success');
   } catch(e){ console.error(e); showToast('Fehler beim Anlegen', 'error'); }
 });
@@ -1141,12 +1211,14 @@ function populateCategorySelects(){
     option1.value = category.name;
     option1.textContent = category.name;
     option1.className = 'mobile-optimized-text';
+    option1.style.color = category.color || '#22c55e';
     elements.prodCategorySelect.appendChild(option1);
     
     const option2 = document.createElement('option');
     option2.value = category.name;
     option2.textContent = category.name;
     option2.className = 'mobile-optimized-text';
+    option2.style.color = category.color || '#22c55e';
     elements.shopCategoryFilter.appendChild(option2);
   });
 }
@@ -1196,13 +1268,18 @@ function renderProductsGrid(){
     const card = document.createElement('div');
     card.className = 'card fade-in';
     
-    // KORRIGIERT: Bild mit Fehlerbehandlung und Firebase Support
-    const img = document.createElement('img');
+    // Finde die Kategorie-Farbe
+    let categoryColor = '#22c55e';
+    if (product.category) {
+      const category = categories.find(c => c.name === product.category);
+      if (category && category.color) {
+        categoryColor = category.color;
+      }
+    }
     
-    // Verwende die Bild-URL aus Firebase, falls vorhanden
+    const img = document.createElement('img');
     let imageUrl = product.image || 'https://via.placeholder.com/300x120';
     
-    // Falls es eine relative URL ist, mache sie absolut
     if (imageUrl.startsWith('/')) {
       imageUrl = window.location.origin + imageUrl;
     }
@@ -1212,7 +1289,6 @@ function renderProductsGrid(){
     img.alt = product.name || 'Produktbild';
     img.onerror = function() { 
       handleImageError(this); 
-      // Fallback auf Firebase Storage URL falls verfügbar
       if (product.id) {
         this.src = `https://firebasestorage.googleapis.com/v0/b/khusland-b7d13.appspot.com/o/products%2F${product.id}?alt=media`;
       }
@@ -1226,7 +1302,7 @@ function renderProductsGrid(){
     title.style.fontWeight = '700';
     title.style.fontSize = '1rem';
     title.style.marginTop = '8px';
-    title.style.color = product.colorName || '#22c55e';
+    title.style.color = product.colorName || categoryColor; // Verwende Kategorie-Farbe falls keine eigene Farbe
     title.textContent = product.name || '';
     
     const desc = document.createElement('div');
@@ -1270,6 +1346,7 @@ function renderProductsGrid(){
       const categoryDiv = document.createElement('div');
       categoryDiv.className = 'kv mobile-optimized-text product-card-text';
       categoryDiv.style.marginTop = '8px';
+      categoryDiv.style.color = categoryColor; // Kategorie-Farbe verwenden
       categoryDiv.textContent = 'Kategorie: ' + product.category;
       card.appendChild(categoryDiv);
     }
@@ -1431,7 +1508,6 @@ function searchOrders() {
   const searchTerm = (elements.ordersSearch.value || '').trim().toLowerCase();
   
   if (!searchTerm) {
-    // Suche zurücksetzen - nur nicht-bearbeitete Bestellungen anzeigen
     const orders = elements.ordersList.querySelectorAll('.order-card');
     orders.forEach(order => {
       order.style.display = '';
@@ -1454,7 +1530,6 @@ function searchOrders() {
     }
   });
   
-  // "Keine Ergebnisse" Meldung anzeigen
   const noResults = elements.ordersList.querySelector('.no-search-results');
   if (!hasMatches) {
     if (!noResults) {
@@ -1475,7 +1550,6 @@ function searchUsers() {
   const searchTerm = (elements.usersSearch.value || '').trim().toLowerCase();
   
   if (!searchTerm) {
-    // Suche zurücksetzen - alle Nutzer anzeigen
     const users = elements.usersList.querySelectorAll('.user-order-item');
     users.forEach(user => {
       user.style.display = '';
@@ -1498,7 +1572,6 @@ function searchUsers() {
     }
   });
   
-  // "Keine Ergebnisse" Meldung anzeigen
   const noResults = elements.usersList.querySelector('.no-search-results');
   if (!hasMatches) {
     if (!noResults) {
@@ -1540,13 +1613,10 @@ async function loadUserStats(user) {
     if (snapshot.exists()) {
       const stats = snapshot.val();
       
-      // WICHTIG: Korrektur für falsche resetTime Werte
       let resetTime = stats.resetTime;
       
-      // Wenn resetTime undefiniert, null oder größer als lifeTime ist, korrigieren
       if (resetTime === undefined || resetTime === null || resetTime > lifeTime) {
         resetTime = lifeTime;
-        // Automatisch korrigieren in der Datenbank
         await update(userStatsRef, {
           ...stats,
           resetTime: lifeTime
@@ -1559,14 +1629,12 @@ async function loadUserStats(user) {
         lastReset: stats.lastReset || null
       };
     } else {
-      // Erstelle neue Stats wenn nicht vorhanden
       const initialStats = {
         lifeTime: lifeTime,
-        resetTime: lifeTime, // Startet mit aktueller Bestellanzahl
+        resetTime: lifeTime,
         lastReset: null
       };
       
-      // Speichere initiale Stats
       await update(userStatsRef, initialStats);
       return initialStats;
     }
@@ -1587,28 +1655,25 @@ async function resetUserTime(user) {
   try {
     const userStatsRef = ref(db, `userStats/${user.phone}`);
     
-    // Hole aktuelle Stats um sicherzustellen, dass wir die neuesten Daten haben
     const currentSnapshot = await get(userStatsRef);
     const currentStats = currentSnapshot.exists() ? currentSnapshot.val() : {};
     
-    // Setze resetTime explizit auf 0
     await update(userStatsRef, {
       ...currentStats,
       userName: user.userName,
       phone: user.phone,
       lastReset: Date.now(),
-      resetTime: 0  // EXPLIZIT auf 0 setzen
+      resetTime: 0
     });
     
     showToast(`ResetTime für ${user.userName} wurde auf 0 zurückgesetzt`, 'success');
     
-    // UI sofort aktualisieren
     setTimeout(() => {
       renderUsersList();
       if (selectedUserId === user.phone) {
         renderUserOrders({
           ...user,
-          resetTime: 0, // Sofortige UI-Aktualisierung
+          resetTime: 0,
           lastReset: Date.now()
         });
       }
@@ -1624,7 +1689,6 @@ async function resetUserTime(user) {
 async function renderUsersList() {
   const usersMap = new Map();
   
-  // Sammle alle Nutzer - JETZT ALLE Bestellungen, auch bearbeitete
   allOrders.forEach(order => {
     if (order.phone && order.userName) {
       const userKey = `${order.phone}-${order.userName}`;
@@ -1647,10 +1711,8 @@ async function renderUsersList() {
     return; 
   }
   
-  // Sort users by name
   users.sort((a, b) => a.userName.localeCompare(b.userName));
   
-  // Lade Statistiken für jeden Nutzer
   for (const user of users) {
     const stats = await loadUserStats(user);
     user.lifeTime = stats.lifeTime;
@@ -1680,21 +1742,18 @@ async function renderUsersList() {
     
     elements.usersList.appendChild(userItem);
     
-    // Reset-Button Event
     const resetBtn = userItem.querySelector('.reset-btn');
     resetBtn.onclick = (e) => {
       e.stopPropagation();
       resetUserTime(user);
     };
     
-    // Details-Button Event
     const detailsBtn = userItem.querySelector('.details-btn');
     detailsBtn.onclick = (e) => {
       e.stopPropagation();
       userItem.click();
     };
     
-    // Klick auf User Item
     userItem.onclick = () => {
       document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
       userItem.classList.add('active');
@@ -1713,7 +1772,6 @@ function renderUserOrders(user) {
     return; 
   }
   
-  // Header mit Statistiken
   const headerCard = document.createElement('div');
   headerCard.className = 'order-card';
   
@@ -1751,7 +1809,6 @@ function renderUserOrders(user) {
   
   elements.userOrdersDetails.appendChild(headerCard);
   
-  // Bestellungen anzeigen
   const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   
   sortedOrders.forEach(order => {
@@ -1799,7 +1856,6 @@ function renderUserOrders(user) {
       orderCard.appendChild(itemsList);
     }
     
-    // NEU: "Öffnen"-Button für bearbeitete Bestellungen
     if (order.status === 'bearbeitet') {
       const openButton = document.createElement('button');
       openButton.className = 'btn small-btn';
@@ -1880,12 +1936,10 @@ function removeFromCart(productKey) {
 function updateCartQuantity(productKey, newQuantity) {
   const item = cart.find(item => item.key === productKey);
   if (item && newQuantity > 0) {
-    // Recalculate resources based on original product
     const product = products.find(p => p.key === productKey);
     if (product) {
       const resourceMap = resourcesToMap(product.resources);
       item.quantity = newQuantity;
-      // Reset and recalculate resources
       item.resources = {};
       for (let i = 0; i < newQuantity; i++) {
         for (const resource in resourceMap) {
@@ -1930,7 +1984,6 @@ function renderCartView(){
   const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
   cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
   
-  // Update cart count
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   elements.cartCount.textContent = totalItems > 0 ? totalItems : '';
   elements.cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
@@ -1993,7 +2046,6 @@ function ensureOrderUiInCart(){
 async function saveCartAsOrder(){
   if(cart.length === 0) return showToast('Warenkorb ist leer', 'warning');
   
-  // Nutzerdaten abfragen
   const userName = prompt('Bitte Namen eingeben für Bestellung:');
   const userPhone = prompt('Bitte Telefonnummer eingeben:');
   
@@ -2015,9 +2067,6 @@ async function saveCartAsOrder(){
   try {
     const newOrderRef = push(ordersRef);
     await update(newOrderRef, orderData);
-    
-    // WICHTIG: KEINE automatische Erhöhung der User-Stats mehr!
-    // await updateUserStatsOnNewOrder(userPhone, userName);
     
     if(!orderCodeDisplayEl) ensureOrderUiInCart();
     orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
@@ -2045,7 +2094,6 @@ onValue(ordersRef, snapshot => {
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
   
-  // Filtere Bestellungen: Nur anzeigen, wenn nicht als bearbeitet markiert oder nicht entfernt
   const visibleOrders = allOrders.filter(o => 
     o.status !== 'bearbeitet' && !o.removedFromOrders
   );
@@ -2055,9 +2103,7 @@ function renderOrdersList() {
     return; 
   }
   
-  // Sort by status and date
   visibleOrders.sort((a,b)=> {
-    // First by status (open first, then processed, then cancelled)
     const statusOrder = { 'offen': 0, 'bearbeitet': 1, 'storniert': 2 };
     const statusA = statusOrder[a.status] || 0;
     const statusB = statusOrder[b.status] || 0;
@@ -2066,7 +2112,6 @@ function renderOrdersList() {
       return statusA - statusB;
     }
     
-    // Then by date (newest first)
     return (b.createdAt||0) - (a.createdAt||0);
   });
   
@@ -2148,7 +2193,6 @@ function loadOrderByCode(code){
   elements.orderUserName.value = order.userName || '';
   elements.orderPhone.value = order.phone || '';
   
-  // Update status buttons
   elements.markOrderProcessedBtn.disabled = order.status === 'bearbeitet';
   elements.markOrderOpenBtn.disabled = order.status === 'offen';
   elements.markOrderCancelledBtn.disabled = order.status === 'storniert';
@@ -2171,16 +2215,13 @@ elements.markOrderProcessedBtn.addEventListener('click', async ()=> {
   if(!selectedOrder) return;
   if(!confirm('Bestellung als bearbeitet markieren und aus Bestellungen entfernen?')) return;
   try { 
-    // WICHTIG: User-Stats erhöhen BEVOR Bestellung als bearbeitet markiert wird
     await incrementUserStatsOnProcessed(selectedOrder);
     
-    // Dann Bestellung als bearbeitet markieren
     await update(ref(db,'orders/'+selectedOrder.key), { 
       status: 'bearbeitet',
       removedFromOrders: true
     }); 
     
-    // Bestellung aus der aktuellen Ansicht entfernen
     elements.orderDetails.style.display = 'none';
     elements.orderCodeInput.value = '';
     selectedOrder = null;

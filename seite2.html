@@ -566,7 +566,7 @@
         return;
       }
       
-      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge (g)', 'Cash ($)', 'Verkäuferanteil (80%)', 'Käuferanteil (20%)'];
+      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge (g)', 'Gesamtpreis ($)', 'Verkäuferanteil (80%)', 'Käuferanteil (20%)'];
       const rows = entries.map(e => [
         formatDate(e.date),
         `"${e.buyer}"`,

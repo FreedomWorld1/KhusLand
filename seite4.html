@@ -16,7 +16,6 @@
   --success-color: #10b981;
   --warning-color: #f59e0b;
   --error-color: #ef4444;
-  /* NEU: Hintergrundfarbe Variable */
   --background-color: #0f1724;
 }
 
@@ -417,7 +416,6 @@ body {
   }
 }
 
-/* FIX: Text-Optimierungen für bessere Darstellung auf allen Geräten */
 .mobile-optimized-text {
   word-break: break-word;
   overflow-wrap: break-word;
@@ -594,6 +592,76 @@ body {
   width: 80px;
   height: 36px;
 }
+
+/* Verbesserungen für bessere Benutzerfreundlichkeit */
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.btn-success {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn-warning {
+  background: var(--warning-color);
+  color: white;
+}
+
+.btn-error {
+  background: var(--error-color);
+  color: white;
+}
+
+/* Verbesserte Formulare */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #e6eef8;
+}
+
+/* Verbesserte Produktkarten */
+.product-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.product-card:hover {
+  border-color: rgba(6, 182, 212, 0.3);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+}
+
+/* Verbesserte Tabs */
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Verbesserte Modals */
+.modal-header {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+/* Verbesserte Tabellen */
+.table-striped tbody tr:nth-child(odd) {
+  background: rgba(255,255,255,0.02);
+}
+
+.table-hover tbody tr:hover {
+  background: rgba(255,255,255,0.05);
+}
 </style>
 </head>
 <body>
@@ -607,9 +675,9 @@ body {
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button id="btnShop" class="btn">Shop</button>
-        <button id="btnCart" class="btn">Warenkorb <span id="cartCount" style="margin-left:4px;background:var(--secondary-color);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;"></span></button>
-        <button id="openSettingsBtn" class="btn">⚙️</button>
+        <button id="btnShop" class="btn btn-primary">Shop</button>
+        <button id="btnCart" class="btn btn-secondary">Warenkorb <span id="cartCount" style="margin-left:4px;background:var(--secondary-color);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;"></span></button>
+        <button id="openSettingsBtn" class="btn" aria-label="Einstellungen">⚙️</button>
       </div>
     </header>
 
@@ -637,7 +705,7 @@ body {
           <div class="kv mobile-optimized-text">Ressourcen & Anzahl</div>
         </div>
         <div class="table-container">
-          <table class="table" id="cartTable">
+          <table class="table table-striped table-hover" id="cartTable">
             <thead>
               <tr>
                 <th class="mobile-optimized-text">Produkt</th>
@@ -656,21 +724,23 @@ body {
 
   <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
     <div class="modal-box">
-      <div class="flex items-start justify-between mb-4">
+      <div class="modal-header flex items-start justify-between">
         <div>
           <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0" class="mobile-optimized-text">⚙️ Einstellungen</h3>
           <div class="kv mobile-optimized-text">Passwortgeschützte — Funktionen</div>
         </div>
         <div class="flex gap-2 items-center">
-          <button id="settingsCloseBtn" class="btn">✖</button>
+          <button id="settingsCloseBtn" class="btn" aria-label="Schließen">✖</button>
         </div>
       </div>
 
       <div id="settingsLoginArea">
-        <label class="kv mb-2 mobile-optimized-text">Admin Passwort</label>
-        <div class="flex items-center gap-2 mb-3">
-          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
-          <button id="settingsUnlockBtn" class="btn">Einloggen</button>
+        <div class="form-group">
+          <label class="form-label mobile-optimized-text">Admin Passwort</label>
+          <div class="flex items-center gap-2">
+            <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+            <button id="settingsUnlockBtn" class="btn btn-primary">Einloggen</button>
+          </div>
         </div>
         <div id="settingsLoginError" class="error kv mobile-optimized-text" style="display:none">❌ Falsches Passwort</div>
       </div>
@@ -687,12 +757,12 @@ body {
           </div>
         </div>
 
-        <div id="tabProducts" class="tab-panel">
+        <div id="tabProducts" class="tab-content">
           <div class="flex items-center justify-between mb-3 admin-actions">
             <h4 style="font-weight:700" class="mobile-optimized-text">Produkte verwalten</h4>
             <div class="flex gap-2">
-              <button id="btnNewProduct" class="btn">Neues Produkt</button>
-              <button id="btnReloadProducts" class="btn">Neu laden</button>
+              <button id="btnNewProduct" class="btn btn-success">Neues Produkt</button>
+              <button id="btnReloadProducts" class="btn btn-secondary">Neu laden</button>
             </div>
           </div>
 
@@ -727,7 +797,7 @@ body {
               <div id="resourceTableContainer" style="margin-bottom:8px">
                 <h5 style="margin:0 0 8px 0;font-weight:700" class="mobile-optimized-text">Ressourcen (Name:Anzahl:Farbe)</h5>
                 <div class="table-container">
-                  <table class="table" id="resourceTable">
+                  <table class="table table-striped" id="resourceTable">
                     <thead>
                       <tr>
                         <th class="mobile-optimized-text">Ressource</th>
@@ -740,20 +810,20 @@ body {
                   </table>
                 </div>
                 <div style="margin-top:8px">
-                  <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
+                  <button id="addResourceBtn" type="button" class="btn btn-secondary">Ressource hinzufügen</button>
                 </div>
               </div>
 
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button type="submit" class="btn" style="background:var(--success-color)">✅ Speichern</button>
-                <button id="cancelProductBtn" type="button" class="btn" style="background:var(--error-color)">❌ Abbrechen</button>
+                <button type="submit" class="btn btn-success">✅ Speichern</button>
+                <button id="cancelProductBtn" type="button" class="btn btn-error">❌ Abbrechen</button>
               </div>
             </form>
           </div>
 
           <div class="card" style="max-height:46vh;overflow:auto">
             <div class="table-container">
-              <table class="table" style="width:100%">
+              <table class="table table-striped table-hover" style="width:100%">
                 <thead>
                   <tr>
                     <th class="mobile-optimized-text">Vorschau</th>
@@ -769,31 +839,34 @@ body {
           </div>
         </div>
 
-        <div id="tabCategories" class="tab-panel hidden-el">
+        <div id="tabCategories" class="tab-content hidden-el">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
             <h4 style="font-weight:700" class="mobile-optimized-text">Kategorien verwalten</h4>
             <div style="display:flex;gap:8px;width:100%;max-width:360px;">
               <input id="newCategoryInput" class="input mobile-optimized-text" placeholder="Neue Kategorie" />
-              <button id="addCategoryBtn" class="btn">Hinzufügen</button>
+              <button id="addCategoryBtn" class="btn btn-success">Hinzufügen</button>
             </div>
           </div>
           <div id="categoriesList" class="card" style="max-height:36vh;overflow:auto;padding:12px"></div>
         </div>
 
-        <div id="tabGeneral" class="tab-panel hidden-el">
+        <div id="tabGeneral" class="tab-content hidden-el">
           <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Allgemein</h4>
-          <label class="kv mb-2 mobile-optimized-text">Titel</label>
-          <input id="settingTitle" class="input mobile-optimized-text" placeholder="Seiten-Titel"/>
-          <label class="kv mb-2 mobile-optimized-text" style="margin-top:8px">Header Bild URL (48x48 empfohlen)</label>
-          <input id="settingHeaderImage" class="input mobile-optimized-text" placeholder="Bild-URL"/>
-          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-            <button id="saveGeneralBtn" class="btn" style="background:var(--success-color)">✅ Speichern</button>
-            <button id="resetGeneralBtn" class="btn" style="background:var(--error-color)">❌ Zurücksetzen</button>
+          <div class="form-group">
+            <label class="form-label mobile-optimized-text">Titel</label>
+            <input id="settingTitle" class="input mobile-optimized-text" placeholder="Seiten-Titel"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label mobile-optimized-text">Header Bild URL (48x48 empfohlen)</label>
+            <input id="settingHeaderImage" class="input mobile-optimized-text" placeholder="Bild-URL"/>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="saveGeneralBtn" class="btn btn-success">✅ Speichern</button>
+            <button id="resetGeneralBtn" class="btn btn-error">❌ Zurücksetzen</button>
           </div>
         </div>
 
-        <div id="tabOrders" class="tab-panel hidden-el">
-          <!-- Suchfunktion nur für Bestellungen -->
+        <div id="tabOrders" class="tab-content hidden-el">
           <div class="settings-search-container">
             <div class="search-input">
               <div class="search-icon">🔍</div>
@@ -805,8 +878,8 @@ body {
 
           <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
             <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
-            <button id="loadOrderBtn" class="btn">Laden</button>
-            <button id="refreshOrdersBtn" class="btn">🔄 Aktualisieren</button>
+            <button id="loadOrderBtn" class="btn btn-primary">Laden</button>
+            <button id="refreshOrdersBtn" class="btn btn-secondary">🔄 Aktualisieren</button>
           </div>
 
           <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
@@ -817,10 +890,10 @@ body {
               <input id="orderUserName" class="input mobile-optimized-text" placeholder="Name des Kunden" style="margin-top:6px">
               <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
               <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                <button id="saveOrderUserBtn" class="btn" style="background:var(--success-color)">✅ Daten speichern</button>
-                <button id="markOrderProcessedBtn" class="btn" style="background:var(--success-color)">✅ Als bearbeitet</button>
-                <button id="markOrderOpenBtn" class="btn" style="background:var(--warning-color)">🔄 Als offen</button>
-                <button id="markOrderCancelledBtn" class="btn" style="background:var(--error-color)">❌ Stornieren</button>
+                <button id="saveOrderUserBtn" class="btn btn-success">✅ Daten speichern</button>
+                <button id="markOrderProcessedBtn" class="btn btn-success">✅ Als bearbeitet</button>
+                <button id="markOrderOpenBtn" class="btn btn-warning">🔄 Als offen</button>
+                <button id="markOrderCancelledBtn" class="btn btn-error">❌ Stornieren</button>
               </div>
             </div>
           </div>
@@ -829,8 +902,7 @@ body {
           <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
         </div>
 
-        <div id="tabUsers" class="tab-panel hidden-el">
-          <!-- Suchfunktion nur für Nutzer -->
+        <div id="tabUsers" class="tab-content hidden-el">
           <div class="settings-search-container">
             <div class="search-input">
               <div class="search-icon">🔍</div>
@@ -858,14 +930,13 @@ body {
           </div>
         </div>
 
-        <div id="tabColors" class="tab-panel hidden-el">
+        <div id="tabColors" class="tab-content hidden-el">
           <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">🎨 Globale Farben verwalten</h4>
           <div class="kv mb-3 mobile-optimized-text">Ändere hier die Farben der gesamten Webseite</div>
           
           <div class="card" style="margin-bottom:16px">
             <h5 style="margin:0 0 12px 0;font-weight:700" class="mobile-optimized-text">Hintergrund & Karten</h5>
             
-            <!-- NEU: Hintergrundfarbe Einstellung -->
             <div class="color-setting-item">
               <div>
                 <div style="font-weight:600" class="mobile-optimized-text">Hintergrundfarbe</div>
@@ -877,7 +948,6 @@ body {
               </div>
             </div>
             
-            <!-- NEU: Karten-Hintergrund Einstellung -->
             <div class="color-setting-item">
               <div>
                 <div style="font-weight:600" class="mobile-optimized-text">Karten-Hintergrund</div>
@@ -948,9 +1018,9 @@ body {
           </div>
           
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button id="saveColorsBtn" class="btn" style="background:var(--success-color)">✅ Farben speichern</button>
-            <button id="resetColorsBtn" class="btn" style="background:var(--error-color)">❌ Farben zurücksetzen</button>
-            <button id="applyColorsBtn" class="btn" style="background:var(--secondary-color)">🎨 Vorschau anwenden</button>
+            <button id="saveColorsBtn" class="btn btn-success">✅ Farben speichern</button>
+            <button id="resetColorsBtn" class="btn btn-error">❌ Farben zurücksetzen</button>
+            <button id="applyColorsBtn" class="btn btn-secondary">🎨 Vorschau anwenden</button>
           </div>
           
           <div class="kv mobile-optimized-text" style="margin-top:12px">
@@ -1001,7 +1071,7 @@ const elements = {
   settingsLoginArea: document.getElementById('settingsLoginArea'),
   settingsEditor: document.getElementById('settingsEditor'),
   tabBtns: document.querySelectorAll('.tab-btn'),
-  tabPanels: document.querySelectorAll('.tab-panel'),
+  tabPanels: document.querySelectorAll('.tab-content'),
   btnNewProduct: document.getElementById('btnNewProduct'),
   productFormCard: document.getElementById('productFormCard'),
   productForm: document.getElementById('productForm'),
@@ -1061,7 +1131,6 @@ const elements = {
   successColorInput: document.getElementById('successColorInput'),
   warningColorInput: document.getElementById('warningColorInput'),
   errorColorInput: document.getElementById('errorColorInput'),
-  // NEU: Hintergrund-Farbelemente
   backgroundColorInput: document.getElementById('backgroundColorInput'),
   cardColorInput: document.getElementById('cardColorInput'),
   saveColorsBtn: document.getElementById('saveColorsBtn'),
@@ -1086,7 +1155,6 @@ const defaultColors = {
   success: '#10b981',
   warning: '#f59e0b',
   error: '#ef4444',
-  // NEU: Hintergrundfarben
   background: '#0f1724',
   card: '#0b1220'
 };
@@ -1117,7 +1185,7 @@ function handleImageError(img) {
   img.style.opacity = '0.7';
 }
 
-// NEUE FUNKTION: Globale Farben anwenden
+// Globale Farben anwenden
 function applyColors(colors = null) {
   const colorSettings = colors || defaultColors;
   
@@ -1127,7 +1195,6 @@ function applyColors(colors = null) {
   document.documentElement.style.setProperty('--success-color', colorSettings.success);
   document.documentElement.style.setProperty('--warning-color', colorSettings.warning);
   document.documentElement.style.setProperty('--error-color', colorSettings.error);
-  // NEU: Hintergrundfarben
   document.documentElement.style.setProperty('--background-color', colorSettings.background);
   document.documentElement.style.setProperty('--card', colorSettings.card);
   
@@ -1152,7 +1219,6 @@ function applyColors(colors = null) {
     elements.errorColorInput.value = colorSettings.error;
     document.getElementById('errorColorPreview').style.background = colorSettings.error;
   }
-  // NEU: Hintergrundfarben Vorschau
   if (elements.backgroundColorInput) {
     elements.backgroundColorInput.value = colorSettings.background;
     document.getElementById('backgroundColorPreview').style.background = colorSettings.background;
@@ -1163,7 +1229,7 @@ function applyColors(colors = null) {
   }
 }
 
-// NEUE FUNKTION: User-Stats NUR bei "Als bearbeitet" erhöhen
+// User-Stats NUR bei "Als bearbeitet" erhöhen
 async function incrementUserStatsOnProcessed(order) {
   try {
     const userPhone = order.phone;
@@ -1242,7 +1308,7 @@ elements.tabBtns.forEach(btn => {
   });
 });
 
-// NEUE FUNKTION: Farben aus Firebase laden
+// Farben aus Firebase laden
 onValue(colorsRef, snapshot => {
   const colors = snapshot.val();
   if (colors) {
@@ -1283,7 +1349,7 @@ elements.resetGeneralBtn.addEventListener('click', async () => {
   } catch(e){ console.error(e); showToast('Fehler beim Zurücksetzen', 'error'); }
 });
 
-// NEUE FUNKTIONEN: Farben verwalten
+// Farben verwalten
 elements.applyColorsBtn.addEventListener('click', () => {
   const currentColors = {
     primary: elements.primaryColorInput.value,
@@ -1291,7 +1357,6 @@ elements.applyColorsBtn.addEventListener('click', () => {
     success: elements.successColorInput.value,
     warning: elements.warningColorInput.value,
     error: elements.errorColorInput.value,
-    // NEU: Hintergrundfarben
     background: elements.backgroundColorInput.value,
     card: elements.cardColorInput.value
   };
@@ -1307,7 +1372,6 @@ elements.saveColorsBtn.addEventListener('click', async () => {
     success: elements.successColorInput.value,
     warning: elements.warningColorInput.value,
     error: elements.errorColorInput.value,
-    // NEU: Hintergrundfarben
     background: elements.backgroundColorInput.value,
     card: elements.cardColorInput.value
   };
@@ -1358,7 +1422,7 @@ function renderCategoriesList(){
       <div class="mobile-optimized-text">${escapeHtml(category.name)}</div>
       <div style="display:flex;gap:6px">
         <button class="btn small-btn" data-edit="${category.key}">✏️</button>
-        <button class="btn small-btn" data-del="${category.key}" style="background:var(--error-color)">🗑️ Löschen</button>
+        <button class="btn small-btn btn-error" data-del="${category.key}">🗑️ Löschen</button>
       </div>`;
     elements.categoriesList.appendChild(div);
     
@@ -1454,7 +1518,7 @@ function renderProductsGrid(){
   
   visibleProducts.forEach(product => {
     const card = document.createElement('div');
-    card.className = 'card fade-in';
+    card.className = 'card product-card fade-in';
     
     const img = document.createElement('img');
     let imageUrl = product.image || 'https://via.placeholder.com/300x120';
@@ -1530,8 +1594,7 @@ function renderProductsGrid(){
     }
 
     const addButton = document.createElement('button');
-    addButton.className = 'btn';
-    addButton.style.background = 'var(--success-color)';
+    addButton.className = 'btn btn-success';
     addButton.style.marginTop = '8px';
     addButton.textContent = '✅ In den Warenkorb';
     addButton.onclick = () => { 
@@ -1566,7 +1629,7 @@ function renderProductsTable(){
       <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(resourcesText)}</td>
       <td style="padding:8px">
         <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
-        <button class="btn small-btn" data-del="${product.key}" style="background:var(--error-color)">🗑️ Löschen</button>
+        <button class="btn small-btn btn-error" data-del="${product.key}">🗑️ Löschen</button>
       </td>`;
     elements.productsTableBody.appendChild(row);
     
@@ -1620,7 +1683,7 @@ function addResourceRow(name = '', value = '', color = '#facc15'){
     <td><input class="input mobile-optimized-text" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
     <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="0" /></td>
     <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
-    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:var(--error-color)">❌ Löschen</button></td>`;
+    <td style="text-align:center"><button class="btn small-btn btn-error" type="button">❌ Löschen</button></td>`;
   
   const deleteButton = row.querySelector('button');
   deleteButton.onclick = () => row.remove();
@@ -1780,7 +1843,7 @@ elements.settingsModal.addEventListener('click', (e) => {
   }
 });
 
-// KORRIGIERT: Funktion zum Laden der User-Statistiken
+// Funktion zum Laden der User-Statistiken
 async function loadUserStats(user) {
   try {
     const userStatsRef = ref(db, `userStats/${user.phone}`);
@@ -1826,7 +1889,7 @@ async function loadUserStats(user) {
   }
 }
 
-// VOLLSTÄNDIG KORRIGIERT: Reset-Funktion
+// Reset-Funktion
 async function resetUserTime(user) {
   if (!confirm(`ResetTime für ${user.userName} wirklich auf 0 zurücksetzen?\n\nAktuell: ${user.resetTime} Bestellungen\nNach Reset: 0 Bestellungen`)) return;
   
@@ -1914,8 +1977,8 @@ async function renderUsersList() {
         <div class="kv" style="font-size: 0.7rem; margin-top: 4px;">${lastResetText}</div>
       </div>
       <div style="margin-top: 8px; display: flex; gap: 6px;">
-        <button class="btn small-btn reset-btn" style="background: var(--warning-color);">🔄 ResetTime zurücksetzen</button>
-        <button class="btn small-btn details-btn" style="background: var(--secondary-color);">📋 Details anzeigen</button>
+        <button class="btn small-btn btn-warning reset-btn">🔄 ResetTime zurücksetzen</button>
+        <button class="btn small-btn btn-secondary details-btn">📋 Details anzeigen</button>
       </div>`;
     
     elements.usersList.appendChild(userItem);
@@ -1980,7 +2043,7 @@ function renderUserOrders(user) {
       ${lastResetText}
     </div>
     <div style="margin-top:12px;">
-      <button class="btn" style="background:var(--warning-color);width:100%;" onclick="resetUserTime(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+      <button class="btn btn-warning" style="width:100%;" onclick="resetUserTime(${JSON.stringify(user).replace(/"/g, '&quot;')})">
         🔄 ResetTime auf 0 zurücksetzen
       </button>
     </div>`;
@@ -2036,8 +2099,7 @@ function renderUserOrders(user) {
     
     if (order.status === 'bearbeitet') {
       const openButton = document.createElement('button');
-      openButton.className = 'btn small-btn';
-      openButton.style.background = 'var(--secondary-color)';
+      openButton.className = 'btn small-btn btn-secondary';
       openButton.style.marginTop = '8px';
       openButton.textContent = '🔓 In Bestellungen öffnen';
       openButton.onclick = async () => {
@@ -2152,7 +2214,7 @@ function renderCartView(){
           </div>
         </td>
         <td style="text-align:center">
-          <button class="btn small-btn" style="background:var(--error-color)" onclick="removeFromCart('${entry.key}')">🗑️</button>
+          <button class="btn small-btn btn-error" onclick="removeFromCart('${entry.key}')">🗑️</button>
         </td>`;
       elements.cartTableBody.appendChild(tr);
       for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
@@ -2190,8 +2252,7 @@ function ensureOrderUiInCart(){
   const wrapper = document.createElement('div');
   wrapper.style.marginTop = '12px';
   saveOrderBtnEl = document.createElement('button');
-  saveOrderBtnEl.className = 'btn';
-  saveOrderBtnEl.style.background = 'var(--success-color)';
+  saveOrderBtnEl.className = 'btn btn-success';
   saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
   saveOrderBtnEl.onclick = saveCartAsOrder;
   wrapper.appendChild(saveOrderBtnEl);
@@ -2202,7 +2263,7 @@ function ensureOrderUiInCart(){
   orderCodeDisplayEl.className = 'success mobile-optimized-text';
   orderCodeDisplayEl.textContent = '';
   const copyBtn = document.createElement('button');
-  copyBtn.className = 'btn small-btn';
+  copyBtn.className = 'btn small-btn btn-secondary';
   copyBtn.style.marginLeft = '8px';
   copyBtn.textContent = '📋 Kopieren';
   copyBtn.onclick = ()=> {
@@ -2220,7 +2281,7 @@ function ensureOrderUiInCart(){
   elements.cartView.appendChild(wrapper);
 }
 
-// KORRIGIERT: Bestellung speichern OHNE automatische Erhöhung
+// Bestellung speichern OHNE automatische Erhöhung
 async function saveCartAsOrder(){
   if(cart.length === 0) return showToast('Warenkorb ist leer', 'warning');
   
@@ -2268,7 +2329,7 @@ onValue(ordersRef, snapshot => {
   renderOrdersList();
 });
 
-// GEÄNDERT: renderOrdersList - Zeigt nur nicht-bearbeitete Bestellungen an
+// renderOrdersList - Zeigt nur nicht-bearbeitete Bestellungen an
 function renderOrdersList() {
   elements.ordersList.innerHTML = '';
   
@@ -2325,7 +2386,7 @@ function renderOrdersList() {
       </div>
       <div class="order-card-actions">
         <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
-        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:var(--error-color)">🗑️ Löschen</button>
+        <button class="btn small-btn btn-error" data-del="${escapeHtml(o.key)}">🗑️ Löschen</button>
       </div>`;
     elements.ordersList.appendChild(div);
     
@@ -2388,7 +2449,7 @@ elements.saveOrderUserBtn.addEventListener('click', async ()=> {
   catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
 });
 
-// GEÄNDERT: "Als bearbeitet" Button - Erhöht User-Stats
+// "Als bearbeitet" Button - Erhöht User-Stats
 elements.markOrderProcessedBtn.addEventListener('click', async ()=> {
   if(!selectedOrder) return;
   if(!confirm('Bestellung als bearbeitet markieren und aus Bestellungen entfernen?')) return;

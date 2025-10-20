@@ -567,7 +567,7 @@
       
       // Sortierung: Neueste oben
       const sortedEntries = [...entries].sort((a, b) => b.timestamp - a.timestamp);
-      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge (g)', 'Preis ($)', 'Verkäuferanteil (60%)', 'Käuferanteil (40%)'];
+      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Preis ', 'Verkäuferanteil (60%)', 'Käuferanteil (40%)'];
       const rows = sortedEntries.map(e => [
         e.date,
         `"${e.buyer}"`,

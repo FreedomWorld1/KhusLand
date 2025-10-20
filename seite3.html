@@ -269,7 +269,7 @@
     const db = getDatabase(app);
     const entriesRef = ref(db,'scarface_kokain_entries');
 
-    const ADMIN_PASSWORD = 'admin789';
+    const ADMIN_PASSWORD = '1101';
     let entries = [];
 
     // Utility
@@ -466,7 +466,7 @@
         el.innerHTML = `
           <div class="flex justify-between items-start mb-2">
             <div class="text-sm text-gray-400">${formatDate(en.date)}</div>
-            <div class="px-2 py-1 bg-red-900/30 text-red-400 text-xs rounded-full">${en.quantity}g</div>
+            <div class="px-2 py-1 bg-red-900/30 text-red-400 text-xs rounded-full">${en.quantity} Bricks</div>
           </div>
           <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
           <div class="grid grid-cols-2 gap-3 text-sm">
@@ -566,7 +566,7 @@
         return;
       }
       
-      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge (g)', 'Gesamtpreis', 'Verkäuferanteil (90%)', 'Käuferanteil (10%)'];
+      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Gesamtpreis', 'Verkäuferanteil (90%)', 'Käuferanteil (10%)'];
       const rows = entries.map(e => [
         formatDate(e.date),
         `"${e.buyer}"`,

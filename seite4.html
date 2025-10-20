@@ -35,7 +35,7 @@
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
     .hidden-el { 
-      display: none; 
+      display: none !important; 
     }
     input, select, textarea { 
       transition: all 0.2s ease; 
@@ -807,6 +807,9 @@
       renderResources();
       renderCraftingItems();
       renderWorkbenches();
+      
+      // Sicherstellen, dass das Modal versteckt ist
+      hide(resourceModal);
     });
   </script>
 </body>

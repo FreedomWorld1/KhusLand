@@ -122,6 +122,15 @@
       justify-content: center;
       z-index: 1000;
     }
+    .resource-input {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .resource-input select,
+    .resource-input input {
+      flex: 1;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -320,6 +329,103 @@
         <div class="flex gap-3 pt-2">
           <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
           <button type="button" id="cancelResource" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal für Crafting Item hinzufügen -->
+  <div id="craftingModal" class="modal-overlay hidden-el">
+    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
+      <h3 class="text-lg font-semibold mb-4 text-red-400">Crafting Item hinzufügen</h3>
+      <form id="craftingForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+          <input type="text" id="craftingName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
+          <select id="craftingCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+            <option value="tools">Werkzeuge</option>
+            <option value="weapons">Waffen</option>
+            <option value="armor">Rüstung</option>
+            <option value="consumables">Verbrauchsgüter</option>
+            <option value="structures">Strukturen</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Seltenheit</label>
+          <select id="craftingRarity" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+            <option value="common">Gewöhnlich</option>
+            <option value="uncommon">Ungewöhnlich</option>
+            <option value="rare">Selten</option>
+            <option value="epic">Episch</option>
+            <option value="legendary">Legendär</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
+          <textarea id="craftingDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Benötigte Ressourcen</label>
+          <div id="craftingResources">
+            <div class="resource-input">
+              <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
+                <option value="">Ressource auswählen</option>
+              </select>
+              <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
+              <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
+            </div>
+          </div>
+          <button type="button" id="addResourceRow" class="mt-2 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn text-sm">+ Ressource hinzufügen</button>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
+          <button type="button" id="cancelCrafting" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal für Werkbank hinzufügen -->
+  <div id="workbenchModal" class="modal-overlay hidden-el">
+    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
+      <h3 class="text-lg font-semibold mb-4 text-red-400">Werkbank hinzufügen</h3>
+      <form id="workbenchForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+          <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Stufe</label>
+          <select id="workbenchLevel" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+            <option value="1">Stufe 1</option>
+            <option value="2">Stufe 2</option>
+            <option value="3">Stufe 3</option>
+            <option value="4">Stufe 4</option>
+            <option value="5">Stufe 5</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
+          <textarea id="workbenchDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Verfügbare Rezepte</label>
+          <div id="workbenchRecipes">
+            <div class="resource-input">
+              <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
+                <option value="">Rezept auswählen</option>
+              </select>
+              <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
+            </div>
+          </div>
+          <button type="button" id="addRecipeRow" class="mt-2 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn text-sm">+ Rezept hinzufügen</button>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
+          <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
         </div>
       </form>
     </div>
@@ -634,9 +740,25 @@
     const totalCrafting = document.getElementById('totalCrafting');
     const totalWorkbenches = document.getElementById('totalWorkbenches');
     const addResourceBtn = document.getElementById('addResourceBtn');
+    const addCraftingBtn = document.getElementById('addCraftingBtn');
+    const addWorkbenchBtn = document.getElementById('addWorkbenchBtn');
+    
+    // Modal Elemente
     const resourceModal = document.getElementById('resourceModal');
     const resourceForm = document.getElementById('resourceForm');
     const cancelResource = document.getElementById('cancelResource');
+    
+    const craftingModal = document.getElementById('craftingModal');
+    const craftingForm = document.getElementById('craftingForm');
+    const cancelCrafting = document.getElementById('cancelCrafting');
+    const addResourceRow = document.getElementById('addResourceRow');
+    const craftingResources = document.getElementById('craftingResources');
+    
+    const workbenchModal = document.getElementById('workbenchModal');
+    const workbenchForm = document.getElementById('workbenchForm');
+    const cancelWorkbench = document.getElementById('cancelWorkbench');
+    const addRecipeRow = document.getElementById('addRecipeRow');
+    const workbenchRecipes = document.getElementById('workbenchRecipes');
 
     adminLoginBtn.addEventListener('click', () => {
       if (adminPassInput.value === ADMIN_PASSWORD) { 
@@ -736,12 +858,142 @@
       resourceForm.reset();
     });
 
-    // Modal schließen, wenn außerhalb geklickt wird
-    resourceModal.addEventListener('click', (e) => {
-      if (e.target === resourceModal) {
-        hide(resourceModal);
-        resourceForm.reset();
+    // Modal für Crafting Item hinzufügen
+    addCraftingBtn.addEventListener('click', () => {
+      // Fülle die Ressourcen-Auswahl
+      const resourceSelects = craftingResources.querySelectorAll('.resource-select');
+      resourceSelects.forEach(select => {
+        select.innerHTML = '<option value="">Ressource auswählen</option>';
+        resources.forEach(resource => {
+          const option = document.createElement('option');
+          option.value = resource.name;
+          option.textContent = resource.name;
+          select.appendChild(option);
+        });
+      });
+      show(craftingModal);
+    });
+
+    cancelCrafting.addEventListener('click', () => {
+      hide(craftingModal);
+      craftingForm.reset();
+      // Setze Ressourcen zurück auf eine Zeile
+      craftingResources.innerHTML = `
+        <div class="resource-input">
+          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
+            <option value="">Ressource auswählen</option>
+          </select>
+          <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
+          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
+        </div>
+      `;
+    });
+
+    // Modal für Werkbank hinzufügen
+    addWorkbenchBtn.addEventListener('click', () => {
+      // Fülle die Rezepte-Auswahl
+      const recipeSelects = workbenchRecipes.querySelectorAll('.recipe-select');
+      recipeSelects.forEach(select => {
+        select.innerHTML = '<option value="">Rezept auswählen</option>';
+        craftingItems.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.name;
+          option.textContent = item.name;
+          select.appendChild(option);
+        });
+      });
+      show(workbenchModal);
+    });
+
+    cancelWorkbench.addEventListener('click', () => {
+      hide(workbenchModal);
+      workbenchForm.reset();
+      // Setze Rezepte zurück auf eine Zeile
+      workbenchRecipes.innerHTML = `
+        <div class="resource-input">
+          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
+            <option value="">Rezept auswählen</option>
+          </select>
+          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
+        </div>
+      `;
+    });
+
+    // Ressourcen-Zeile für Crafting hinzufügen
+    addResourceRow.addEventListener('click', () => {
+      const newRow = document.createElement('div');
+      newRow.className = 'resource-input';
+      newRow.innerHTML = `
+        <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
+          <option value="">Ressource auswählen</option>
+        </select>
+        <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
+        <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
+      `;
+      
+      // Fülle die neue Auswahl
+      const select = newRow.querySelector('.resource-select');
+      resources.forEach(resource => {
+        const option = document.createElement('option');
+        option.value = resource.name;
+        option.textContent = resource.name;
+        select.appendChild(option);
+      });
+      
+      craftingResources.appendChild(newRow);
+    });
+
+    // Rezept-Zeile für Werkbank hinzufügen
+    addRecipeRow.addEventListener('click', () => {
+      const newRow = document.createElement('div');
+      newRow.className = 'resource-input';
+      newRow.innerHTML = `
+        <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
+          <option value="">Rezept auswählen</option>
+        </select>
+        <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
+      `;
+      
+      // Fülle die neue Auswahl
+      const select = newRow.querySelector('.recipe-select');
+      craftingItems.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.name;
+        option.textContent = item.name;
+        select.appendChild(option);
+      });
+      
+      workbenchRecipes.appendChild(newRow);
+    });
+
+    // Entferne Ressourcen-Zeile
+    craftingResources.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-resource')) {
+        if (craftingResources.children.length > 1) {
+          e.target.parentElement.remove();
+        }
       }
+    });
+
+    // Entferne Rezept-Zeile
+    workbenchRecipes.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-recipe')) {
+        if (workbenchRecipes.children.length > 1) {
+          e.target.parentElement.remove();
+        }
+      }
+    });
+
+    // Modal schließen, wenn außerhalb geklickt wird
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          hide(modal);
+          if (modal === resourceModal) resourceForm.reset();
+          if (modal === craftingModal) craftingForm.reset();
+          if (modal === workbenchModal) workbenchForm.reset();
+        }
+      });
     });
 
     resourceForm.addEventListener('submit', (e) => {
@@ -766,6 +1018,104 @@
       renderAdminTable();
       hide(resourceModal);
       resourceForm.reset();
+    });
+
+    craftingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('craftingName').value;
+      const category = document.getElementById('craftingCategory').value;
+      const rarity = document.getElementById('craftingRarity').value;
+      const description = document.getElementById('craftingDescription').value;
+      
+      // Sammle Ressourcen
+      const requiredResources = [];
+      const resourceInputs = craftingResources.querySelectorAll('.resource-input');
+      resourceInputs.forEach(input => {
+        const resourceName = input.querySelector('.resource-select').value;
+        const amount = parseInt(input.querySelector('.resource-amount').value);
+        if (resourceName && amount > 0) {
+          requiredResources.push({ name: resourceName, amount: amount });
+        }
+      });
+      
+      if (requiredResources.length === 0) {
+        alert('Bitte fügen Sie mindestens eine benötigte Ressource hinzu.');
+        return;
+      }
+      
+      // Neues Crafting Item hinzufügen
+      const newCraftingItem = {
+        id: Math.max(...craftingItems.map(i => i.id)) + 1,
+        name,
+        category,
+        rarity,
+        description,
+        resources: requiredResources
+      };
+      
+      craftingItems.push(newCraftingItem);
+      renderCraftingItems();
+      renderAdminTable();
+      hide(craftingModal);
+      craftingForm.reset();
+      // Setze Ressourcen zurück auf eine Zeile
+      craftingResources.innerHTML = `
+        <div class="resource-input">
+          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
+            <option value="">Ressource auswählen</option>
+          </select>
+          <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
+          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
+        </div>
+      `;
+    });
+
+    workbenchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('workbenchName').value;
+      const level = parseInt(document.getElementById('workbenchLevel').value);
+      const description = document.getElementById('workbenchDescription').value;
+      
+      // Sammle Rezepte
+      const availableRecipes = [];
+      const recipeInputs = workbenchRecipes.querySelectorAll('.recipe-select');
+      recipeInputs.forEach(input => {
+        const recipeName = input.value;
+        if (recipeName) {
+          availableRecipes.push(recipeName);
+        }
+      });
+      
+      if (availableRecipes.length === 0) {
+        alert('Bitte fügen Sie mindestens ein verfügbares Rezept hinzu.');
+        return;
+      }
+      
+      // Neue Werkbank hinzufügen
+      const newWorkbench = {
+        id: Math.max(...workbenches.map(w => w.id)) + 1,
+        name,
+        level,
+        description,
+        recipes: availableRecipes
+      };
+      
+      workbenches.push(newWorkbench);
+      renderWorkbenches();
+      renderAdminTable();
+      hide(workbenchModal);
+      workbenchForm.reset();
+      // Setze Rezepte zurück auf eine Zeile
+      workbenchRecipes.innerHTML = `
+        <div class="resource-input">
+          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
+            <option value="">Rezept auswählen</option>
+          </select>
+          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
+        </div>
+      `;
     });
 
     // Löschfunktionen
@@ -808,8 +1158,10 @@
       renderCraftingItems();
       renderWorkbenches();
       
-      // Sicherstellen, dass das Modal versteckt ist
+      // Sicherstellen, dass alle Modals versteckt sind
       hide(resourceModal);
+      hide(craftingModal);
+      hide(workbenchModal);
     });
   </script>
 </body>

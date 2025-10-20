@@ -5,33 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Werkbank Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
-    // Firebase Konfiguration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-      authDomain: "khusland-b7d13.firebaseapp.com",
-      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-      projectId: "khusland-b7d13",
-      storageBucket: "khusland-b7d13.firebasestorage.app",
-      messagingSenderId: "69573193613",
-      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-      measurementId: "G-JSCWR4207G"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    
-    // Firebase Referenzen
-    const workbenchesRef = ref(db, 'werkbank_manager/workbenches');
-    const categoriesRef = ref(db, 'werkbank_manager/categories');
-
-    window.firebaseDb = db;
-    window.workbenchesRef = workbenchesRef;
-    window.categoriesRef = categoriesRef;
-  </script>
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -115,7 +88,6 @@
       background: #dc2626;
       border-radius: 10px;
     }
-    /* Fix für Hamburger-Menü - Höherer z-index */
     .hamburger-container {
       position: relative;
       z-index: 1000;
@@ -179,6 +151,7 @@
           <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
             <a href="./" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Startseite</a>
             <a href="workbenches.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Werkbänke</a>
+            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
           </div>
         </div>
       </div>
@@ -325,7 +298,29 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+    // Firebase Konfiguration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    // Firebase Referenzen
+    const workbenchesRef = ref(db, 'werkbank_manager/workbenches');
+    const categoriesRef = ref(db, 'werkbank_manager/categories');
+
     // Globale Variablen
     let categories = ["Grundlegend", "Metall", "Alchemie", "Rüstung", "Waffen", "Magie", "Kochen"];
     let workbenches = [];
@@ -356,7 +351,7 @@
     // Firebase Funktionen
     async function saveWorkbench(workbench) {
       try {
-        await push(window.workbenchesRef, workbench);
+        await push(workbenchesRef, workbench);
         return true;
       } catch (error) {
         console.error('Fehler beim Speichern der Werkbank:', error);
@@ -366,7 +361,7 @@
 
     async function deleteWorkbenchFromFirebase(key) {
       try {
-        await remove(ref(window.firebaseDb, `werkbank_manager/workbenches/${key}`));
+        await remove(ref(db, `werkbank_manager/workbenches/${key}`));
         return true;
       } catch (error) {
         console.error('Fehler beim Löschen der Werkbank:', error);
@@ -376,7 +371,7 @@
 
     async function saveCategoriesToFirebase() {
       try {
-        await set(window.categoriesRef, categories);
+        await set(categoriesRef, categories);
         return true;
       } catch (error) {
         console.error('Fehler beim Speichern der Kategorien:', error);
@@ -385,7 +380,7 @@
     }
 
     // Firebase Listener
-    onValue(window.workbenchesRef, (snapshot) => {
+    onValue(workbenchesRef, (snapshot) => {
       workbenches = [];
       snapshot.forEach((childSnap) => {
         const data = childSnap.val();
@@ -396,7 +391,7 @@
       renderAdminTable();
     });
 
-    onValue(window.categoriesRef, (snapshot) => {
+    onValue(categoriesRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
         categories = data;
@@ -454,9 +449,6 @@
         }
       }
     }
-
-    // Initialize with Workbenches active
-    updateButtonStates('workbenches');
 
     // Kategorien Filter rendern
     function renderCategories() {
@@ -744,4 +736,14 @@
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
-      renderCategories
+      renderCategories();
+      renderWorkbenches();
+      updateButtonStates('workbenches');
+      
+      // Sicherstellen, dass alle Modals versteckt sind
+      hide(workbenchModal);
+      hide(categoriesModal);
+    });
+  </script>
+</body>
+</html>

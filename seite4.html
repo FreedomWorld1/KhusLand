@@ -37,11 +37,11 @@
     .hidden-el { 
       display: none; 
     }
-    input, select { 
+    input, select, textarea { 
       transition: all 0.2s ease; 
       font-size: 0.95rem; 
     }
-    input:focus, select:focus { 
+    input:focus, select:focus, textarea:focus { 
       outline: none; 
       border-color: #dc2626; 
       box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); 
@@ -109,6 +109,18 @@
     .resource-item:hover {
       transform: translateY(-3px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
     }
   </style>
 </head>
@@ -273,7 +285,7 @@
   </div>
 
   <!-- Modals für Admin-Bereich -->
-  <div id="resourceModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden-el">
+  <div id="resourceModal" class="modal-overlay hidden-el">
     <div class="card p-6 m-4 max-w-md w-full shadow-soft">
       <h3 class="text-lg font-semibold mb-4 text-red-400">Ressource hinzufügen</h3>
       <form id="resourceForm" class="space-y-4">
@@ -622,8 +634,6 @@
     const totalCrafting = document.getElementById('totalCrafting');
     const totalWorkbenches = document.getElementById('totalWorkbenches');
     const addResourceBtn = document.getElementById('addResourceBtn');
-    const addCraftingBtn = document.getElementById('addCraftingBtn');
-    const addWorkbenchBtn = document.getElementById('addWorkbenchBtn');
     const resourceModal = document.getElementById('resourceModal');
     const resourceForm = document.getElementById('resourceForm');
     const cancelResource = document.getElementById('cancelResource');
@@ -724,6 +734,14 @@
     cancelResource.addEventListener('click', () => {
       hide(resourceModal);
       resourceForm.reset();
+    });
+
+    // Modal schließen, wenn außerhalb geklickt wird
+    resourceModal.addEventListener('click', (e) => {
+      if (e.target === resourceModal) {
+        hide(resourceModal);
+        resourceForm.reset();
+      }
     });
 
     resourceForm.addEventListener('submit', (e) => {

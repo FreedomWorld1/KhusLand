@@ -5,6 +5,33 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Werkbank Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+    // Firebase Konfiguration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    // Firebase Referenzen
+    const workbenchesRef = ref(db, 'werkbank_manager/workbenches');
+    const categoriesRef = ref(db, 'werkbank_manager/categories');
+
+    window.firebaseDb = db;
+    window.workbenchesRef = workbenchesRef;
+    window.categoriesRef = categoriesRef;
+  </script>
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -299,16 +326,10 @@
   </div>
 
   <script>
-    // Benutzerdefinierte Kategorien (können geändert werden)
+    // Globale Variablen
     let categories = ["Grundlegend", "Metall", "Alchemie", "Rüstung", "Waffen", "Magie", "Kochen"];
-
-    // Beispiel-Daten für Werkbänke
-    const workbenches = [
-      { id: 1, name: "Einfache Werkbank", category: "Grundlegend", level: 1, description: "Ermöglicht grundlegendes Crafting" },
-      { id: 2, name: "Schmiede", category: "Metall", level: 2, description: "Ermöglicht Metallverarbeitung" },
-      { id: 3, name: "Alchemie-Tisch", category: "Alchemie", level: 2, description: "Ermöglicht Herstellung von Tränken" },
-      { id: 4, name: "Rüstungsschmied", category: "Rüstung", level: 3, description: "Ermöglicht Herstellung von Rüstungen" }
-    ];
+    let workbenches = [];
+    let tempCategories = [];
 
     // Utility
     function show(el) { 
@@ -331,6 +352,58 @@
       const index = categories.indexOf(category) % categoryColors.length;
       return categoryColors[index] || 'text-gray-400';
     }
+
+    // Firebase Funktionen
+    async function saveWorkbench(workbench) {
+      try {
+        await push(window.workbenchesRef, workbench);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Speichern der Werkbank:', error);
+        return false;
+      }
+    }
+
+    async function deleteWorkbenchFromFirebase(key) {
+      try {
+        await remove(ref(window.firebaseDb, `werkbank_manager/workbenches/${key}`));
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Löschen der Werkbank:', error);
+        return false;
+      }
+    }
+
+    async function saveCategoriesToFirebase() {
+      try {
+        await set(window.categoriesRef, categories);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Speichern der Kategorien:', error);
+        return false;
+      }
+    }
+
+    // Firebase Listener
+    onValue(window.workbenchesRef, (snapshot) => {
+      workbenches = [];
+      snapshot.forEach((childSnap) => {
+        const data = childSnap.val();
+        data.key = childSnap.key;
+        workbenches.push(data);
+      });
+      renderWorkbenches();
+      renderAdminTable();
+    });
+
+    onValue(window.categoriesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        categories = data;
+        renderCategories();
+        loadCategoriesToDropdown();
+      }
+    });
 
     // Hamburger Menu
     document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
@@ -516,7 +589,7 @@
           <td class="p-3">${workbench.category}</td>
           <td class="p-3">Stufe ${workbench.level}</td>
           <td class="p-3">
-            <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteWorkbench(${workbench.id})">
+            <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteWorkbench('${workbench.key}')">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
               </svg>
@@ -542,6 +615,7 @@
 
     // Modal für Kategorien verwalten
     manageCategoriesBtn.addEventListener('click', () => {
+      tempCategories = [...categories];
       renderCategoriesList();
       show(categoriesModal);
     });
@@ -554,7 +628,7 @@
     // Kategorien Liste rendern
     function renderCategoriesList() {
       categoriesList.innerHTML = '';
-      categories.forEach((category, index) => {
+      tempCategories.forEach((category, index) => {
         const div = document.createElement('div');
         div.className = 'category-input';
         div.innerHTML = `
@@ -568,8 +642,8 @@
     // Neue Kategorie hinzufügen
     addCategoryBtn.addEventListener('click', () => {
       const categoryName = newCategoryName.value.trim();
-      if (categoryName && !categories.includes(categoryName)) {
-        categories.push(categoryName);
+      if (categoryName && !tempCategories.includes(categoryName)) {
+        tempCategories.push(categoryName);
         renderCategoriesList();
         newCategoryName.value = '';
       }
@@ -580,38 +654,44 @@
       if (e.target.classList.contains('remove-category')) {
         const index = parseInt(e.target.getAttribute('data-index'));
         // Überprüfen ob Kategorie in Verwendung ist
-        const categoryInUse = workbenches.some(wb => wb.category === categories[index]);
+        const categoryInUse = workbenches.some(wb => wb.category === tempCategories[index]);
         if (categoryInUse) {
           alert('Diese Kategorie wird noch von Werkbänken verwendet und kann nicht gelöscht werden!');
           return;
         }
-        categories.splice(index, 1);
+        tempCategories.splice(index, 1);
         renderCategoriesList();
       }
     });
 
     // Kategorien speichern
-    saveCategories.addEventListener('click', () => {
+    saveCategories.addEventListener('click', async () => {
       // Aktualisiere Kategorie-Namen
       const categoryInputs = categoriesList.querySelectorAll('.category-edit');
       categoryInputs.forEach(input => {
         const index = parseInt(input.getAttribute('data-index'));
         const newName = input.value.trim();
-        if (newName && newName !== categories[index]) {
+        if (newName && newName !== tempCategories[index]) {
           // Aktualisiere Kategorie in Werkbänken
           workbenches.forEach(wb => {
-            if (wb.category === categories[index]) {
+            if (wb.category === tempCategories[index]) {
               wb.category = newName;
             }
           });
-          categories[index] = newName;
+          tempCategories[index] = newName;
         }
       });
       
-      renderCategories();
-      renderWorkbenches();
-      renderAdminTable();
-      hide(categoriesModal);
+      categories = [...tempCategories];
+      const success = await saveCategoriesToFirebase();
+      if (success) {
+        renderCategories();
+        renderWorkbenches();
+        renderAdminTable();
+        hide(categoriesModal);
+      } else {
+        alert('Fehler beim Speichern der Kategorien!');
+      }
     });
 
     // Modal schließen, wenn außerhalb geklickt wird
@@ -625,7 +705,7 @@
       });
     });
 
-    workbenchForm.addEventListener('submit', (e) => {
+    workbenchForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const name = document.getElementById('workbenchName').value;
@@ -633,43 +713,35 @@
       const level = parseInt(document.getElementById('workbenchLevel').value);
       const description = document.getElementById('workbenchDescription').value;
       
-      // Neue Werkbank hinzufügen
+      // Neue Werkbank erstellen
       const newWorkbench = {
-        id: Math.max(...workbenches.map(w => w.id)) + 1,
         name,
         category,
         level,
-        description
+        description,
+        date: new Date().toISOString(),
+        timestamp: Date.now()
       };
       
-      workbenches.push(newWorkbench);
-      renderWorkbenches();
-      renderAdminTable();
-      hide(workbenchModal);
-      workbenchForm.reset();
+      const success = await saveWorkbench(newWorkbench);
+      if (success) {
+        hide(workbenchModal);
+        workbenchForm.reset();
+      } else {
+        alert('Fehler beim Speichern der Werkbank!');
+      }
     });
 
     // Löschfunktion
-    window.deleteWorkbench = function(id) { 
+    window.deleteWorkbench = async function(key) { 
       if (confirm('Werkbank wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        const index = workbenches.findIndex(w => w.id === id);
-        if (index !== -1) {
-          workbenches.splice(index, 1);
-          renderWorkbenches();
-          renderAdminTable();
+        const success = await deleteWorkbenchFromFirebase(key);
+        if (!success) {
+          alert('Fehler beim Löschen der Werkbank!');
         }
       }
     }
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
-      renderCategories();
-      renderWorkbenches();
-      
-      // Sicherstellen, dass alle Modals versteckt sind
-      hide(workbenchModal);
-      hide(categoriesModal);
-    });
-  </script>
-</body>
-</html>
+      renderCategories

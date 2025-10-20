@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Ressourcen Manager</title>
+  <title>Werkbank Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { 
@@ -142,12 +142,10 @@
         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center">
           <span class="text-white font-bold">⚒️</span>
         </div>
-        <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Ressourcen Manager</h1>
+        <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Werkbank Manager</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button id="btnResources" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">Ressourcen</button>
-        <button id="btnCrafting" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Herstellung</button>
-        <button id="btnWorkbenches" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Werkbänke</button>
+        <button id="btnWorkbenches" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">Werkbänke</button>
         <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
         <div class="hamburger-container">
           <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
@@ -157,9 +155,7 @@
           </button>
           <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
             <a href="./" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Startseite</a>
-            <a href="resources.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Ressourcen</a>
-            <a href="crafting.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Herstellung</a>
-            <a href="workbenches.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Werkbänke</a>
+            <a href="workbenches.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Werkbänke</a>
           </div>
         </div>
       </div>
@@ -167,57 +163,11 @@
 
     <div id="mainContainer" class="space-y-6 relative z-0">
 
-      <!-- RESSOURCEN -->
-      <div id="resourcesSection" class="card p-6 shadow-soft fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">📦</span>
-          Ressourcen
-        </h2>
-        
-        <!-- Kategorien -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">Alle</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="minerals">Mineralien</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="metals">Metalle</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="wood">Holz</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="textiles">Textilien</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="chemicals">Chemikalien</button>
-        </div>
-        
-        <!-- Ressourcen Grid -->
-        <div id="resourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Ressourcen werden hier dynamisch geladen -->
-        </div>
-      </div>
-
-      <!-- HERSTELLUNG -->
-      <div id="craftingSection" class="card p-6 shadow-soft hidden-el fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">🔨</span>
-          Herstellung
-        </h2>
-        
-        <!-- Crafting Kategorien -->
-        <div class="flex flex-wrap gap-2 mb-6">
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-craft-category="all">Alle</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-craft-category="tools">Werkzeuge</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-craft-category="weapons">Waffen</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-craft-category="armor">Rüstung</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-craft-category="consumables">Verbrauchsgüter</button>
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-craft-category="structures">Strukturen</button>
-        </div>
-        
-        <!-- Crafting Grid -->
-        <div id="craftingGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Crafting Items werden hier dynamisch geladen -->
-        </div>
-      </div>
-
       <!-- WERKBÄNKE -->
-      <div id="workbenchesSection" class="card p-6 shadow-soft hidden-el fade-in">
+      <div id="workbenchesSection" class="card p-6 shadow-soft fade-in">
         <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
           <span class="bg-red-900/30 p-2 rounded-lg">🛠️</span>
-          Werkbänke
+          Meine Werkbänke
         </h2>
         
         <!-- Workbenches Grid -->
@@ -247,24 +197,7 @@
         </div>
         <div id="adminContent" class="hidden-el">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-            <div class="small-muted">Gesamtressourcen: <span id="totalResources" class="font-bold text-white">0</span></div>
-            <div class="small-muted">Herstellbare Items: <span id="totalCrafting" class="font-bold text-white">0</span></div>
             <div class="small-muted">Werkbänke: <span id="totalWorkbenches" class="font-bold text-white">0</span></div>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <button id="addResourceBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
-              Ressource hinzufügen
-            </button>
-            <button id="addCraftingBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
-              Crafting Item hinzufügen
-            </button>
             <button id="addWorkbenchBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -277,10 +210,9 @@
             <table class="w-full text-left text-sm">
               <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
                 <tr>
-                  <th class="p-3 font-medium">Typ</th>
                   <th class="p-3 font-medium">Name</th>
-                  <th class="p-3 font-medium">Kategorie</th>
-                  <th class="p-3 font-medium">Seltenheit</th>
+                  <th class="p-3 font-medium">Stufe</th>
+                  <th class="p-3 font-medium">Beschreibung</th>
                   <th class="p-3 font-medium">Aktion</th>
                 </tr>
               </thead>
@@ -290,101 +222,6 @@
         </div>
       </div>
 
-    </div>
-  </div>
-
-  <!-- Modals für Admin-Bereich -->
-  <div id="resourceModal" class="modal-overlay hidden-el">
-    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-      <h3 class="text-lg font-semibold mb-4 text-red-400">Ressource hinzufügen</h3>
-      <form id="resourceForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-          <input type="text" id="resourceName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
-          <select id="resourceCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
-            <option value="minerals">Mineralien</option>
-            <option value="metals">Metalle</option>
-            <option value="wood">Holz</option>
-            <option value="textiles">Textilien</option>
-            <option value="chemicals">Chemikalien</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Seltenheit</label>
-          <select id="resourceRarity" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
-            <option value="common">Gewöhnlich</option>
-            <option value="uncommon">Ungewöhnlich</option>
-            <option value="rare">Selten</option>
-            <option value="epic">Episch</option>
-            <option value="legendary">Legendär</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
-          <textarea id="resourceDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3"></textarea>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
-          <button type="button" id="cancelResource" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal für Crafting Item hinzufügen -->
-  <div id="craftingModal" class="modal-overlay hidden-el">
-    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-      <h3 class="text-lg font-semibold mb-4 text-red-400">Crafting Item hinzufügen</h3>
-      <form id="craftingForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-          <input type="text" id="craftingName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
-          <select id="craftingCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
-            <option value="tools">Werkzeuge</option>
-            <option value="weapons">Waffen</option>
-            <option value="armor">Rüstung</option>
-            <option value="consumables">Verbrauchsgüter</option>
-            <option value="structures">Strukturen</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Seltenheit</label>
-          <select id="craftingRarity" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
-            <option value="common">Gewöhnlich</option>
-            <option value="uncommon">Ungewöhnlich</option>
-            <option value="rare">Selten</option>
-            <option value="epic">Episch</option>
-            <option value="legendary">Legendär</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
-          <textarea id="craftingDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3"></textarea>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Benötigte Ressourcen</label>
-          <div id="craftingResources">
-            <div class="resource-input">
-              <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
-                <option value="">Ressource auswählen</option>
-              </select>
-              <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
-              <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
-            </div>
-          </div>
-          <button type="button" id="addResourceRow" class="mt-2 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn text-sm">+ Ressource hinzufügen</button>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
-          <button type="button" id="cancelCrafting" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
-        </div>
-      </form>
     </div>
   </div>
 
@@ -411,18 +248,6 @@
           <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
           <textarea id="workbenchDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3"></textarea>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Verfügbare Rezepte</label>
-          <div id="workbenchRecipes">
-            <div class="resource-input">
-              <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
-                <option value="">Rezept auswählen</option>
-              </select>
-              <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
-            </div>
-          </div>
-          <button type="button" id="addRecipeRow" class="mt-2 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn text-sm">+ Rezept hinzufügen</button>
-        </div>
         <div class="flex gap-3 pt-2">
           <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
           <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
@@ -432,34 +257,12 @@
   </div>
 
   <script>
-    // Beispiel-Daten für Ressourcen
-    const resources = [
-      { id: 1, name: "Eisen", category: "metals", rarity: "common", description: "Grundlegendes Metall für viele Herstellungsprozesse" },
-      { id: 2, name: "Gold", category: "metals", rarity: "rare", description: "Wertvolles Metall für spezielle Gegenstände" },
-      { id: 3, name: "Holz", category: "wood", rarity: "common", description: "Grundmaterial für Bau und Handwerk" },
-      { id: 4, name: "Stein", category: "minerals", rarity: "common", description: "Robustes Material für Strukturen" },
-      { id: 5, name: "Schwefel", category: "chemicals", rarity: "uncommon", description: "Wichtige Chemikalie für Sprengstoffe" },
-      { id: 6, name: "Stoff", category: "textiles", rarity: "common", description: "Vielseitiges Material für Kleidung und Polsterung" },
-      { id: 7, name: "Diamant", category: "minerals", rarity: "epic", description: "Extrem hartes Material für hochwertige Werkzeuge" },
-      { id: 8, name: "Leder", category: "textiles", rarity: "uncommon", description: "Robustes Material für Rüstung und Ausrüstung" }
-    ];
-
-    // Beispiel-Daten für Crafting
-    const craftingItems = [
-      { id: 1, name: "Eisen-Schwert", category: "weapons", rarity: "uncommon", resources: [{name: "Eisen", amount: 5}, {name: "Holz", amount: 2}], description: "Standard Nahkampfwaffe" },
-      { id: 2, name: "Holzbogen", category: "weapons", rarity: "common", resources: [{name: "Holz", amount: 10}, {name: "Stoff", amount: 2}], description: "Einfache Fernkampfwaffe" },
-      { id: 3, name: "Leder-Rüstung", category: "armor", rarity: "common", resources: [{name: "Leder", amount: 8}], description: "Leichte Schutzausrüstung" },
-      { id: 4, name: "Eisen-Spitzhacke", category: "tools", rarity: "uncommon", resources: [{name: "Eisen", amount: 3}, {name: "Holz", amount: 2}], description: "Effizientes Werkzeug zum Abbauen" },
-      { id: 5, name: "Heiltrank", category: "consumables", rarity: "uncommon", resources: [{name: "Schwefel", amount: 1}, {name: "Stoff", amount: 1}], description: "Stellt Gesundheit wieder her" },
-      { id: 6, name: "Holzwand", category: "structures", rarity: "common", resources: [{name: "Holz", amount: 5}], description: "Grundlegende Verteidigungsstruktur" }
-    ];
-
     // Beispiel-Daten für Werkbänke
     const workbenches = [
-      { id: 1, name: "Einfache Werkbank", level: 1, description: "Ermöglicht grundlegendes Crafting", recipes: ["Holzbogen", "Holzwand"] },
-      { id: 2, name: "Schmiede", level: 2, description: "Ermöglicht Metallverarbeitung", recipes: ["Eisen-Schwert", "Eisen-Spitzhacke"] },
-      { id: 3, name: "Alchemie-Tisch", level: 2, description: "Ermöglicht Herstellung von Tränken", recipes: ["Heiltrank"] },
-      { id: 4, name: "Rüstungsschmied", level: 3, description: "Ermöglicht Herstellung von Rüstungen", recipes: ["Leder-Rüstung"] }
+      { id: 1, name: "Einfache Werkbank", level: 1, description: "Ermöglicht grundlegendes Crafting" },
+      { id: 2, name: "Schmiede", level: 2, description: "Ermöglicht Metallverarbeitung" },
+      { id: 3, name: "Alchemie-Tisch", level: 2, description: "Ermöglicht Herstellung von Tränken" },
+      { id: 4, name: "Rüstungsschmied", level: 3, description: "Ermöglicht Herstellung von Rüstungen" }
     ];
 
     // Utility
@@ -489,42 +292,20 @@
     });
 
     // Tabs Navigation
-    document.getElementById('btnResources').addEventListener('click', () => {
-      show(document.getElementById('resourcesSection')); 
-      hide(document.getElementById('craftingSection')); 
-      hide(document.getElementById('workbenchesSection'));
-      hide(document.getElementById('adminPanel'));
-      updateButtonStates('resources');
-    });
-    
-    document.getElementById('btnCrafting').addEventListener('click', () => {
-      hide(document.getElementById('resourcesSection')); 
-      show(document.getElementById('craftingSection')); 
-      hide(document.getElementById('workbenchesSection'));
-      hide(document.getElementById('adminPanel'));
-      updateButtonStates('crafting');
-    });
-    
     document.getElementById('btnWorkbenches').addEventListener('click', () => {
-      hide(document.getElementById('resourcesSection')); 
-      hide(document.getElementById('craftingSection')); 
-      show(document.getElementById('workbenchesSection'));
+      show(document.getElementById('workbenchesSection')); 
       hide(document.getElementById('adminPanel'));
       updateButtonStates('workbenches');
     });
     
     document.getElementById('btnAdmin').addEventListener('click', () => {
-      hide(document.getElementById('resourcesSection')); 
-      hide(document.getElementById('craftingSection')); 
-      hide(document.getElementById('workbenchesSection'));
+      hide(document.getElementById('workbenchesSection')); 
       show(document.getElementById('adminPanel'));
       updateButtonStates('admin');
     });
 
     function updateButtonStates(activeButton) {
       const buttons = {
-        resources: document.getElementById('btnResources'),
-        crafting: document.getElementById('btnCrafting'),
         workbenches: document.getElementById('btnWorkbenches'),
         admin: document.getElementById('btnAdmin')
       };
@@ -536,130 +317,16 @@
       
       if (buttons[activeButton]) {
         buttons[activeButton].classList.remove('bg-gray-700');
-        if (activeButton === 'resources') {
+        if (activeButton === 'workbenches') {
           buttons[activeButton].classList.add('bg-red-600', 'pulse-glow');
         } else if (activeButton === 'admin') {
           buttons[activeButton].classList.add('bg-blue-600');
-        } else {
-          buttons[activeButton].classList.add('bg-gray-600');
         }
       }
     }
 
-    // Initialize with Resources active
-    updateButtonStates('resources');
-
-    // Kategorie-Filter für Ressourcen
-    document.querySelectorAll('#resourcesSection .category-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Active state setzen
-        document.querySelectorAll('#resourcesSection .category-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Ressourcen filtern
-        const category = this.getAttribute('data-category');
-        filterResources(category);
-      });
-    });
-
-    // Kategorie-Filter für Crafting
-    document.querySelectorAll('#craftingSection .category-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Active state setzen
-        document.querySelectorAll('#craftingSection .category-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Crafting Items filtern
-        const category = this.getAttribute('data-craft-category');
-        filterCraftingItems(category);
-      });
-    });
-
-    // Ressourcen rendern
-    function renderResources(category = 'all') {
-      const resourcesGrid = document.getElementById('resourcesGrid');
-      resourcesGrid.innerHTML = '';
-      
-      const filteredResources = category === 'all' 
-        ? resources 
-        : resources.filter(r => r.category === category);
-      
-      if (filteredResources.length === 0) {
-        resourcesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Ressourcen in dieser Kategorie.</p></div>';
-        return;
-      }
-      
-      filteredResources.forEach(resource => {
-        const rarityColors = {
-          common: 'text-gray-400',
-          uncommon: 'text-green-400',
-          rare: 'text-blue-400',
-          epic: 'text-purple-400',
-          legendary: 'text-yellow-400'
-        };
-        
-        const el = document.createElement('div');
-        el.className = 'resource-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-red-500/30 transition-all duration-200';
-        el.innerHTML = `
-          <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold text-lg">${resource.name}</div>
-            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full ${rarityColors[resource.rarity]}">${getRarityText(resource.rarity)}</div>
-          </div>
-          <div class="text-sm text-gray-400 mb-3">${resource.description}</div>
-          <div class="flex justify-between items-center">
-            <div class="px-2 py-1 bg-gray-700/50 text-xs rounded-full">${getCategoryText(resource.category)}</div>
-            <button class="px-3 py-1 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn">Details</button>
-          </div>
-        `;
-        resourcesGrid.appendChild(el);
-      });
-    }
-
-    // Crafting Items rendern
-    function renderCraftingItems(category = 'all') {
-      const craftingGrid = document.getElementById('craftingGrid');
-      craftingGrid.innerHTML = '';
-      
-      const filteredItems = category === 'all' 
-        ? craftingItems 
-        : craftingItems.filter(i => i.category === category);
-      
-      if (filteredItems.length === 0) {
-        craftingGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine herstellbaren Items in dieser Kategorie.</p></div>';
-        return;
-      }
-      
-      filteredItems.forEach(item => {
-        const rarityColors = {
-          common: 'text-gray-400',
-          uncommon: 'text-green-400',
-          rare: 'text-blue-400',
-          epic: 'text-purple-400',
-          legendary: 'text-yellow-400'
-        };
-        
-        const resourcesList = item.resources.map(r => `${r.amount}x ${r.name}`).join(', ');
-        
-        const el = document.createElement('div');
-        el.className = 'resource-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-red-500/30 transition-all duration-200';
-        el.innerHTML = `
-          <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold text-lg">${item.name}</div>
-            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full ${rarityColors[item.rarity]}">${getRarityText(item.rarity)}</div>
-          </div>
-          <div class="text-sm text-gray-400 mb-3">${item.description}</div>
-          <div class="mb-3">
-            <div class="text-xs text-gray-500 mb-1">Benötigte Ressourcen:</div>
-            <div class="text-sm">${resourcesList}</div>
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="px-2 py-1 bg-gray-700/50 text-xs rounded-full">${getCategoryText(item.category)}</div>
-            <button class="px-3 py-1 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn">Herstellen</button>
-          </div>
-        `;
-        craftingGrid.appendChild(el);
-      });
-    }
+    // Initialize with Workbenches active
+    updateButtonStates('workbenches');
 
     // Werkbänke rendern
     function renderWorkbenches() {
@@ -667,13 +334,11 @@
       workbenchesGrid.innerHTML = '';
       
       if (workbenches.length === 0) {
-        workbenchesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Werkbänke verfügbar.</p></div>';
+        workbenchesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Werkbänke verfügbar. Fügen Sie welche im Admin-Bereich hinzu.</p></div>';
         return;
       }
       
       workbenches.forEach(workbench => {
-        const recipesList = workbench.recipes.join(', ');
-        
         const el = document.createElement('div');
         el.className = 'resource-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-red-500/30 transition-all duration-200';
         el.innerHTML = `
@@ -682,52 +347,12 @@
             <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-blue-400">Stufe ${workbench.level}</div>
           </div>
           <div class="text-sm text-gray-400 mb-3">${workbench.description}</div>
-          <div class="mb-3">
-            <div class="text-xs text-gray-500 mb-1">Verfügbare Rezepte:</div>
-            <div class="text-sm">${recipesList}</div>
-          </div>
           <div class="flex justify-end">
-            <button class="px-3 py-1 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn">Bauen</button>
+            <button class="px-3 py-1 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn">Öffnen</button>
           </div>
         `;
         workbenchesGrid.appendChild(el);
       });
-    }
-
-    // Hilfsfunktionen
-    function getRarityText(rarity) {
-      const rarityMap = {
-        common: 'Gewöhnlich',
-        uncommon: 'Ungewöhnlich',
-        rare: 'Selten',
-        epic: 'Episch',
-        legendary: 'Legendär'
-      };
-      return rarityMap[rarity] || rarity;
-    }
-
-    function getCategoryText(category) {
-      const categoryMap = {
-        minerals: 'Mineralien',
-        metals: 'Metalle',
-        wood: 'Holz',
-        textiles: 'Textilien',
-        chemicals: 'Chemikalien',
-        tools: 'Werkzeuge',
-        weapons: 'Waffen',
-        armor: 'Rüstung',
-        consumables: 'Verbrauchsgüter',
-        structures: 'Strukturen'
-      };
-      return categoryMap[category] || category;
-    }
-
-    function filterResources(category) {
-      renderResources(category);
-    }
-
-    function filterCraftingItems(category) {
-      renderCraftingItems(category);
     }
 
     // Adminbereich
@@ -736,29 +361,13 @@
     const adminPassInput = document.getElementById('adminPass');
     const adminError = document.getElementById('adminError');
     const adminTableBody = document.getElementById('adminTableBody');
-    const totalResources = document.getElementById('totalResources');
-    const totalCrafting = document.getElementById('totalCrafting');
     const totalWorkbenches = document.getElementById('totalWorkbenches');
-    const addResourceBtn = document.getElementById('addResourceBtn');
-    const addCraftingBtn = document.getElementById('addCraftingBtn');
     const addWorkbenchBtn = document.getElementById('addWorkbenchBtn');
     
     // Modal Elemente
-    const resourceModal = document.getElementById('resourceModal');
-    const resourceForm = document.getElementById('resourceForm');
-    const cancelResource = document.getElementById('cancelResource');
-    
-    const craftingModal = document.getElementById('craftingModal');
-    const craftingForm = document.getElementById('craftingForm');
-    const cancelCrafting = document.getElementById('cancelCrafting');
-    const addResourceRow = document.getElementById('addResourceRow');
-    const craftingResources = document.getElementById('craftingResources');
-    
     const workbenchModal = document.getElementById('workbenchModal');
     const workbenchForm = document.getElementById('workbenchForm');
     const cancelWorkbench = document.getElementById('cancelWorkbench');
-    const addRecipeRow = document.getElementById('addRecipeRow');
-    const workbenchRecipes = document.getElementById('workbenchRecipes');
 
     adminLoginBtn.addEventListener('click', () => {
       if (adminPassInput.value === ADMIN_PASSWORD) { 
@@ -783,55 +392,14 @@
     function renderAdminTable() {
       adminTableBody.innerHTML = '';
       
-      // Ressourcen in Admin-Tabelle
-      resources.forEach(resource => {
-        const tr = document.createElement('tr');
-        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-        tr.innerHTML = `
-          <td class="p-3">Ressource</td>
-          <td class="p-3">${resource.name}</td>
-          <td class="p-3">${getCategoryText(resource.category)}</td>
-          <td class="p-3">${getRarityText(resource.rarity)}</td>
-          <td class="p-3">
-            <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteResource(${resource.id})">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
-              Löschen
-            </button>
-          </td>`;
-        adminTableBody.appendChild(tr);
-      });
-      
-      // Crafting Items in Admin-Tabelle
-      craftingItems.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-        tr.innerHTML = `
-          <td class="p-3">Crafting</td>
-          <td class="p-3">${item.name}</td>
-          <td class="p-3">${getCategoryText(item.category)}</td>
-          <td class="p-3">${getRarityText(item.rarity)}</td>
-          <td class="p-3">
-            <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteCraftingItem(${item.id})">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
-              Löschen
-            </button>
-          </td>`;
-        adminTableBody.appendChild(tr);
-      });
-      
       // Werkbänke in Admin-Tabelle
       workbenches.forEach(workbench => {
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         tr.innerHTML = `
-          <td class="p-3">Werkbank</td>
           <td class="p-3">${workbench.name}</td>
-          <td class="p-3">Werkbank</td>
           <td class="p-3">Stufe ${workbench.level}</td>
+          <td class="p-3">${workbench.description}</td>
           <td class="p-3">
             <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteWorkbench(${workbench.id})">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -843,232 +411,25 @@
         adminTableBody.appendChild(tr);
       });
       
-      totalResources.innerText = resources.length;
-      totalCrafting.innerText = craftingItems.length;
       totalWorkbenches.innerText = workbenches.length;
     }
 
-    // Modal für Ressource hinzufügen
-    addResourceBtn.addEventListener('click', () => {
-      show(resourceModal);
-    });
-
-    cancelResource.addEventListener('click', () => {
-      hide(resourceModal);
-      resourceForm.reset();
-    });
-
-    // Modal für Crafting Item hinzufügen
-    addCraftingBtn.addEventListener('click', () => {
-      // Fülle die Ressourcen-Auswahl
-      const resourceSelects = craftingResources.querySelectorAll('.resource-select');
-      resourceSelects.forEach(select => {
-        select.innerHTML = '<option value="">Ressource auswählen</option>';
-        resources.forEach(resource => {
-          const option = document.createElement('option');
-          option.value = resource.name;
-          option.textContent = resource.name;
-          select.appendChild(option);
-        });
-      });
-      show(craftingModal);
-    });
-
-    cancelCrafting.addEventListener('click', () => {
-      hide(craftingModal);
-      craftingForm.reset();
-      // Setze Ressourcen zurück auf eine Zeile
-      craftingResources.innerHTML = `
-        <div class="resource-input">
-          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
-            <option value="">Ressource auswählen</option>
-          </select>
-          <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
-          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
-        </div>
-      `;
-    });
-
     // Modal für Werkbank hinzufügen
     addWorkbenchBtn.addEventListener('click', () => {
-      // Fülle die Rezepte-Auswahl
-      const recipeSelects = workbenchRecipes.querySelectorAll('.recipe-select');
-      recipeSelects.forEach(select => {
-        select.innerHTML = '<option value="">Rezept auswählen</option>';
-        craftingItems.forEach(item => {
-          const option = document.createElement('option');
-          option.value = item.name;
-          option.textContent = item.name;
-          select.appendChild(option);
-        });
-      });
       show(workbenchModal);
     });
 
     cancelWorkbench.addEventListener('click', () => {
       hide(workbenchModal);
       workbenchForm.reset();
-      // Setze Rezepte zurück auf eine Zeile
-      workbenchRecipes.innerHTML = `
-        <div class="resource-input">
-          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
-            <option value="">Rezept auswählen</option>
-          </select>
-          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
-        </div>
-      `;
-    });
-
-    // Ressourcen-Zeile für Crafting hinzufügen
-    addResourceRow.addEventListener('click', () => {
-      const newRow = document.createElement('div');
-      newRow.className = 'resource-input';
-      newRow.innerHTML = `
-        <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
-          <option value="">Ressource auswählen</option>
-        </select>
-        <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
-        <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
-      `;
-      
-      // Fülle die neue Auswahl
-      const select = newRow.querySelector('.resource-select');
-      resources.forEach(resource => {
-        const option = document.createElement('option');
-        option.value = resource.name;
-        option.textContent = resource.name;
-        select.appendChild(option);
-      });
-      
-      craftingResources.appendChild(newRow);
-    });
-
-    // Rezept-Zeile für Werkbank hinzufügen
-    addRecipeRow.addEventListener('click', () => {
-      const newRow = document.createElement('div');
-      newRow.className = 'resource-input';
-      newRow.innerHTML = `
-        <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
-          <option value="">Rezept auswählen</option>
-        </select>
-        <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
-      `;
-      
-      // Fülle die neue Auswahl
-      const select = newRow.querySelector('.recipe-select');
-      craftingItems.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.name;
-        option.textContent = item.name;
-        select.appendChild(option);
-      });
-      
-      workbenchRecipes.appendChild(newRow);
-    });
-
-    // Entferne Ressourcen-Zeile
-    craftingResources.addEventListener('click', (e) => {
-      if (e.target.classList.contains('remove-resource')) {
-        if (craftingResources.children.length > 1) {
-          e.target.parentElement.remove();
-        }
-      }
-    });
-
-    // Entferne Rezept-Zeile
-    workbenchRecipes.addEventListener('click', (e) => {
-      if (e.target.classList.contains('remove-recipe')) {
-        if (workbenchRecipes.children.length > 1) {
-          e.target.parentElement.remove();
-        }
-      }
     });
 
     // Modal schließen, wenn außerhalb geklickt wird
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          hide(modal);
-          if (modal === resourceModal) resourceForm.reset();
-          if (modal === craftingModal) craftingForm.reset();
-          if (modal === workbenchModal) workbenchForm.reset();
-        }
-      });
-    });
-
-    resourceForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      const name = document.getElementById('resourceName').value;
-      const category = document.getElementById('resourceCategory').value;
-      const rarity = document.getElementById('resourceRarity').value;
-      const description = document.getElementById('resourceDescription').value;
-      
-      // Neue Ressource hinzufügen
-      const newResource = {
-        id: Math.max(...resources.map(r => r.id)) + 1,
-        name,
-        category,
-        rarity,
-        description
-      };
-      
-      resources.push(newResource);
-      renderResources();
-      renderAdminTable();
-      hide(resourceModal);
-      resourceForm.reset();
-    });
-
-    craftingForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      const name = document.getElementById('craftingName').value;
-      const category = document.getElementById('craftingCategory').value;
-      const rarity = document.getElementById('craftingRarity').value;
-      const description = document.getElementById('craftingDescription').value;
-      
-      // Sammle Ressourcen
-      const requiredResources = [];
-      const resourceInputs = craftingResources.querySelectorAll('.resource-input');
-      resourceInputs.forEach(input => {
-        const resourceName = input.querySelector('.resource-select').value;
-        const amount = parseInt(input.querySelector('.resource-amount').value);
-        if (resourceName && amount > 0) {
-          requiredResources.push({ name: resourceName, amount: amount });
-        }
-      });
-      
-      if (requiredResources.length === 0) {
-        alert('Bitte fügen Sie mindestens eine benötigte Ressource hinzu.');
-        return;
+    workbenchModal.addEventListener('click', (e) => {
+      if (e.target === workbenchModal) {
+        hide(workbenchModal);
+        workbenchForm.reset();
       }
-      
-      // Neues Crafting Item hinzufügen
-      const newCraftingItem = {
-        id: Math.max(...craftingItems.map(i => i.id)) + 1,
-        name,
-        category,
-        rarity,
-        description,
-        resources: requiredResources
-      };
-      
-      craftingItems.push(newCraftingItem);
-      renderCraftingItems();
-      renderAdminTable();
-      hide(craftingModal);
-      craftingForm.reset();
-      // Setze Ressourcen zurück auf eine Zeile
-      craftingResources.innerHTML = `
-        <div class="resource-input">
-          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-select">
-            <option value="">Ressource auswählen</option>
-          </select>
-          <input type="number" min="1" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 resource-amount" placeholder="Menge">
-          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-resource">-</button>
-        </div>
-      `;
     });
 
     workbenchForm.addEventListener('submit', (e) => {
@@ -1078,28 +439,12 @@
       const level = parseInt(document.getElementById('workbenchLevel').value);
       const description = document.getElementById('workbenchDescription').value;
       
-      // Sammle Rezepte
-      const availableRecipes = [];
-      const recipeInputs = workbenchRecipes.querySelectorAll('.recipe-select');
-      recipeInputs.forEach(input => {
-        const recipeName = input.value;
-        if (recipeName) {
-          availableRecipes.push(recipeName);
-        }
-      });
-      
-      if (availableRecipes.length === 0) {
-        alert('Bitte fügen Sie mindestens ein verfügbares Rezept hinzu.');
-        return;
-      }
-      
       // Neue Werkbank hinzufügen
       const newWorkbench = {
         id: Math.max(...workbenches.map(w => w.id)) + 1,
         name,
         level,
-        description,
-        recipes: availableRecipes
+        description
       };
       
       workbenches.push(newWorkbench);
@@ -1107,40 +452,9 @@
       renderAdminTable();
       hide(workbenchModal);
       workbenchForm.reset();
-      // Setze Rezepte zurück auf eine Zeile
-      workbenchRecipes.innerHTML = `
-        <div class="resource-input">
-          <select class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500 recipe-select">
-            <option value="">Rezept auswählen</option>
-          </select>
-          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-recipe">-</button>
-        </div>
-      `;
     });
 
-    // Löschfunktionen
-    window.deleteResource = function(id) { 
-      if (confirm('Ressource wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        const index = resources.findIndex(r => r.id === id);
-        if (index !== -1) {
-          resources.splice(index, 1);
-          renderResources();
-          renderAdminTable();
-        }
-      }
-    }
-
-    window.deleteCraftingItem = function(id) { 
-      if (confirm('Crafting Item wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        const index = craftingItems.findIndex(i => i.id === id);
-        if (index !== -1) {
-          craftingItems.splice(index, 1);
-          renderCraftingItems();
-          renderAdminTable();
-        }
-      }
-    }
-
+    // Löschfunktion
     window.deleteWorkbench = function(id) { 
       if (confirm('Werkbank wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
         const index = workbenches.findIndex(w => w.id === id);
@@ -1154,13 +468,9 @@
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
-      renderResources();
-      renderCraftingItems();
       renderWorkbenches();
       
-      // Sicherstellen, dass alle Modals versteckt sind
-      hide(resourceModal);
-      hide(craftingModal);
+      // Sicherstellen, dass das Modal versteckt ist
       hide(workbenchModal);
     });
   </script>

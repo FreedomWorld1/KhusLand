@@ -466,7 +466,7 @@
         el.innerHTML = `
           <div class="flex justify-between items-start mb-2">
             <div class="text-sm text-gray-400">${formatDate(en.date)}</div>
-            <div class="px-2 py-1 bg-purple-900/30 text-purple-400 text-xs rounded-full">${en.quantity}g</div>
+            <div class="px-2 py-1 bg-purple-900/30 text-purple-400 text-xs rounded-full">${en.quantity} Bricks</div>
           </div>
           <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
           <div class="grid grid-cols-2 gap-3 text-sm">
@@ -566,7 +566,7 @@
         return;
       }
       
-      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge (g)', 'Gesamtpreis ($)', 'Verkäuferanteil (80%)', 'Käuferanteil (20%)'];
+      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Gesamtpreis ($)', 'Verkäuferanteil (80%)', 'Käuferanteil (20%)'];
       const rows = entries.map(e => [
         formatDate(e.date),
         `"${e.buyer}"`,

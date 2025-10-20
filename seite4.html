@@ -122,15 +122,6 @@
       justify-content: center;
       z-index: 1000;
     }
-    .resource-input {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .resource-input select,
-    .resource-input input {
-      flex: 1;
-    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -169,6 +160,18 @@
           <span class="bg-red-900/30 p-2 rounded-lg">🛠️</span>
           Meine Werkbänke
         </h2>
+        
+        <!-- Kategorien Filter -->
+        <div class="flex flex-wrap gap-2 mb-6">
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">Alle</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="basic">Grundlegend</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="metal">Metallverarbeitung</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="alchemy">Alchemie</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="armor">Rüstung</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="weapon">Waffen</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="magic">Magie</button>
+          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg" data-category="cooking">Kochen</button>
+        </div>
         
         <!-- Workbenches Grid -->
         <div id="workbenchesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -211,8 +214,8 @@
               <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
                 <tr>
                   <th class="p-3 font-medium">Name</th>
+                  <th class="p-3 font-medium">Kategorie</th>
                   <th class="p-3 font-medium">Stufe</th>
-                  <th class="p-3 font-medium">Beschreibung</th>
                   <th class="p-3 font-medium">Aktion</th>
                 </tr>
               </thead>
@@ -233,6 +236,18 @@
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
           <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
+          <select id="workbenchCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+            <option value="basic">Grundlegend</option>
+            <option value="metal">Metallverarbeitung</option>
+            <option value="alchemy">Alchemie</option>
+            <option value="armor">Rüstung</option>
+            <option value="weapon">Waffen</option>
+            <option value="magic">Magie</option>
+            <option value="cooking">Kochen</option>
+          </select>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-1">Stufe</label>
@@ -257,12 +272,15 @@
   </div>
 
   <script>
-    // Beispiel-Daten für Werkbänke
+    // Beispiel-Daten für Werkbänke mit verschiedenen Kategorien
     const workbenches = [
-      { id: 1, name: "Einfache Werkbank", level: 1, description: "Ermöglicht grundlegendes Crafting" },
-      { id: 2, name: "Schmiede", level: 2, description: "Ermöglicht Metallverarbeitung" },
-      { id: 3, name: "Alchemie-Tisch", level: 2, description: "Ermöglicht Herstellung von Tränken" },
-      { id: 4, name: "Rüstungsschmied", level: 3, description: "Ermöglicht Herstellung von Rüstungen" }
+      { id: 1, name: "Einfache Werkbank", category: "basic", level: 1, description: "Ermöglicht grundlegendes Crafting" },
+      { id: 2, name: "Schmiede", category: "metal", level: 2, description: "Ermöglicht Metallverarbeitung" },
+      { id: 3, name: "Alchemie-Tisch", category: "alchemy", level: 2, description: "Ermöglicht Herstellung von Tränken" },
+      { id: 4, name: "Rüstungsschmied", category: "armor", level: 3, description: "Ermöglicht Herstellung von Rüstungen" },
+      { id: 5, name: "Waffenschmied", category: "weapon", level: 3, description: "Ermöglicht Herstellung von Waffen" },
+      { id: 6, name: "Zaubertisch", category: "magic", level: 4, description: "Ermöglicht magische Verzauberungen" },
+      { id: 7, name: "Kochstelle", category: "cooking", level: 1, description: "Ermöglicht Zubereitung von Speisen" }
     ];
 
     // Utility
@@ -328,17 +346,54 @@
     // Initialize with Workbenches active
     updateButtonStates('workbenches');
 
+    // Kategorie-Filter für Werkbänke
+    document.querySelectorAll('#workbenchesSection .category-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Active state setzen
+        document.querySelectorAll('#workbenchesSection .category-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Werkbänke filtern
+        const category = this.getAttribute('data-category');
+        filterWorkbenches(category);
+      });
+    });
+
     // Werkbänke rendern
-    function renderWorkbenches() {
+    function renderWorkbenches(category = 'all') {
       const workbenchesGrid = document.getElementById('workbenchesGrid');
       workbenchesGrid.innerHTML = '';
       
-      if (workbenches.length === 0) {
-        workbenchesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Werkbänke verfügbar. Fügen Sie welche im Admin-Bereich hinzu.</p></div>';
+      const filteredWorkbenches = category === 'all' 
+        ? workbenches 
+        : workbenches.filter(w => w.category === category);
+      
+      if (filteredWorkbenches.length === 0) {
+        workbenchesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Werkbänke in dieser Kategorie.</p></div>';
         return;
       }
       
-      workbenches.forEach(workbench => {
+      filteredWorkbenches.forEach(workbench => {
+        const categoryColors = {
+          basic: 'text-gray-400',
+          metal: 'text-orange-400',
+          alchemy: 'text-green-400',
+          armor: 'text-blue-400',
+          weapon: 'text-red-400',
+          magic: 'text-purple-400',
+          cooking: 'text-yellow-400'
+        };
+        
+        const categoryText = {
+          basic: 'Grundlegend',
+          metal: 'Metall',
+          alchemy: 'Alchemie',
+          armor: 'Rüstung',
+          weapon: 'Waffen',
+          magic: 'Magie',
+          cooking: 'Kochen'
+        };
+        
         const el = document.createElement('div');
         el.className = 'resource-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-red-500/30 transition-all duration-200';
         el.innerHTML = `
@@ -347,12 +402,17 @@
             <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-blue-400">Stufe ${workbench.level}</div>
           </div>
           <div class="text-sm text-gray-400 mb-3">${workbench.description}</div>
-          <div class="flex justify-end">
+          <div class="flex justify-between items-center">
+            <div class="px-2 py-1 bg-gray-700/50 text-xs rounded-full ${categoryColors[workbench.category]}">${categoryText[workbench.category]}</div>
             <button class="px-3 py-1 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn">Öffnen</button>
           </div>
         `;
         workbenchesGrid.appendChild(el);
       });
+    }
+
+    function filterWorkbenches(category) {
+      renderWorkbenches(category);
     }
 
     // Adminbereich
@@ -392,14 +452,24 @@
     function renderAdminTable() {
       adminTableBody.innerHTML = '';
       
+      const categoryText = {
+        basic: 'Grundlegend',
+        metal: 'Metall',
+        alchemy: 'Alchemie',
+        armor: 'Rüstung',
+        weapon: 'Waffen',
+        magic: 'Magie',
+        cooking: 'Kochen'
+      };
+      
       // Werkbänke in Admin-Tabelle
       workbenches.forEach(workbench => {
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         tr.innerHTML = `
           <td class="p-3">${workbench.name}</td>
+          <td class="p-3">${categoryText[workbench.category]}</td>
           <td class="p-3">Stufe ${workbench.level}</td>
-          <td class="p-3">${workbench.description}</td>
           <td class="p-3">
             <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteWorkbench(${workbench.id})">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -436,6 +506,7 @@
       e.preventDefault();
       
       const name = document.getElementById('workbenchName').value;
+      const category = document.getElementById('workbenchCategory').value;
       const level = parseInt(document.getElementById('workbenchLevel').value);
       const description = document.getElementById('workbenchDescription').value;
       
@@ -443,6 +514,7 @@
       const newWorkbench = {
         id: Math.max(...workbenches.map(w => w.id)) + 1,
         name,
+        category,
         level,
         description
       };

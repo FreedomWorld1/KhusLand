@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Werkbank Manager</title>
+  <title>Drogenrouten Manager - GTA RP</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
     }
     .card { 
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
-      border: 1px solid rgba(220, 38, 38, 0.2); 
+      border: 1px solid rgba(34, 197, 94, 0.2); 
       border-radius: 16px; 
       backdrop-filter: blur(10px);
     }
@@ -44,16 +43,16 @@
     }
     input:focus, select:focus, textarea:focus { 
       outline: none; 
-      border-color: #dc2626; 
-      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); 
+      border-color: #22c55e; 
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3); 
     }
     .active-link { 
-      background-color: #dc2626 !important; 
+      background-color: #22c55e !important; 
       color: #fff !important; 
       font-weight: 600; 
     }
     .gradient-text {
-      background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%);
+      background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -61,7 +60,7 @@
     .glass-effect {
       background: rgba(30, 41, 59, 0.7);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(220, 38, 38, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.1);
     }
     .fade-in {
       animation: fadeIn 0.3s ease-in-out;
@@ -74,9 +73,9 @@
       animation: pulseGlow 2s infinite;
     }
     @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
+      0% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
     }
     .scrollbar-custom::-webkit-scrollbar {
       width: 6px;
@@ -86,7 +85,7 @@
       border-radius: 10px;
     }
     .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #dc2626;
+      background: #22c55e;
       border-radius: 10px;
     }
     .hamburger-container {
@@ -100,7 +99,7 @@
       transition: all 0.3s ease;
     }
     .category-btn.active {
-      background-color: #dc2626;
+      background-color: #22c55e;
       color: white;
     }
     .resource-item {
@@ -127,237 +126,224 @@
       gap: 8px;
       margin-bottom: 8px;
     }
-    .workbench-card {
-      position: relative;
-      overflow: hidden;
+    .route-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
-    .workbench-card::before {
-      content: '';
-      position: absolute;
+    .password-overlay {
+      position: fixed;
       top: 0;
       left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%);
-    }
-    .loading-spinner {
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      border-top: 3px solid #dc2626;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 12px 20px;
-      border-radius: 8px;
-      color: white;
-      font-weight: 500;
-      z-index: 1002;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .toast.success {
-      background-color: #10b981;
-    }
-    .toast.error {
-      background-color: #ef4444;
-    }
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: #94a3b8;
-    }
-    .empty-state svg {
-      margin: 0 auto 16px;
-      opacity: 0.5;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
     }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
-  <div class="max-w-6xl mx-auto p-4 md:p-6">
-
-    <!-- HEADER -->
-    <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center">
-          <span class="text-white font-bold">⚒️</span>
+  
+  <!-- PASSWORT SCHUTZ -->
+  <div id="passwordOverlay" class="password-overlay">
+    <div class="card p-8 max-w-md w-full mx-4 shadow-soft">
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center mx-auto mb-4">
+          <span class="text-white font-bold text-2xl">🔒</span>
         </div>
-        <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Werkbank Manager</h1>
+        <h2 class="text-2xl font-bold gradient-text">Zugang geschützt</h2>
+        <p class="text-gray-400 mt-2">GTA RP Drogenrouten Manager</p>
       </div>
-      <div class="flex items-center gap-2">
-        <button id="btnWorkbenches" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">Werkbänke</button>
-        <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
-        <div class="hamburger-container">
-          <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-          </button>
-          <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-            <a href="./" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Startseite</a>
-            <a href="workbenches.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Werkbänke</a>
-            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
-          </div>
-        </div>
+      <div class="mb-4">
+        <label for="passwordInput" class="block text-sm font-medium text-gray-300 mb-1">Passwort eingeben</label>
+        <input id="passwordInput" type="password" placeholder="Passwort" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500"/>
       </div>
-    </header>
+      <button id="passwordSubmit" class="w-full py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+        </svg>
+        Zugang erhalten
+      </button>
+      <span id="passwordError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
+    </div>
+  </div>
 
-    <div id="mainContainer" class="space-y-6 relative z-0">
+  <!-- HAUPTINHALT (Versteckt bis Passwort richtig) -->
+  <div id="mainContent" class="hidden-el">
+    <div class="max-w-6xl mx-auto p-4 md:p-6">
 
-      <!-- WERKBÄNKE -->
-      <div id="workbenchesSection" class="card p-6 shadow-soft fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">🛠️</span>
-          Meine Werkbänke
-        </h2>
-        
-        <!-- Kategorien Filter -->
-        <div class="flex flex-wrap gap-2 mb-6" id="categoriesContainer">
-          <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">Alle</button>
-          <!-- Kategorien werden hier dynamisch geladen -->
-        </div>
-        
-        <!-- Workbenches Grid -->
-        <div id="workbenchesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Werkbänke werden hier dynamisch geladen -->
-          <div id="loadingWorkbenches" class="col-span-full">
-            <div class="loading-spinner"></div>
-            <p class="text-center mt-4 text-gray-400">Lade Werkbänke...</p>
+      <!-- HEADER -->
+      <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center">
+            <span class="text-white font-bold">💰</span>
           </div>
+          <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Drogenrouten Manager</h1>
         </div>
-      </div>
-
-      <!-- ADMIN -->
-      <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
-        <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-          <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
-          Adminbereich
-        </h2>
-        <div id="adminLoginSection">
-          <div class="mb-4">
-            <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
-            <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
-          </div>
-          <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-            Einloggen
-          </button>
-          <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
-        </div>
-        <div id="adminContent" class="hidden-el">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-            <div class="small-muted">Werkbänke: <span id="totalWorkbenches" class="font-bold text-white">0</span></div>
-            <div class="flex gap-2">
-              <button id="addWorkbenchBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-                Werkbank
-              </button>
-              <button id="manageCategoriesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                </svg>
-                Kategorien
-              </button>
+        <div class="flex items-center gap-2">
+          <button id="btnRoutes" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Routen</button>
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
+          <div class="hamburger-container">
+            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+            </button>
+            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+              <a href="./" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Startseite</a>
+              <a href="routes.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Routen</a>
+              <button id="logoutBtn" class="block w-full text-left px-4 py-3 hover:bg-gray-700 transition-colors text-red-400">Logout</button>
             </div>
           </div>
+        </div>
+      </header>
+
+      <div id="mainContainer" class="space-y-6 relative z-0">
+
+        <!-- ROUTEN -->
+        <div id="routesSection" class="card p-6 shadow-soft fade-in">
+          <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
+            <span class="bg-green-900/30 p-2 rounded-lg">📍</span>
+            Meine Drogenrouten
+          </h2>
           
-          <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
-            <table class="w-full text-left text-sm">
-              <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
-                <tr>
-                  <th class="p-3 font-medium">Name</th>
-                  <th class="p-3 font-medium">Kategorie</th>
-                  <th class="p-3 font-medium">Herstellungszeit</th>
-                  <th class="p-3 font-medium">Aktion</th>
-                </tr>
-              </thead>
-              <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Modal für Werkbank hinzufügen -->
-  <div id="workbenchModal" class="modal-overlay hidden-el">
-    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-      <h3 class="text-lg font-semibold mb-4 text-red-400" id="workbenchModalTitle">Werkbank hinzufügen</h3>
-      <form id="workbenchForm" class="space-y-4">
-        <input type="hidden" id="workbenchKey">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-          <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
-          <select id="workbenchCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
-            <!-- Kategorien werden dynamisch geladen -->
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Herstellungszeit</label>
-          <input type="text" id="workbenchTime" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="z.B.: 2 Stunden, 30 Minuten" required/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
-          <textarea id="workbenchDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3" placeholder="z.B.:&#10;1x Schrauben&#10;21x Waffen"></textarea>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
-          <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal für Kategorien verwalten -->
-  <div id="categoriesModal" class="modal-overlay hidden-el">
-    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-      <h3 class="text-lg font-semibold mb-4 text-purple-400">Kategorien verwalten</h3>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Neue Kategorie</label>
-          <div class="flex gap-2">
-            <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
-            <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">Hinzufügen</button>
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">Vorhandene Kategorien</label>
-          <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
+          <!-- Kategorien Filter -->
+          <div class="flex flex-wrap gap-2 mb-6" id="categoriesContainer">
+            <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">Alle</button>
             <!-- Kategorien werden hier dynamisch geladen -->
           </div>
+          
+          <!-- Routes Grid -->
+          <div id="routesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Routen werden hier dynamisch geladen -->
+          </div>
         </div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">Speichern</button>
-          <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+
+        <!-- ADMIN -->
+        <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
+          <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
+            <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
+            Adminbereich
+          </h2>
+          <div id="adminLoginSection">
+            <div class="mb-4">
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
+              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
+            </div>
+            <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+              Einloggen
+            </button>
+            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
+          </div>
+          <div id="adminContent" class="hidden-el">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
+              <div class="small-muted">Routen: <span id="totalRoutes" class="font-bold text-white">0</span></div>
+              <div class="flex gap-2">
+                <button id="addRouteBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                  Route
+                </button>
+                <button id="manageCategoriesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                  </svg>
+                  Kategorien
+                </button>
+              </div>
+            </div>
+            
+            <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
+              <table class="w-full text-left text-sm">
+                <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
+                  <tr>
+                    <th class="p-3 font-medium">Name</th>
+                    <th class="p-3 font-medium">Kategorie</th>
+                    <th class="p-3 font-medium">Zeit</th>
+                    <th class="p-3 font-medium">Aktion</th>
+                  </tr>
+                </thead>
+                <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Modal für Route hinzufügen -->
+    <div id="routeModal" class="modal-overlay hidden-el">
+      <div class="card p-6 m-4 max-w-md w-full shadow-soft">
+        <h3 class="text-lg font-semibold mb-4 text-green-400" id="routeModalTitle">Route hinzufügen</h3>
+        <form id="routeForm" class="space-y-4">
+          <input type="hidden" id="routeKey">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+            <input type="text" id="routeName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="z.B.: Meth-Lieferung Nord" required/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
+            <select id="routeCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required>
+              <!-- Kategorien werden dynamisch geladen -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Zeitaufwand</label>
+            <input type="text" id="routeTime" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="z.B.: 15-20 Minuten" required/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
+            <textarea id="routeDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" rows="3" placeholder="z.B.:&#10;- Start: Labor&#10;- Ziel: Treffpunkt Nord&#10;- Risiko: Mittel"></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Bild-URL (optional)</label>
+            <input type="text" id="routeImageUrl" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="https://example.com/bild.jpg"/>
+            <div class="text-xs text-gray-500 mt-1">URL zu einem Bild der Route (Karte, Treffpunkt, etc.)</div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">Speichern</button>
+            <button type="button" id="cancelRoute" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal für Kategorien verwalten -->
+    <div id="categoriesModal" class="modal-overlay hidden-el">
+      <div class="card p-6 m-4 max-w-md w-full shadow-soft">
+        <h3 class="text-lg font-semibold mb-4 text-purple-400">Kategorien verwalten</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Neue Kategorie</label>
+            <div class="flex gap-2">
+              <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
+              <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">Hinzufügen</button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Vorhandene Kategorien</label>
+            <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
+              <!-- Kategorien werden hier dynamisch geladen -->
+            </div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">Speichern</button>
+            <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Toast für Benachrichtigungen -->
-  <div id="toast" class="toast"></div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -379,13 +365,65 @@
     const db = getDatabase(app);
     
     // Firebase Referenzen
-    const workbenchesRef = ref(db, 'werkbank_manager/workbenches');
-    const categoriesRef = ref(db, 'werkbank_manager/categories');
+    const routesRef = ref(db, 'drogenrouten_manager/routes');
+    const categoriesRef = ref(db, 'drogenrouten_manager/categories');
 
     // Globale Variablen
-    let categories = ["Grundlegend", "Metall", "Alchemie", "Rüstung", "Waffen", "Magie", "Kochen"];
-    let workbenches = [];
+    let categories = ["Meth", "Kokain", "Weed", "Heroin", "Ecstasy", "Synthetik", "Vertrieb"];
+    let routes = [];
     let tempCategories = [];
+
+    // Passwort Konfiguration
+    const SITE_PASSWORD = 'route123';
+    const passwordOverlay = document.getElementById('passwordOverlay');
+    const mainContent = document.getElementById('mainContent');
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordSubmit = document.getElementById('passwordSubmit');
+    const passwordError = document.getElementById('passwordError');
+
+    // Passwortüberprüfung beim Laden
+    function checkPassword() {
+      const savedPassword = localStorage.getItem('drogenrouten_access');
+      if (savedPassword === SITE_PASSWORD) {
+        showMainContent();
+      } else {
+        showPasswordOverlay();
+      }
+    }
+
+    function showPasswordOverlay() {
+      passwordOverlay.classList.remove('hidden-el');
+      mainContent.classList.add('hidden-el');
+    }
+
+    function showMainContent() {
+      passwordOverlay.classList.add('hidden-el');
+      mainContent.classList.remove('hidden-el');
+    }
+
+    // Passwort Event Listener
+    passwordSubmit.addEventListener('click', () => {
+      if (passwordInput.value === SITE_PASSWORD) {
+        localStorage.setItem('drogenrouten_access', SITE_PASSWORD);
+        showMainContent();
+      } else {
+        passwordError.classList.remove('hidden-el');
+        passwordInput.value = '';
+        passwordInput.focus();
+      }
+    });
+
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        passwordSubmit.click();
+      }
+    });
+
+    // Logout Funktion
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('drogenrouten_access');
+      showPasswordOverlay();
+    });
 
     // Utility
     function show(el) { 
@@ -397,44 +435,33 @@
       el.classList.remove('fade-in');
     }
 
-    // Toast-Benachrichtigungen
-    function showToast(message, type = 'success') {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast ${type} show`;
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    }
-
     // Firebase Funktionen
-    async function saveWorkbench(workbench) {
+    async function saveRoute(route) {
       try {
-        await push(workbenchesRef, workbench);
+        await push(routesRef, route);
         return true;
       } catch (error) {
-        console.error('Fehler beim Speichern der Werkbank:', error);
+        console.error('Fehler beim Speichern der Route:', error);
         return false;
       }
     }
 
-    async function updateWorkbench(key, workbench) {
+    async function updateRoute(key, route) {
       try {
-        await update(ref(db, `werkbank_manager/workbenches/${key}`), workbench);
+        await update(ref(db, `drogenrouten_manager/routes/${key}`), route);
         return true;
       } catch (error) {
-        console.error('Fehler beim Aktualisieren der Werkbank:', error);
+        console.error('Fehler beim Aktualisieren der Route:', error);
         return false;
       }
     }
 
-    async function deleteWorkbenchFromFirebase(key) {
+    async function deleteRouteFromFirebase(key) {
       try {
-        await remove(ref(db, `werkbank_manager/workbenches/${key}`));
+        await remove(ref(db, `drogenrouten_manager/routes/${key}`));
         return true;
       } catch (error) {
-        console.error('Fehler beim Löschen der Werkbank:', error);
+        console.error('Fehler beim Löschen der Route:', error);
         return false;
       }
     }
@@ -450,16 +477,14 @@
     }
 
     // Firebase Listener
-    onValue(workbenchesRef, (snapshot) => {
-      workbenches = [];
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnap) => {
-          const data = childSnap.val();
-          data.key = childSnap.key;
-          workbenches.push(data);
-        });
-      }
-      renderWorkbenches();
+    onValue(routesRef, (snapshot) => {
+      routes = [];
+      snapshot.forEach((childSnap) => {
+        const data = childSnap.val();
+        data.key = childSnap.key;
+        routes.push(data);
+      });
+      renderRoutes();
       renderAdminTable();
     });
 
@@ -489,33 +514,33 @@
     });
 
     // Tabs Navigation
-    document.getElementById('btnWorkbenches').addEventListener('click', () => {
-      show(document.getElementById('workbenchesSection')); 
+    document.getElementById('btnRoutes').addEventListener('click', () => {
+      show(document.getElementById('routesSection')); 
       hide(document.getElementById('adminPanel'));
-      updateButtonStates('workbenches');
+      updateButtonStates('routes');
     });
     
     document.getElementById('btnAdmin').addEventListener('click', () => {
-      hide(document.getElementById('workbenchesSection')); 
+      hide(document.getElementById('routesSection')); 
       show(document.getElementById('adminPanel'));
       updateButtonStates('admin');
     });
 
     function updateButtonStates(activeButton) {
       const buttons = {
-        workbenches: document.getElementById('btnWorkbenches'),
+        routes: document.getElementById('btnRoutes'),
         admin: document.getElementById('btnAdmin')
       };
       
       Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-red-600', 'bg-blue-600');
+        btn.classList.remove('pulse-glow', 'bg-green-600', 'bg-blue-600');
         btn.classList.add('bg-gray-700');
       });
       
       if (buttons[activeButton]) {
         buttons[activeButton].classList.remove('bg-gray-700');
-        if (activeButton === 'workbenches') {
-          buttons[activeButton].classList.add('bg-red-600', 'pulse-glow');
+        if (activeButton === 'routes') {
+          buttons[activeButton].classList.add('bg-green-600', 'pulse-glow');
         } else if (activeButton === 'admin') {
           buttons[activeButton].classList.add('bg-blue-600');
         }
@@ -544,16 +569,16 @@
           document.querySelectorAll('#categoriesContainer .category-btn').forEach(b => b.classList.remove('active'));
           this.classList.add('active');
           
-          // Werkbänke filtern
+          // Routen filtern
           const category = this.getAttribute('data-category');
-          filterWorkbenches(category);
+          filterRoutes(category);
         });
       });
     }
 
     // Kategorien in Dropdown laden
     function loadCategoriesToDropdown() {
-      const categorySelect = document.getElementById('workbenchCategory');
+      const categorySelect = document.getElementById('routeCategory');
       categorySelect.innerHTML = '';
       categories.forEach(category => {
         const option = document.createElement('option');
@@ -563,49 +588,43 @@
       });
     }
 
-    // Werkbänke rendern
-    function renderWorkbenches(category = 'all') {
-      const workbenchesGrid = document.getElementById('workbenchesGrid');
-      const loadingElement = document.getElementById('loadingWorkbenches');
+    // Routen rendern
+    function renderRoutes(category = 'all') {
+      const routesGrid = document.getElementById('routesGrid');
+      routesGrid.innerHTML = '';
       
-      if (loadingElement) {
-        loadingElement.remove();
-      }
+      const filteredRoutes = category === 'all' 
+        ? routes 
+        : routes.filter(w => w.category === category);
       
-      workbenchesGrid.innerHTML = '';
-      
-      const filteredWorkbenches = category === 'all' 
-        ? workbenches 
-        : workbenches.filter(w => w.category === category);
-      
-      if (filteredWorkbenches.length === 0) {
-        workbenchesGrid.innerHTML = `
-          <div class="col-span-full empty-state">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p class="text-lg">Keine Werkbänke in dieser Kategorie.</p>
-            <p class="text-sm mt-2">Fügen Sie im Admin-Bereich neue Werkbänke hinzu.</p>
-          </div>`;
+      if (filteredRoutes.length === 0) {
+        routesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Routen in dieser Kategorie.</p></div>';
         return;
       }
       
-      filteredWorkbenches.forEach(workbench => {
+      filteredRoutes.forEach(route => {
         const el = document.createElement('div');
-        el.className = 'resource-item workbench-card p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-red-500/30 transition-all duration-200';
+        el.className = 'resource-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
+        
+        let imageHtml = '';
+        if (route.imageUrl) {
+          imageHtml = `<img src="${route.imageUrl}" alt="${route.name}" class="route-image" onerror="this.style.display='none'">`;
+        }
+        
         el.innerHTML = `
+          ${imageHtml}
           <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold text-lg">${workbench.name}</div>
-            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-blue-400">${workbench.time}</div>
+            <div class="font-semibold text-lg">${route.name}</div>
+            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-green-400">${route.time}</div>
           </div>
-          <div class="text-sm text-gray-400 whitespace-pre-line">${workbench.description}</div>
+          <div class="text-sm text-gray-400 whitespace-pre-line">${route.description}</div>
         `;
-        workbenchesGrid.appendChild(el);
+        routesGrid.appendChild(el);
       });
     }
 
-    function filterWorkbenches(category) {
-      renderWorkbenches(category);
+    function filterRoutes(category) {
+      renderRoutes(category);
     }
 
     // Adminbereich
@@ -614,16 +633,16 @@
     const adminPassInput = document.getElementById('adminPass');
     const adminError = document.getElementById('adminError');
     const adminTableBody = document.getElementById('adminTableBody');
-    const totalWorkbenches = document.getElementById('totalWorkbenches');
-    const addWorkbenchBtn = document.getElementById('addWorkbenchBtn');
+    const totalRoutes = document.getElementById('totalRoutes');
+    const addRouteBtn = document.getElementById('addRouteBtn');
     const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
     
     // Modal Elemente
-    const workbenchModal = document.getElementById('workbenchModal');
-    const workbenchForm = document.getElementById('workbenchForm');
-    const workbenchModalTitle = document.getElementById('workbenchModalTitle');
-    const workbenchKeyInput = document.getElementById('workbenchKey');
-    const cancelWorkbench = document.getElementById('cancelWorkbench');
+    const routeModal = document.getElementById('routeModal');
+    const routeForm = document.getElementById('routeForm');
+    const routeModalTitle = document.getElementById('routeModalTitle');
+    const routeKeyInput = document.getElementById('routeKey');
+    const cancelRoute = document.getElementById('cancelRoute');
     
     const categoriesModal = document.getElementById('categoriesModal');
     const newCategoryName = document.getElementById('newCategoryName');
@@ -638,12 +657,10 @@
         show(document.getElementById('adminContent')); 
         renderAdminTable(); 
         adminPassInput.value = '';
-        showToast('Erfolgreich eingeloggt', 'success');
       } else {
         adminError.classList.remove('hidden-el');
         adminPassInput.value = '';
         adminPassInput.focus();
-        showToast('Falsches Passwort', 'error');
       }
     });
 
@@ -657,104 +674,88 @@
     function renderAdminTable() {
       adminTableBody.innerHTML = '';
       
-      if (workbenches.length === 0) {
-        adminTableBody.innerHTML = `
-          <tr>
-            <td colspan="4" class="p-8 text-center text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <p>Keine Werkbänke vorhanden.</p>
-              <p class="text-sm mt-2">Fügen Sie eine neue Werkbank hinzu.</p>
-            </td>
-          </tr>`;
-      } else {
-        // Werkbänke in Admin-Tabelle
-        workbenches.forEach(workbench => {
-          const tr = document.createElement('tr');
-          tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-          tr.innerHTML = `
-            <td class="p-3">${workbench.name}</td>
-            <td class="p-3">${workbench.category}</td>
-            <td class="p-3">${workbench.time}</td>
-            <td class="p-3">
-              <div class="flex gap-2">
-                <button type="button" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-workbench" data-key="${workbench.key}">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                  </svg>
-                  Bearbeiten
-                </button>
-                <button type="button" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-workbench" data-key="${workbench.key}">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                  </svg>
-                  Löschen
-                </button>
-              </div>
-            </td>`;
-          adminTableBody.appendChild(tr);
-        });
-        
-        // Event Listener für Bearbeiten-Buttons
-        document.querySelectorAll('.edit-workbench').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const key = this.getAttribute('data-key');
-            editWorkbench(key);
-          });
-        });
-        
-        // Event Listener für Löschen-Buttons
-        document.querySelectorAll('.delete-workbench').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const key = this.getAttribute('data-key');
-            deleteWorkbench(key);
-          });
-        });
-      }
+      // Routen in Admin-Tabelle
+      routes.forEach(route => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3">${route.name}</td>
+          <td class="p-3">${route.category}</td>
+          <td class="p-3">${route.time}</td>
+          <td class="p-3">
+            <div class="flex gap-2">
+              <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-route" data-key="${route.key}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+                Bearbeiten
+              </button>
+              <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-route" data-key="${route.key}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                Löschen
+              </button>
+            </div>
+          </td>`;
+        adminTableBody.appendChild(tr);
+      });
       
-      totalWorkbenches.innerText = workbenches.length;
+      // Event Listener für Bearbeiten-Buttons
+      document.querySelectorAll('.edit-route').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key = this.getAttribute('data-key');
+          editRoute(key);
+        });
+      });
+      
+      // Event Listener für Löschen-Buttons
+      document.querySelectorAll('.delete-route').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key = this.getAttribute('data-key');
+          deleteRoute(key);
+        });
+      });
+      
+      totalRoutes.innerText = routes.length;
     }
 
-    // Werkbank bearbeiten
-    function editWorkbench(key) {
-      const workbench = workbenches.find(w => w.key === key);
-      if (!workbench) return;
+    // Route bearbeiten
+    function editRoute(key) {
+      const route = routes.find(w => w.key === key);
+      if (!route) return;
       
-      // Formular mit Werkbank-Daten füllen
-      document.getElementById('workbenchName').value = workbench.name;
-      document.getElementById('workbenchCategory').value = workbench.category;
-      document.getElementById('workbenchTime').value = workbench.time;
-      document.getElementById('workbenchDescription').value = workbench.description;
-      workbenchKeyInput.value = key;
+      // Formular mit Route-Daten füllen
+      document.getElementById('routeName').value = route.name;
+      document.getElementById('routeCategory').value = route.category;
+      document.getElementById('routeTime').value = route.time;
+      document.getElementById('routeDescription').value = route.description;
+      document.getElementById('routeImageUrl').value = route.imageUrl || '';
+      routeKeyInput.value = key;
       
       // Modal-Titel ändern
-      workbenchModalTitle.textContent = 'Werkbank bearbeiten';
+      routeModalTitle.textContent = 'Route bearbeiten';
       
       // Modal anzeigen
-      show(workbenchModal);
+      show(routeModal);
     }
 
-    // Modal für Werkbank hinzufügen
-    addWorkbenchBtn.addEventListener('click', () => {
+    // Modal für Route hinzufügen
+    addRouteBtn.addEventListener('click', () => {
       // Formular zurücksetzen
-      workbenchForm.reset();
-      workbenchKeyInput.value = '';
+      routeForm.reset();
+      routeKeyInput.value = '';
       
       // Modal-Titel ändern
-      workbenchModalTitle.textContent = 'Werkbank hinzufügen';
+      routeModalTitle.textContent = 'Route hinzufügen';
       
       loadCategoriesToDropdown();
-      show(workbenchModal);
+      show(routeModal);
     });
 
-    cancelWorkbench.addEventListener('click', () => {
-      hide(workbenchModal);
-      workbenchForm.reset();
+    cancelRoute.addEventListener('click', () => {
+      hide(routeModal);
+      routeForm.reset();
     });
 
     // Modal für Kategorien verwalten
@@ -772,12 +773,6 @@
     // Kategorien Liste rendern
     function renderCategoriesList() {
       categoriesList.innerHTML = '';
-      
-      if (tempCategories.length === 0) {
-        categoriesList.innerHTML = '<div class="text-center py-4 text-gray-400">Keine Kategorien vorhanden</div>';
-        return;
-      }
-      
       tempCategories.forEach((category, index) => {
         const div = document.createElement('div');
         div.className = 'category-input';
@@ -796,9 +791,6 @@
         tempCategories.push(categoryName);
         renderCategoriesList();
         newCategoryName.value = '';
-        showToast('Kategorie hinzugefügt', 'success');
-      } else if (tempCategories.includes(categoryName)) {
-        showToast('Kategorie existiert bereits', 'error');
       }
     });
 
@@ -807,14 +799,13 @@
       if (e.target.classList.contains('remove-category')) {
         const index = parseInt(e.target.getAttribute('data-index'));
         // Überprüfen ob Kategorie in Verwendung ist
-        const categoryInUse = workbenches.some(wb => wb.category === tempCategories[index]);
+        const categoryInUse = routes.some(wb => wb.category === tempCategories[index]);
         if (categoryInUse) {
-          showToast('Diese Kategorie wird noch von Werkbänken verwendet und kann nicht gelöscht werden!', 'error');
+          alert('Diese Kategorie wird noch von Routen verwendet und kann nicht gelöscht werden!');
           return;
         }
         tempCategories.splice(index, 1);
         renderCategoriesList();
-        showToast('Kategorie gelöscht', 'success');
       }
     });
 
@@ -822,51 +813,31 @@
     saveCategories.addEventListener('click', async () => {
       // Aktualisiere Kategorie-Namen
       const categoryInputs = categoriesList.querySelectorAll('.category-edit');
-      let hasErrors = false;
-      
       categoryInputs.forEach(input => {
         const index = parseInt(input.getAttribute('data-index'));
         const newName = input.value.trim();
-        
-        if (!newName) {
-          showToast('Kategoriename darf nicht leer sein', 'error');
-          hasErrors = true;
-          return;
-        }
-        
-        if (newName !== tempCategories[index]) {
-          // Überprüfe auf doppelte Namen
-          const duplicate = tempCategories.some((cat, i) => i !== index && cat === newName);
-          if (duplicate) {
-            showToast(`Kategorie "${newName}" existiert bereits`, 'error');
-            hasErrors = true;
-            return;
-          }
-          
-          // Aktualisiere Kategorie in Werkbänken
-          workbenches.forEach(wb => {
+        if (newName && newName !== tempCategories[index]) {
+          // Aktualisiere Kategorie in Routen
+          routes.forEach(wb => {
             if (wb.category === tempCategories[index]) {
               wb.category = newName;
               // Update in Firebase
-              updateWorkbench(wb.key, { category: newName });
+              updateRoute(wb.key, { category: newName });
             }
           });
           tempCategories[index] = newName;
         }
       });
       
-      if (hasErrors) return;
-      
       categories = [...tempCategories];
       const success = await saveCategoriesToFirebase();
       if (success) {
         renderCategories();
-        renderWorkbenches();
+        renderRoutes();
         renderAdminTable();
         hide(categoriesModal);
-        showToast('Kategorien erfolgreich gespeichert', 'success');
       } else {
-        showToast('Fehler beim Speichern der Kategorien!', 'error');
+        alert('Fehler beim Speichern der Kategorien!');
       }
     });
 
@@ -875,28 +846,24 @@
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           hide(modal);
-          if (modal === workbenchModal) workbenchForm.reset();
+          if (modal === routeModal) routeForm.reset();
           if (modal === categoriesModal) newCategoryName.value = '';
         }
       });
     });
 
-    workbenchForm.addEventListener('submit', async (e) => {
+    routeForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const name = document.getElementById('workbenchName').value.trim();
-      const category = document.getElementById('workbenchCategory').value;
-      const time = document.getElementById('workbenchTime').value.trim();
-      const description = document.getElementById('workbenchDescription').value.trim();
-      const key = workbenchKeyInput.value;
+      const name = document.getElementById('routeName').value;
+      const category = document.getElementById('routeCategory').value;
+      const time = document.getElementById('routeTime').value;
+      const description = document.getElementById('routeDescription').value;
+      const imageUrl = document.getElementById('routeImageUrl').value;
+      const key = routeKeyInput.value;
       
-      if (!name || !category || !time) {
-        showToast('Bitte füllen Sie alle Pflichtfelder aus', 'error');
-        return;
-      }
-      
-      // Werkbank-Objekt erstellen
-      const workbenchData = {
+      // Route-Objekt erstellen
+      const routeData = {
         name,
         category,
         time,
@@ -905,47 +872,47 @@
         timestamp: Date.now()
       };
       
+      // Bild-URL hinzufügen, falls vorhanden
+      if (imageUrl) {
+        routeData.imageUrl = imageUrl;
+      }
+      
       let success;
-      let message;
       if (key) {
-        // Bestehende Werkbank aktualisieren
-        success = await updateWorkbench(key, workbenchData);
-        message = 'Werkbank erfolgreich aktualisiert';
+        // Bestehende Route aktualisieren
+        success = await updateRoute(key, routeData);
       } else {
-        // Neue Werkbank erstellen
-        success = await saveWorkbench(workbenchData);
-        message = 'Werkbank erfolgreich hinzugefügt';
+        // Neue Route erstellen
+        success = await saveRoute(routeData);
       }
       
       if (success) {
-        hide(workbenchModal);
-        workbenchForm.reset();
-        showToast(message, 'success');
+        hide(routeModal);
+        routeForm.reset();
       } else {
-        showToast(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} der Werkbank!`, 'error');
+        alert(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} der Route!`);
       }
     });
 
     // Löschfunktion
-    window.deleteWorkbench = async function(key) { 
-      if (confirm('Werkbank wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        const success = await deleteWorkbenchFromFirebase(key);
-        if (success) {
-          showToast('Werkbank erfolgreich gelöscht', 'success');
-        } else {
-          showToast('Fehler beim Löschen der Werkbank!', 'error');
+    window.deleteRoute = async function(key) { 
+      if (confirm('Route wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
+        const success = await deleteRouteFromFirebase(key);
+        if (!success) {
+          alert('Fehler beim Löschen der Route!');
         }
       }
     }
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
+      checkPassword();
       renderCategories();
-      renderWorkbenches();
-      updateButtonStates('workbenches');
+      renderRoutes();
+      updateButtonStates('routes');
       
       // Sicherstellen, dass alle Modals versteckt sind
-      hide(workbenchModal);
+      hide(routeModal);
       hide(categoriesModal);
     });
   </script>

@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Kartell Bewerbung</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { 
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+    }
+    .card { 
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
+      border: 1px solid rgba(220, 38, 38, 0.2); 
+      border-radius: 16px; 
+      backdrop-filter: blur(10px);
+    }
+    .shadow-soft { 
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
+                  0 5px 10px rgba(0, 0, 0, 0.3),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1); 
+    }
+    .small-muted { 
+      color: #94a3b8; 
+      font-size: 0.85rem; 
+    }
+    .btn { 
+      transition: all 0.2s ease; 
+      font-size: 0.9rem; 
+      font-weight: 500;
+    }
+    .btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    .hidden-el { 
+      display: none; 
+    }
+    input, textarea, select { 
+      transition: all 0.2s ease; 
+      font-size: 0.95rem; 
+    }
+    input:focus, textarea:focus, select:focus { 
+      outline: none; 
+      border-color: #dc2626; 
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); 
+    }
+    .active-link { 
+      background-color: #dc2626 !important; 
+      color: #fff !important; 
+      font-weight: 600; 
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .glass-effect {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(220, 38, 38, 0.1);
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
+    }
+    .scrollbar-custom::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 10px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+      background: #dc2626;
+      border-radius: 10px;
+    }
+    .hamburger-container {
+      position: relative;
+      z-index: 1000;
+    }
+    .hamburger-menu {
+      z-index: 1001;
+    }
+    .required:after {
+      content: " *";
+      color: #dc2626;
+    }
+  </style>
+</head>
+<body class="text-gray-100 antialiased min-h-screen">
+  <div class="max-w-4xl mx-auto p-4 md:p-6">
+
+    <!-- HEADER -->
+    <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center">
+          <span class="text-white font-bold">💀</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Kartell Bewerbung</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnStandard" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">Standard Fragen</button>
+        <button id="btnSituative" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Situative Fragen</button>
+        <button id="btnStress" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Stressfragen</button>
+        <div class="hamburger-container">
+          <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
+            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+          </button>
+          <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+            <a href="./" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Weed</a>
+            <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
+            <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Scarface Kokain</a>
+            <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
+            <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Routen</a>
+            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="mainContainer" class="space-y-6 relative z-0">
+
+      <!-- STANDARD FRAGEN -->
+      <div id="standardSection" class="card p-6 shadow-soft fade-in">
+        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
+          <span class="bg-red-900/30 p-2 rounded-lg">📝</span>
+          Standard Fragen
+        </h2>
+        <form id="standardForm" class="space-y-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-300 mb-1 required">Name</label>
+              <input id="name" type="text" placeholder="Dein vollständiger Name" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+            </div>
+            <div>
+              <label for="alter" class="block text-sm font-medium text-gray-300 mb-1 required">Alter & Herkunft</label>
+              <input id="alter" type="text" placeholder="Alter und Herkunft" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+            </div>
+          </div>
+          <div>
+            <label for="hintergrund" class="block text-sm font-medium text-gray-300 mb-1 required">Familien- oder Hintergrundgeschichte</label>
+            <textarea id="hintergrund" rows="3" placeholder="Beschreibe deinen familiären Hintergrund und deine Geschichte" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label for="motivation" class="block text-sm font-medium text-gray-300 mb-1 required">Motivation</label>
+            <textarea id="motivation" rows="3" placeholder="Warum möchtest du dem Kartell beitreten?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label for="faehigkeiten" class="block text-sm font-medium text-gray-300 mb-1 required">Fähigkeiten & Talente</label>
+            <textarea id="faehigkeiten" rows="3" placeholder="Welche besonderen Fähigkeiten oder Talente bringst du mit?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label for="schwaechen" class="block text-sm font-medium text-gray-300 mb-1 required">Schwächen</label>
+            <textarea id="schwaechen" rows="2" placeholder="Was sind deine Schwächen?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label for="werte" class="block text-sm font-medium text-gray-300 mb-1 required">Werte & Loyalität</label>
+            <textarea id="werte" rows="2" placeholder="Welche Werte sind dir wichtig und wie definierst du Loyalität?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label for="ziele" class="block text-sm font-medium text-gray-300 mb-1 required">Langfristige Ziele</label>
+            <textarea id="ziele" rows="2" placeholder="Was sind deine langfristigen Ziele im Kartell?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label for="profit" class="block text-sm font-medium text-gray-300 mb-1 required">Wie soll die Familie / Kushland von dir profitieren?</label>
+            <textarea id="profit" rows="2" placeholder="Welchen Nutzen bringst du dem Kartell?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="nextToSituative" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              Weiter zu Situative Fragen
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- SITUATIVE FRAGEN -->
+      <div id="situativeSection" class="card p-6 shadow-soft hidden-el fade-in">
+        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
+          <span class="bg-red-900/30 p-2 rounded-lg">🤔</span>
+          Situative Fragen
+        </h2>
+        <form id="situativeForm" class="space-y-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein Fremder spricht dich in der Stadt an und fragt, ob du jemanden aus dem Kartell kennst. Wie reagierst du?</label>
+            <textarea id="situative1" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein Kunde weigert sich, den vereinbarten Preis für eine Lieferung zu zahlen. Wie gehst du mit ihm um?</label>
+            <textarea id="situative2" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein anderer versucht, dich für seine Organisation abzuwerben. Wie antwortest du ihm?</label>
+            <textarea id="situative3" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1 required">Du musst neue Kontakte in der Stadt aufbauen, um Geschäfte für das Kartell / Kushland zu sichern. Wie würdest du vorgehen?</label>
+            <textarea id="situative4" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="backToStandard" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+              Zurück
+            </button>
+            <button type="button" id="nextToStress" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              Weiter zu Stressfragen
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STRESSFRAGEN -->
+      <div id="stressSection" class="card p-6 shadow-soft hidden-el fade-in">
+        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
+          <span class="bg-red-900/30 p-2 rounded-lg">🔥</span>
+          Stressfragen
+        </h2>
+        <form id="stressForm" class="space-y-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein gegnerisches Kartell bietet dir viel Geld für Infos – deine Entscheidung?</label>
+            <textarea id="stress1" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1 required">Du bist allein und wirst von 3 bewaffneten Leuten abgefangen – deine Handlung?</label>
+            <textarea id="stress2" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
+          </div>
+          
+          <h3 class="text-lg font-semibold mt-6 mb-4 text-red-400 flex items-center gap-2">
+            <span class="bg-red-900/30 p-2 rounded-lg">💪</span>
+            Sport Test
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium">Situps</span>
+                <span class="text-sm text-gray-400">15x</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="situps" class="rounded text-red-600 focus:ring-red-500">
+                <label for="situps" class="text-sm">Bestanden</label>
+              </div>
+            </div>
+            <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium">Pushups</span>
+                <span class="text-sm text-gray-400">15x</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="pushups" class="rounded text-red-600 focus:ring-red-500">
+                <label for="pushups" class="text-sm">Bestanden</label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="backToSituative" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+              Zurück
+            </button>
+            <button type="button" id="submitApplication" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              Bewerbung abschließen
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ERGEBNIS -->
+      <div id="resultSection" class="card p-6 shadow-soft hidden-el fade-in">
+        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
+          <span class="bg-red-900/30 p-2 rounded-lg">🎯</span>
+          Ergebnis
+        </h2>
+        <div id="resultContent" class="space-y-4">
+          <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
+            <div id="resultMessage" class="text-lg font-bold mb-2"></div>
+            <div id="resultDetails" class="text-sm text-gray-300"></div>
+          </div>
+          
+          <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+            <h3 class="font-medium mb-2 text-red-400">Bewerbungszusammenfassung</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-400">Name:</span>
+                <span id="summaryName" class="font-medium"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Alter & Herkunft:</span>
+                <span id="summaryAlter" class="font-medium"></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Sporttest:</span>
+                <span id="summarySport" class="font-medium"></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="backToStress" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+              Zurück
+            </button>
+            <button type="button" id="newApplication" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              Neue Bewerbung
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Utility
+    function show(el) { 
+      el.classList.remove('hidden-el'); 
+      el.classList.add('fade-in');
+    }
+    function hide(el) { 
+      el.classList.add('hidden-el'); 
+      el.classList.remove('fade-in');
+    }
+    
+    // Tab Navigation
+    document.getElementById('btnStandard').addEventListener('click', () => {
+      show(document.getElementById('standardSection')); 
+      hide(document.getElementById('situativeSection')); 
+      hide(document.getElementById('stressSection'));
+      hide(document.getElementById('resultSection'));
+      updateButtonStates('standard');
+    });
+    
+    document.getElementById('btnSituative').addEventListener('click', () => {
+      hide(document.getElementById('standardSection')); 
+      show(document.getElementById('situativeSection')); 
+      hide(document.getElementById('stressSection'));
+      hide(document.getElementById('resultSection'));
+      updateButtonStates('situative');
+    });
+    
+    document.getElementById('btnStress').addEventListener('click', () => {
+      hide(document.getElementById('standardSection')); 
+      hide(document.getElementById('situativeSection')); 
+      show(document.getElementById('stressSection'));
+      hide(document.getElementById('resultSection'));
+      updateButtonStates('stress');
+    });
+    
+    function updateButtonStates(activeButton) {
+      const buttons = {
+        standard: document.getElementById('btnStandard'),
+        situative: document.getElementById('btnSituative'),
+        stress: document.getElementById('btnStress')
+      };
+      
+      Object.values(buttons).forEach(btn => {
+        btn.classList.remove('pulse-glow', 'bg-red-600');
+        btn.classList.add('bg-gray-700');
+      });
+      
+      if (buttons[activeButton]) {
+        buttons[activeButton].classList.remove('bg-gray-700');
+        buttons[activeButton].classList.add('bg-red-600', 'pulse-glow');
+      }
+    }
+
+    // Hamburger Menu
+    document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('hamburgerMenu').classList.toggle('hidden');
+    });
+
+    // Close hamburger menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const hamburgerMenu = document.getElementById('hamburgerMenu');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      
+      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        hamburgerMenu.classList.add('hidden');
+      }
+    });
+
+    // Form Navigation
+    document.getElementById('nextToSituative').addEventListener('click', () => {
+      if (validateStandardForm()) {
+        hide(document.getElementById('standardSection')); 
+        show(document.getElementById('situativeSection')); 
+        updateButtonStates('situative');
+      }
+    });
+    
+    document.getElementById('backToStandard').addEventListener('click', () => {
+      hide(document.getElementById('situativeSection')); 
+      show(document.getElementById('standardSection')); 
+      updateButtonStates('standard');
+    });
+    
+    document.getElementById('nextToStress').addEventListener('click', () => {
+      if (validateSituativeForm()) {
+        hide(document.getElementById('situativeSection')); 
+        show(document.getElementById('stressSection')); 
+        updateButtonStates('stress');
+      }
+    });
+    
+    document.getElementById('backToSituative').addEventListener('click', () => {
+      hide(document.getElementById('stressSection')); 
+      show(document.getElementById('situativeSection')); 
+      updateButtonStates('situative');
+    });
+    
+    document.getElementById('backToStress').addEventListener('click', () => {
+      hide(document.getElementById('resultSection')); 
+      show(document.getElementById('stressSection')); 
+      updateButtonStates('stress');
+    });
+    
+    document.getElementById('newApplication').addEventListener('click', () => {
+      // Reset all forms
+      document.getElementById('standardForm').reset();
+      document.getElementById('situativeForm').reset();
+      document.getElementById('stressForm').reset();
+      
+      // Go back to standard section
+      hide(document.getElementById('resultSection')); 
+      show(document.getElementById('standardSection')); 
+      updateButtonStates('standard');
+    });
+    
+    // Form Validation
+    function validateStandardForm() {
+      const requiredFields = document.querySelectorAll('#standardForm [required]');
+      let valid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('border-red-500');
+          valid = false;
+        } else {
+          field.classList.remove('border-red-500');
+        }
+      });
+      
+      if (!valid) {
+        alert('Bitte füllen Sie alle Pflichtfelder aus.');
+      }
+      
+      return valid;
+    }
+    
+    function validateSituativeForm() {
+      const requiredFields = document.querySelectorAll('#situativeForm [required]');
+      let valid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('border-red-500');
+          valid = false;
+        } else {
+          field.classList.remove('border-red-500');
+        }
+      });
+      
+      if (!valid) {
+        alert('Bitte beantworten Sie alle situativen Fragen.');
+      }
+      
+      return valid;
+    }
+    
+    function validateStressForm() {
+      const requiredFields = document.querySelectorAll('#stressForm [required]');
+      let valid = true;
+      
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          field.classList.add('border-red-500');
+          valid = false;
+        } else {
+          field.classList.remove('border-red-500');
+        }
+      });
+      
+      // Check if sport test is completed
+      const situps = document.getElementById('situps').checked;
+      const pushups = document.getElementById('pushups').checked;
+      
+      if (!situps || !pushups) {
+        alert('Bitte bestätigen Sie, dass Sie den Sporttest bestanden haben.');
+        valid = false;
+      }
+      
+      return valid;
+    }
+    
+    // Application Submission
+    document.getElementById('submitApplication').addEventListener('click', () => {
+      if (validateStressForm()) {
+        // Calculate result
+        const situps = document.getElementById('situps').checked;
+        const pushups = document.getElementById('pushups').checked;
+        const sportPassed = situps && pushups;
+        
+        // For demonstration, we'll randomly decide if the application is accepted
+        // In a real scenario, this would be based on the answers
+        const accepted = Math.random() > 0.5;
+        
+        // Show result
+        hide(document.getElementById('stressSection')); 
+        show(document.getElementById('resultSection'));
+        
+        // Update result content
+        const resultMessage = document.getElementById('resultMessage');
+        const resultDetails = document.getElementById('resultDetails');
+        
+        if (accepted && sportPassed) {
+          resultMessage.textContent = 'BESTANDEN';
+          resultMessage.className = 'text-lg font-bold mb-2 text-green-400';
+          resultDetails.textContent = 'Herzlichen Glückwunsch! Du hast die Bewerbung bestanden. Du wirst in Kürze kontaktiert.';
+          
+          // Show the "consequence" for passing
+          setTimeout(() => {
+            alert('Da du bestanden hast: Du wirst einmal in die Schulter geschossen (simuliert).');
+          }, 1000);
+        } else {
+          resultMessage.textContent = 'NICHT BESTANDEN';
+          resultMessage.className = 'text-lg font-bold mb-2 text-red-400';
+          resultDetails.textContent = 'Leider hast du die Bewerbung nicht bestanden. Deine Antworten erfüllen nicht unsere Anforderungen.';
+          
+          // Show the "consequence" for failing
+          setTimeout(() => {
+            alert('Da du nicht bestanden hast: Du bekommst Bloodout (simuliert).');
+          }, 1000);
+        }
+        
+        // Update summary
+        document.getElementById('summaryName').textContent = document.getElementById('name').value;
+        document.getElementById('summaryAlter').textContent = document.getElementById('alter').value;
+        document.getElementById('summarySport').textContent = sportPassed ? 'Bestanden' : 'Nicht bestanden';
+      }
+    });
+
+    // Initialize with Standard active
+    updateButtonStates('standard');
+  </script>
+</body>
+</html>

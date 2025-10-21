@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Drogenrouten Manager - GTA RP</title>
+  <title>Drogenrouten</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { 
@@ -157,7 +157,7 @@
           <span class="text-white font-bold text-2xl">🔒</span>
         </div>
         <h2 class="text-2xl font-bold gradient-text">Zugang geschützt</h2>
-        <p class="text-gray-400 mt-2">GTA RP Drogenrouten Manager</p>
+        <p class="text-gray-400 mt-2"> Drogenrouten Manager</p>
       </div>
       <div class="mb-4">
         <label for="passwordInput" class="block text-sm font-medium text-gray-300 mb-1">Passwort eingeben</label>
@@ -213,7 +213,7 @@
         <div id="routesSection" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
             <span class="bg-green-900/30 p-2 rounded-lg">📍</span>
-            Meine Drogenrouten
+             Drogenrouten
           </h2>
           
           <!-- Kategorien Filter -->
@@ -373,12 +373,12 @@
     const categoriesRef = ref(db, 'drogenrouten_manager/categories');
 
     // Globale Variablen
-    let categories = ["Meth", "Kokain", "Weed", "Heroin", "Ecstasy", "Synthetik", "Vertrieb"];
+    let categories = [];
     let routes = [];
     let tempCategories = [];
 
     // Passwort Konfiguration
-    const SITE_PASSWORD = 'route123';
+    const SITE_PASSWORD = '1101';
     const passwordOverlay = document.getElementById('passwordOverlay');
     const mainContent = document.getElementById('mainContent');
     const passwordInput = document.getElementById('passwordInput');

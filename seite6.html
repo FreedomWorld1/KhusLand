@@ -1,580 +1,703 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Kartell Bewerbung</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { 
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
-    }
-    .card { 
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
-      border: 1px solid rgba(220, 38, 38, 0.2); 
-      border-radius: 16px; 
-      backdrop-filter: blur(10px);
-    }
-    .shadow-soft { 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
-                  0 5px 10px rgba(0, 0, 0, 0.3),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1); 
-    }
-    .small-muted { 
-      color: #94a3b8; 
-      font-size: 0.85rem; 
-    }
-    .btn { 
-      transition: all 0.2s ease; 
-      font-size: 0.9rem; 
-      font-weight: 500;
-    }
-    .btn:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    .hidden-el { 
-      display: none; 
-    }
-    input, textarea, select { 
-      transition: all 0.2s ease; 
-      font-size: 0.95rem; 
-    }
-    input:focus, textarea:focus, select:focus { 
-      outline: none; 
-      border-color: #dc2626; 
-      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); 
-    }
-    .active-link { 
-      background-color: #dc2626 !important; 
-      color: #fff !important; 
-      font-weight: 600; 
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(220, 38, 38, 0.1);
-    }
-    .fade-in {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .pulse-glow {
-      animation: pulseGlow 2s infinite;
-    }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
-    }
-    .scrollbar-custom::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 10px;
-    }
-    .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #dc2626;
-      border-radius: 10px;
-    }
-    .hamburger-container {
-      position: relative;
-      z-index: 1000;
-    }
-    .hamburger-menu {
-      z-index: 1001;
-    }
-    .required:after {
-      content: " *";
-      color: #dc2626;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartell Bewerbung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e6e6e6;
+        }
+        
+        .card {
+            background: rgba(25, 25, 35, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .blood-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blood-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(139, 0, 0, 0.1) 50%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        
+        .blood-effect.active::before {
+            opacity: 1;
+            animation: blood-drip 2s forwards;
+        }
+        
+        @keyframes blood-drip {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { transform: translateY(0); opacity: 0.7; }
+            100% { transform: translateY(100%); opacity: 0; }
+        }
+        
+        .bullet-hole {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #8B0000 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s;
+        }
+        
+        .bullet-hole.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+        
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            transition: all 0.3s;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
+        }
+        
+        .tab-active {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626 0%, #ef4444 100%);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .hidden-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+        }
+        
+        .active-section {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .question-card {
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .question-card:hover {
+            border-left-color: #dc2626;
+            transform: translateX(5px);
+        }
+        
+        .skull-icon {
+            filter: drop-shadow(0 0 5px rgba(220, 38, 38, 0.5));
+        }
+        
+        .result-passed {
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.3) 0%, rgba(22, 163, 74, 0.1) 100%);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        
+        .result-failed {
+            background: linear-gradient(135deg, rgba(185, 28, 28, 0.3) 0%, rgba(220, 38, 38, 0.1) 100%);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+    </style>
 </head>
-<body class="text-gray-100 antialiased min-h-screen">
-  <div class="max-w-4xl mx-auto p-4 md:p-6">
+<body class="min-h-screen py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="card p-6 mb-8 text-center relative blood-effect">
+            <div class="flex items-center justify-center gap-4 mb-4">
+                <div class="skull-icon text-4xl">
+                    <i class="fas fa-skull"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent">
+                    Kartell Bewerbung
+                </h1>
+                <div class="skull-icon text-4xl">
+                    <i class="fas fa-skull"></i>
+                </div>
+            </div>
+            <p class="text-gray-300 max-w-2xl mx-auto">
+                Willkommen bei der Bewerbung für die Organisation. Deine Antworten werden streng vertraulich behandelt. 
+                Sei ehrlich und präzise in deinen Antworten.
+            </p>
+            
+            <!-- Progress Bar -->
+            <div class="mt-6">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="flex justify-between text-sm text-gray-400 mt-2">
+                    <span>Standard Fragen</span>
+                    <span>Situative Fragen</span>
+                    <span>Stressfragen</span>
+                    <span>Ergebnis</span>
+                </div>
+            </div>
+        </header>
 
-    <!-- HEADER -->
-    <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center">
-          <span class="text-white font-bold">💀</span>
+        <!-- Navigation Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 justify-center">
+            <button class="tab-btn px-4 py-2 rounded-lg tab-active" data-tab="standard">
+                <i class="fas fa-user mr-2"></i>Standard Fragen
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700" data-tab="situative">
+                <i class="fas fa-brain mr-2"></i>Situative Fragen
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700" data-tab="stress">
+                <i class="fas fa-fire mr-2"></i>Stressfragen
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700" data-tab="result">
+                <i class="fas fa-trophy mr-2"></i>Ergebnis
+            </button>
         </div>
-        <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Kartell Bewerbung</h1>
-      </div>
-      <div class="flex items-center gap-2">
-        <button id="btnStandard" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">Standard Fragen</button>
-        <button id="btnSituative" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Situative Fragen</button>
-        <button id="btnStress" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Stressfragen</button>
-        <div class="hamburger-container">
-          <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-          </button>
-          <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-            <a href="./" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Weed</a>
-            <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
-            <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Scarface Kokain</a>
-            <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
-            <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Routen</a>
-            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
-          </div>
-        </div>
-      </div>
-    </header>
 
-    <div id="mainContainer" class="space-y-6 relative z-0">
+        <!-- Standard Questions Section -->
+        <section id="standard" class="card p-6 active-section">
+            <h2 class="text-2xl font-bold mb-6 text-red-400 flex items-center gap-2">
+                <i class="fas fa-user"></i>
+                Standard Fragen
+            </h2>
+            
+            <form id="standardForm" class="space-y-6">
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Name</label>
+                    <input type="text" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" required>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Alter & Herkunft</label>
+                    <input type="text" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" required>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Familien- oder Hintergrundgeschichte</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Motivation</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Fähigkeiten & Talente</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Schwächen</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="2" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Werte & Loyalität</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="2" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Langfristige Ziele</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="2" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Wie soll die Familie / Kushland von dir profitieren?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="2" required></textarea>
+                </div>
+                
+                <div class="flex justify-end mt-8">
+                    <button type="button" class="btn-next px-6 py-3 rounded-lg btn-danger font-medium flex items-center gap-2">
+                        Weiter zu Situative Fragen
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
 
-      <!-- STANDARD FRAGEN -->
-      <div id="standardSection" class="card p-6 shadow-soft fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">📝</span>
-          Standard Fragen
-        </h2>
-        <form id="standardForm" class="space-y-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-300 mb-1 required">Name</label>
-              <input id="name" type="text" placeholder="Dein vollständiger Name" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+        <!-- Situative Questions Section -->
+        <section id="situative" class="card p-6 hidden-section">
+            <h2 class="text-2xl font-bold mb-6 text-red-400 flex items-center gap-2">
+                <i class="fas fa-brain"></i>
+                Situative Fragen
+            </h2>
+            
+            <form id="situativeForm" class="space-y-6">
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Ein Fremder spricht dich in der Stadt an und fragt, ob du jemanden aus dem Kartell kennst. Wie reagierst du?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Ein Kunde weigert sich, den vereinbarten Preis für eine Lieferung zu zahlen. Wie gehst du mit ihm um?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Ein anderer versucht, dich für seine Organisation abzuwerben. Wie antwortest du ihm?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Du musst neue Kontakte in der Stadt aufbauen, um Geschäfte für das Kartell / Kushland zu sichern. Wie würdest du vorgehen?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button type="button" class="btn-prev px-6 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 font-medium flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Zurück
+                    </button>
+                    <button type="button" class="btn-next px-6 py-3 rounded-lg btn-danger font-medium flex items-center gap-2">
+                        Weiter zu Stressfragen
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Stress Questions Section -->
+        <section id="stress" class="card p-6 hidden-section">
+            <h2 class="text-2xl font-bold mb-6 text-red-400 flex items-center gap-2">
+                <i class="fas fa-fire"></i>
+                Stressfragen
+            </h2>
+            
+            <form id="stressForm" class="space-y-6">
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Ein gegnerisches Kartell bietet dir viel Geld für Infos – deine Entscheidung?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <div class="question-card p-4 rounded-lg bg-gray-800/50">
+                    <label class="block text-lg font-medium mb-2">Du bist allein und wirst von 3 bewaffneten Leuten abgefangen – deine Handlung?</label>
+                    <textarea class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-red-500 focus:outline-none" rows="3" required></textarea>
+                </div>
+                
+                <h3 class="text-xl font-bold mt-8 mb-4 text-red-400 flex items-center gap-2">
+                    <i class="fas fa-running"></i>
+                    Sport Test
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="font-medium text-lg">Situps</span>
+                            <span class="text-sm text-gray-400">15x</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="situps" class="w-5 h-5 rounded text-red-600 focus:ring-red-500 bg-gray-700 border-gray-600">
+                            <label for="situps" class="text-lg">Bestanden</label>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="font-medium text-lg">Pushups</span>
+                            <span class="text-sm text-gray-400">15x</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" id="pushups" class="w-5 h-5 rounded text-red-600 focus:ring-red-500 bg-gray-700 border-gray-600">
+                            <label for="pushups" class="text-lg">Bestanden</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button type="button" class="btn-prev px-6 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 font-medium flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Zurück
+                    </button>
+                    <button type="button" id="submitApplication" class="px-6 py-3 rounded-lg btn-danger font-medium flex items-center gap-2 pulse-red">
+                        Bewerbung abschließen
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Result Section -->
+        <section id="result" class="card p-6 hidden-section">
+            <h2 class="text-2xl font-bold mb-6 text-red-400 flex items-center gap-2">
+                <i class="fas fa-trophy"></i>
+                Ergebnis
+            </h2>
+            
+            <div id="resultContent" class="space-y-6">
+                <div id="resultMessage" class="p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Bewertung läuft...</h3>
+                    <p class="text-gray-300">Deine Bewerbung wird jetzt ausgewertet.</p>
+                </div>
+                
+                <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
+                    <h3 class="font-medium text-lg mb-3 text-red-400">Bewerbungszusammenfassung</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Name:</span>
+                            <span id="summaryName" class="font-medium">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Alter & Herkunft:</span>
+                            <span id="summaryAlter" class="font-medium">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Sporttest:</span>
+                            <span id="summarySport" class="font-medium">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">Bewertung:</span>
+                            <span id="summaryScore" class="font-medium">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-8">
+                    <button type="button" class="btn-prev px-6 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 font-medium flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Zurück
+                    </button>
+                    <button type="button" id="newApplication" class="px-6 py-3 rounded-lg btn-danger font-medium flex items-center gap-2">
+                        Neue Bewerbung
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
             </div>
-            <div>
-              <label for="alter" class="block text-sm font-medium text-gray-300 mb-1 required">Alter & Herkunft</label>
-              <input id="alter" type="text" placeholder="Alter und Herkunft" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
-            </div>
-          </div>
-          <div>
-            <label for="hintergrund" class="block text-sm font-medium text-gray-300 mb-1 required">Familien- oder Hintergrundgeschichte</label>
-            <textarea id="hintergrund" rows="3" placeholder="Beschreibe deinen familiären Hintergrund und deine Geschichte" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label for="motivation" class="block text-sm font-medium text-gray-300 mb-1 required">Motivation</label>
-            <textarea id="motivation" rows="3" placeholder="Warum möchtest du dem Kartell beitreten?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label for="faehigkeiten" class="block text-sm font-medium text-gray-300 mb-1 required">Fähigkeiten & Talente</label>
-            <textarea id="faehigkeiten" rows="3" placeholder="Welche besonderen Fähigkeiten oder Talente bringst du mit?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label for="schwaechen" class="block text-sm font-medium text-gray-300 mb-1 required">Schwächen</label>
-            <textarea id="schwaechen" rows="2" placeholder="Was sind deine Schwächen?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label for="werte" class="block text-sm font-medium text-gray-300 mb-1 required">Werte & Loyalität</label>
-            <textarea id="werte" rows="2" placeholder="Welche Werte sind dir wichtig und wie definierst du Loyalität?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label for="ziele" class="block text-sm font-medium text-gray-300 mb-1 required">Langfristige Ziele</label>
-            <textarea id="ziele" rows="2" placeholder="Was sind deine langfristigen Ziele im Kartell?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label for="profit" class="block text-sm font-medium text-gray-300 mb-1 required">Wie soll die Familie / Kushland von dir profitieren?</label>
-            <textarea id="profit" rows="2" placeholder="Welchen Nutzen bringst du dem Kartell?" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div class="flex gap-3 pt-2">
-            <button type="button" id="nextToSituative" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              Weiter zu Situative Fragen
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- SITUATIVE FRAGEN -->
-      <div id="situativeSection" class="card p-6 shadow-soft hidden-el fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">🤔</span>
-          Situative Fragen
-        </h2>
-        <form id="situativeForm" class="space-y-5">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein Fremder spricht dich in der Stadt an und fragt, ob du jemanden aus dem Kartell kennst. Wie reagierst du?</label>
-            <textarea id="situative1" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein Kunde weigert sich, den vereinbarten Preis für eine Lieferung zu zahlen. Wie gehst du mit ihm um?</label>
-            <textarea id="situative2" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein anderer versucht, dich für seine Organisation abzuwerben. Wie antwortest du ihm?</label>
-            <textarea id="situative3" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1 required">Du musst neue Kontakte in der Stadt aufbauen, um Geschäfte für das Kartell / Kushland zu sichern. Wie würdest du vorgehen?</label>
-            <textarea id="situative4" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div class="flex gap-3 pt-2">
-            <button type="button" id="backToStandard" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-              </svg>
-              Zurück
-            </button>
-            <button type="button" id="nextToStress" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              Weiter zu Stressfragen
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- STRESSFRAGEN -->
-      <div id="stressSection" class="card p-6 shadow-soft hidden-el fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">🔥</span>
-          Stressfragen
-        </h2>
-        <form id="stressForm" class="space-y-5">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1 required">Ein gegnerisches Kartell bietet dir viel Geld für Infos – deine Entscheidung?</label>
-            <textarea id="stress1" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1 required">Du bist allein und wirst von 3 bewaffneten Leuten abgefangen – deine Handlung?</label>
-            <textarea id="stress2" rows="3" placeholder="Deine Antwort..." class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required></textarea>
-          </div>
-          
-          <h3 class="text-lg font-semibold mt-6 mb-4 text-red-400 flex items-center gap-2">
-            <span class="bg-red-900/30 p-2 rounded-lg">💪</span>
-            Sport Test
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
-              <div class="flex items-center justify-between mb-2">
-                <span class="font-medium">Situps</span>
-                <span class="text-sm text-gray-400">15x</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <input type="checkbox" id="situps" class="rounded text-red-600 focus:ring-red-500">
-                <label for="situps" class="text-sm">Bestanden</label>
-              </div>
-            </div>
-            <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
-              <div class="flex items-center justify-between mb-2">
-                <span class="font-medium">Pushups</span>
-                <span class="text-sm text-gray-400">15x</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <input type="checkbox" id="pushups" class="rounded text-red-600 focus:ring-red-500">
-                <label for="pushups" class="text-sm">Bestanden</label>
-              </div>
-            </div>
-          </div>
-          
-          <div class="flex gap-3 pt-2">
-            <button type="button" id="backToSituative" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-              </svg>
-              Zurück
-            </button>
-            <button type="button" id="submitApplication" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              Bewerbung abschließen
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- ERGEBNIS -->
-      <div id="resultSection" class="card p-6 shadow-soft hidden-el fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-          <span class="bg-red-900/30 p-2 rounded-lg">🎯</span>
-          Ergebnis
-        </h2>
-        <div id="resultContent" class="space-y-4">
-          <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-            <div id="resultMessage" class="text-lg font-bold mb-2"></div>
-            <div id="resultDetails" class="text-sm text-gray-300"></div>
-          </div>
-          
-          <div class="p-4 rounded-lg bg-gray-800/50 border border-gray-700">
-            <h3 class="font-medium mb-2 text-red-400">Bewerbungszusammenfassung</h3>
-            <div class="space-y-2 text-sm">
-              <div class="flex justify-between">
-                <span class="text-gray-400">Name:</span>
-                <span id="summaryName" class="font-medium"></span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-400">Alter & Herkunft:</span>
-                <span id="summaryAlter" class="font-medium"></span>
-              </div>
-              <div class="flex justify-between">
-                <span class="text-gray-400">Sporttest:</span>
-                <span id="summarySport" class="font-medium"></span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="flex gap-3 pt-2">
-            <button type="button" id="backToStress" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-              </svg>
-              Zurück
-            </button>
-            <button type="button" id="newApplication" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              Neue Bewerbung
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
+        </section>
     </div>
-  </div>
 
-  <script>
-    // Utility
-    function show(el) { 
-      el.classList.remove('hidden-el'); 
-      el.classList.add('fade-in');
-    }
-    function hide(el) { 
-      el.classList.add('hidden-el'); 
-      el.classList.remove('fade-in');
-    }
+    <!-- Audio Elements for Effects -->
+    <audio id="gunshotSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-gun-shot-reverb-1005.mp3" type="audio/mpeg">
+    </audio>
     
-    // Tab Navigation
-    document.getElementById('btnStandard').addEventListener('click', () => {
-      show(document.getElementById('standardSection')); 
-      hide(document.getElementById('situativeSection')); 
-      hide(document.getElementById('stressSection'));
-      hide(document.getElementById('resultSection'));
-      updateButtonStates('standard');
-    });
-    
-    document.getElementById('btnSituative').addEventListener('click', () => {
-      hide(document.getElementById('standardSection')); 
-      show(document.getElementById('situativeSection')); 
-      hide(document.getElementById('stressSection'));
-      hide(document.getElementById('resultSection'));
-      updateButtonStates('situative');
-    });
-    
-    document.getElementById('btnStress').addEventListener('click', () => {
-      hide(document.getElementById('standardSection')); 
-      hide(document.getElementById('situativeSection')); 
-      show(document.getElementById('stressSection'));
-      hide(document.getElementById('resultSection'));
-      updateButtonStates('stress');
-    });
-    
-    function updateButtonStates(activeButton) {
-      const buttons = {
-        standard: document.getElementById('btnStandard'),
-        situative: document.getElementById('btnSituative'),
-        stress: document.getElementById('btnStress')
-      };
-      
-      Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-red-600');
-        btn.classList.add('bg-gray-700');
-      });
-      
-      if (buttons[activeButton]) {
-        buttons[activeButton].classList.remove('bg-gray-700');
-        buttons[activeButton].classList.add('bg-red-600', 'pulse-glow');
-      }
-    }
+    <audio id="bloodSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-blood-splash-1250.mp3" type="audio/mpeg">
+    </audio>
 
-    // Hamburger Menu
-    document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.getElementById('hamburgerMenu').classList.toggle('hidden');
-    });
-
-    // Close hamburger menu when clicking outside
-    document.addEventListener('click', (e) => {
-      const hamburgerMenu = document.getElementById('hamburgerMenu');
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      
-      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-        hamburgerMenu.classList.add('hidden');
-      }
-    });
-
-    // Form Navigation
-    document.getElementById('nextToSituative').addEventListener('click', () => {
-      if (validateStandardForm()) {
-        hide(document.getElementById('standardSection')); 
-        show(document.getElementById('situativeSection')); 
-        updateButtonStates('situative');
-      }
-    });
-    
-    document.getElementById('backToStandard').addEventListener('click', () => {
-      hide(document.getElementById('situativeSection')); 
-      show(document.getElementById('standardSection')); 
-      updateButtonStates('standard');
-    });
-    
-    document.getElementById('nextToStress').addEventListener('click', () => {
-      if (validateSituativeForm()) {
-        hide(document.getElementById('situativeSection')); 
-        show(document.getElementById('stressSection')); 
-        updateButtonStates('stress');
-      }
-    });
-    
-    document.getElementById('backToSituative').addEventListener('click', () => {
-      hide(document.getElementById('stressSection')); 
-      show(document.getElementById('situativeSection')); 
-      updateButtonStates('situative');
-    });
-    
-    document.getElementById('backToStress').addEventListener('click', () => {
-      hide(document.getElementById('resultSection')); 
-      show(document.getElementById('stressSection')); 
-      updateButtonStates('stress');
-    });
-    
-    document.getElementById('newApplication').addEventListener('click', () => {
-      // Reset all forms
-      document.getElementById('standardForm').reset();
-      document.getElementById('situativeForm').reset();
-      document.getElementById('stressForm').reset();
-      
-      // Go back to standard section
-      hide(document.getElementById('resultSection')); 
-      show(document.getElementById('standardSection')); 
-      updateButtonStates('standard');
-    });
-    
-    // Form Validation
-    function validateStandardForm() {
-      const requiredFields = document.querySelectorAll('#standardForm [required]');
-      let valid = true;
-      
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          field.classList.add('border-red-500');
-          valid = false;
-        } else {
-          field.classList.remove('border-red-500');
-        }
-      });
-      
-      if (!valid) {
-        alert('Bitte füllen Sie alle Pflichtfelder aus.');
-      }
-      
-      return valid;
-    }
-    
-    function validateSituativeForm() {
-      const requiredFields = document.querySelectorAll('#situativeForm [required]');
-      let valid = true;
-      
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          field.classList.add('border-red-500');
-          valid = false;
-        } else {
-          field.classList.remove('border-red-500');
-        }
-      });
-      
-      if (!valid) {
-        alert('Bitte beantworten Sie alle situativen Fragen.');
-      }
-      
-      return valid;
-    }
-    
-    function validateStressForm() {
-      const requiredFields = document.querySelectorAll('#stressForm [required]');
-      let valid = true;
-      
-      requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-          field.classList.add('border-red-500');
-          valid = false;
-        } else {
-          field.classList.remove('border-red-500');
-        }
-      });
-      
-      // Check if sport test is completed
-      const situps = document.getElementById('situps').checked;
-      const pushups = document.getElementById('pushups').checked;
-      
-      if (!situps || !pushups) {
-        alert('Bitte bestätigen Sie, dass Sie den Sporttest bestanden haben.');
-        valid = false;
-      }
-      
-      return valid;
-    }
-    
-    // Application Submission
-    document.getElementById('submitApplication').addEventListener('click', () => {
-      if (validateStressForm()) {
-        // Calculate result
-        const situps = document.getElementById('situps').checked;
-        const pushups = document.getElementById('pushups').checked;
-        const sportPassed = situps && pushups;
-        
-        // For demonstration, we'll randomly decide if the application is accepted
-        // In a real scenario, this would be based on the answers
-        const accepted = Math.random() > 0.5;
-        
-        // Show result
-        hide(document.getElementById('stressSection')); 
-        show(document.getElementById('resultSection'));
-        
-        // Update result content
+    <script>
+        // DOM Elements
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('section');
+        const progressFill = document.getElementById('progressFill');
+        const nextBtns = document.querySelectorAll('.btn-next');
+        const prevBtns = document.querySelectorAll('.btn-prev');
+        const submitBtn = document.getElementById('submitApplication');
+        const newAppBtn = document.getElementById('newApplication');
         const resultMessage = document.getElementById('resultMessage');
-        const resultDetails = document.getElementById('resultDetails');
+        const header = document.querySelector('header');
+        const gunshotSound = document.getElementById('gunshotSound');
+        const bloodSound = document.getElementById('bloodSound');
         
-        if (accepted && sportPassed) {
-          resultMessage.textContent = 'BESTANDEN';
-          resultMessage.className = 'text-lg font-bold mb-2 text-green-400';
-          resultDetails.textContent = 'Herzlichen Glückwunsch! Du hast die Bewerbung bestanden. Du wirst in Kürze kontaktiert.';
-          
-          // Show the "consequence" for passing
-          setTimeout(() => {
-            alert('Da du bestanden hast: Du wirst einmal in die Schulter geschossen (simuliert).');
-          }, 1000);
-        } else {
-          resultMessage.textContent = 'NICHT BESTANDEN';
-          resultMessage.className = 'text-lg font-bold mb-2 text-red-400';
-          resultDetails.textContent = 'Leider hast du die Bewerbung nicht bestanden. Deine Antworten erfüllen nicht unsere Anforderungen.';
-          
-          // Show the "consequence" for failing
-          setTimeout(() => {
-            alert('Da du nicht bestanden hast: Du bekommst Bloodout (simuliert).');
-          }, 1000);
+        // Application State
+        let applicationState = {
+            currentSection: 'standard',
+            progress: 25,
+            passed: false
+        };
+        
+        // Tab Navigation
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.getAttribute('data-tab');
+                switchSection(targetTab);
+            });
+        });
+        
+        // Next Button Handlers
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentSection = applicationState.currentSection;
+                let nextSection;
+                
+                if (currentSection === 'standard') {
+                    nextSection = 'situative';
+                    applicationState.progress = 50;
+                } else if (currentSection === 'situative') {
+                    nextSection = 'stress';
+                    applicationState.progress = 75;
+                } else if (currentSection === 'stress') {
+                    nextSection = 'result';
+                    applicationState.progress = 100;
+                }
+                
+                switchSection(nextSection);
+                updateProgress();
+            });
+        });
+        
+        // Previous Button Handlers
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentSection = applicationState.currentSection;
+                let prevSection;
+                
+                if (currentSection === 'situative') {
+                    prevSection = 'standard';
+                    applicationState.progress = 25;
+                } else if (currentSection === 'stress') {
+                    prevSection = 'situative';
+                    applicationState.progress = 50;
+                } else if (currentSection === 'result') {
+                    prevSection = 'stress';
+                    applicationState.progress = 75;
+                }
+                
+                switchSection(prevSection);
+                updateProgress();
+            });
+        });
+        
+        // Submit Application
+        submitBtn.addEventListener('click', () => {
+            // Validate forms
+            if (!validateForms()) {
+                alert('Bitte füllen Sie alle erforderlichen Felder aus und bestätigen Sie den Sporttest.');
+                return;
+            }
+            
+            // Calculate result (random for demonstration)
+            const situps = document.getElementById('situps').checked;
+            const pushups = document.getElementById('pushups').checked;
+            const sportPassed = situps && pushups;
+            
+            // For demonstration, we'll randomly decide if the application is accepted
+            // In a real scenario, this would be based on the answers
+            const randomScore = Math.floor(Math.random() * 100) + 1;
+            applicationState.passed = randomScore > 40 && sportPassed;
+            
+            // Update summary
+            document.getElementById('summaryName').textContent = document.querySelector('#standardForm input[type="text"]').value || '-';
+            document.getElementById('summaryAlter').textContent = document.querySelectorAll('#standardForm input[type="text"]')[1].value || '-';
+            document.getElementById('summarySport').textContent = sportPassed ? 'Bestanden' : 'Nicht bestanden';
+            document.getElementById('summaryScore').textContent = `${randomScore}%`;
+            
+            // Show result with delay for dramatic effect
+            setTimeout(() => {
+                showResult();
+            }, 1500);
+            
+            // Switch to result section
+            switchSection('result');
+            applicationState.progress = 100;
+            updateProgress();
+        });
+        
+        // New Application
+        newAppBtn.addEventListener('click', () => {
+            // Reset forms
+            document.querySelectorAll('form').forEach(form => form.reset());
+            
+            // Reset application state
+            applicationState = {
+                currentSection: 'standard',
+                progress: 25,
+                passed: false
+            };
+            
+            // Switch to standard section
+            switchSection('standard');
+            updateProgress();
+            
+            // Reset result message
+            resultMessage.innerHTML = `
+                <div class="text-4xl mb-4">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">Bewertung läuft...</h3>
+                <p class="text-gray-300">Deine Bewerbung wird jetzt ausgewertet.</p>
+            `;
+            resultMessage.className = 'p-6 rounded-lg text-center';
+        });
+        
+        // Switch Section Function
+        function switchSection(sectionId) {
+            // Update tabs
+            tabBtns.forEach(btn => {
+                if (btn.getAttribute('data-tab') === sectionId) {
+                    btn.classList.remove('bg-gray-800', 'hover:bg-gray-700');
+                    btn.classList.add('tab-active');
+                } else {
+                    btn.classList.remove('tab-active');
+                    btn.classList.add('bg-gray-800', 'hover:bg-gray-700');
+                }
+            });
+            
+            // Update sections
+            sections.forEach(section => {
+                if (section.id === sectionId) {
+                    section.classList.remove('hidden-section');
+                    section.classList.add('active-section');
+                } else {
+                    section.classList.remove('active-section');
+                    section.classList.add('hidden-section');
+                }
+            });
+            
+            // Update application state
+            applicationState.currentSection = sectionId;
         }
         
-        // Update summary
-        document.getElementById('summaryName').textContent = document.getElementById('name').value;
-        document.getElementById('summaryAlter').textContent = document.getElementById('alter').value;
-        document.getElementById('summarySport').textContent = sportPassed ? 'Bestanden' : 'Nicht bestanden';
-      }
-    });
-
-    // Initialize with Standard active
-    updateButtonStates('standard');
-  </script>
+        // Update Progress Bar
+        function updateProgress() {
+            progressFill.style.width = `${applicationState.progress}%`;
+        }
+        
+        // Validate Forms
+        function validateForms() {
+            // Check if all required fields are filled
+            const requiredInputs = document.querySelectorAll('input[required], textarea[required]');
+            let allFilled = true;
+            
+            requiredInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.classList.add('border-red-500');
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+            
+            // Check sport test
+            const situps = document.getElementById('situps').checked;
+            const pushups = document.getElementById('pushups').checked;
+            const sportPassed = situps && pushups;
+            
+            return allFilled && sportPassed;
+        }
+        
+        // Show Result
+        function showResult() {
+            if (applicationState.passed) {
+                resultMessage.innerHTML = `
+                    <div class="text-4xl mb-4 text-green-400">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-green-400">BESTANDEN</h3>
+                    <p class="text-gray-300 mb-4">Herzlichen Glückwunsch! Du hast die Bewerbung bestanden.</p>
+                    <p class="text-sm text-gray-400">Du wirst in Kürze kontaktiert.</p>
+                `;
+                resultMessage.classList.add('result-passed');
+                
+                // Show gunshot effect after a delay
+                setTimeout(() => {
+                    showGunshotEffect();
+                }, 1000);
+            } else {
+                resultMessage.innerHTML = `
+                    <div class="text-4xl mb-4 text-red-400">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2 text-red-400">NICHT BESTANDEN</h3>
+                    <p class="text-gray-300 mb-4">Leider hast du die Bewerbung nicht bestanden.</p>
+                    <p class="text-sm text-gray-400">Deine Antworten erfüllen nicht unsere Anforderungen.</p>
+                `;
+                resultMessage.classList.add('result-failed');
+                
+                // Show blood effect after a delay
+                setTimeout(() => {
+                    showBloodEffect();
+                }, 1000);
+            }
+        }
+        
+        // Show Gunshot Effect (for passed application)
+        function showGunshotEffect() {
+            // Create bullet hole
+            const bulletHole = document.createElement('div');
+            bulletHole.className = 'bullet-hole';
+            
+            // Random position on header (simulating shoulder shot)
+            const headerRect = header.getBoundingClientRect();
+            const x = 30 + Math.random() * 20; // Left side of header
+            const y = 50 + Math.random() * 30; // Shoulder area
+            
+            bulletHole.style.left = `${x}%`;
+            bulletHole.style.top = `${y}%`;
+            
+            header.appendChild(bulletHole);
+            
+            // Play gunshot sound
+            gunshotSound.currentTime = 0;
+            gunshotSound.play().catch(e => console.log("Audio play failed:", e));
+            
+            // Show bullet hole
+            setTimeout(() => {
+                bulletHole.classList.add('active');
+            }, 100);
+            
+            // Show message
+            setTimeout(() => {
+                alert('Da du bestanden hast: Du wirst einmal in die Schulter geschossen (simuliert).');
+            }, 800);
+        }
+        
+        // Show Blood Effect (for failed application)
+        function showBloodEffect() {
+            // Add blood effect to header
+            header.classList.add('active');
+            
+            // Play blood sound
+            bloodSound.currentTime = 0;
+            bloodSound.play().catch(e => console.log("Audio play failed:", e));
+            
+            // Show message
+            setTimeout(() => {
+                alert('Da du nicht bestanden hast: Du bekommst Bloodout (simuliert).');
+            }, 1000);
+            
+            // Remove blood effect after animation
+            setTimeout(() => {
+                header.classList.remove('active');
+            }, 2500);
+        }
+        
+        // Initialize
+        updateProgress();
+    </script>
 </body>
 </html>

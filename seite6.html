@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartell Bewerbung</title>
+    <title>Kartell Bewerbung - Admin System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -144,10 +144,37 @@
             background: linear-gradient(135deg, rgba(185, 28, 28, 0.3) 0%, rgba(220, 38, 38, 0.1) 100%);
             border-color: rgba(239, 68, 68, 0.5);
         }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-table th, .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .admin-table th {
+            background-color: rgba(220, 38, 38, 0.2);
+            font-weight: 600;
+        }
+        
+        .admin-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .pin-input {
+            letter-spacing: 5px;
+            font-family: monospace;
+            font-size: 1.5rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="min-h-screen py-8 px-4">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <header class="card p-6 mb-8 text-center relative blood-effect">
             <div class="flex items-center justify-center gap-4 mb-4">
@@ -193,6 +220,9 @@
             </button>
             <button class="tab-btn px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700" data-tab="result">
                 <i class="fas fa-trophy mr-2"></i>Ergebnis
+            </button>
+            <button class="tab-btn px-4 py-2 rounded-lg bg-blue-800 hover:bg-blue-700" data-tab="admin">
+                <i class="fas fa-lock mr-2"></i>Admin Bereich
             </button>
         </div>
 
@@ -408,6 +438,76 @@
                 </div>
             </div>
         </section>
+
+        <!-- Admin Section -->
+        <section id="admin" class="card p-6 hidden-section">
+            <h2 class="text-2xl font-bold mb-6 text-blue-400 flex items-center gap-2">
+                <i class="fas fa-lock"></i>
+                Admin Bereich
+            </h2>
+            
+            <div id="adminLogin" class="space-y-6">
+                <div class="text-center mb-6">
+                    <p class="text-gray-300">Bitte geben Sie den Admin-PIN ein, um auf den geschützten Bereich zuzugreifen.</p>
+                </div>
+                
+                <div class="max-w-xs mx-auto">
+                    <label class="block text-lg font-medium mb-2 text-center">Admin PIN</label>
+                    <input type="password" id="adminPin" maxlength="4" class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-blue-500 focus:outline-none pin-input" placeholder="****">
+                    <p class="text-sm text-gray-400 mt-2 text-center">PIN: 1101</p>
+                </div>
+                
+                <div class="text-center">
+                    <button id="adminLoginBtn" class="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 font-medium">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Einloggen
+                    </button>
+                </div>
+                
+                <div id="adminError" class="text-center text-red-400 hidden mt-4">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>Falscher PIN! Bitte versuchen Sie es erneut.
+                </div>
+            </div>
+            
+            <div id="adminContent" class="hidden space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-blue-400">Bewerbungsübersicht</h3>
+                        <p class="text-gray-300">Gespeicherte Bewerbungen: <span id="applicationCount">0</span></p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="exportData" class="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 font-medium flex items-center gap-2">
+                            <i class="fas fa-download mr-1"></i> Exportieren
+                        </button>
+                        <button id="adminLogout" class="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 font-medium flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Alter & Herkunft</th>
+                                <th>Sporttest</th>
+                                <th>Bewertung</th>
+                                <th>Datum</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody">
+                            <!-- Applications will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="noApplications" class="text-center py-8 text-gray-400">
+                    <i class="fas fa-inbox text-4xl mb-4"></i>
+                    <p>Keine Bewerbungen vorhanden.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- Audio Elements for Effects -->
@@ -433,17 +533,41 @@
         const gunshotSound = document.getElementById('gunshotSound');
         const bloodSound = document.getElementById('bloodSound');
         
+        // Admin Elements
+        const adminPinInput = document.getElementById('adminPin');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminError = document.getElementById('adminError');
+        const adminLogin = document.getElementById('adminLogin');
+        const adminContent = document.getElementById('adminContent');
+        const adminTableBody = document.getElementById('adminTableBody');
+        const applicationCount = document.getElementById('applicationCount');
+        const noApplications = document.getElementById('noApplications');
+        const exportDataBtn = document.getElementById('exportData');
+        const adminLogoutBtn = document.getElementById('adminLogout');
+        
         // Application State
+        const ADMIN_PIN = "1101";
         let applicationState = {
             currentSection: 'standard',
             progress: 25,
-            passed: false
+            passed: false,
+            isAdmin: false
         };
+        
+        // Load applications from localStorage
+        let applications = JSON.parse(localStorage.getItem('kartellApplications')) || [];
         
         // Tab Navigation
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetTab = btn.getAttribute('data-tab');
+                
+                // Special handling for admin tab
+                if (targetTab === 'admin' && !applicationState.isAdmin) {
+                    adminLogin.classList.remove('hidden');
+                    adminContent.classList.add('hidden');
+                }
+                
                 switchSection(targetTab);
             });
         });
@@ -510,9 +634,29 @@
             const randomScore = Math.floor(Math.random() * 100) + 1;
             applicationState.passed = randomScore > 40 && sportPassed;
             
+            // Get form data
+            const name = document.querySelector('#standardForm input[type="text"]').value;
+            const alter = document.querySelectorAll('#standardForm input[type="text"]')[1].value;
+            
+            // Create application object
+            const application = {
+                id: Date.now(),
+                name: name,
+                alter: alter,
+                sportTest: sportPassed ? 'Bestanden' : 'Nicht bestanden',
+                score: randomScore,
+                passed: applicationState.passed,
+                date: new Date().toLocaleString('de-DE'),
+                // In a real application, you would save all form data here
+            };
+            
+            // Save application
+            applications.push(application);
+            localStorage.setItem('kartellApplications', JSON.stringify(applications));
+            
             // Update summary
-            document.getElementById('summaryName').textContent = document.querySelector('#standardForm input[type="text"]').value || '-';
-            document.getElementById('summaryAlter').textContent = document.querySelectorAll('#standardForm input[type="text"]')[1].value || '-';
+            document.getElementById('summaryName').textContent = name || '-';
+            document.getElementById('summaryAlter').textContent = alter || '-';
             document.getElementById('summarySport').textContent = sportPassed ? 'Bestanden' : 'Nicht bestanden';
             document.getElementById('summaryScore').textContent = `${randomScore}%`;
             
@@ -536,7 +680,8 @@
             applicationState = {
                 currentSection: 'standard',
                 progress: 25,
-                passed: false
+                passed: false,
+                isAdmin: applicationState.isAdmin
             };
             
             // Switch to standard section
@@ -554,16 +699,88 @@
             resultMessage.className = 'p-6 rounded-lg text-center';
         });
         
+        // Admin Login
+        adminLoginBtn.addEventListener('click', () => {
+            if (adminPinInput.value === ADMIN_PIN) {
+                applicationState.isAdmin = true;
+                adminLogin.classList.add('hidden');
+                adminContent.classList.remove('hidden');
+                adminError.classList.add('hidden');
+                loadAdminData();
+            } else {
+                adminError.classList.remove('hidden');
+                adminPinInput.value = '';
+                adminPinInput.focus();
+            }
+        });
+        
+        // Allow Enter key for admin login
+        adminPinInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                adminLoginBtn.click();
+            }
+        });
+        
+        // Admin Logout
+        adminLogoutBtn.addEventListener('click', () => {
+            applicationState.isAdmin = false;
+            adminContent.classList.add('hidden');
+            adminLogin.classList.remove('hidden');
+            adminPinInput.value = '';
+        });
+        
+        // Export Data
+        exportDataBtn.addEventListener('click', () => {
+            if (applications.length === 0) {
+                alert('Keine Daten zum Exportieren vorhanden.');
+                return;
+            }
+            
+            // Convert to CSV
+            const headers = ['ID', 'Name', 'Alter & Herkunft', 'Sporttest', 'Bewertung', 'Bestanden', 'Datum'];
+            const csvData = applications.map(app => [
+                app.id,
+                `"${app.name}"`,
+                `"${app.alter}"`,
+                app.sportTest,
+                `${app.score}%`,
+                app.passed ? 'Ja' : 'Nein',
+                `"${app.date}"`
+            ]);
+            
+            const csvContent = [headers, ...csvData].map(row => row.join(',')).join('\n');
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `kartell_bewerbungen_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+        
         // Switch Section Function
         function switchSection(sectionId) {
             // Update tabs
             tabBtns.forEach(btn => {
                 if (btn.getAttribute('data-tab') === sectionId) {
-                    btn.classList.remove('bg-gray-800', 'hover:bg-gray-700');
-                    btn.classList.add('tab-active');
+                    btn.classList.remove('bg-gray-800', 'hover:bg-gray-700', 'bg-blue-800', 'hover:bg-blue-700');
+                    
+                    if (sectionId === 'admin') {
+                        btn.classList.add('tab-active');
+                    } else {
+                        btn.classList.add('tab-active');
+                    }
                 } else {
                     btn.classList.remove('tab-active');
-                    btn.classList.add('bg-gray-800', 'hover:bg-gray-700');
+                    
+                    if (btn.getAttribute('data-tab') === 'admin') {
+                        btn.classList.add('bg-blue-800', 'hover:bg-blue-700');
+                    } else {
+                        btn.classList.add('bg-gray-800', 'hover:bg-gray-700');
+                    }
                 }
             });
             
@@ -642,6 +859,55 @@
                 setTimeout(() => {
                     showBloodEffect();
                 }, 1000);
+            }
+        }
+        
+        // Load Admin Data
+        function loadAdminData() {
+            applicationCount.textContent = applications.length;
+            
+            if (applications.length === 0) {
+                adminTableBody.innerHTML = '';
+                noApplications.classList.remove('hidden');
+                return;
+            }
+            
+            noApplications.classList.add('hidden');
+            
+            // Sort applications by date (newest first)
+            const sortedApplications = [...applications].sort((a, b) => b.id - a.id);
+            
+            // Populate table
+            adminTableBody.innerHTML = sortedApplications.map(app => `
+                <tr>
+                    <td>${app.name}</td>
+                    <td>${app.alter}</td>
+                    <td>${app.sportTest}</td>
+                    <td>${app.score}%</td>
+                    <td>${app.date}</td>
+                    <td>
+                        <button class="delete-btn px-3 py-1 rounded bg-red-600 hover:bg-red-500 text-sm" data-id="${app.id}">
+                            <i class="fas fa-trash mr-1"></i> Löschen
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.closest('.delete-btn').getAttribute('data-id'));
+                    deleteApplication(id);
+                });
+            });
+        }
+        
+        // Delete Application
+        function deleteApplication(id) {
+            if (confirm('Möchten Sie diese Bewerbung wirklich löschen?')) {
+                applications = applications.filter(app => app.id !== id);
+                localStorage.setItem('kartellApplications', JSON.stringify(applications));
+                loadAdminData();
             }
         }
         

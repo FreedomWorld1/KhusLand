@@ -148,13 +148,13 @@
             <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             <span class="block h-0.5 bg-gray-100 rounded-full"></span>
           </button>
-                    <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+          <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
             <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Weed</a>
             <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
             <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Scarface Weed</a>
             <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Herstellung</a>
             <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Routen</a>
-            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</
+            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
           </div>
         </div>
       </div>
@@ -320,7 +320,7 @@
     const categoriesRef = ref(db, 'werkbank_manager/categories');
 
     // Globale Variablen
-    let categories = [];
+    let categories = ["Grundlegend", "Metall", "Alchemie", "Rüstung", "Waffen", "Magie", "Kochen"];
     let workbenches = [];
     let tempCategories = [];
 
@@ -446,6 +446,21 @@
       }
     }
 
+    // Event Listener für Kategorie Buttons
+    function setupCategoryFilters() {
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('category-btn')) {
+          // Active state setzen
+          document.querySelectorAll('#categoriesContainer .category-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          
+          // Werkbänke filtern
+          const category = e.target.getAttribute('data-category');
+          filterWorkbenches(category);
+        }
+      });
+    }
+
     // Kategorien Filter rendern
     function renderCategories() {
       const categoriesContainer = document.getElementById('categoriesContainer');
@@ -461,18 +476,8 @@
         categoriesContainer.appendChild(btn);
       });
       
-      // Event Listener für Kategorie Buttons
-      document.querySelectorAll('#categoriesContainer .category-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          // Active state setzen
-          document.querySelectorAll('#categoriesContainer .category-btn').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          
-          // Werkbänke filtern
-          const category = this.getAttribute('data-category');
-          filterWorkbenches(category);
-        });
-      });
+      // Setup Event Listener
+      setupCategoryFilters();
     }
 
     // Kategorien in Dropdown laden
@@ -497,7 +502,12 @@
         : workbenches.filter(w => w.category === category);
       
       if (filteredWorkbenches.length === 0) {
-        workbenchesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Werkbänke in dieser Kategorie.</p></div>';
+        workbenchesGrid.innerHTML = `
+          <div class="col-span-full text-center py-8 text-gray-400">
+            <p>Keine Werkbänke in dieser Kategorie.</p>
+            <p class="text-sm mt-2">Fügen Sie Werkbänke in dieser Kategorie im Admin-Bereich hinzu.</p>
+          </div>
+        `;
         return;
       }
       
@@ -794,6 +804,7 @@
       renderCategories();
       renderWorkbenches();
       updateButtonStates('workbenches');
+      setupCategoryFilters();
       
       // Sicherstellen, dass alle Modals versteckt sind
       hide(workbenchModal);

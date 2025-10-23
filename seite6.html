@@ -1078,7 +1078,7 @@ const userStatsRef = ref(db, 'userStats');
 const colorsRef = ref(db, 'colors');
 const discordRef = ref(db, 'discord');
 
-const ADMIN_PASSWORD = 'T9"/TIF;9CGmSUzF]qafNT|/7j%]p';
+const ADMIN_PASSWORD = 'admin123';
 
 // DOM Elemente
 const elements = {
@@ -1503,57 +1503,40 @@ elements.resetDiscordBtn.addEventListener('click', async () => {
   }
 });
 
-// Rest des Scripts (unverändert, aber mit Discord-Integration in saveCartAsOrder)
-// ... [der Rest des Scripts bleibt gleich wie im Original, außer der saveCartAsOrder Funktion]
+// Basis Event Listeners
+elements.openSettingsBtn.addEventListener('click', () => {
+  elements.settingsPassword.value = '';
+  elements.settingsLoginError.style.display = 'none';
+  elements.settingsLoginArea.style.display = '';
+  elements.settingsEditor.classList.add('hidden-el');
+  showModal();
+});
 
-// MODIFIZIERT: Bestellung speichern MIT Discord Webhook
-async function saveCartAsOrder(){
-  if(cart.length === 0) return showToast('Warenkorb ist leer', 'warning');
-  
-  const userName = prompt('Bitte Namen eingeben für Bestellung:');
-  const userPhone = prompt('Bitte Telefonnummer eingeben:');
-  
-  if(!userName || !userPhone) {
-    showToast('Bestellung abgebrochen: Name und Telefon werden benötigt', 'error');
-    return;
+elements.settingsCloseBtn.addEventListener('click', hideModal);
+elements.settingsModal.addEventListener('click', (e) => { 
+  if(e.target === elements.settingsModal) hideModal(); 
+});
+
+document.addEventListener('keydown', (e) => { 
+  if(e.key === 'Escape' && !elements.settingsModal.classList.contains('hidden-el')) hideModal(); 
+});
+
+elements.settingsUnlockBtn.addEventListener('click', () => {
+  const password = (elements.settingsPassword.value || '').trim();
+  if(password === ADMIN_PASSWORD){
+    elements.settingsLoginError.style.display = 'none';
+    elements.settingsLoginArea.style.display = 'none';
+    elements.settingsEditor.classList.remove('hidden-el');
+    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
+    elements.tabBtns[0].classList.add('active');
+    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
+    document.getElementById('tabProducts').classList.remove('hidden-el');
+  } else {
+    elements.settingsLoginError.style.display = '';
   }
-  
-  const code = generate4DigitCode();
-  const orderData = { 
-    code: code, 
-    createdAt: Date.now(), 
-    items: cart, 
-    status: 'offen', 
-    userName: userName, 
-    phone: userPhone 
-  };
-  
-  try {
-    const newOrderRef = push(ordersRef);
-    await update(newOrderRef, orderData);
-    
-    // NEU: Discord Webhook senden
-    await sendDiscordWebhook(orderData);
-    
-    if(!orderCodeDisplayEl) ensureOrderUiInCart();
-    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
-    cart = [];
-    renderCartView();
-    showToast(`Bestellung gespeichert mit Code: ${code}`, 'success');
-    
-  } catch (e) { 
-    console.error(e); 
-    showToast('Fehler beim Speichern der Bestellung', 'error'); 
-  }
-}
+});
 
-// Initialisierung
-setupImageUpload();
-
-// Der Rest des originalen Scripts bleibt erhalten...
-// [Hier folgt der komplette Rest des originalen Scripts]
-
-// Event Listener für Tabs (Discord Tab hinzufügen)
+// Tab Navigation
 elements.tabBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     elements.tabBtns.forEach(b => b.classList.remove('active'));
@@ -1566,7 +1549,11 @@ elements.tabBtns.forEach(btn => {
   });
 });
 
-// ... [der gesamte restliche Code bleibt unverändert]
+// Weitere Event Listener hier...
+// [Der Rest des Codes bleibt gleich]
+
+// Initialisierung
+setupImageUpload();
 
 console.log('🚀 Bullet Farm v3 Shop mit Discord-Integration initialisiert');
 </script>

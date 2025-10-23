@@ -1603,11 +1603,223 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+// EINSTELLUNGEN FUNKTIONEN - JETZT VOLL FUNKTIONSFÄHIG
+
+// Produkt Management
+document.getElementById('btnNewProduct').addEventListener('click', () => {
+  document.getElementById('productFormCard').classList.remove('hidden-el');
+  document.getElementById('productForm').reset();
+  document.getElementById('prodId').value = '';
+  document.getElementById('prodPreview').src = 'https://via.placeholder.com/150x100';
+});
+
+document.getElementById('cancelProductBtn').addEventListener('click', () => {
+  document.getElementById('productFormCard').classList.add('hidden-el');
+});
+
+document.getElementById('addResourceBtn').addEventListener('click', () => {
+  const tbody = document.querySelector('#resourceTable tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td><input class="input mobile-optimized-text" placeholder="Ressourcenname" /></td>
+    <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" placeholder="0" /></td>
+    <td><input type="color" class="color-input" value="#facc15" /></td>
+    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:var(--error-color)">❌ Löschen</button></td>
+  `;
+  row.querySelector('button').addEventListener('click', () => row.remove());
+  tbody.appendChild(row);
+});
+
+document.getElementById('productForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const rows = Array.from(document.querySelectorAll('#resourceTable tbody tr'));
+  const resources = rows.map(row => {
+    const name = row.children[0].querySelector('input').value.trim();
+    const quantity = row.children[1].querySelector('input').value.trim();
+    const color = row.children[2].querySelector('input').value;
+    return name && quantity ? `${name}:${quantity}:${color}` : '';
+  }).filter(Boolean).join(';');
+
+  const payload = {
+    name: document.getElementById('prodName').value.trim(),
+    image: document.getElementById('prodImg').value.trim(),
+    description: document.getElementById('prodDesc').value.trim(),
+    category: document.getElementById('prodCategorySelect').value.trim(),
+    resources: resources,
+    colorName: document.getElementById('colorNameInput').value,
+    colorQuantity: document.getElementById('colorQuantityInput').value,
+    updatedAt: Date.now()
+  };
+
+  try{
+    if(document.getElementById('prodId').value){
+      await update(ref(db, 'products/' + document.getElementById('prodId').value), payload);
+      showToast('Produkt aktualisiert', 'success');
+    } else {
+      await push(productsRef, payload);
+      showToast('Produkt angelegt', 'success');
+    }
+    document.getElementById('productFormCard').classList.add('hidden-el');
+  } catch(error){ 
+    console.error(error); 
+    showToast('Fehler beim Speichern des Produkts', 'error'); 
+  }
+});
+
+// Kategorien Management
+onValue(categoriesRef, snapshot => {
+  categories = [];
+  snapshot.forEach(child => {
+    const data = child.val(); 
+    data.key = child.key; 
+    categories.push(data);
+  });
+  renderCategoriesList();
+});
+
+function renderCategoriesList(){
+  const categoriesList = document.getElementById('categoriesList');
+  categoriesList.innerHTML = '';
+  
+  if(categories.length === 0){ 
+    categoriesList.innerHTML = '<div class="kv mobile-optimized-text">Keine Kategorien vorhanden.</div>'; 
+    return; 
+  }
+  
+  categories.forEach(category => {
+    const div = document.createElement('div');
+    div.className = 'category-item fade-in';
+    div.innerHTML = `
+      <div class="mobile-optimized-text">${escapeHtml(category.name)}</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn small-btn edit-category" data-key="${category.key}">✏️</button>
+        <button class="btn small-btn delete-category" data-key="${category.key}" style="background:var(--error-color)">🗑️ Löschen</button>
+      </div>`;
+    categoriesList.appendChild(div);
+    
+    div.querySelector('.delete-category').addEventListener('click', async () => {
+      if(!confirm('Kategorie wirklich löschen?')) return;
+      try{ 
+        await remove(ref(db, 'categories/' + category.key)); 
+        showToast('Kategorie gelöscht', 'success');
+      } 
+      catch(e){ console.error(e); showToast('Fehler beim Löschen', 'error'); }
+    });
+    
+    div.querySelector('.edit-category').addEventListener('click', () => {
+      const newName = prompt('Neuer Kategorie-Name', category.name);
+      if(newName && newName.trim()){
+        update(ref(db, 'categories/' + category.key), { name: newName.trim() })
+          .then(() => showToast('Kategorie umbenannt', 'success'))
+          .catch(() => showToast('Fehler beim Umbenennen', 'error'));
+      }
+    });
+  });
+}
+
+document.getElementById('addCategoryBtn').addEventListener('click', async () => {
+  const name = (document.getElementById('newCategoryInput').value || '').trim();
+  if(!name) return showToast('Bitte Namen eingeben', 'warning');
+  try{
+    await push(categoriesRef, { name });
+    document.getElementById('newCategoryInput').value = '';
+    showToast('Kategorie hinzugefügt', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Anlegen', 'error'); }
+});
+
+// Allgemeine Einstellungen
+document.getElementById('saveGeneralBtn').addEventListener('click', async () => {
+  const title = (document.getElementById('settingTitle').value || '').trim() || 'Bullet Farm v3';
+  const image = (document.getElementById('settingHeaderImage').value || '').trim() || 'https://via.placeholder.com/48';
+  try{ 
+    await update(settingsRef, { title, headerImage: image }); 
+    showToast('Allgemeine Einstellungen gespeichert', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
+});
+
+document.getElementById('resetGeneralBtn').addEventListener('click', async () => {
+  if(!confirm('Auf Standard zurücksetzen?')) return;
+  try{ 
+    await update(settingsRef, { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' }); 
+    showToast('Einstellungen zurückgesetzt', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Zurücksetzen', 'error'); }
+});
+
+// Farben Einstellungen
+document.getElementById('applyColorsBtn').addEventListener('click', () => {
+  const currentColors = {
+    primary: document.getElementById('primaryColorInput').value,
+    secondary: document.getElementById('secondaryColorInput').value,
+    success: document.getElementById('successColorInput').value,
+    warning: document.getElementById('warningColorInput').value,
+    error: document.getElementById('errorColorInput').value,
+    background: document.getElementById('backgroundColorInput').value,
+    card: document.getElementById('cardColorInput').value
+  };
+  
+  applyColors(currentColors);
+  showToast('Farbvorschau angewendet', 'info');
+});
+
+document.getElementById('saveColorsBtn').addEventListener('click', async () => {
+  const colors = {
+    primary: document.getElementById('primaryColorInput').value,
+    secondary: document.getElementById('secondaryColorInput').value,
+    success: document.getElementById('successColorInput').value,
+    warning: document.getElementById('warningColorInput').value,
+    error: document.getElementById('errorColorInput').value,
+    background: document.getElementById('backgroundColorInput').value,
+    card: document.getElementById('cardColorInput').value
+  };
+  
+  try {
+    await update(colorsRef, colors);
+    showToast('Farben gespeichert', 'success');
+  } catch (error) {
+    console.error('Fehler beim Speichern der Farben:', error);
+    showToast('Fehler beim Speichern der Farben', 'error');
+  }
+});
+
+document.getElementById('resetColorsBtn').addEventListener('click', async () => {
+  if(!confirm('Farben auf Standard zurücksetzen?')) return;
+  try {
+    await update(colorsRef, defaultColors);
+    applyColors(defaultColors);
+    showToast('Farben zurückgesetzt', 'success');
+  } catch (error) {
+    console.error('Fehler beim Zurücksetzen der Farben:', error);
+    showToast('Fehler beim Zurücksetzen der Farben', 'error');
+  }
+});
+
 // Initialisierung
 setupImageUpload();
 renderCartView();
 
-console.log('🚀 Bullet Farm v3 Shop mit Discord-Integration initialisiert');
+// Settings von Firebase laden
+onValue(settingsRef, snapshot => {
+  const val = snapshot.val();
+  if(val){
+    settings.title = val.title || settings.title;
+    settings.headerImage = val.headerImage || settings.headerImage;
+  }
+  document.getElementById('pageTitle').innerText = settings.title || 'Bullet Farm v3';
+  document.getElementById('headerLogo').src = settings.headerImage || 'https://via.placeholder.com/48';
+  if(document.getElementById('settingTitle')) document.getElementById('settingTitle').value = settings.title || '';
+  if(document.getElementById('settingHeaderImage')) document.getElementById('settingHeaderImage').value = settings.headerImage || '';
+});
+
+// Farben von Firebase laden
+onValue(colorsRef, snapshot => {
+  const colors = snapshot.val();
+  if (colors) {
+    applyColors(colors);
+  }
+});
+
+console.log('🚀 Bullet Farm v3 Shop komplett initialisiert - Alle Einstellungen funktionieren!');
 </script>
 </body>
 </html>

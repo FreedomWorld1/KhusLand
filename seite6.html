@@ -707,7 +707,7 @@ body {
       <div id="settingsLoginArea">
         <label class="kv mb-2 mobile-optimized-text">Admin Passwort</label>
         <div class="flex items-center gap-2 mb-3">
-          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (1101)"/>
           <button id="settingsUnlockBtn" class="btn">Einloggen</button>
         </div>
         <div id="settingsLoginError" class="error kv mobile-optimized-text" style="display:none">❌ Falsches Passwort</div>
@@ -1078,95 +1078,7 @@ const userStatsRef = ref(db, 'userStats');
 const colorsRef = ref(db, 'colors');
 const discordRef = ref(db, 'discord');
 
-const ADMIN_PASSWORD = 'admin123';
-
-// DOM Elemente
-const elements = {
-  openSettingsBtn: document.getElementById('openSettingsBtn'),
-  settingsModal: document.getElementById('settingsModal'),
-  settingsCloseBtn: document.getElementById('settingsCloseBtn'),
-  settingsPassword: document.getElementById('settingsPassword'),
-  settingsUnlockBtn: document.getElementById('settingsUnlockBtn'),
-  settingsLoginError: document.getElementById('settingsLoginError'),
-  settingsLoginArea: document.getElementById('settingsLoginArea'),
-  settingsEditor: document.getElementById('settingsEditor'),
-  tabBtns: document.querySelectorAll('.tab-btn'),
-  tabPanels: document.querySelectorAll('.tab-panel'),
-  btnNewProduct: document.getElementById('btnNewProduct'),
-  productFormCard: document.getElementById('productFormCard'),
-  productForm: document.getElementById('productForm'),
-  cancelProductBtn: document.getElementById('cancelProductBtn'),
-  prodId: document.getElementById('prodId'),
-  prodName: document.getElementById('prodName'),
-  prodImg: document.getElementById('prodImg'),
-  prodImgFile: document.getElementById('prodImgFile'),
-  prodPreview: document.getElementById('prodPreview'),
-  prodDesc: document.getElementById('prodDesc'),
-  prodCategorySelect: document.getElementById('prodCategorySelect'),
-  colorNameInput: document.getElementById('colorNameInput'),
-  colorQuantityInput: document.getElementById('colorQuantityInput'),
-  addResourceBtn: document.getElementById('addResourceBtn'),
-  resourceTable: document.querySelector('#resourceTable tbody'),
-  productsTableBody: document.getElementById('productsTableBody'),
-  btnReloadProducts: document.getElementById('btnReloadProducts'),
-  settingTitle: document.getElementById('settingTitle'),
-  settingHeaderImage: document.getElementById('settingHeaderImage'),
-  saveGeneralBtn: document.getElementById('saveGeneralBtn'),
-  resetGeneralBtn: document.getElementById('resetGeneralBtn'),
-  pageTitle: document.getElementById('pageTitle'),
-  headerLogo: document.getElementById('headerLogo'),
-  productsGrid: document.getElementById('productsGrid'),
-  shopView: document.getElementById('shopView'),
-  cartView: document.getElementById('cartView'),
-  btnShop: document.getElementById('btnShop'),
-  btnCart: document.getElementById('btnCart'),
-  cartTableBody: document.querySelector('#cartTable tbody'),
-  cartSummary: document.getElementById('cartSummary'),
-  shopCategoryFilter: document.getElementById('shopCategoryFilter'),
-  newCategoryInput: document.getElementById('newCategoryInput'),
-  addCategoryBtn: document.getElementById('addCategoryBtn'),
-  categoriesList: document.getElementById('categoriesList'),
-  orderCodeInput: document.getElementById('orderCodeInput'),
-  loadOrderBtn: document.getElementById('loadOrderBtn'),
-  orderDetails: document.getElementById('orderDetails'),
-  orderItems: document.getElementById('orderItems'),
-  orderUserName: document.getElementById('orderUserName'),
-  orderPhone: document.getElementById('orderPhone'),
-  saveOrderUserBtn: document.getElementById('saveOrderUserBtn'),
-  markOrderProcessedBtn: document.getElementById('markOrderProcessedBtn'),
-  markOrderOpenBtn: document.getElementById('markOrderOpenBtn'),
-  markOrderCancelledBtn: document.getElementById('markOrderCancelledBtn'),
-  ordersList: document.getElementById('ordersList'),
-  productsCount: document.getElementById('productsCount'),
-  usersList: document.getElementById('usersList'),
-  userOrdersDetails: document.getElementById('userOrdersDetails'),
-  cartCount: document.getElementById('cartCount'),
-  productSearch: document.getElementById('productSearch'),
-  refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
-  orderCodeDisplay: document.getElementById('orderCodeDisplay'),
-  ordersSearch: document.getElementById('ordersSearch'),
-  usersSearch: document.getElementById('usersSearch'),
-  // Farbelemente
-  primaryColorInput: document.getElementById('primaryColorInput'),
-  secondaryColorInput: document.getElementById('secondaryColorInput'),
-  successColorInput: document.getElementById('successColorInput'),
-  warningColorInput: document.getElementById('warningColorInput'),
-  errorColorInput: document.getElementById('errorColorInput'),
-  backgroundColorInput: document.getElementById('backgroundColorInput'),
-  cardColorInput: document.getElementById('cardColorInput'),
-  saveColorsBtn: document.getElementById('saveColorsBtn'),
-  resetColorsBtn: document.getElementById('resetColorsBtn'),
-  applyColorsBtn: document.getElementById('applyColorsBtn'),
-  // Discord Elemente
-  discordWebhookUrl: document.getElementById('discordWebhookUrl'),
-  discordChannelName: document.getElementById('discordChannelName'),
-  discordBotName: document.getElementById('discordBotName'),
-  discordBotAvatar: document.getElementById('discordBotAvatar'),
-  testDiscordBtn: document.getElementById('testDiscordBtn'),
-  saveDiscordBtn: document.getElementById('saveDiscordBtn'),
-  resetDiscordBtn: document.getElementById('resetDiscordBtn'),
-  discordTestResult: document.getElementById('discordTestResult')
-};
+const ADMIN_PASSWORD = '1101';
 
 let products = [];
 let settings = { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' };
@@ -1301,21 +1213,21 @@ async function sendDiscordWebhook(order) {
 
 // NEUE FUNKTION: Discord Webhook testen
 async function testDiscordWebhook() {
-  const webhookUrl = elements.discordWebhookUrl.value.trim();
+  const webhookUrl = document.getElementById('discordWebhookUrl').value.trim();
   
   if (!webhookUrl) {
-    elements.discordTestResult.innerHTML = '<span class="error">❌ Bitte gib eine Webhook URL ein</span>';
+    document.getElementById('discordTestResult').innerHTML = '<span class="error">❌ Bitte gib eine Webhook URL ein</span>';
     return;
   }
 
-  elements.discordTestResult.innerHTML = '<span class="info">⏳ Sende Testnachricht...</span>';
-  elements.testDiscordBtn.disabled = true;
+  document.getElementById('discordTestResult').innerHTML = '<span class="info">⏳ Sende Testnachricht...</span>';
+  document.getElementById('testDiscordBtn').disabled = true;
 
   try {
     const testPayload = {
       content: '🔔 **Testnachricht von Bullet Farm v3**\nDein Discord Webhook funktioniert einwandfrei! ✅',
-      username: elements.discordBotName.value.trim() || 'Bullet Farm Bot',
-      avatar_url: elements.discordBotAvatar.value.trim() || ''
+      username: document.getElementById('discordBotName').value.trim() || 'Bullet Farm Bot',
+      avatar_url: document.getElementById('discordBotAvatar').value.trim() || ''
     };
 
     const response = await fetch(webhookUrl, {
@@ -1327,14 +1239,14 @@ async function testDiscordWebhook() {
     });
 
     if (response.ok) {
-      elements.discordTestResult.innerHTML = '<span class="success">✅ Testnachricht erfolgreich gesendet!</span>';
+      document.getElementById('discordTestResult').innerHTML = '<span class="success">✅ Testnachricht erfolgreich gesendet!</span>';
     } else {
       throw new Error(`HTTP ${response.status}`);
     }
   } catch (error) {
-    elements.discordTestResult.innerHTML = `<span class="error">❌ Fehler: ${error.message}</span>`;
+    document.getElementById('discordTestResult').innerHTML = `<span class="error">❌ Fehler: ${error.message}</span>`;
   } finally {
-    elements.testDiscordBtn.disabled = false;
+    document.getElementById('testDiscordBtn').disabled = false;
   }
 }
 
@@ -1343,20 +1255,20 @@ onValue(discordRef, snapshot => {
   const data = snapshot.val();
   if (data) {
     discordSettings = data;
-    elements.discordWebhookUrl.value = data.webhookUrl || '';
-    elements.discordChannelName.value = data.channelName || '';
-    elements.discordBotName.value = data.botName || '';
-    elements.discordBotAvatar.value = data.botAvatar || '';
+    document.getElementById('discordWebhookUrl').value = data.webhookUrl || '';
+    document.getElementById('discordChannelName').value = data.channelName || '';
+    document.getElementById('discordBotName').value = data.botName || '';
+    document.getElementById('discordBotAvatar').value = data.botAvatar || '';
   }
 });
 
 // NEUE FUNKTION: Discord Einstellungen speichern
 async function saveDiscordSettings() {
   const settings = {
-    webhookUrl: elements.discordWebhookUrl.value.trim(),
-    channelName: elements.discordChannelName.value.trim(),
-    botName: elements.discordBotName.value.trim(),
-    botAvatar: elements.discordBotAvatar.value.trim()
+    webhookUrl: document.getElementById('discordWebhookUrl').value.trim(),
+    channelName: document.getElementById('discordChannelName').value.trim(),
+    botName: document.getElementById('discordBotName').value.trim(),
+    botAvatar: document.getElementById('discordBotAvatar').value.trim()
   };
 
   try {
@@ -1371,14 +1283,14 @@ async function saveDiscordSettings() {
 
 // NEUE FUNKTION: Bild-Upload Handler
 function setupImageUpload() {
-  elements.prodImgFile.addEventListener('change', function(e) {
+  document.getElementById('prodImgFile').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          elements.prodImg.value = e.target.result;
-          elements.prodPreview.src = e.target.result;
+          document.getElementById('prodImg').value = e.target.result;
+          document.getElementById('prodPreview').src = e.target.result;
         };
         reader.readAsDataURL(file);
       } else {
@@ -1400,32 +1312,32 @@ function applyColors(colors = null) {
   document.documentElement.style.setProperty('--background-color', colorSettings.background);
   document.documentElement.style.setProperty('--card', colorSettings.card);
   
-  if (elements.primaryColorInput) {
-    elements.primaryColorInput.value = colorSettings.primary;
+  if (document.getElementById('primaryColorInput')) {
+    document.getElementById('primaryColorInput').value = colorSettings.primary;
     document.getElementById('primaryColorPreview').style.background = colorSettings.primary;
   }
-  if (elements.secondaryColorInput) {
-    elements.secondaryColorInput.value = colorSettings.secondary;
+  if (document.getElementById('secondaryColorInput')) {
+    document.getElementById('secondaryColorInput').value = colorSettings.secondary;
     document.getElementById('secondaryColorPreview').style.background = colorSettings.secondary;
   }
-  if (elements.successColorInput) {
-    elements.successColorInput.value = colorSettings.success;
+  if (document.getElementById('successColorInput')) {
+    document.getElementById('successColorInput').value = colorSettings.success;
     document.getElementById('successColorPreview').style.background = colorSettings.success;
   }
-  if (elements.warningColorInput) {
-    elements.warningColorInput.value = colorSettings.warning;
+  if (document.getElementById('warningColorInput')) {
+    document.getElementById('warningColorInput').value = colorSettings.warning;
     document.getElementById('warningColorPreview').style.background = colorSettings.warning;
   }
-  if (elements.errorColorInput) {
-    elements.errorColorInput.value = colorSettings.error;
+  if (document.getElementById('errorColorInput')) {
+    document.getElementById('errorColorInput').value = colorSettings.error;
     document.getElementById('errorColorPreview').style.background = colorSettings.error;
   }
-  if (elements.backgroundColorInput) {
-    elements.backgroundColorInput.value = colorSettings.background;
+  if (document.getElementById('backgroundColorInput')) {
+    document.getElementById('backgroundColorInput').value = colorSettings.background;
     document.getElementById('backgroundColorPreview').style.background = colorSettings.background;
   }
-  if (elements.cardColorInput) {
-    elements.cardColorInput.value = colorSettings.card;
+  if (document.getElementById('cardColorInput')) {
+    document.getElementById('cardColorInput').value = colorSettings.card;
     document.getElementById('cardColorPreview').style.background = colorSettings.card;
   }
 }
@@ -1469,21 +1381,21 @@ async function incrementUserStatsOnProcessed(order) {
 }
 
 function showModal() { 
-  elements.settingsModal.classList.remove('hidden-el'); 
-  setTimeout(() => elements.settingsModal.classList.add('active'), 10); 
+  document.getElementById('settingsModal').classList.remove('hidden-el'); 
+  setTimeout(() => document.getElementById('settingsModal').classList.add('active'), 10); 
   document.body.style.overflow = 'hidden'; 
 }
 
 function hideModal() { 
-  elements.settingsModal.classList.remove('active'); 
+  document.getElementById('settingsModal').classList.remove('active'); 
   document.body.style.overflow = ''; 
-  setTimeout(() => elements.settingsModal.classList.add('hidden-el'), 240); 
+  setTimeout(() => document.getElementById('settingsModal').classList.add('hidden-el'), 240); 
 }
 
 // Event Listeners für Discord
-elements.testDiscordBtn.addEventListener('click', testDiscordWebhook);
-elements.saveDiscordBtn.addEventListener('click', saveDiscordSettings);
-elements.resetDiscordBtn.addEventListener('click', async () => {
+document.getElementById('testDiscordBtn').addEventListener('click', testDiscordWebhook);
+document.getElementById('saveDiscordBtn').addEventListener('click', saveDiscordSettings);
+document.getElementById('resetDiscordBtn').addEventListener('click', async () => {
   if (!confirm('Discord Einstellungen zurücksetzen?')) return;
   try {
     await update(discordRef, {
@@ -1492,10 +1404,10 @@ elements.resetDiscordBtn.addEventListener('click', async () => {
       botName: '',
       botAvatar: ''
     });
-    elements.discordWebhookUrl.value = '';
-    elements.discordChannelName.value = '';
-    elements.discordBotName.value = '';
-    elements.discordBotAvatar.value = '';
+    document.getElementById('discordWebhookUrl').value = '';
+    document.getElementById('discordChannelName').value = '';
+    document.getElementById('discordBotName').value = '';
+    document.getElementById('discordBotAvatar').value = '';
     showToast('Discord Einstellungen zurückgesetzt', 'success');
   } catch (error) {
     console.error('Fehler beim Zurücksetzen der Discord Einstellungen:', error);
@@ -1504,56 +1416,196 @@ elements.resetDiscordBtn.addEventListener('click', async () => {
 });
 
 // Basis Event Listeners
-elements.openSettingsBtn.addEventListener('click', () => {
-  elements.settingsPassword.value = '';
-  elements.settingsLoginError.style.display = 'none';
-  elements.settingsLoginArea.style.display = '';
-  elements.settingsEditor.classList.add('hidden-el');
+document.getElementById('openSettingsBtn').addEventListener('click', () => {
+  document.getElementById('settingsPassword').value = '';
+  document.getElementById('settingsLoginError').style.display = 'none';
+  document.getElementById('settingsLoginArea').style.display = '';
+  document.getElementById('settingsEditor').classList.add('hidden-el');
   showModal();
 });
 
-elements.settingsCloseBtn.addEventListener('click', hideModal);
-elements.settingsModal.addEventListener('click', (e) => { 
-  if(e.target === elements.settingsModal) hideModal(); 
+document.getElementById('settingsCloseBtn').addEventListener('click', hideModal);
+document.getElementById('settingsModal').addEventListener('click', (e) => { 
+  if(e.target === document.getElementById('settingsModal')) hideModal(); 
 });
 
 document.addEventListener('keydown', (e) => { 
-  if(e.key === 'Escape' && !elements.settingsModal.classList.contains('hidden-el')) hideModal(); 
+  if(e.key === 'Escape' && !document.getElementById('settingsModal').classList.contains('hidden-el')) hideModal(); 
 });
 
-elements.settingsUnlockBtn.addEventListener('click', () => {
-  const password = (elements.settingsPassword.value || '').trim();
+document.getElementById('settingsUnlockBtn').addEventListener('click', () => {
+  const password = (document.getElementById('settingsPassword').value || '').trim();
   if(password === ADMIN_PASSWORD){
-    elements.settingsLoginError.style.display = 'none';
-    elements.settingsLoginArea.style.display = 'none';
-    elements.settingsEditor.classList.remove('hidden-el');
-    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
-    elements.tabBtns[0].classList.add('active');
-    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
+    document.getElementById('settingsLoginError').style.display = 'none';
+    document.getElementById('settingsLoginArea').style.display = 'none';
+    document.getElementById('settingsEditor').classList.remove('hidden-el');
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden-el'));
     document.getElementById('tabProducts').classList.remove('hidden-el');
   } else {
-    elements.settingsLoginError.style.display = '';
+    document.getElementById('settingsLoginError').style.display = '';
   }
 });
 
 // Tab Navigation
-elements.tabBtns.forEach(btn => {
+document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    elements.tabBtns.forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const tabName = btn.dataset.tab;
-    elements.tabPanels.forEach(p => p.classList.add('hidden-el'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden-el'));
     document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
-    if (tabName === 'users') renderUsersList();
-    if (tabName === 'orders') renderOrdersList();
   });
 });
 
-// Weitere Event Listener hier...
-// [Der Rest des Codes bleibt gleich]
+// Shop/Warenkorb Navigation
+document.getElementById('btnShop').addEventListener('click', () => {
+  document.getElementById('shopView').classList.remove('hidden-el');
+  document.getElementById('cartView').classList.add('hidden-el');
+});
+
+document.getElementById('btnCart').addEventListener('click', () => {
+  document.getElementById('shopView').classList.add('hidden-el');
+  document.getElementById('cartView').classList.remove('hidden-el');
+  renderCartView();
+});
+
+// Produkte laden und anzeigen
+onValue(productsRef, snapshot => {
+  products = [];
+  snapshot.forEach(child => {
+    const data = child.val(); 
+    data.key = child.key; 
+    products.push(data);
+  });
+  renderProductsGrid();
+});
+
+function renderProductsGrid() {
+  const productsGrid = document.getElementById('productsGrid');
+  productsGrid.innerHTML = '';
+  
+  products.forEach(product => {
+    const card = document.createElement('div');
+    card.className = 'card fade-in';
+    
+    const img = document.createElement('img');
+    img.src = product.image || 'https://via.placeholder.com/300x120';
+    img.className = 'product-image';
+    img.alt = product.name || 'Produktbild';
+    img.onerror = () => handleImageError(img);
+    
+    const title = document.createElement('div');
+    title.className = 'mobile-optimized-text product-card-text';
+    title.style.fontWeight = '700';
+    title.style.fontSize = '1rem';
+    title.style.marginTop = '8px';
+    title.style.color = product.colorName || 'var(--primary-color)';
+    title.textContent = product.name || '';
+    
+    const desc = document.createElement('div');
+    desc.className = 'small-muted mobile-optimized-text product-card-text';
+    desc.textContent = product.description || '';
+    
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(desc);
+
+    const addButton = document.createElement('button');
+    addButton.className = 'btn';
+    addButton.style.background = 'var(--success-color)';
+    addButton.style.marginTop = '8px';
+    addButton.textContent = '✅ In den Warenkorb';
+    addButton.onclick = () => { 
+      addToCartByProductKey(product.key); 
+      showToast(`"${product.name}" zum Warenkorb hinzugefügt`, 'success'); 
+    };
+    card.appendChild(addButton);
+
+    productsGrid.appendChild(card);
+  });
+}
+
+function addToCartByProductKey(productKey) {
+  const product = products.find(p => p.key === productKey);
+  if (!product) return;
+  
+  const existingIndex = cart.findIndex(item => item.key === productKey);
+  if (existingIndex === -1) {
+    cart.push({ 
+      key: productKey, 
+      name: product.name, 
+      quantity: 1 
+    });
+  } else {
+    cart[existingIndex].quantity += 1;
+  }
+  
+  renderCartView();
+}
+
+function renderCartView() {
+  const cartTableBody = document.querySelector('#cartTable tbody');
+  cartTableBody.innerHTML = '';
+  
+  if (cart.length === 0) {
+    cartTableBody.innerHTML = '<tr><td colspan="4" class="kv mobile-optimized-text" style="text-align:center;padding:20px">Warenkorb ist leer</td></tr>';
+  } else {
+    cart.forEach(entry => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="mobile-optimized-text">${escapeHtml(entry.name)}</td>
+        <td class="mobile-optimized-text resource-text-fix">-</td>
+        <td style="text-align:right" class="mobile-optimized-text">
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px">
+            <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity - 1})">-</button>
+            <span>${entry.quantity}</span>
+            <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity + 1})">+</button>
+          </div>
+        </td>
+        <td style="text-align:center">
+          <button class="btn small-btn" style="background:var(--error-color)" onclick="removeFromCart('${entry.key}')">🗑️</button>
+        </td>`;
+      cartTableBody.appendChild(tr);
+    });
+  }
+  
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  document.getElementById('cartCount').textContent = totalItems > 0 ? totalItems : '';
+  document.getElementById('cartCount').style.display = totalItems > 0 ? 'flex' : 'none';
+}
+
+// Globale Funktionen für Cart
+window.updateCartQuantity = function(productKey, newQuantity) {
+  const item = cart.find(item => item.key === productKey);
+  if (item && newQuantity > 0) {
+    item.quantity = newQuantity;
+    renderCartView();
+  } else if (newQuantity <= 0) {
+    removeFromCart(productKey);
+  }
+}
+
+window.removeFromCart = function(productKey) {
+  const index = cart.findIndex(item => item.key === productKey);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    renderCartView();
+    showToast('Produkt aus Warenkorb entfernt', 'success');
+  }
+}
+
+function escapeHtml(text) {
+  if(!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
 
 // Initialisierung
 setupImageUpload();
+renderCartView();
 
 console.log('🚀 Bullet Farm v3 Shop mit Discord-Integration initialisiert');
 </script>

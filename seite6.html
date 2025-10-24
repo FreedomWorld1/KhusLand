@@ -1456,6 +1456,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     const tabName = btn.dataset.tab;
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden-el'));
     document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
+    if (tabName === 'users') renderUsersList();
+    if (tabName === 'orders') renderOrdersList();
   });
 });
 
@@ -1471,7 +1473,7 @@ document.getElementById('btnCart').addEventListener('click', () => {
   renderCartView();
 });
 
-// Produkte laden und anzeigen
+// PRODUKTE mit RESSOURCEN laden und anzeigen
 onValue(productsRef, snapshot => {
   products = [];
   snapshot.forEach(child => {
@@ -1480,6 +1482,8 @@ onValue(productsRef, snapshot => {
     products.push(data);
   });
   renderProductsGrid();
+  renderProductsTable();
+  populateCategorySelects();
 });
 
 function renderProductsGrid() {
@@ -1512,6 +1516,44 @@ function renderProductsGrid() {
     card.appendChild(title);
     card.appendChild(desc);
 
+    // RESSOURCEN anzeigen
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
+      if(pairs.length > 0){
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.style.marginTop = '8px';
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th class="mobile-optimized-text">Ressource</th>
+              <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pairs.map(resource => {
+              const [name, value, color] = resource.split(':');
+              return `
+                <tr>
+                  <td style="color:${color || '#facc15'}" class="mobile-optimized-text resource-text-fix">${escapeHtml(name)}</td>
+                  <td style="text-align:right;color:${product.colorQuantity || 'var(--secondary-color)'}" class="mobile-optimized-text">
+                    ${Number(value).toLocaleString('de-DE')}
+                  </td>
+                </tr>`;
+            }).join('')}
+          </tbody>`;
+        card.appendChild(table);
+      }
+    }
+
+    if(product.category) {
+      const categoryDiv = document.createElement('div');
+      categoryDiv.className = 'kv mobile-optimized-text product-card-text';
+      categoryDiv.style.marginTop = '8px';
+      categoryDiv.textContent = 'Kategorie: ' + product.category;
+      card.appendChild(categoryDiv);
+    }
+
     const addButton = document.createElement('button');
     addButton.className = 'btn';
     addButton.style.background = 'var(--success-color)';
@@ -1527,36 +1569,138 @@ function renderProductsGrid() {
   });
 }
 
+function renderProductsTable() {
+  const productsTableBody = document.getElementById('productsTableBody');
+  productsTableBody.innerHTML = '';
+  
+  products.forEach(product => {
+    const resourcesText = product.resources ? 
+      product.resources.split(';').map(resource => {
+        const [name, value] = resource.split(':');
+        return `${name}: ${value}`;
+      }).join(', ') : '';
+    
+    const row = document.createElement('tr');
+    row.className = 'fade-in';
+    row.innerHTML = `
+      <td style="padding:8px">
+        <img src="${product.image || 'https://via.placeholder.com/80'}" 
+             class="product-image-admin" 
+             alt="${escapeHtml(product.name || '')}">
+      </td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.name || '')}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.category || '')}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(resourcesText)}</td>
+      <td style="padding:8px">
+        <button class="btn small-btn edit-product" data-key="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
+        <button class="btn small-btn delete-product" data-key="${product.key}" style="background:var(--error-color)">🗑️ Löschen</button>
+      </td>`;
+    productsTableBody.appendChild(row);
+    
+    row.querySelector('.edit-product').addEventListener('click', () => openProductForm(product));
+    row.querySelector('.delete-product').addEventListener('click', () => { 
+      if(confirm('Produkt wirklich löschen?')) {
+        remove(ref(db, 'products/' + product.key))
+          .then(() => showToast('Produkt gelöscht', 'success'))
+          .catch(() => showToast('Fehler beim Löschen', 'error'));
+      }
+    });
+  });
+}
+
+function openProductForm(product = null) {
+  document.getElementById('productFormCard').classList.remove('hidden-el');
+  document.querySelector('#resourceTable tbody').innerHTML = '';
+  
+  if(product){
+    document.getElementById('prodId').value = product.key || '';
+    document.getElementById('prodName').value = product.name || '';
+    document.getElementById('prodImg').value = product.image || '';
+    document.getElementById('prodPreview').src = product.image || 'https://via.placeholder.com/150x100';
+    document.getElementById('prodDesc').value = product.description || '';
+    document.getElementById('prodCategorySelect').value = product.category || '';
+    document.getElementById('colorNameInput').value = product.colorName || '#22c55e';
+    document.getElementById('colorQuantityInput').value = product.colorQuantity || '#3b82f6';
+    
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
+      pairs.forEach(resource => {
+        const [name, value, color] = resource.split(':');
+        addResourceRow(name, value, color || '#facc15');
+      });
+    }
+  } else {
+    document.getElementById('prodId').value = '';
+    document.getElementById('productForm').reset();
+    document.getElementById('prodPreview').src = 'https://via.placeholder.com/150x100';
+    document.getElementById('colorNameInput').value = '#22c55e';
+    document.getElementById('colorQuantityInput').value = '#3b82f6';
+  }
+}
+
+function addResourceRow(name = '', value = '', color = '#facc15') {
+  const row = document.createElement('tr');
+  row.className = 'fade-in';
+  row.innerHTML = `
+    <td><input class="input mobile-optimized-text" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
+    <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="0" /></td>
+    <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
+    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:var(--error-color)">❌ Löschen</button></td>`;
+  
+  const deleteButton = row.querySelector('button');
+  deleteButton.addEventListener('click', () => row.remove());
+  document.querySelector('#resourceTable tbody').appendChild(row);
+}
+
 function addToCartByProductKey(productKey) {
   const product = products.find(p => p.key === productKey);
   if (!product) return;
   
+  const resourceMap = resourcesToMap(product.resources);
   const existingIndex = cart.findIndex(item => item.key === productKey);
+  
   if (existingIndex === -1) {
     cart.push({ 
       key: productKey, 
       name: product.name, 
+      resources: {...resourceMap}, 
       quantity: 1 
     });
   } else {
     cart[existingIndex].quantity += 1;
+    for(const resource in resourceMap) {
+      cart[existingIndex].resources[resource] = (cart[existingIndex].resources[resource] || 0) + resourceMap[resource];
+    }
   }
   
   renderCartView();
 }
 
+function resourcesToMap(resourcesString) {
+  const map = {};
+  if(!resourcesString) return map;
+  const pairs = resourcesString.split(';').map(x => x.trim()).filter(Boolean);
+  pairs.forEach(resource => {
+    const [name, value] = resource.split(':');
+    if(name && value) map[name] = (map[name] || 0) + Number(value);
+  });
+  return map;
+}
+
 function renderCartView() {
   const cartTableBody = document.querySelector('#cartTable tbody');
   cartTableBody.innerHTML = '';
+  const totalResources = {};
   
   if (cart.length === 0) {
     cartTableBody.innerHTML = '<tr><td colspan="4" class="kv mobile-optimized-text" style="text-align:center;padding:20px">Warenkorb ist leer</td></tr>';
   } else {
     cart.forEach(entry => {
+      const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td class="mobile-optimized-text">${escapeHtml(entry.name)}</td>
-        <td class="mobile-optimized-text resource-text-fix">-</td>
+        <td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td>
         <td style="text-align:right" class="mobile-optimized-text">
           <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px">
             <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity - 1})">-</button>
@@ -1568,106 +1712,249 @@ function renderCartView() {
           <button class="btn small-btn" style="background:var(--error-color)" onclick="removeFromCart('${entry.key}')">🗑️</button>
         </td>`;
       cartTableBody.appendChild(tr);
+      
+      for(const k in entry.resources) {
+        totalResources[k] = (totalResources[k] || 0) + entry.resources[k];
+      }
     });
   }
+  
+  const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
+  document.getElementById('cartSummary').innerText = 'Gesamt Ressourcen: ' + summary;
   
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   document.getElementById('cartCount').textContent = totalItems > 0 ? totalItems : '';
   document.getElementById('cartCount').style.display = totalItems > 0 ? 'flex' : 'none';
-}
-
-// Globale Funktionen für Cart
-window.updateCartQuantity = function(productKey, newQuantity) {
-  const item = cart.find(item => item.key === productKey);
-  if (item && newQuantity > 0) {
-    item.quantity = newQuantity;
-    renderCartView();
-  } else if (newQuantity <= 0) {
-    removeFromCart(productKey);
-  }
-}
-
-window.removeFromCart = function(productKey) {
-  const index = cart.findIndex(item => item.key === productKey);
-  if (index !== -1) {
-    cart.splice(index, 1);
-    renderCartView();
-    showToast('Produkt aus Warenkorb entfernt', 'success');
-  }
-}
-
-function escapeHtml(text) {
-  if(!text) return '';
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// EINSTELLUNGEN FUNKTIONEN - JETZT VOLL FUNKTIONSFÄHIG
-
-// Produkt Management
-document.getElementById('btnNewProduct').addEventListener('click', () => {
-  document.getElementById('productFormCard').classList.remove('hidden-el');
-  document.getElementById('productForm').reset();
-  document.getElementById('prodId').value = '';
-  document.getElementById('prodPreview').src = 'https://via.placeholder.com/150x100';
-});
-
-document.getElementById('cancelProductBtn').addEventListener('click', () => {
-  document.getElementById('productFormCard').classList.add('hidden-el');
-});
-
-document.getElementById('addResourceBtn').addEventListener('click', () => {
-  const tbody = document.querySelector('#resourceTable tbody');
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td><input class="input mobile-optimized-text" placeholder="Ressourcenname" /></td>
-    <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" placeholder="0" /></td>
-    <td><input type="color" class="color-input" value="#facc15" /></td>
-    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:var(--error-color)">❌ Löschen</button></td>
-  `;
-  row.querySelector('button').addEventListener('click', () => row.remove());
-  tbody.appendChild(row);
-});
-
-document.getElementById('productForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
   
-  const rows = Array.from(document.querySelectorAll('#resourceTable tbody tr'));
-  const resources = rows.map(row => {
-    const name = row.children[0].querySelector('input').value.trim();
-    const quantity = row.children[1].querySelector('input').value.trim();
-    const color = row.children[2].querySelector('input').value;
-    return name && quantity ? `${name}:${quantity}:${color}` : '';
-  }).filter(Boolean).join(';');
+  ensureOrderUiInCart();
+}
 
-  const payload = {
-    name: document.getElementById('prodName').value.trim(),
-    image: document.getElementById('prodImg').value.trim(),
-    description: document.getElementById('prodDesc').value.trim(),
-    category: document.getElementById('prodCategorySelect').value.trim(),
-    resources: resources,
-    colorName: document.getElementById('colorNameInput').value,
-    colorQuantity: document.getElementById('colorQuantityInput').value,
-    updatedAt: Date.now()
-  };
-
-  try{
-    if(document.getElementById('prodId').value){
-      await update(ref(db, 'products/' + document.getElementById('prodId').value), payload);
-      showToast('Produkt aktualisiert', 'success');
-    } else {
-      await push(productsRef, payload);
-      showToast('Produkt angelegt', 'success');
-    }
-    document.getElementById('productFormCard').classList.add('hidden-el');
-  } catch(error){ 
-    console.error(error); 
-    showToast('Fehler beim Speichern des Produkts', 'error'); 
-  }
+// BESTELLUNGEN laden und anzeigen
+onValue(ordersRef, snapshot => {
+  allOrders = [];
+  snapshot.forEach(child => { 
+    const o = child.val(); 
+    o.key = child.key; 
+    allOrders.push(o); 
+  });
+  renderOrdersList();
 });
 
-// Kategorien Management
+function renderOrdersList() {
+  const ordersList = document.getElementById('ordersList');
+  ordersList.innerHTML = '';
+  
+  const visibleOrders = allOrders.filter(o => o.status !== 'bearbeitet' && !o.removedFromOrders);
+  
+  if(visibleOrders.length === 0){ 
+    ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine offenen Bestellungen vorhanden.</div>'; 
+    return; 
+  }
+  
+  visibleOrders.sort((a,b)=> {
+    const statusOrder = { 'offen': 0, 'bearbeitet': 1, 'storniert': 2 };
+    const statusA = statusOrder[a.status] || 0;
+    const statusB = statusOrder[b.status] || 0;
+    
+    if (statusA !== statusB) {
+      return statusA - statusB;
+    }
+    
+    return (b.createdAt||0) - (a.createdAt||0);
+  });
+  
+  visibleOrders.forEach(o => {
+    const div = document.createElement('div');
+    div.className = 'order-card fade-in';
+    const name = o.userName || '— unbekannt —';
+    const phone = o.phone || '';
+    const total = o.items?.length || 0;
+    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (o.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (o.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    div.innerHTML = `
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>${escapeHtml(o.code)}</strong><br>
+          <div class="kv">${escapeHtml(date)}</div>
+          ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''}
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+          <div class="kv mobile-optimized-text" style="text-align:right;margin-top:4px">${total} Artikel</div>
+        </div>
+      </div>
+      <div class="order-card-actions">
+        <button class="btn small-btn view-order" data-code="${escapeHtml(o.code)}">👁️ Ansehen</button>
+        <button class="btn small-btn delete-order" data-key="${escapeHtml(o.key)}" style="background:var(--error-color)">🗑️ Löschen</button>
+      </div>`;
+    ordersList.appendChild(div);
+    
+    div.querySelector('.delete-order').addEventListener('click', () => { 
+      if(confirm('Bestellung wirklich löschen?')) 
+        remove(ref(db,'orders/'+o.key))
+          .then(() => showToast('Bestellung gelöscht', 'success'))
+          .catch(() => showToast('Fehler beim Löschen', 'error')); 
+    });
+    
+    div.querySelector('.view-order').addEventListener('click', () => loadOrderByCode(o.code));
+  });
+}
+
+function loadOrderByCode(code) {
+  const order = allOrders.find(o => (o.code||'').toString() === code.toString());
+  if(!order) return showToast('Keine Bestellung mit diesem Code gefunden', 'error');
+  
+  selectedOrder = order;
+  document.getElementById('orderDetails').style.display = '';
+  document.getElementById('orderCodeDisplay').textContent = `Bestellcode: ${order.code}`;
+  document.getElementById('orderItems').innerHTML = '';
+  
+  (order.items || []).forEach(item => {
+    const div = document.createElement('div');
+    const resText = Object.entries(item.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${escapeHtml(String(item.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
+    document.getElementById('orderItems').appendChild(div);
+  });
+  
+  document.getElementById('orderUserName').value = order.userName || '';
+  document.getElementById('orderPhone').value = order.phone || '';
+  
+  document.getElementById('markOrderProcessedBtn').disabled = order.status === 'bearbeitet';
+  document.getElementById('markOrderOpenBtn').disabled = order.status === 'offen';
+  document.getElementById('markOrderCancelledBtn').disabled = order.status === 'storniert';
+}
+
+// NUTZER laden und anzeigen
+function renderUsersList() {
+  const usersMap = new Map();
+  
+  allOrders.forEach(order => {
+    if (order.phone && order.userName) {
+      const userKey = `${order.phone}-${order.userName}`;
+      if (!usersMap.has(userKey)) {
+        usersMap.set(userKey, { 
+          phone: order.phone, 
+          userName: order.userName, 
+          orders: []
+        });
+      }
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  
+  const users = Array.from(usersMap.values());
+  const usersList = document.getElementById('usersList');
+  usersList.innerHTML = '';
+  
+  if (users.length === 0) { 
+    usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
+    return; 
+  }
+  
+  users.sort((a, b) => a.userName.localeCompare(b.userName));
+  
+  users.forEach(user => {
+    const userItem = document.createElement('div');
+    userItem.className = 'user-order-item fade-in';
+    if (selectedUserId === user.phone) userItem.classList.add('active');
+    
+    userItem.innerHTML = `
+      <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
+      <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
+      <div class="kv mobile-optimized-text" style="margin-top: 8px;">
+        <div>📊 ${user.orders.length} Bestellung${user.orders.length !== 1 ? 'en' : ''}</div>
+      </div>
+      <div style="margin-top: 8px;">
+        <button class="btn small-btn view-user-orders" style="background: var(--secondary-color);">📋 Bestellungen anzeigen</button>
+      </div>`;
+    
+    usersList.appendChild(userItem);
+    
+    userItem.querySelector('.view-user-orders').addEventListener('click', (e) => {
+      e.stopPropagation();
+      userItem.click();
+    });
+    
+    userItem.addEventListener('click', () => {
+      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      userItem.classList.add('active');
+      selectedUserId = user.phone;
+      renderUserOrders(user);
+    });
+  });
+}
+
+function renderUserOrders(user) {
+  const userOrdersDetails = document.getElementById('userOrdersDetails');
+  userOrdersDetails.innerHTML = '';
+  
+  if (!user || !user.orders.length) { 
+    userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
+    return; 
+  }
+  
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  
+  sortedOrders.forEach(order => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'order-card fade-in';
+    
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (order.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (order.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    orderCard.innerHTML = `
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
+          <div class="kv">${escapeHtml(date)}</div>
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+        </div>
+      </div>`;
+    
+    if (order.items && order.items.length > 0) {
+      const itemsList = document.createElement('div');
+      itemsList.style.marginTop = '8px';
+      order.items.forEach(item => {
+        const resourceText = Object.entries(item.resources || {}).map(([k, v]) => `${k}: ${v}`).join(', ');
+        const itemDiv = document.createElement('div');
+        itemDiv.style.marginBottom = '6px';
+        itemDiv.style.padding = '6px';
+        itemDiv.style.background = 'rgba(255,255,255,0.02)';
+        itemDiv.style.borderRadius = '4px';
+        itemDiv.innerHTML = `
+          <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
+          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemsList.appendChild(itemDiv);
+      });
+      orderCard.appendChild(itemsList);
+    }
+    
+    userOrdersDetails.appendChild(orderCard);
+  });
+}
+
+// KATEGORIEN Management
 onValue(categoriesRef, snapshot => {
   categories = [];
   snapshot.forEach(child => {
@@ -1676,6 +1963,7 @@ onValue(categoriesRef, snapshot => {
     categories.push(data);
   });
   renderCategoriesList();
+  populateCategorySelects();
 });
 
 function renderCategoriesList(){
@@ -1718,6 +2006,207 @@ function renderCategoriesList(){
   });
 }
 
+function populateCategorySelects(){
+  const prodCategorySelect = document.getElementById('prodCategorySelect');
+  const shopCategoryFilter = document.getElementById('shopCategoryFilter');
+  
+  prodCategorySelect.innerHTML = '<option value="">— Keine Kategorie —</option>';
+  shopCategoryFilter.innerHTML = '<option value="">— Alle Kategorien —</option>';
+
+  categories.forEach(category => {
+    const option1 = document.createElement('option');
+    option1.value = category.name;
+    option1.textContent = category.name;
+    option1.className = 'mobile-optimized-text';
+    prodCategorySelect.appendChild(option1);
+    
+    const option2 = document.createElement('option');
+    option2.value = category.name;
+    option2.textContent = category.name;
+    option2.className = 'mobile-optimized-text';
+    shopCategoryFilter.appendChild(option2);
+  });
+}
+
+// BESTELLUNG Funktionen
+function ensureOrderUiInCart() {
+  if(saveOrderBtnEl) return;
+  
+  const wrapper = document.createElement('div');
+  wrapper.style.marginTop = '12px';
+  
+  saveOrderBtnEl = document.createElement('button');
+  saveOrderBtnEl.className = 'btn';
+  saveOrderBtnEl.style.background = 'var(--success-color)';
+  saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
+  saveOrderBtnEl.addEventListener('click', saveCartAsOrder);
+  wrapper.appendChild(saveOrderBtnEl);
+  
+  orderCodeDisplayEl = document.createElement('div');
+  orderCodeDisplayEl.style.marginTop = '8px';
+  orderCodeDisplayEl.style.fontWeight = '700';
+  orderCodeDisplayEl.style.fontSize = '1.05rem';
+  orderCodeDisplayEl.className = 'success mobile-optimized-text';
+  orderCodeDisplayEl.textContent = '';
+  
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'btn small-btn';
+  copyBtn.style.marginLeft = '8px';
+  copyBtn.textContent = '📋 Kopieren';
+  copyBtn.addEventListener('click', () => {
+    const txt = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ','').trim();
+    if(!txt) return showToast('Kein Bestellcode vorhanden', 'warning');
+    navigator.clipboard?.writeText(txt).then(() => showToast('Code kopiert', 'success')).catch(() => showToast('Kopieren nicht möglich', 'error'));
+  });
+  
+  const codeWrap = document.createElement('div');
+  codeWrap.style.display = 'flex';
+  codeWrap.style.alignItems = 'center';
+  codeWrap.style.gap = '8px';
+  codeWrap.appendChild(orderCodeDisplayEl);
+  codeWrap.appendChild(copyBtn);
+  wrapper.appendChild(codeWrap);
+  
+  document.getElementById('cartView').appendChild(wrapper);
+}
+
+function generate4DigitCode() { 
+  return Math.floor(1000 + Math.random() * 9000).toString(); 
+}
+
+async function saveCartAsOrder() {
+  if(cart.length === 0) return showToast('Warenkorb ist leer', 'warning');
+  
+  const userName = prompt('Bitte Namen eingeben für Bestellung:');
+  const userPhone = prompt('Bitte Telefonnummer eingeben:');
+  
+  if(!userName || !userPhone) {
+    showToast('Bestellung abgebrochen: Name und Telefon werden benötigt', 'error');
+    return;
+  }
+  
+  const code = generate4DigitCode();
+  const orderData = { 
+    code: code, 
+    createdAt: Date.now(), 
+    items: [...cart], 
+    status: 'offen', 
+    userName: userName, 
+    phone: userPhone 
+  };
+  
+  try {
+    const newOrderRef = push(ordersRef);
+    await update(newOrderRef, orderData);
+    
+    // Discord Webhook senden
+    await sendDiscordWebhook(orderData);
+    
+    if(!orderCodeDisplayEl) ensureOrderUiInCart();
+    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
+    cart = [];
+    renderCartView();
+    showToast(`Bestellung gespeichert mit Code: ${code}`, 'success');
+    
+  } catch (e) { 
+    console.error(e); 
+    showToast('Fehler beim Speichern der Bestellung', 'error'); 
+  }
+}
+
+// Globale Funktionen für Cart
+window.updateCartQuantity = function(productKey, newQuantity) {
+  const item = cart.find(item => item.key === productKey);
+  if (item && newQuantity > 0) {
+    const product = products.find(p => p.key === productKey);
+    if (product) {
+      const resourceMap = resourcesToMap(product.resources);
+      item.quantity = newQuantity;
+      item.resources = {};
+      for (let i = 0; i < newQuantity; i++) {
+        for (const resource in resourceMap) {
+          item.resources[resource] = (item.resources[resource] || 0) + resourceMap[resource];
+        }
+      }
+    }
+    renderCartView();
+  } else if (newQuantity <= 0) {
+    removeFromCart(productKey);
+  }
+}
+
+window.removeFromCart = function(productKey) {
+  const index = cart.findIndex(item => item.key === productKey);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    renderCartView();
+    showToast('Produkt aus Warenkorb entfernt', 'success');
+  }
+}
+
+function escapeHtml(text) {
+  if(!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// EINSTELLUNGEN FUNKTIONEN
+
+// Produkt Management
+document.getElementById('btnNewProduct').addEventListener('click', () => {
+  document.getElementById('productFormCard').classList.remove('hidden-el');
+  document.getElementById('productForm').reset();
+  document.getElementById('prodId').value = '';
+  document.getElementById('prodPreview').src = 'https://via.placeholder.com/150x100';
+});
+
+document.getElementById('cancelProductBtn').addEventListener('click', () => {
+  document.getElementById('productFormCard').classList.add('hidden-el');
+});
+
+document.getElementById('addResourceBtn').addEventListener('click', () => {
+  addResourceRow();
+});
+
+document.getElementById('productForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const rows = Array.from(document.querySelectorAll('#resourceTable tbody tr'));
+  const resources = rows.map(row => {
+    const name = row.children[0].querySelector('input').value.trim();
+    const quantity = row.children[1].querySelector('input').value.trim();
+    const color = row.children[2].querySelector('input').value;
+    return name && quantity ? `${name}:${quantity}:${color}` : '';
+  }).filter(Boolean).join(';');
+
+  const payload = {
+    name: document.getElementById('prodName').value.trim(),
+    image: document.getElementById('prodImg').value.trim(),
+    description: document.getElementById('prodDesc').value.trim(),
+    category: document.getElementById('prodCategorySelect').value.trim(),
+    resources: resources,
+    colorName: document.getElementById('colorNameInput').value,
+    colorQuantity: document.getElementById('colorQuantityInput').value,
+    updatedAt: Date.now()
+  };
+
+  try{
+    if(document.getElementById('prodId').value){
+      await update(ref(db, 'products/' + document.getElementById('prodId').value), payload);
+      showToast('Produkt aktualisiert', 'success');
+    } else {
+      await push(productsRef, payload);
+      showToast('Produkt angelegt', 'success');
+    }
+    document.getElementById('productFormCard').classList.add('hidden-el');
+  } catch(error){ 
+    console.error(error); 
+    showToast('Fehler beim Speichern des Produkts', 'error'); 
+  }
+});
+
+// Kategorien Management
 document.getElementById('addCategoryBtn').addEventListener('click', async () => {
   const name = (document.getElementById('newCategoryInput').value || '').trim();
   if(!name) return showToast('Bitte Namen eingeben', 'warning');
@@ -1744,6 +2233,71 @@ document.getElementById('resetGeneralBtn').addEventListener('click', async () =>
     await update(settingsRef, { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' }); 
     showToast('Einstellungen zurückgesetzt', 'success');
   } catch(e){ console.error(e); showToast('Fehler beim Zurücksetzen', 'error'); }
+});
+
+// Bestellungen Event Listener
+document.getElementById('loadOrderBtn').addEventListener('click', () => {
+  const code = (document.getElementById('orderCodeInput').value||'').trim();
+  if(!code) return showToast('Code eingeben', 'warning');
+  loadOrderByCode(code);
+});
+
+document.getElementById('refreshOrdersBtn').addEventListener('click', () => {
+  get(ordersRef)
+    .then(() => showToast('Bestellungen aktualisiert', 'success'))
+    .catch(() => showToast('Aktualisieren fehlgeschlagen', 'error'));
+});
+
+document.getElementById('saveOrderUserBtn').addEventListener('click', async () => {
+  if (!selectedOrder) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { 
+      userName: (document.getElementById('orderUserName').value||'').trim(), 
+      phone: (document.getElementById('orderPhone').value||'').trim() 
+    }); 
+    showToast('Kundendaten gespeichert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
+});
+
+document.getElementById('markOrderProcessedBtn').addEventListener('click', async () => {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung als bearbeitet markieren und aus Bestellungen entfernen?')) return;
+  try { 
+    await incrementUserStatsOnProcessed(selectedOrder);
+    
+    await update(ref(db,'orders/'+selectedOrder.key), { 
+      status: 'bearbeitet',
+      removedFromOrders: true
+    }); 
+    
+    document.getElementById('orderDetails').style.display = 'none';
+    document.getElementById('orderCodeInput').value = '';
+    selectedOrder = null;
+    
+    showToast('Bestellung als bearbeitet markiert und aus Bestellungen entfernt', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+document.getElementById('markOrderOpenBtn').addEventListener('click', async () => {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung als offen markieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'offen' }); 
+    showToast('Bestellung als offen markiert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+document.getElementById('markOrderCancelledBtn').addEventListener('click', async () => {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung stornieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'storniert' }); 
+    showToast('Bestellung storniert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
 
 // Farben Einstellungen
@@ -1796,6 +2350,7 @@ document.getElementById('resetColorsBtn').addEventListener('click', async () => 
 
 // Initialisierung
 setupImageUpload();
+ensureOrderUiInCart();
 renderCartView();
 
 // Settings von Firebase laden
@@ -1819,7 +2374,7 @@ onValue(colorsRef, snapshot => {
   }
 });
 
-console.log('🚀 Bullet Farm v3 Shop komplett initialisiert - Alle Einstellungen funktionieren!');
+console.log('🚀 Bullet Farm v3 Shop komplett initialisiert - ALLE FUNKTIONEN AKTIV!');
 </script>
 </body>
 </html>

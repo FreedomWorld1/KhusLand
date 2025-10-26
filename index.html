@@ -1,601 +1,3066 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Weed Ankauf</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { 
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    }
-    .card { 
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
-      border: 1px solid rgba(74, 222, 128, 0.2); 
-      border-radius: 16px; 
-      backdrop-filter: blur(10px);
-    }
-    .shadow-soft { 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
-                  0 5px 10px rgba(0, 0, 0, 0.3),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1); 
-    }
-    .small-muted { 
-      color: #94a3b8; 
-      font-size: 0.85rem; 
-    }
-    .btn { 
-      transition: all 0.2s ease; 
-      font-size: 0.9rem; 
-      font-weight: 500;
-    }
-    .btn:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    .hidden-el { 
-      display: none; 
-    }
-    input { 
-      transition: all 0.2s ease; 
-      font-size: 0.95rem; 
-    }
-    input:focus { 
-      outline: none; 
-      border-color: #7e22ce; 
-      box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.3); 
-    }
-    .active-link { 
-      background-color: #16a34a !important; 
-      color: #fff !important; 
-      font-weight: 600; 
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(74, 222, 128, 0.1);
-    }
-    .fade-in {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .pulse-glow {
-      animation: pulseGlow 2s infinite;
-    }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(74, 222, 128, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(74, 222, 128, 0.5); }
-    }
-    .scrollbar-custom::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 10px;
-    }
-    .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #4ade80;
-      border-radius: 10px;
-    }
-    /* Fix für Hamburger-Menü - Höherer z-index */
-    .hamburger-container {
-      position: relative;
-      z-index: 1000;
-    }
-    .hamburger-menu {
-      z-index: 1001;
-    }
-  </style>
-</head>
-<body class="text-gray-100 antialiased min-h-screen">
-  <div class="max-w-4xl mx-auto p-4 md:p-6">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Bullet Farm v3 — Shop</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root {
+  --bg: #0f1724;
+  --card: #0b1220;
+  --muted: #9ca3af;
+  --accent: #06b6d4;
+  --primary-color: #22c55e;
+  --secondary-color: #3b82f6;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --background-color: #0f1724;
+}
 
-    <!-- HEADER -->
-    <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
-          <span class="text-white font-bold">🌿</span>
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+  background: var(--background-color);
+  color: #e6eef8;
+  margin: 0;
+  line-height: 1.5;
+  transition: background-color 0.3s ease;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+.card {
+  background: linear-gradient(180deg, var(--card), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.shadow-soft {
+  box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+}
+
+.small-muted {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.btn {
+  transition: all 0.12s ease;
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+  background: #111827;
+  color: #e6eef8;
+  border: 1px solid rgba(255,255,255,0.03);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  background: #1f2937;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hidden-el {
+  display: none !important;
+}
+
+.product-image {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-image-admin {
+  width: 80px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+#productsGrid .card {
+  margin: 0 auto;
+  transition: transform 0.2s ease;
+}
+
+#productsGrid .card:hover {
+  transform: translateY(-5px);
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4,6,11,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+  z-index: 80;
+  backdrop-filter: blur(4px);
+  padding: 12px;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-box {
+  width: 100%;
+  max-width: 980px;
+  background: linear-gradient(180deg, var(--card), var(--background-color));
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 20px 60px rgba(2,6,23,0.7);
+  transform: translateY(-8px);
+  transition: transform 0.22s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-overlay.active .modal-box {
+  transform: translateY(0);
+}
+
+.tab-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.tab-btn.active {
+  background: linear-gradient(90deg, #94a3b8, #06b6d4);
+  color: #041628;
+  font-weight: 700;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.kv {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.category-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.input, textarea, select {
+  background: #071224;
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #e6eef8;
+  padding: 0.5rem;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 16px;
+}
+
+.input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: rgba(6, 182, 212, 0.5);
+}
+
+.color-input {
+  width: 48px;
+  height: 36px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: #fff;
+  cursor: pointer;
+}
+
+.small-btn {
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.success { color: var(--success-color); }
+.warning { color: var(--warning-color); }
+.error { color: var(--error-color); }
+.info { color: var(--secondary-color); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.orders-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.orders-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-order-item {
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-order-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.user-order-item.active {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.3);
+}
+
+.user-orders-list, .order-details-container {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-open {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning-color);
+}
+
+.status-processed {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success-color);
+}
+
+.status-cancelled {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error-color);
+}
+
+.order-card {
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.order-card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* NEU: Bild-Upload Stile */
+.image-upload-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-upload-btn {
+  background: var(--secondary-color);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.image-upload-btn:hover {
+  background: #2563eb;
+}
+
+.file-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.image-preview {
+  position: relative;
+  width: 80px;
+  height: 60px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--error-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 8px;
+  }
+  
+  .card {
+    padding: 12px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .product-image {
+    height: 120px;
+  }
+  
+  .flex.gap-2 {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .tab-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .table {
+    font-size: 0.8rem;
+    min-width: 500px;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  
+  .orders-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .shop-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start !important;
+  }
+  
+  .shop-filter {
+    width: 100% !important;
+  }
+  
+  .admin-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .admin-actions .btn {
+    width: 100%;
+  }
+  
+  .order-card-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .order-card-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    gap: 10px;
+  }
+  
+  .product-image {
+    height: 100px;
+  }
+  
+  .container {
+    padding: 6px;
+  }
+  
+  .card {
+    padding: 10px;
+  }
+}
+
+/* FIX: Text-Optimierungen für bessere Darstellung auf allen Geräten */
+.mobile-optimized-text {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.4;
+}
+
+.product-card-text {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.table-text-fix {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 200px;
+}
+
+.resource-text-fix {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal !important;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: slideInRight 0.3s ease;
+  max-width: 300px;
+}
+
+.toast-success {
+  background: var(--success-color);
+}
+
+.toast-error {
+  background: var(--error-color);
+}
+
+.toast-warning {
+  background: var(--warning-color);
+}
+
+.toast-info {
+  background: var(--secondary-color);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Loading Spinner */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Search Input */
+.search-input {
+  position: relative;
+}
+
+.search-input input {
+  padding-left: 36px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+
+/* Settings Search */
+.settings-search-container {
+  margin-bottom: 16px;
+}
+
+.no-search-results {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* User Stats */
+.user-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.stat-card {
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-lifetime {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.stat-resettime {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.stat-lifetime .stat-value {
+  color: var(--success-color);
+}
+
+.stat-resettime .stat-value {
+  color: var(--warning-color);
+}
+
+/* Color Settings */
+.color-setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.color-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.color-input-wide {
+  width: 80px;
+  height: 36px;
+}
+
+/* NEU: Webhook Einstellungen */
+.webhook-setting-item {
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.webhook-test-btn {
+  background: var(--secondary-color);
+  margin-left: 8px;
+}
+
+.webhook-status {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.webhook-status.connected {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success-color);
+}
+
+.webhook-status.disconnected {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error-color);
+}
+
+/* NEU: Logo und Titel als klickbare Links */
+.clickable-header {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-header:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.created-by-link {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.created-by-link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="card shadow-soft mb-6 flex items-center justify-between fade-in">
+      <div class="flex items-center gap-4">
+        <!-- NEU: Klickbares Logo -->
+        <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" 
+             style="width:48px;height:48px;object-fit:cover;border-radius:8px" 
+             class="clickable-header">
+        <div>
+          <!-- NEU: Klickbarer Titel -->
+          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin:0" 
+              class="mobile-optimized-text clickable-header">Bullet Farm v3</h1>
+          <div class="small-muted mobile-optimized-text">Shop System</div>
+          <!-- NEU: Created by Link -->
+          <div class="created-by-link mobile-optimized-text" id="createdByLink">Created by Colin</div>
         </div>
-        <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Weed Ankauf</h1>
       </div>
       <div class="flex items-center gap-2">
-        <button id="btnNew" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Neuer Ankauf</button>
-        <button id="btnOverview" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Übersicht</button>
-        <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
-        <div class="hamburger-container">
-          <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-          </button>
-          <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-            <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Weed</a>
-            <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
-            <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Scarface Weed</a>
-            <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
-            <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Routen</a>
-            <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
-          </div>
-        </div>
+        <button id="btnShop" class="btn">Shop</button>
+        <button id="btnCart" class="btn">Warenkorb <span id="cartCount" style="margin-left:4px;background:var(--secondary-color);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;"></span></button>
+        <button id="openSettingsBtn" class="btn">⚙️</button>
       </div>
     </header>
 
-    <div id="mainContainer" class="space-y-6 relative z-0">
+    <main id="mainContent">
+      <section id="shopView" class="card mb-6 fade-in">
+        <div class="shop-header flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3" style="flex-wrap: wrap;">
+            <h2 style="font-weight:700;color:var(--primary-color);margin:0" class="mobile-optimized-text">🛒 Produkte</h2>
+            <div class="kv mobile-optimized-text" style="white-space: nowrap;">Filter:</div>
+            <select id="shopCategoryFilter" class="input shop-filter" style="width:200px; min-width: 150px;">
+              <option value="">— Alle Kategorien —</option>
+            </select>
+          </div>
+          <div class="search-input" style="position:relative">
+            <div class="search-icon">🔍</div>
+            <input id="productSearch" type="text" class="input" placeholder="Produkte suchen..." style="padding-left:36px;width:200px">
+          </div>
+        </div>
+        <div id="productsGrid" class="grid"></div>
+      </section>
 
-      <!-- NEUER ANKAUF -->
-      <div id="newEntry" class="card p-6 shadow-soft fade-in">
-        <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
-          <span class="bg-green-900/30 p-2 rounded-lg">💰</span>
-          Neuer Ankauf
-        </h2>
-        <form id="entryForm" class="space-y-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="buyer" class="block text-sm font-medium text-gray-300 mb-1">Käufer</label>
-              <input id="buyer" type="text" placeholder="Name des Käufers" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required/>
-            </div>
-            <div>
-              <label for="seller" class="block text-sm font-medium text-gray-300 mb-1">Verkäufer</label>
-              <input id="seller" type="text" placeholder="Name des Verkäufers" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required/>
+      <section id="cartView" class="card mb-6 hidden-el fade-in">
+        <div class="flex items-center justify-between mb-4">
+          <h2 style="font-weight:700;color:var(--primary-color)" class="mobile-optimized-text">🛍️ Warenkorb</h2>
+          <div class="kv mobile-optimized-text">Ressourcen & Anzahl</div>
+        </div>
+        <div class="table-container">
+          <table class="table" id="cartTable">
+            <thead>
+              <tr>
+                <th class="mobile-optimized-text">Produkt</th>
+                <th class="mobile-optimized-text">Ressourcen</th>
+                <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+                <th style="width:80px" class="mobile-optimized-text">Aktionen</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div style="margin-top:12px;font-weight:700" id="cartSummary" class="mobile-optimized-text">Gesamt Ressourcen: keine</div>
+      </section>
+    </main>
+  </div>
+
+  <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
+    <div class="modal-box">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <h3 style="font-size:1.15rem;font-weight:700;color:#94a3b8;margin:0" class="mobile-optimized-text">⚙️ Einstellungen</h3>
+          <div class="kv mobile-optimized-text">Passwortgeschützte — Funktionen</div>
+        </div>
+        <div class="flex gap-2 items-center">
+          <button id="settingsCloseBtn" class="btn">✖</button>
+        </div>
+      </div>
+
+      <div id="settingsLoginArea">
+        <label class="kv mb-2 mobile-optimized-text">Admin Passwort</label>
+        <div class="flex items-center gap-2 mb-3">
+          <input id="settingsPassword" type="password" class="input" placeholder="Passwort (admin123)"/>
+          <button id="settingsUnlockBtn" class="btn">Einloggen</button>
+        </div>
+        <div id="settingsLoginError" class="error kv mobile-optimized-text" style="display:none">❌ Falsches Passwort</div>
+      </div>
+
+      <div id="settingsEditor" class="hidden-el">
+        <div class="mb-4">
+          <div class="flex gap-2">
+            <button class="tab-btn active" data-tab="products">Produkte</button>
+            <button class="tab-btn" data-tab="categories">Kategorien</button>
+            <button class="tab-btn" data-tab="general">Allgemein</button>
+            <button class="tab-btn" data-tab="orders">Bestellungen</button>
+            <button class="tab-btn" data-tab="users">Nutzer</button>
+            <button class="tab-btn" data-tab="colors">Farben</button>
+            <!-- NEU: Webhook Tab -->
+            <button class="tab-btn" data-tab="webhook">Discord Webhook</button>
+          </div>
+        </div>
+
+        <div id="tabProducts" class="tab-panel">
+          <div class="flex items-center justify-between mb-3 admin-actions">
+            <h4 style="font-weight:700" class="mobile-optimized-text">Produkte verwalten</h4>
+            <div class="flex gap-2">
+              <button id="btnNewProduct" class="btn">Neues Produkt</button>
+              <button id="btnReloadProducts" class="btn">Neu laden</button>
             </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">Menge</label>
-              <input id="quantity" type="number" min="1" placeholder="Geben Sie die Menge ein" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500"/>
+
+          <div id="productFormCard" class="card mb-3 hidden-el">
+            <form id="productForm">
+              <input id="prodId" type="hidden"/>
+              <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px">
+                <div>
+                  <input id="prodName" class="input mobile-optimized-text" placeholder="Name" required />
+                  <!-- NEU: Bild-Upload Optionen -->
+                  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                    <input id="prodImg" class="input mobile-optimized-text" placeholder="Bild-URL" style="flex:1"/>
+                    <div class="image-upload-container">
+                      <div class="image-upload-btn">
+                        <span id="prodImgUploadText">📁 Datei auswählen</span>
+                        <span id="prodImgUploadLoading" class="upload-loading hidden-el"></span>
+                      </div>
+                      <input type="file" id="prodImgFile" class="file-input" accept="image/*">
+                    </div>
+                  </div>
+                  <!-- Bild-Vorschau -->
+                  <div id="imagePreviewContainer" class="image-preview-container"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <label class="kv mobile-optimized-text">Vorschau</label>
+                  <img id="prodPreview" src="https://via.placeholder.com/150x100" alt="Vorschau" style="width:100%;height:80px;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,0.03)">
+                </div>
+              </div>
+
+              <textarea id="prodDesc" class="input mobile-optimized-text" rows="2" placeholder="Beschreibung (optional)" style="margin-bottom:8px"></textarea>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
+                <select id="prodCategorySelect" class="input mobile-optimized-text">
+                  <option value="">— Keine Kategorie —</option>
+                </select>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  <label class="kv mobile-optimized-text">Name-Farbe</label>
+                  <input id="colorNameInput" type="color" class="color-input" value="#22c55e">
+                  <label class="kv mobile-optimized-text">Anzahl-Farbe</label>
+                  <input id="colorQuantityInput" type="color" class="color-input" value="#3b82f6">
+                </div>
+              </div>
+
+              <div id="resourceTableContainer" style="margin-bottom:8px">
+                <h5 style="margin:0 0 8px 0;font-weight:700" class="mobile-optimized-text">Ressourcen (Name:Anzahl:Farbe)</h5>
+                <div class="table-container">
+                  <table class="table" id="resourceTable">
+                    <thead>
+                      <tr>
+                        <th class="mobile-optimized-text">Ressource</th>
+                        <th style="width:120px;text-align:right" class="mobile-optimized-text">Anzahl</th>
+                        <th style="width:120px" class="mobile-optimized-text">Farbe</th>
+                        <th style="width:60px" class="mobile-optimized-text">Aktion</th>
+                      </tr>
+                    </thead>
+                    <tbody style="background:transparent"></tbody>
+                  </table>
+                </div>
+                <div style="margin-top:8px">
+                  <button id="addResourceBtn" type="button" class="btn">Ressource hinzufügen</button>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="submit" class="btn" style="background:var(--success-color)">✅ Speichern</button>
+                <button id="cancelProductBtn" type="button" class="btn" style="background:var(--error-color)">❌ Abbrechen</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card" style="max-height:46vh;overflow:auto">
+            <div class="table-container">
+              <table class="table" style="width:100%">
+                <thead>
+                  <tr>
+                    <th class="mobile-optimized-text">Vorschau</th>
+                    <th class="mobile-optimized-text">Name</th>
+                    <th class="mobile-optimized-text">Kategorie</th>
+                    <th class="mobile-optimized-text">Ressourcen</th>
+                    <th style="width:140px" class="mobile-optimized-text">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+              </table>
             </div>
-            <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 flex items-center justify-center">
-              <div class="text-center">
-                <div class="small-muted mb-0.5">Gesamtpreis</div>
-                <div id="totalPrice" class="text-lg font-bold text-purple-400">0 $</div>
+          </div>
+        </div>
+
+        <div id="tabCategories" class="tab-panel hidden-el">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <h4 style="font-weight:700" class="mobile-optimized-text">Kategorien verwalten</h4>
+            <div style="display:flex;gap:8px;width:100%;max-width:360px;">
+              <input id="newCategoryInput" class="input mobile-optimized-text" placeholder="Neue Kategorie" />
+              <button id="addCategoryBtn" class="btn">Hinzufügen</button>
+            </div>
+          </div>
+          <div id="categoriesList" class="card" style="max-height:36vh;overflow:auto;padding:12px"></div>
+        </div>
+
+        <div id="tabGeneral" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Allgemein</h4>
+          
+          <label class="kv mb-2 mobile-optimized-text">Titel</label>
+          <input id="settingTitle" class="input mobile-optimized-text" placeholder="Seiten-Titel"/>
+          
+          <!-- NEU: Header Bild Upload -->
+          <label class="kv mb-2 mobile-optimized-text" style="margin-top:8px">Header Bild</label>
+          <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <input id="settingHeaderImage" class="input mobile-optimized-text" placeholder="Bild-URL" style="flex:1"/>
+            <div class="image-upload-container">
+              <div class="image-upload-btn">
+                <span id="headerImgUploadText">📁 Datei auswählen</span>
+                <span id="headerImgUploadLoading" class="upload-loading hidden-el"></span>
+              </div>
+              <input type="file" id="settingHeaderImageFile" class="file-input" accept="image/*">
+            </div>
+          </div>
+          
+          <!-- NEU: Header Bild Vorschau -->
+          <div id="headerImagePreviewContainer" class="image-preview-container"></div>
+          
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <button id="saveGeneralBtn" class="btn" style="background:var(--success-color)">✅ Speichern</button>
+            <button id="resetGeneralBtn" class="btn" style="background:var(--error-color)">❌ Zurücksetzen</button>
+          </div>
+        </div>
+
+        <div id="tabOrders" class="tab-panel hidden-el">
+          <div class="settings-search-container">
+            <div class="search-input">
+              <div class="search-icon">🔍</div>
+              <input id="ordersSearch" type="text" class="input" placeholder="Bestellungen suchen (Code, Name, Telefon, Status)..." style="padding-left:36px">
+            </div>
+          </div>
+
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Bestellungen verwalten</h4>
+
+          <div class="flex items-center gap-2 mb-3" style="flex-wrap:wrap;">
+            <input id="orderCodeInput" class="input mobile-optimized-text" placeholder="Bestellcode eingeben (z. B. 4272)" style="width:200px;min-width:150px;">
+            <button id="loadOrderBtn" class="btn">Laden</button>
+            <button id="refreshOrdersBtn" class="btn">🔄 Aktualisieren</button>
+          </div>
+
+          <div id="orderDetails" class="card" style="margin-bottom:12px;display:none">
+            <h5 style="margin:0 0 8px 0" class="mobile-optimized-text">Bestelldetails</h5>
+            <div id="orderCodeDisplay" class="kv mobile-optimized-text" style="margin-bottom:8px"></div>
+            <div id="orderItems" class="kv mobile-optimized-text"></div>
+            <div style="margin-top:8px">
+              <input id="orderUserName" class="input mobile-optimized-text" placeholder="Name des Kunden" style="margin-top:6px">
+              <input id="orderPhone" class="input mobile-optimized-text" placeholder="Telefonnummer" style="margin-top:6px">
+              <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                <button id="saveOrderUserBtn" class="btn" style="background:var(--success-color)">✅ Daten speichern</button>
+                <button id="markOrderProcessedBtn" class="btn" style="background:var(--success-color)">✅ Als bearbeitet</button>
+                <button id="markOrderOpenBtn" class="btn" style="background:var(--warning-color)">🔄 Als offen</button>
+                <button id="markOrderCancelledBtn" class="btn" style="background:var(--error-color)">❌ Stornieren</button>
               </div>
             </div>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-              <div class="small-muted mb-1">Verkäufer (70%)</div>
-              <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
-            </div>
-            <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-              <div class="small-muted mb-1">Käufer (30%)</div>
-              <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
-            </div>
-          </div>
-          <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-              Speichern
-            </button>
-            <button type="button" id="resetForm" class="px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
-              Zurücksetzen
-            </button>
-          </div>
-        </form>
-      </div>
 
-      <!-- ÜBERSICHT -->
-      <div id="overview" class="card p-5 shadow-soft hidden-el fade-in">
-        <h2 class="text-lg font-semibold mb-4 text-green-400 flex items-center gap-2">
-          <span class="bg-green-900/30 p-2 rounded-lg">📋</span>
-          Übersicht
-        </h2>
-        <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto scrollbar-custom p-1"></div>
-      </div>
-
-      <!-- ADMIN -->
-      <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
-        <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-          <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
-          Adminbereich
-        </h2>
-        <div id="adminLoginSection">
-          <div class="mb-4">
-            <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
-            <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
-          </div>
-          <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-            </svg>
-            Einloggen
-          </button>
-          <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
+          <h5 style="margin-top:10px" class="mobile-optimized-text">Alle Bestellungen</h5>
+          <div id="ordersList" class="card" style="max-height:40vh;overflow:auto;padding:12px"></div>
         </div>
-        <div id="adminContent" class="hidden-el">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-            <div class="small-muted">Gesamtanzahl: <span id="totalCount" class="font-bold text-white">0</span></div>
-            <div class="small-muted">Gesamtumsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
-            <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm btn flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-              CSV Export
-            </button>
+
+        <div id="tabUsers" class="tab-panel hidden-el">
+          <div class="settings-search-container">
+            <div class="search-input">
+              <div class="search-icon">🔍</div>
+              <input id="usersSearch" type="text" class="input" placeholder="Nutzer suchen (Name, Telefon)..." style="padding-left:36px">
+            </div>
           </div>
-          <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
-            <table class="w-full text-left text-sm">
-              <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
-                <tr>
-                  <th class="p-3 font-medium">Datum</th>
-                  <th class="p-3 font-medium">Käufer</th>
-                  <th class="p-3 font-medium">Verkäufer</th>
-                  <th class="p-3 font-medium">Menge</th>
-                  <th class="p-3 font-medium">Preis</th>
-                  <th class="p-3 font-medium">Verkäufer (60%)</th>
-                  <th class="p-3 font-medium">Käufer (40%)</th>
-                  <th class="p-3 font-medium">Aktion</th>
-                </tr>
-              </thead>
-              <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
-            </table>
+
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">Nutzer & Bestellungen</h4>
+          <div class="kv mb-3 mobile-optimized-text">Klicke auf einen Nutzer, um alle seine Bestellungen zu sehen</div>
+          
+          <div class="orders-layout">
+            <div class="orders-column">
+              <h5 class="mobile-optimized-text">📞 Nutzer</h5>
+              <div id="usersList" class="card user-orders-list" style="padding:12px">
+                <div class="kv mobile-optimized-text">Lade Nutzer...</div>
+              </div>
+            </div>
+            
+            <div class="orders-column">
+              <h5 class="mobile-optimized-text">📋 Bestellungen des Nutzers</h5>
+              <div id="userOrdersDetails" class="card order-details-container" style="padding:12px">
+                <div class="kv mobile-optimized-text">Wähle einen Nutzer aus, um seine Bestellungen zu sehen</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
+        <div id="tabColors" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">🎨 Globale Farben verwalten</h4>
+          <div class="kv mb-3 mobile-optimized-text">Ändere hier die Farben der gesamten Webseite</div>
+          
+          <div class="card" style="margin-bottom:16px">
+            <h5 style="margin:0 0 12px 0;font-weight:700" class="mobile-optimized-text">Hintergrund & Karten</h5>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Hintergrundfarbe</div>
+                <div class="kv mobile-optimized-text">Haupt-Hintergrund der gesamten Webseite</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="backgroundColorPreview" style="background:var(--background-color)"></div>
+                <input type="color" id="backgroundColorInput" class="color-input-wide" value="#0f1724">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Karten-Hintergrund</div>
+                <div class="kv mobile-optimized-text">Hintergrundfarbe der Karten/Container</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="cardColorPreview" style="background:var(--card)"></div>
+                <input type="color" id="cardColorInput" class="color-input-wide" value="#0b1220">
+              </div>
+            </div>
+            
+            <h5 style="margin:20px 0 12px 0;font-weight:700" class="mobile-optimized-text">Hauptfarben</h5>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Primärfarbe</div>
+                <div class="kv mobile-optimized-text">Titel, Überschriften, wichtige Elemente</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="primaryColorPreview" style="background:var(--primary-color)"></div>
+                <input type="color" id="primaryColorInput" class="color-input-wide" value="#22c55e">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Sekundärfarbe</div>
+                <div class="kv mobile-optimized-text">Warenkorb-Zähler, Buttons, sekundäre Elemente</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="secondaryColorPreview" style="background:var(--secondary-color)"></div>
+                <input type="color" id="secondaryColorInput" class="color-input-wide" value="#3b82f6">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Erfolgsfarbe</div>
+                <div class="kv mobile-optimized-text">Positive Aktionen, Bestätigungen</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="successColorPreview" style="background:var(--success-color)"></div>
+                <input type="color" id="successColorInput" class="color-input-wide" value="#10b981">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Warnfarbe</div>
+                <div class="kv mobile-optimized-text">Warnungen, Status "offen"</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="warningColorPreview" style="background:var(--warning-color)"></div>
+                <input type="color" id="warningColorInput" class="color-input-wide" value="#f59e0b">
+              </div>
+            </div>
+            
+            <div class="color-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Fehlerfarbe</div>
+                <div class="kv mobile-optimized-text">Fehler, Stornierungen, negative Aktionen</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="color-preview" id="errorColorPreview" style="background:var(--error-color)"></div>
+                <input type="color" id="errorColorInput" class="color-input-wide" value="#ef4444">
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="saveColorsBtn" class="btn" style="background:var(--success-color)">✅ Farben speichern</button>
+            <button id="resetColorsBtn" class="btn" style="background:var(--error-color)">❌ Farben zurücksetzen</button>
+            <button id="applyColorsBtn" class="btn" style="background:var(--secondary-color)">🎨 Vorschau anwenden</button>
+          </div>
+          
+          <div class="kv mobile-optimized-text" style="margin-top:12px">
+            <strong>Tipp:</strong> Verwende "Vorschau anwenden" um die Änderungen zu testen, bevor du sie speicherst.
+          </div>
+        </div>
+
+        <!-- NEU: Discord Webhook Tab -->
+        <div id="tabWebhook" class="tab-panel hidden-el">
+          <h4 style="font-weight:700;margin-bottom:8px" class="mobile-optimized-text">🔗 Discord Webhook</h4>
+          <div class="kv mb-3 mobile-optimized-text">Hier kannst du einen Discord Webhook konfigurieren, um Bestellungen automatisch an deinen Discord-Channel zu senden</div>
+          
+          <div class="card" style="margin-bottom:16px">
+            <div class="webhook-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Discord Webhook URL</div>
+                <div class="kv mobile-optimized-text">Füge hier deinen Discord Webhook Link ein</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                <input type="text" id="webhookUrl" class="input" placeholder="https://discord.com/api/webhooks/..." style="flex:1">
+                <button id="testWebhookBtn" class="btn webhook-test-btn">Testen</button>
+              </div>
+              <div id="webhookStatus" class="webhook-status disconnected" style="margin-top:8px">Nicht verbunden</div>
+            </div>
+            
+            <div class="webhook-setting-item">
+              <div>
+                <div style="font-weight:600" class="mobile-optimized-text">Webhook Einstellungen</div>
+                <div class="kv mobile-optimized-text">Konfiguriere das Verhalten des Webhooks</div>
+              </div>
+              <div style="margin-top:8px">
+                <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <input type="checkbox" id="webhookEnabled" checked>
+                  <span class="mobile-optimized-text">Webhook aktivieren</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                  <input type="checkbox" id="sendOrderDetails" checked>
+                  <span class="mobile-optimized-text">Bestelldetails mitsenden</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:8px">
+                  <input type="checkbox" id="sendCustomerInfo" checked>
+                  <span class="mobile-optimized-text">Kundeninformationen mitsenden (Name & Telefon)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button id="saveWebhookBtn" class="btn" style="background:var(--success-color)">✅ Webhook speichern</button>
+            <button id="resetWebhookBtn" class="btn" style="background:var(--error-color)">❌ Webhook zurücksetzen</button>
+          </div>
+          
+          <div class="kv mobile-optimized-text" style="margin-top:12px">
+            <strong>Anleitung:</strong> Erstelle einen Webhook in deinem Discord-Channel unter Channel-Einstellungen → Integrationen → Webhooks → Neuer Webhook
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-      authDomain: "khusland-b7d13.firebaseapp.com",
-      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-      projectId: "khusland-b7d13",
-      storageBucket: "khusland-b7d13.firebasestorage.app",
-      messagingSenderId: "69573193613",
-      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-      measurementId: "G-JSCWR4207G"
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+const firebaseConfig = { 
+  apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+  authDomain: "khusland-b7d13.firebaseapp.com",
+  databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+  projectId: "khusland-b7d13",
+  storageBucket: "khusland-b7d13.firebasestorage.app",
+  messagingSenderId: "69573193613",
+  appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+  measurementId: "G-JSCWR4207G"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const productsRef = ref(db, 'products');
+const settingsRef = ref(db, 'settings');
+const categoriesRef = ref(db, 'categories');
+const ordersRef = ref(db, 'orders');
+const userStatsRef = ref(db, 'userStats');
+const colorsRef = ref(db, 'colors');
+const webhookRef = ref(db, 'webhook');
+
+const ADMIN_PASSWORD = 'T9"/TIF;9CGmSUzF]qafNT|/7j%]p';
+
+// NEU: Discord Links
+const LOGO_LINK = 'https://discord.gg/nnpUm8TNhB';
+const CREATED_BY_LINK = 'https://discord.gg/RQgwDjKUBd';
+
+// DOM Elemente
+const elements = {
+  openSettingsBtn: document.getElementById('openSettingsBtn'),
+  settingsModal: document.getElementById('settingsModal'),
+  settingsCloseBtn: document.getElementById('settingsCloseBtn'),
+  settingsPassword: document.getElementById('settingsPassword'),
+  settingsUnlockBtn: document.getElementById('settingsUnlockBtn'),
+  settingsLoginError: document.getElementById('settingsLoginError'),
+  settingsLoginArea: document.getElementById('settingsLoginArea'),
+  settingsEditor: document.getElementById('settingsEditor'),
+  tabBtns: document.querySelectorAll('.tab-btn'),
+  tabPanels: document.querySelectorAll('.tab-panel'),
+  btnNewProduct: document.getElementById('btnNewProduct'),
+  productFormCard: document.getElementById('productFormCard'),
+  productForm: document.getElementById('productForm'),
+  cancelProductBtn: document.getElementById('cancelProductBtn'),
+  prodId: document.getElementById('prodId'),
+  prodName: document.getElementById('prodName'),
+  prodImg: document.getElementById('prodImg'),
+  prodImgFile: document.getElementById('prodImgFile'),
+  prodImgUploadText: document.getElementById('prodImgUploadText'),
+  prodImgUploadLoading: document.getElementById('prodImgUploadLoading'),
+  prodPreview: document.getElementById('prodPreview'),
+  prodDesc: document.getElementById('prodDesc'),
+  prodCategorySelect: document.getElementById('prodCategorySelect'),
+  colorNameInput: document.getElementById('colorNameInput'),
+  colorQuantityInput: document.getElementById('colorQuantityInput'),
+  addResourceBtn: document.getElementById('addResourceBtn'),
+  resourceTable: document.querySelector('#resourceTable tbody'),
+  productsTableBody: document.getElementById('productsTableBody'),
+  btnReloadProducts: document.getElementById('btnReloadProducts'),
+  settingTitle: document.getElementById('settingTitle'),
+  settingHeaderImage: document.getElementById('settingHeaderImage'),
+  settingHeaderImageFile: document.getElementById('settingHeaderImageFile'),
+  headerImgUploadText: document.getElementById('headerImgUploadText'),
+  headerImgUploadLoading: document.getElementById('headerImgUploadLoading'),
+  saveGeneralBtn: document.getElementById('saveGeneralBtn'),
+  resetGeneralBtn: document.getElementById('resetGeneralBtn'),
+  pageTitle: document.getElementById('pageTitle'),
+  headerLogo: document.getElementById('headerLogo'),
+  productsGrid: document.getElementById('productsGrid'),
+  shopView: document.getElementById('shopView'),
+  cartView: document.getElementById('cartView'),
+  btnShop: document.getElementById('btnShop'),
+  btnCart: document.getElementById('btnCart'),
+  cartTableBody: document.querySelector('#cartTable tbody'),
+  cartSummary: document.getElementById('cartSummary'),
+  shopCategoryFilter: document.getElementById('shopCategoryFilter'),
+  newCategoryInput: document.getElementById('newCategoryInput'),
+  addCategoryBtn: document.getElementById('addCategoryBtn'),
+  categoriesList: document.getElementById('categoriesList'),
+  orderCodeInput: document.getElementById('orderCodeInput'),
+  loadOrderBtn: document.getElementById('loadOrderBtn'),
+  orderDetails: document.getElementById('orderDetails'),
+  orderItems: document.getElementById('orderItems'),
+  orderUserName: document.getElementById('orderUserName'),
+  orderPhone: document.getElementById('orderPhone'),
+  saveOrderUserBtn: document.getElementById('saveOrderUserBtn'),
+  markOrderProcessedBtn: document.getElementById('markOrderProcessedBtn'),
+  markOrderOpenBtn: document.getElementById('markOrderOpenBtn'),
+  markOrderCancelledBtn: document.getElementById('markOrderCancelledBtn'),
+  ordersList: document.getElementById('ordersList'),
+  productsCount: document.getElementById('productsCount'),
+  usersList: document.getElementById('usersList'),
+  userOrdersDetails: document.getElementById('userOrdersDetails'),
+  cartCount: document.getElementById('cartCount'),
+  productSearch: document.getElementById('productSearch'),
+  refreshOrdersBtn: document.getElementById('refreshOrdersBtn'),
+  orderCodeDisplay: document.getElementById('orderCodeDisplay'),
+  ordersSearch: document.getElementById('ordersSearch'),
+  usersSearch: document.getElementById('usersSearch'),
+  // Farbelemente
+  primaryColorInput: document.getElementById('primaryColorInput'),
+  secondaryColorInput: document.getElementById('secondaryColorInput'),
+  successColorInput: document.getElementById('successColorInput'),
+  warningColorInput: document.getElementById('warningColorInput'),
+  errorColorInput: document.getElementById('errorColorInput'),
+  backgroundColorInput: document.getElementById('backgroundColorInput'),
+  cardColorInput: document.getElementById('cardColorInput'),
+  saveColorsBtn: document.getElementById('saveColorsBtn'),
+  resetColorsBtn: document.getElementById('resetColorsBtn'),
+  applyColorsBtn: document.getElementById('applyColorsBtn'),
+  // NEU: Webhook Elemente
+  webhookUrl: document.getElementById('webhookUrl'),
+  testWebhookBtn: document.getElementById('testWebhookBtn'),
+  webhookStatus: document.getElementById('webhookStatus'),
+  webhookEnabled: document.getElementById('webhookEnabled'),
+  sendOrderDetails: document.getElementById('sendOrderDetails'),
+  sendCustomerInfo: document.getElementById('sendCustomerInfo'),
+  saveWebhookBtn: document.getElementById('saveWebhookBtn'),
+  resetWebhookBtn: document.getElementById('resetWebhookBtn'),
+  // NEU: Bild-Upload Elemente
+  imagePreviewContainer: document.getElementById('imagePreviewContainer'),
+  headerImagePreviewContainer: document.getElementById('headerImagePreviewContainer'),
+  // NEU: Klickbare Links
+  createdByLink: document.getElementById('createdByLink')
+};
+
+let products = [];
+let settings = { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' };
+let categories = [];
+let cart = [];
+let allOrders = [];
+let saveOrderBtnEl = null;
+let orderCodeDisplayEl = null;
+let selectedUserId = null;
+let selectedOrder = null;
+let webhookSettings = {
+  url: '',
+  enabled: true,
+  sendOrderDetails: true,
+  sendCustomerInfo: true
+};
+
+// Standard Farben
+const defaultColors = {
+  primary: '#22c55e',
+  secondary: '#3b82f6',
+  success: '#10b981',
+  warning: '#f59e0b',
+  error: '#ef4444',
+  background: '#0f1724',
+  card: '#0b1220'
+};
+
+// NEU: Logo und Titel als klickbare Links
+function setupClickableHeader() {
+  // Logo klickbar machen
+  elements.headerLogo.addEventListener('click', () => {
+    window.open(LOGO_LINK, '_blank');
+  });
+  
+  // Titel klickbar machen
+  elements.pageTitle.addEventListener('click', () => {
+    window.open(LOGO_LINK, '_blank');
+  });
+  
+  // "Created by Colin" Link
+  elements.createdByLink.addEventListener('click', () => {
+    window.open(CREATED_BY_LINK, '_blank');
+  });
+}
+
+// NEU: Vereinfachte Bild-Upload Funktion - verwendet Data URLs
+function handleImageUpload(file, type = 'product') {
+  const uploadText = type === 'product' ? elements.prodImgUploadText : elements.headerImgUploadText;
+  const uploadLoading = type === 'product' ? elements.prodImgUploadLoading : elements.headerImgUploadLoading;
+  const fileInput = type === 'product' ? elements.prodImgFile : elements.settingHeaderImageFile;
+  const targetInput = type === 'product' ? elements.prodImg : elements.settingHeaderImage;
+  const previewContainer = type === 'product' ? elements.imagePreviewContainer : elements.headerImagePreviewContainer;
+  
+  uploadText.textContent = 'Lädt hoch...';
+  uploadLoading.classList.remove('hidden-el');
+  fileInput.disabled = true;
+
+  return new Promise((resolve) => {
+    // Simuliere einen kurzen Upload (ohne Firebase Storage)
+    setTimeout(() => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        
+        // Setze die Data URL als Bildquelle
+        targetInput.value = dataUrl;
+        
+        // Aktualisiere Vorschau
+        if (type === 'product') {
+          elements.prodPreview.src = dataUrl;
+        }
+        
+        // Füge Bild zur Vorschau hinzu
+        addImageToPreview(dataUrl, file.name, type);
+        
+        uploadText.textContent = type === 'product' ? '📁 Datei auswählen' : '📁 Datei auswählen';
+        uploadLoading.classList.add('hidden-el');
+        fileInput.disabled = false;
+        fileInput.value = '';
+        
+        showToast('Bild erfolgreich geladen', 'success');
+        resolve(dataUrl);
+      };
+      reader.readAsDataURL(file);
+    }, 1000); // Kurze Verzögerung für realistischen Effekt
+  });
+}
+
+// NEU: Bild zur Vorschau hinzufügen
+function addImageToPreview(dataUrl, fileName, type = 'product') {
+  const container = type === 'header' ? elements.headerImagePreviewContainer : elements.imagePreviewContainer;
+  container.innerHTML = '';
+  
+  const previewDiv = document.createElement('div');
+  previewDiv.className = 'image-preview';
+  
+  const img = document.createElement('img');
+  img.src = dataUrl;
+  img.alt = fileName;
+  
+  const removeBtn = document.createElement('button');
+  removeBtn.className = 'remove-image-btn';
+  removeBtn.innerHTML = '×';
+  removeBtn.onclick = function() {
+    if (type === 'header') {
+      elements.settingHeaderImage.value = '';
+    } else {
+      elements.prodImg.value = '';
+      elements.prodPreview.src = 'https://via.placeholder.com/150x100';
+    }
+    container.innerHTML = '';
+    if (type === 'header') {
+      elements.settingHeaderImageFile.value = '';
+    } else {
+      elements.prodImgFile.value = '';
+    }
+  };
+  
+  previewDiv.appendChild(img);
+  previewDiv.appendChild(removeBtn);
+  container.appendChild(previewDiv);
+}
+
+// NEU: Bild-Upload für Produkte initialisieren
+function setupProductImageUpload() {
+  elements.prodImgFile.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Bitte nur Bilddateien auswählen', 'error');
+        return;
+      }
+      
+      // Sofortige Vorschau
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        elements.prodPreview.src = e.target.result;
+        addImageToPreview(e.target.result, file.name, 'product');
+      };
+      reader.readAsDataURL(file);
+      
+      // "Upload" starten
+      handleImageUpload(file, 'product');
+    }
+  });
+}
+
+// NEU: Bild-Upload für Header initialisieren
+function setupHeaderImageUpload() {
+  elements.settingHeaderImageFile.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Bitte nur Bilddateien auswählen', 'error');
+        return;
+      }
+      
+      // Sofortige Vorschau
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        addImageToPreview(e.target.result, file.name, 'header');
+      };
+      reader.readAsDataURL(file);
+      
+      // "Upload" starten
+      handleImageUpload(file, 'header');
+    }
+  });
+}
+
+// Discord Webhook an Discord senden
+async function sendDiscordWebhook(order) {
+  if (!webhookSettings.enabled || !webhookSettings.url) {
+    return false;
+  }
+
+  try {
+    const embed = {
+      title: "🛒 Neue Bestellung eingegangen",
+      color: 0x00ff00,
+      fields: [],
+      timestamp: new Date().toISOString(),
+      footer: {
+        text: "Bullet Farm v3 Shop System"
+      }
     };
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getDatabase(app);
-    const entriesRef = ref(db,'weed_entries');
-
-    const ADMIN_PASSWORD = '1101';
-    let entries = [];
-
-    function show(el) { 
-      el.classList.remove('hidden-el'); 
-      el.classList.add('fade-in');
-    }
-    function hide(el) { 
-      el.classList.add('hidden-el'); 
-      el.classList.remove('fade-in');
-    }
-    function formatCurrency(n) { 
-      return new Intl.NumberFormat('de-DE').format(Math.round(n)) + ' $'; 
-    }
-    function formatDate(d) {
-      const date = new Date(d);
-      const pad = n => n.toString().padStart(2,'0');
-      return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    }
-
-    // Hamburger Menu
-    document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.getElementById('hamburgerMenu').classList.toggle('hidden');
+    // Bestellcode hinzufügen
+    embed.fields.push({
+      name: "📋 Bestellcode",
+      value: `\`${order.code}\``,
+      inline: true
     });
 
-    // Close hamburger menu when clicking outside
-    document.addEventListener('click', (e) => {
-      const hamburgerMenu = document.getElementById('hamburgerMenu');
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      
-      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-        hamburgerMenu.classList.add('hidden');
+    // Kundeninformationen hinzufügen, wenn aktiviert
+    if (webhookSettings.sendCustomerInfo) {
+      embed.fields.push({
+        name: "👤 Kunde",
+        value: `**Name:** ${order.userName || 'Unbekannt'}\n**Telefon:** ${order.phone || 'Unbekannt'}`,
+        inline: true
+      });
+    }
+
+    // Bestelldetails hinzufügen, wenn aktiviert
+    if (webhookSettings.sendOrderDetails && order.items && order.items.length > 0) {
+      let itemsText = "";
+      order.items.forEach((item, index) => {
+        itemsText += `**${item.name}** — ${item.quantity}x\n`;
+        
+        // Ressourcen hinzufügen
+        if (item.resources && Object.keys(item.resources).length > 0) {
+          const resources = Object.entries(item.resources).map(([name, value]) => `${name}: ${value}`).join(', ');
+          itemsText += `📦 ${resources}\n`;
+        }
+        
+        if (index < order.items.length - 1) {
+          itemsText += '\n';
+        }
+      });
+
+      embed.fields.push({
+        name: `📦 Bestellte Artikel (${order.items.length})`,
+        value: itemsText
+      });
+    }
+
+    // Gesamtanzahl der Artikel
+    const totalItems = order.items ? order.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+    embed.fields.push({
+      name: "📊 Gesamt",
+      value: `${totalItems} Artikel`,
+      inline: true
+    });
+
+    const payload = {
+      embeds: [embed]
+    };
+
+    const response = await fetch(webhookSettings.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error('Fehler beim Senden des Webhooks:', error);
+    return false;
+  }
+}
+
+// Webhook testen
+async function testWebhook() {
+  if (!webhookSettings.url) {
+    showToast('Bitte zuerst eine Webhook URL eingeben', 'warning');
+    return;
+  }
+
+  elements.testWebhookBtn.disabled = true;
+  elements.testWebhookBtn.textContent = 'Teste...';
+
+  try {
+    const testEmbed = {
+      title: "🔗 Webhook Test",
+      description: "Dies ist eine Testnachricht von deinem Bullet Farm v3 Shop System",
+      color: 0x0099ff,
+      timestamp: new Date().toISOString(),
+      footer: {
+        text: "Webhook Test erfolgreich!"
       }
+    };
+
+    const response = await fetch(webhookSettings.url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        embeds: [testEmbed]
+      })
     });
 
-    // Tabs Navigation
-    document.getElementById('btnNew').addEventListener('click', () => {
-      show(document.getElementById('newEntry')); 
-      hide(document.getElementById('overview')); 
-      hide(document.getElementById('adminPanel'));
-      updateButtonStates('new');
-    });
-    
-    document.getElementById('btnOverview').addEventListener('click', () => {
-      hide(document.getElementById('newEntry')); 
-      show(document.getElementById('overview')); 
-      hide(document.getElementById('adminPanel'));
-      renderOverview();
-      updateButtonStates('overview');
-    });
-    
-    document.getElementById('btnAdmin').addEventListener('click', () => {
-      hide(document.getElementById('newEntry')); 
-      hide(document.getElementById('overview')); 
-      show(document.getElementById('adminPanel'));
-      updateButtonStates('admin');
-    });
+    if (response.ok) {
+      showToast('Webhook Test erfolgreich! Nachricht wurde an Discord gesendet.', 'success');
+      elements.webhookStatus.textContent = 'Verbunden';
+      elements.webhookStatus.className = 'webhook-status connected';
+    } else {
+      throw new Error(`HTTP ${response.status}`);
+    }
+  } catch (error) {
+    showToast('Webhook Test fehlgeschlagen: ' + error.message, 'error');
+    elements.webhookStatus.textContent = 'Nicht verbunden';
+    elements.webhookStatus.className = 'webhook-status disconnected';
+  } finally {
+    elements.testWebhookBtn.disabled = false;
+    elements.testWebhookBtn.textContent = 'Testen';
+  }
+}
 
-    function updateButtonStates(activeButton) {
-      const buttons = {
-        new: document.getElementById('btnNew'),
-        overview: document.getElementById('btnOverview'),
-        admin: document.getElementById('btnAdmin')
+// Webhook Einstellungen laden
+onValue(webhookRef, snapshot => {
+  const settings = snapshot.val();
+  if (settings) {
+    webhookSettings = { ...webhookSettings, ...settings };
+    updateWebhookUI();
+  }
+});
+
+// Webhook UI aktualisieren
+function updateWebhookUI() {
+  if (elements.webhookUrl) {
+    elements.webhookUrl.value = webhookSettings.url || '';
+    elements.webhookEnabled.checked = webhookSettings.enabled;
+    elements.sendOrderDetails.checked = webhookSettings.sendOrderDetails;
+    elements.sendCustomerInfo.checked = webhookSettings.sendCustomerInfo;
+    
+    if (webhookSettings.url && webhookSettings.enabled) {
+      elements.webhookStatus.textContent = 'Aktiviert';
+      elements.webhookStatus.className = 'webhook-status connected';
+    } else if (webhookSettings.url) {
+      elements.webhookStatus.textContent = 'Deaktiviert';
+      elements.webhookStatus.className = 'webhook-status disconnected';
+    } else {
+      elements.webhookStatus.textContent = 'Nicht konfiguriert';
+      elements.webhookStatus.className = 'webhook-status disconnected';
+    }
+  }
+}
+
+// Webhook Einstellungen speichern
+async function saveWebhookSettings() {
+  const newSettings = {
+    url: (elements.webhookUrl.value || '').trim(),
+    enabled: elements.webhookEnabled.checked,
+    sendOrderDetails: elements.sendOrderDetails.checked,
+    sendCustomerInfo: elements.sendCustomerInfo.checked
+  };
+
+  try {
+    await update(webhookRef, newSettings);
+    webhookSettings = newSettings;
+    showToast('Webhook Einstellungen gespeichert', 'success');
+    updateWebhookUI();
+  } catch (error) {
+    console.error('Fehler beim Speichern der Webhook Einstellungen:', error);
+    showToast('Fehler beim Speichern der Webhook Einstellungen', 'error');
+  }
+}
+
+// Webhook zurücksetzen
+async function resetWebhookSettings() {
+  if (!confirm('Webhook Einstellungen wirklich zurücksetzen?')) return;
+  
+  const defaultSettings = {
+    url: '',
+    enabled: true,
+    sendOrderDetails: true,
+    sendCustomerInfo: true
+  };
+
+  try {
+    await update(webhookRef, defaultSettings);
+    webhookSettings = defaultSettings;
+    showToast('Webhook Einstellungen zurückgesetzt', 'success');
+    updateWebhookUI();
+  } catch (error) {
+    console.error('Fehler beim Zurücksetzen der Webhook Einstellungen:', error);
+    showToast('Fehler beim Zurücksetzen der Webhook Einstellungen', 'error');
+  }
+}
+
+// Toast Funktionen
+function showToast(message, type = 'info', duration = 4000) {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  
+  const container = document.getElementById('toastContainer');
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'slideInRight 0.3s ease reverse';
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 300);
+  }, duration);
+}
+
+// Funktion zur Behandlung von Bildfehlern
+function handleImageError(img) {
+  img.onerror = null;
+  img.src = 'https://via.placeholder.com/300x120?text=Bild+nicht+verfügbar';
+  img.style.opacity = '0.7';
+}
+
+// Globale Farben anwenden
+function applyColors(colors = null) {
+  const colorSettings = colors || defaultColors;
+  
+  document.documentElement.style.setProperty('--primary-color', colorSettings.primary);
+  document.documentElement.style.setProperty('--secondary-color', colorSettings.secondary);
+  document.documentElement.style.setProperty('--success-color', colorSettings.success);
+  document.documentElement.style.setProperty('--warning-color', colorSettings.warning);
+  document.documentElement.style.setProperty('--error-color', colorSettings.error);
+  document.documentElement.style.setProperty('--background-color', colorSettings.background);
+  document.documentElement.style.setProperty('--card', colorSettings.card);
+  
+  if (elements.primaryColorInput) {
+    elements.primaryColorInput.value = colorSettings.primary;
+    document.getElementById('primaryColorPreview').style.background = colorSettings.primary;
+  }
+  if (elements.secondaryColorInput) {
+    elements.secondaryColorInput.value = colorSettings.secondary;
+    document.getElementById('secondaryColorPreview').style.background = colorSettings.secondary;
+  }
+  if (elements.successColorInput) {
+    elements.successColorInput.value = colorSettings.success;
+    document.getElementById('successColorPreview').style.background = colorSettings.success;
+  }
+  if (elements.warningColorInput) {
+    elements.warningColorInput.value = colorSettings.warning;
+    document.getElementById('warningColorPreview').style.background = colorSettings.warning;
+  }
+  if (elements.errorColorInput) {
+    elements.errorColorInput.value = colorSettings.error;
+    document.getElementById('errorColorPreview').style.background = colorSettings.error;
+  }
+  if (elements.backgroundColorInput) {
+    elements.backgroundColorInput.value = colorSettings.background;
+    document.getElementById('backgroundColorPreview').style.background = colorSettings.background;
+  }
+  if (elements.cardColorInput) {
+    elements.cardColorInput.value = colorSettings.card;
+    document.getElementById('cardColorPreview').style.background = colorSettings.card;
+  }
+}
+
+// User-Stats NUR bei "Als bearbeitet" erhöhen
+async function incrementUserStatsOnProcessed(order) {
+  try {
+    const userPhone = order.phone;
+    const userName = order.userName;
+    
+    if (!userPhone) {
+      console.error('Keine Telefonnummer in der Bestellung gefunden');
+      return;
+    }
+
+    const userStatsRef = ref(db, `userStats/${userPhone}`);
+    const snapshot = await get(userStatsRef);
+    
+    let currentStats = {};
+    if (snapshot.exists()) {
+      currentStats = snapshot.val();
+    }
+    
+    const currentResetTime = currentStats.resetTime || 0;
+    const currentLifeTime = currentStats.lifeTime || 0;
+    
+    const newStats = {
+      userName: userName,
+      phone: userPhone,
+      lifeTime: currentLifeTime + 1,
+      resetTime: currentResetTime + 1,
+      lastReset: currentStats.lastReset || null
+    };
+    
+    await update(userStatsRef, newStats);
+    console.log(`User Stats erhöht für ${userName}: LifeTime ${currentLifeTime} → ${currentLifeTime + 1}, ResetTime ${currentResetTime} → ${currentResetTime + 1}`);
+    
+  } catch (error) {
+    console.error('Fehler beim Erhöhen der User-Stats:', error);
+  }
+}
+
+function showModal() { 
+  elements.settingsModal.classList.remove('hidden-el'); 
+  setTimeout(() => elements.settingsModal.classList.add('active'), 10); 
+  document.body.style.overflow = 'hidden'; 
+}
+
+function hideModal() { 
+  elements.settingsModal.classList.remove('active'); 
+  document.body.style.overflow = ''; 
+  setTimeout(() => elements.settingsModal.classList.add('hidden-el'), 240); 
+}
+
+elements.openSettingsBtn.addEventListener('click', () => {
+  elements.settingsPassword.value = '';
+  elements.settingsLoginError.style.display = 'none';
+  elements.settingsLoginArea.style.display = '';
+  elements.settingsEditor.classList.add('hidden-el');
+  showModal();
+});
+
+elements.settingsCloseBtn.addEventListener('click', hideModal);
+elements.settingsModal.addEventListener('click', (e) => { 
+  if(e.target === elements.settingsModal) hideModal(); 
+});
+
+document.addEventListener('keydown', (e) => { 
+  if(e.key === 'Escape' && !elements.settingsModal.classList.contains('hidden-el')) hideModal(); 
+});
+
+elements.tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    elements.tabBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tabName = btn.dataset.tab;
+    elements.tabPanels.forEach(p => p.classList.add('hidden-el'));
+    document.getElementById(`tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden-el');
+    if (tabName === 'users') renderUsersList();
+    if (tabName === 'orders') renderOrdersList();
+    if (tabName === 'webhook') updateWebhookUI();
+  });
+});
+
+// Webhook Event Listener
+elements.testWebhookBtn.addEventListener('click', testWebhook);
+elements.saveWebhookBtn.addEventListener('click', saveWebhookSettings);
+elements.resetWebhookBtn.addEventListener('click', resetWebhookSettings);
+
+// Farben aus Firebase laden
+onValue(colorsRef, snapshot => {
+  const colors = snapshot.val();
+  if (colors) {
+    applyColors(colors);
+  }
+});
+
+onValue(settingsRef, snapshot => {
+  const val = snapshot.val();
+  if(val){
+    settings.title = val.title || settings.title;
+    settings.headerImage = val.headerImage || settings.headerImage;
+  }
+  applySettings();
+});
+
+function applySettings(){
+  elements.pageTitle.innerText = settings.title || 'Bullet Farm v3';
+  elements.headerLogo.src = settings.headerImage || 'https://via.placeholder.com/48';
+  if(elements.settingTitle) elements.settingTitle.value = settings.title || '';
+  if(elements.settingHeaderImage) elements.settingHeaderImage.value = settings.headerImage || '';
+  
+  // NEU: Header Bild Vorschau anzeigen
+  if (settings.headerImage && settings.headerImage !== 'https://via.placeholder.com/48') {
+    addImageToPreview(settings.headerImage, 'Header Bild', 'header');
+  }
+}
+
+elements.saveGeneralBtn.addEventListener('click', async () => {
+  const title = (elements.settingTitle.value || '').trim() || 'Bullet Farm v3';
+  const image = (elements.settingHeaderImage.value || '').trim() || 'https://via.placeholder.com/48';
+  try{ 
+    await update(settingsRef, { title, headerImage: image }); 
+    showToast('Allgemeine Einstellungen gespeichert', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
+});
+
+elements.resetGeneralBtn.addEventListener('click', async () => {
+  if(!confirm('Auf Standard zurücksetzen?')) return;
+  try{ 
+    await update(settingsRef, { title: 'Bullet Farm v3', headerImage: 'https://via.placeholder.com/48' }); 
+    showToast('Einstellungen zurückgesetzt', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Zurücksetzen', 'error'); }
+});
+
+// Farben verwalten
+elements.applyColorsBtn.addEventListener('click', () => {
+  const currentColors = {
+    primary: elements.primaryColorInput.value,
+    secondary: elements.secondaryColorInput.value,
+    success: elements.successColorInput.value,
+    warning: elements.warningColorInput.value,
+    error: elements.errorColorInput.value,
+    background: elements.backgroundColorInput.value,
+    card: elements.cardColorInput.value
+  };
+  
+  applyColors(currentColors);
+  showToast('Farbvorschau angewendet', 'info');
+});
+
+elements.saveColorsBtn.addEventListener('click', async () => {
+  const colors = {
+    primary: elements.primaryColorInput.value,
+    secondary: elements.secondaryColorInput.value,
+    success: elements.successColorInput.value,
+    warning: elements.warningColorInput.value,
+    error: elements.errorColorInput.value,
+    background: elements.backgroundColorInput.value,
+    card: elements.cardColorInput.value
+  };
+  
+  try {
+    await update(colorsRef, colors);
+    showToast('Farben gespeichert', 'success');
+  } catch (error) {
+    console.error('Fehler beim Speichern der Farben:', error);
+    showToast('Fehler beim Speichern der Farben', 'error');
+  }
+});
+
+elements.resetColorsBtn.addEventListener('click', async () => {
+  if(!confirm('Farben auf Standard zurücksetzen?')) return;
+  try {
+    await update(colorsRef, defaultColors);
+    applyColors(defaultColors);
+    showToast('Farben zurückgesetzt', 'success');
+  } catch (error) {
+    console.error('Fehler beim Zurücksetzen der Farben:', error);
+    showToast('Fehler beim Zurücksetzen der Farben', 'error');
+  }
+});
+
+onValue(categoriesRef, snapshot => {
+  categories = [];
+  snapshot.forEach(child => {
+    const data = child.val(); 
+    data.key = child.key; 
+    categories.push(data);
+  });
+  renderCategoriesList();
+  populateCategorySelects();
+});
+
+function renderCategoriesList(){
+  elements.categoriesList.innerHTML = '';
+  if(categories.length === 0){ 
+    elements.categoriesList.innerHTML = '<div class="kv mobile-optimized-text">Keine Kategorien vorhanden.</div>'; 
+    return; 
+  }
+  
+  categories.forEach(category => {
+    const div = document.createElement('div');
+    div.className = 'category-item fade-in';
+    div.innerHTML = `
+      <div class="mobile-optimized-text">${escapeHtml(category.name)}</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn small-btn" data-edit="${category.key}">✏️</button>
+        <button class="btn small-btn" data-del="${category.key}" style="background:var(--error-color)">🗑️ Löschen</button>
+      </div>`;
+    elements.categoriesList.appendChild(div);
+    
+    div.querySelector('[data-del]').onclick = async () => {
+      if(!confirm('Kategorie wirklich löschen?')) return;
+      try{ 
+        await remove(ref(db, 'categories/' + category.key)); 
+        showToast('Kategorie gelöscht', 'success');
+      } 
+      catch(e){ console.error(e); showToast('Fehler beim Löschen', 'error'); }
+    };
+    
+    div.querySelector('[data-edit]').onclick = () => {
+      const newName = prompt('Neuer Kategorie-Name', category.name);
+      if(newName && newName.trim()){
+        update(ref(db, 'categories/' + category.key), { name: newName.trim() })
+          .then(() => showToast('Kategorie umbenannt', 'success'))
+          .catch(() => showToast('Fehler beim Umbenennen', 'error'));
+      }
+    };
+  });
+}
+
+elements.addCategoryBtn.addEventListener('click', async () => {
+  const name = (elements.newCategoryInput.value || '').trim();
+  if(!name) return showToast('Bitte Namen eingeben', 'warning');
+  try{
+    await push(categoriesRef, { name });
+    elements.newCategoryInput.value = '';
+    showToast('Kategorie hinzugefügt', 'success');
+  } catch(e){ console.error(e); showToast('Fehler beim Anlegen', 'error'); }
+});
+
+function populateCategorySelects(){
+  elements.prodCategorySelect.innerHTML = '<option value="">— Keine Kategorie —</option>';
+  elements.shopCategoryFilter.innerHTML = '<option value="">— Alle Kategorien —</option>';
+
+  categories.forEach(category => {
+    const option1 = document.createElement('option');
+    option1.value = category.name;
+    option1.textContent = category.name;
+    option1.className = 'mobile-optimized-text';
+    elements.prodCategorySelect.appendChild(option1);
+    
+    const option2 = document.createElement('option');
+    option2.value = category.name;
+    option2.textContent = category.name;
+    option2.className = 'mobile-optimized-text';
+    elements.shopCategoryFilter.appendChild(option2);
+  });
+}
+
+onValue(productsRef, snapshot => {
+  products = [];
+  snapshot.forEach(child => {
+    const data = child.val(); 
+    data.key = child.key; 
+    products.push(data);
+  });
+  products.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  renderProductsTable();
+  renderProductsGrid();
+});
+
+function escapeHtml(text) {
+  if(!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+elements.shopCategoryFilter.addEventListener('change', renderProductsGrid);
+elements.productSearch.addEventListener('input', renderProductsGrid);
+
+function renderProductsGrid(){
+  const filter = (elements.shopCategoryFilter.value || '').trim();
+  const search = (elements.productSearch.value || '').trim().toLowerCase();
+  
+  elements.productsGrid.innerHTML = '';
+  
+  let visibleProducts = products.filter(p => 
+    (!filter || (p.category || '') === filter) &&
+    (!search || 
+      (p.name || '').toLowerCase().includes(search) || 
+      (p.description || '').toLowerCase().includes(search) ||
+      (p.category || '').toLowerCase().includes(search))
+  );
+  
+  if(visibleProducts.length === 0){ 
+    elements.productsGrid.innerHTML = '<div class="kv p-4 mobile-optimized-text">Keine Produkte gefunden.</div>'; 
+    return; 
+  }
+  
+  visibleProducts.forEach(product => {
+    const card = document.createElement('div');
+    card.className = 'card fade-in';
+    
+    const img = document.createElement('img');
+    let imageUrl = product.image || 'https://via.placeholder.com/300x120';
+    
+    img.src = imageUrl;
+    img.className = 'product-image';
+    img.alt = product.name || 'Produktbild';
+    img.onerror = function() { 
+      handleImageError(this);
+    };
+    img.onload = function() { 
+      this.style.opacity = '1'; 
+    };
+    
+    const title = document.createElement('div');
+    title.className = 'mobile-optimized-text product-card-text';
+    title.style.fontWeight = '700';
+    title.style.fontSize = '1rem';
+    title.style.marginTop = '8px';
+    title.style.color = product.colorName || 'var(--primary-color)';
+    title.textContent = product.name || '';
+    
+    const desc = document.createElement('div');
+    desc.className = 'small-muted mobile-optimized-text product-card-text';
+    desc.textContent = product.description || '';
+    
+    card.appendChild(img);
+    card.appendChild(title);
+    card.appendChild(desc);
+
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
+      if(pairs.length > 0){
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.style.marginTop = '8px';
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th class="mobile-optimized-text">Ressource</th>
+              <th style="text-align:right" class="mobile-optimized-text">Anzahl</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pairs.map(resource => {
+              const [name, value, color] = resource.split(':');
+              return `
+                <tr>
+                  <td style="color:${color || '#facc15'}" class="mobile-optimized-text resource-text-fix">${escapeHtml(name)}</td>
+                  <td style="text-align:right;color:${product.colorQuantity || 'var(--secondary-color)'}" class="mobile-optimized-text">
+                    ${Number(value).toLocaleString('de-DE')}
+                  </td>
+                </tr>`;
+            }).join('')}
+          </tbody>`;
+        card.appendChild(table);
+      }
+    }
+
+    if(product.category) {
+      const categoryDiv = document.createElement('div');
+      categoryDiv.className = 'kv mobile-optimized-text product-card-text';
+      categoryDiv.style.marginTop = '8px';
+      categoryDiv.textContent = 'Kategorie: ' + product.category;
+      card.appendChild(categoryDiv);
+    }
+
+    const addButton = document.createElement('button');
+    addButton.className = 'btn';
+    addButton.style.background = 'var(--success-color)';
+    addButton.style.marginTop = '8px';
+    addButton.textContent = '✅ In den Warenkorb';
+    addButton.onclick = () => { 
+      addToCartByProductKey(product.key); 
+      showToast(`"${product.name}" zum Warenkorb hinzugefügt`, 'success'); 
+    };
+    card.appendChild(addButton);
+
+    elements.productsGrid.appendChild(card);
+  });
+}
+
+function renderProductsTable(){
+  elements.productsTableBody.innerHTML = '';
+  products.forEach(product => {
+    const resourcesText = product.resources ? 
+      product.resources.split(';').map(resource => {
+        const [name, value] = resource.split(':');
+        return `${name}: ${value}`;
+      }).join(', ') : '';
+    
+    const row = document.createElement('tr');
+    row.className = 'fade-in';
+    row.innerHTML = `
+      <td style="padding:8px">
+        <img src="${product.image || 'https://via.placeholder.com/80'}" 
+             class="product-image-admin" 
+             alt="${escapeHtml(product.name || '')}">
+      </td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.name || '')}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(product.category || '')}</td>
+      <td style="padding:8px" class="mobile-optimized-text table-text-fix">${escapeHtml(resourcesText)}</td>
+      <td style="padding:8px">
+        <button class="btn small-btn" data-edit="${product.key}" style="margin-right:6px">✏️ Bearbeiten</button>
+        <button class="btn small-btn" data-del="${product.key}" style="background:var(--error-color)">🗑️ Löschen</button>
+      </td>`;
+    elements.productsTableBody.appendChild(row);
+    
+    row.querySelector('[data-edit]').onclick = () => openProductForm(product);
+    row.querySelector('[data-del]').onclick = () => { 
+      if(confirm('Produkt wirklich löschen?')) {
+        remove(ref(db, 'products/' + product.key))
+          .then(() => showToast('Produkt gelöscht', 'success'))
+          .catch(() => showToast('Fehler beim Löschen', 'error'));
+      }
+    };
+  });
+}
+
+elements.btnNewProduct.addEventListener('click', () => openProductForm());
+
+function openProductForm(product = null){
+  elements.productFormCard.classList.remove('hidden-el');
+  elements.resourceTable.innerHTML = '';
+  elements.imagePreviewContainer.innerHTML = '';
+  
+  if(product){
+    elements.prodId.value = product.key || '';
+    elements.prodName.value = product.name || '';
+    elements.prodImg.value = product.image || '';
+    elements.prodPreview.src = product.image || 'https://via.placeholder.com/150x100';
+    elements.prodDesc.value = product.description || '';
+    elements.prodCategorySelect.value = product.category || '';
+    elements.colorNameInput.value = product.colorName || '#22c55e';
+    elements.colorQuantityInput.value = product.colorQuantity || '#3b82f6';
+    
+    // Bild-Vorschau hinzufügen, falls vorhanden
+    if (product.image) {
+      addImageToPreview(product.image, 'Produktbild', 'product');
+    }
+    
+    if(product.resources){
+      const pairs = product.resources.split(';').map(x => x.trim()).filter(Boolean);
+      pairs.forEach(resource => {
+        const [name, value, color] = resource.split(':');
+        addResourceRow(name, value, color || '#facc15');
+      });
+    }
+  } else {
+    elements.prodId.value = '';
+    elements.productForm.reset();
+    elements.prodPreview.src = 'https://via.placeholder.com/150x100';
+    elements.colorNameInput.value = '#22c55e';
+    elements.colorQuantityInput.value = '#3b82f6';
+  }
+}
+
+function addResourceRow(name = '', value = '', color = '#facc15'){
+  const row = document.createElement('tr');
+  row.className = 'fade-in';
+  row.innerHTML = `
+    <td><input class="input mobile-optimized-text" value="${escapeHtml(name)}" placeholder="Ressourcenname" /></td>
+    <td style="text-align:right"><input type="number" min="0" class="input mobile-optimized-text" value="${escapeHtml(value)}" placeholder="0" /></td>
+    <td><input type="color" class="color-input" value="${escapeHtml(color)}" /></td>
+    <td style="text-align:center"><button class="btn small-btn" type="button" style="background:var(--error-color)">❌ Löschen</button></td>`;
+  
+  const deleteButton = row.querySelector('button');
+  deleteButton.onclick = () => row.remove();
+  elements.resourceTable.appendChild(row);
+}
+
+elements.addResourceBtn.addEventListener('click', () => addResourceRow());
+elements.prodImg.addEventListener('input', () => {
+  elements.prodPreview.src = elements.prodImg.value || 'https://via.placeholder.com/150x100';
+});
+elements.cancelProductBtn.addEventListener('click', () => {
+  elements.productFormCard.classList.add('hidden-el');
+  elements.productForm.reset();
+  elements.prodId.value = '';
+});
+
+elements.productForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const rows = Array.from(elements.resourceTable.querySelectorAll('tr'));
+  const resources = rows.map(row => {
+    const name = row.children[0].querySelector('input').value.trim();
+    const quantity = row.children[1].querySelector('input').value.trim();
+    const color = row.children[2].querySelector('input').value;
+    return name && quantity ? `${name}:${quantity}:${color}` : '';
+  }).filter(Boolean).join(';');
+
+  const payload = {
+    name: (elements.prodName.value || '').trim(),
+    image: (elements.prodImg.value || '').trim(),
+    description: (elements.prodDesc.value || '').trim(),
+    category: (elements.prodCategorySelect.value || '').trim(),
+    resources: resources,
+    colorName: elements.colorNameInput.value || '#22c55e',
+    colorQuantity: elements.colorQuantityInput.value || '#3b82f6',
+    updatedAt: Date.now()
+  };
+
+  try{
+    if(elements.prodId.value){
+      await update(ref(db, 'products/' + elements.prodId.value), payload);
+      showToast('Produkt aktualisiert', 'success');
+    } else {
+      await push(productsRef, payload);
+      showToast('Produkt angelegt', 'success');
+    }
+    elements.productFormCard.classList.add('hidden-el');
+    elements.productForm.reset();
+    elements.prodId.value = '';
+  } catch(error){ console.error(error); showToast('Fehler beim Speichern des Produkts', 'error'); }
+});
+
+elements.btnReloadProducts.addEventListener('click', () => {
+  get(productsRef)
+    .then(() => showToast('Produkte neu geladen', 'success'))
+    .catch(() => showToast('Laden fehlgeschlagen', 'error'));
+});
+
+// Suchfunktion für Bestellungen
+elements.ordersSearch.addEventListener('input', searchOrders);
+
+function searchOrders() {
+  const searchTerm = (elements.ordersSearch.value || '').trim().toLowerCase();
+  
+  if (!searchTerm) {
+    const orders = elements.ordersList.querySelectorAll('.order-card');
+    orders.forEach(order => {
+      order.style.display = '';
+    });
+    const noResults = elements.ordersList.querySelector('.no-search-results');
+    if (noResults) noResults.remove();
+    return;
+  }
+  
+  const orders = elements.ordersList.querySelectorAll('.order-card');
+  let hasMatches = false;
+  
+  orders.forEach(order => {
+    const text = order.textContent.toLowerCase();
+    if (text.includes(searchTerm)) {
+      order.style.display = '';
+      hasMatches = true;
+    } else {
+      order.style.display = 'none';
+    }
+  });
+  
+  const noResults = elements.ordersList.querySelector('.no-search-results');
+  if (!hasMatches) {
+    if (!noResults) {
+      const noResultsMsg = document.createElement('div');
+      noResultsMsg.className = 'no-search-results';
+      noResultsMsg.textContent = 'Keine Bestellungen gefunden';
+      elements.ordersList.appendChild(noResultsMsg);
+    }
+  } else if (noResults) {
+    noResults.remove();
+  }
+}
+
+// Suchfunktion für Nutzer
+elements.usersSearch.addEventListener('input', searchUsers);
+
+function searchUsers() {
+  const searchTerm = (elements.usersSearch.value || '').trim().toLowerCase();
+  
+  if (!searchTerm) {
+    const users = elements.usersList.querySelectorAll('.user-order-item');
+    users.forEach(user => {
+      user.style.display = '';
+    });
+    const noResults = elements.usersList.querySelector('.no-search-results');
+    if (noResults) noResults.remove();
+    return;
+  }
+  
+  const users = elements.usersList.querySelectorAll('.user-order-item');
+  let hasMatches = false;
+  
+  users.forEach(user => {
+    const text = user.textContent.toLowerCase();
+    if (text.includes(searchTerm)) {
+      user.style.display = '';
+      hasMatches = true;
+    } else {
+      user.style.display = 'none';
+    }
+  });
+  
+  const noResults = elements.usersList.querySelector('.no-search-results');
+  if (!hasMatches) {
+    if (!noResults) {
+      const noResultsMsg = document.createElement('div');
+      noResultsMsg.className = 'no-search-results';
+      noResultsMsg.textContent = 'Keine Nutzer gefunden';
+      elements.usersList.appendChild(noResultsMsg);
+    }
+  } else if (noResults) {
+    noResults.remove();
+  }
+}
+
+// Suchfelder zurücksetzen wenn Modal geschlossen wird
+elements.settingsCloseBtn.addEventListener('click', () => {
+  elements.ordersSearch.value = '';
+  elements.usersSearch.value = '';
+  searchOrders();
+  searchUsers();
+});
+
+elements.settingsModal.addEventListener('click', (e) => { 
+  if(e.target === elements.settingsModal) {
+    elements.ordersSearch.value = '';
+    elements.usersSearch.value = '';
+    searchOrders();
+    searchUsers();
+  }
+});
+
+// Funktion zum Laden der User-Statistiken
+async function loadUserStats(user) {
+  try {
+    const userStatsRef = ref(db, `userStats/${user.phone}`);
+    const snapshot = await get(userStatsRef);
+    
+    const lifeTime = user.orders.length;
+    
+    if (snapshot.exists()) {
+      const stats = snapshot.val();
+      
+      let resetTime = stats.resetTime;
+      
+      if (resetTime === undefined || resetTime === null || resetTime > lifeTime) {
+        resetTime = lifeTime;
+        await update(userStatsRef, {
+          ...stats,
+          resetTime: lifeTime
+        });
+      }
+      
+      return {
+        lifeTime: lifeTime,
+        resetTime: resetTime,
+        lastReset: stats.lastReset || null
+      };
+    } else {
+      const initialStats = {
+        lifeTime: lifeTime,
+        resetTime: lifeTime,
+        lastReset: null
       };
       
-      Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-green-600', 'bg-blue-600');
-        btn.classList.add('bg-gray-700');
+      await update(userStatsRef, initialStats);
+      return initialStats;
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden der User-Statistiken:', error);
+    return {
+      lifeTime: user.orders.length,
+      resetTime: user.orders.length,
+      lastReset: null
+    };
+  }
+}
+
+// Reset-Funktion
+async function resetUserTime(user) {
+  if (!confirm(`ResetTime für ${user.userName} wirklich auf 0 zurücksetzen?\n\nAktuell: ${user.resetTime} Bestellungen\nNach Reset: 0 Bestellungen`)) return;
+  
+  try {
+    const userStatsRef = ref(db, `userStats/${user.phone}`);
+    
+    const currentSnapshot = await get(userStatsRef);
+    const currentStats = currentSnapshot.exists() ? currentSnapshot.val() : {};
+    
+    await update(userStatsRef, {
+      ...currentStats,
+      userName: user.userName,
+      phone: user.phone,
+      lastReset: Date.now(),
+      resetTime: 0
+    });
+    
+    showToast(`ResetTime für ${user.userName} wurde auf 0 zurückgesetzt`, 'success');
+    
+    setTimeout(() => {
+      renderUsersList();
+      if (selectedUserId === user.phone) {
+        renderUserOrders({
+          ...user,
+          resetTime: 0,
+          lastReset: Date.now()
+        });
+      }
+    }, 500);
+    
+  } catch (error) {
+    console.error('Fehler beim Zurücksetzen:', error);
+    showToast('Fehler beim Zurücksetzen der ResetTime', 'error');
+  }
+}
+
+// Verbesserte renderUsersList mit LifeTime/ResetTime
+async function renderUsersList() {
+  const usersMap = new Map();
+  
+  allOrders.forEach(order => {
+    if (order.phone && order.userName) {
+      const userKey = `${order.phone}-${order.userName}`;
+      if (!usersMap.has(userKey)) {
+        usersMap.set(userKey, { 
+          phone: order.phone, 
+          userName: order.userName, 
+          orders: []
+        });
+      }
+      usersMap.get(userKey).orders.push(order);
+    }
+  });
+  
+  const users = Array.from(usersMap.values());
+  elements.usersList.innerHTML = '';
+  
+  if (users.length === 0) { 
+    elements.usersList.innerHTML = '<div class="kv mobile-optimized-text">Keine Nutzer mit Telefonnummern gefunden.</div>'; 
+    return; 
+  }
+  
+  users.sort((a, b) => a.userName.localeCompare(b.userName));
+  
+  for (const user of users) {
+    const stats = await loadUserStats(user);
+    user.lifeTime = stats.lifeTime;
+    user.resetTime = stats.resetTime;
+    user.lastReset = stats.lastReset;
+    
+    const userItem = document.createElement('div');
+    userItem.className = 'user-order-item fade-in';
+    if (selectedUserId === user.phone) userItem.classList.add('active');
+    
+    const lastResetText = user.lastReset ? 
+      `(Zuletzt: ${new Date(user.lastReset).toLocaleString('de-DE')})` : 
+      '(Noch nie zurückgesetzt)';
+    
+    userItem.innerHTML = `
+      <div style="font-weight:700" class="mobile-optimized-text">${escapeHtml(user.userName)}</div>
+      <div class="kv mobile-optimized-text">📞 ${escapeHtml(user.phone)}</div>
+      <div class="kv mobile-optimized-text" style="margin-top: 8px;">
+        <div>🔄 LifeTime: ${user.lifeTime} Bestellung${user.lifeTime !== 1 ? 'en' : ''}</div>
+        <div>⏰ ResetTime: ${user.resetTime} Bestellung${user.resetTime !== 1 ? 'en' : ''}</div>
+        <div class="kv" style="font-size: 0.7rem; margin-top: 4px;">${lastResetText}</div>
+      </div>
+      <div style="margin-top: 8px; display: flex; gap: 6px;">
+        <button class="btn small-btn reset-btn" style="background: var(--warning-color);">🔄 ResetTime zurücksetzen</button>
+        <button class="btn small-btn details-btn" style="background: var(--secondary-color);">📋 Details anzeigen</button>
+      </div>`;
+    
+    elements.usersList.appendChild(userItem);
+    
+    const resetBtn = userItem.querySelector('.reset-btn');
+    resetBtn.onclick = (e) => {
+      e.stopPropagation();
+      resetUserTime(user);
+    };
+    
+    const detailsBtn = userItem.querySelector('.details-btn');
+    detailsBtn.onclick = (e) => {
+      e.stopPropagation();
+      userItem.click();
+    };
+    
+    userItem.onclick = () => {
+      document.querySelectorAll('.user-order-item').forEach(item => item.classList.remove('active'));
+      userItem.classList.add('active');
+      selectedUserId = user.phone;
+      renderUserOrders(user);
+    };
+  }
+}
+
+// Erweiterte renderUserOrders Funktion mit Reset-Funktionalität und Öffnen-Button
+function renderUserOrders(user) {
+  elements.userOrdersDetails.innerHTML = '';
+  
+  if (!user || !user.orders.length) { 
+    elements.userOrdersDetails.innerHTML = '<div class="kv mobile-optimized-text">Keine Bestellungen für diesen Nutzer gefunden.</div>'; 
+    return; 
+  }
+  
+  const headerCard = document.createElement('div');
+  headerCard.className = 'order-card';
+  
+  const lastResetText = user.lastReset ? 
+    `(Zuletzt zurückgesetzt: ${new Date(user.lastReset).toLocaleString('de-DE')})` : 
+    '(Noch nie zurückgesetzt)';
+  
+  headerCard.innerHTML = `
+    <div class="order-card-header">
+      <div class="mobile-optimized-text">
+        <strong>📊 Statistiken für ${escapeHtml(user.userName)}</strong>
+        <div class="kv">📞 ${escapeHtml(user.phone)}</div>
+      </div>
+    </div>
+    <div class="user-stats-grid">
+      <div class="stat-card stat-lifetime">
+        <div class="stat-value">${user.lifeTime}</div>
+        <div class="kv">LifeTime Bestellungen</div>
+        <div class="kv" style="font-size:0.7rem">Gesamtanzahl aller Bestellungen</div>
+      </div>
+      <div class="stat-card stat-resettime">
+        <div class="stat-value">${user.resetTime}</div>
+        <div class="kv">ResetTime Bestellungen</div>
+        <div class="kv" style="font-size:0.7rem">Aktuelle Periode</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:0.8rem;color:var(--muted)" class="mobile-optimized-text">
+      ${lastResetText}
+    </div>
+    <div style="margin-top:12px;">
+      <button class="btn" style="background:var(--warning-color);width:100%;" onclick="resetUserTime(${JSON.stringify(user).replace(/"/g, '&quot;')})">
+        🔄 ResetTime auf 0 zurücksetzen
+      </button>
+    </div>`;
+  
+  elements.userOrdersDetails.appendChild(headerCard);
+  
+  const sortedOrders = user.orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  
+  sortedOrders.forEach(order => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'order-card fade-in';
+    
+    const date = order.createdAt ? new Date(order.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (order.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (order.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    orderCard.innerHTML = `
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>Bestellcode: ${escapeHtml(order.code)}</strong>
+          <div class="kv">${escapeHtml(date)}</div>
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+        </div>
+      </div>`;
+    
+    if (order.items && order.items.length > 0) {
+      const itemsList = document.createElement('div');
+      itemsList.style.marginTop = '8px';
+      order.items.forEach(item => {
+        const resourceText = Object.entries(item.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
+        const itemDiv = document.createElement('div');
+        itemDiv.style.marginBottom = '6px';
+        itemDiv.style.padding = '6px';
+        itemDiv.style.background = 'rgba(255,255,255,0.02)';
+        itemDiv.style.borderRadius = '4px';
+        itemDiv.innerHTML = `
+          <div class="mobile-optimized-text"><b>${escapeHtml(item.name)}</b> — ${item.quantity}x</div>
+          <div class="kv mobile-optimized-text">${escapeHtml(resourceText)}</div>`;
+        itemsList.appendChild(itemDiv);
       });
-      
-      if (buttons[activeButton]) {
-        buttons[activeButton].classList.remove('bg-gray-700');
-        if (activeButton === 'new') {
-          buttons[activeButton].classList.add('bg-green-600', 'pulse-glow');
-        } else if (activeButton === 'admin') {
-          buttons[activeButton].classList.add('bg-blue-600');
-        } else {
-          buttons[activeButton].classList.add('bg-gray-600');
+      orderCard.appendChild(itemsList);
+    }
+    
+    if (order.status === 'bearbeitet') {
+      const openButton = document.createElement('button');
+      openButton.className = 'btn small-btn';
+      openButton.style.background = 'var(--secondary-color)';
+      openButton.style.marginTop = '8px';
+      openButton.textContent = '🔓 In Bestellungen öffnen';
+      openButton.onclick = async () => {
+        if (!confirm('Diese Bestellung wieder in den Bestellungen öffnen?')) return;
+        try {
+          await update(ref(db, 'orders/' + order.key), {
+            status: 'offen',
+            removedFromOrders: false
+          });
+          showToast('Bestellung wurde wieder geöffnet', 'success');
+        } catch (error) {
+          console.error(error);
+          showToast('Fehler beim Öffnen der Bestellung', 'error');
+        }
+      };
+      orderCard.appendChild(openButton);
+    }
+    
+    elements.userOrdersDetails.appendChild(orderCard);
+  });
+}
+
+elements.settingsUnlockBtn.addEventListener('click', () => {
+  const password = (elements.settingsPassword.value || '').trim();
+  if(password === ADMIN_PASSWORD){
+    elements.settingsLoginError.style.display = 'none';
+    elements.settingsLoginArea.style.display = 'none';
+    elements.settingsEditor.classList.remove('hidden-el');
+    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
+    elements.tabBtns[0].classList.add('active');
+    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
+    document.getElementById('tabProducts').classList.remove('hidden-el');
+  } else {
+    elements.settingsLoginError.style.display = '';
+  }
+});
+
+function resourcesToMap(resourcesString){
+  const map = {};
+  if(!resourcesString) return map;
+  const pairs = resourcesString.split(';').map(x => x.trim()).filter(Boolean);
+  pairs.forEach(resource => {
+    const [name, value] = resource.split(':');
+    if(name && value) map[name] = (map[name] || 0) + Number(value);
+  });
+  return map;
+}
+
+function addToCartByProductKey(productKey){
+  const product = products.find(p => p.key === productKey);
+  if(!product) return;
+  const resourceMap = resourcesToMap(product.resources);
+  const existingIndex = cart.findIndex(item => item.key === productKey);
+  if(existingIndex === -1){
+    cart.push({ key: productKey, name: product.name, resources: {...resourceMap}, quantity: 1 });
+  } else {
+    cart[existingIndex].quantity += 1;
+    for(const resource in resourceMap) {
+      cart[existingIndex].resources[resource] = (cart[existingIndex].resources[resource] || 0) + resourceMap[resource];
+    }
+  }
+  renderCartView();
+}
+
+function removeFromCart(productKey) {
+  const index = cart.findIndex(item => item.key === productKey);
+  if (index !== -1) {
+    cart.splice(index, 1);
+    renderCartView();
+    showToast('Produkt aus Warenkorb entfernt', 'success');
+  }
+}
+
+function updateCartQuantity(productKey, newQuantity) {
+  const item = cart.find(item => item.key === productKey);
+  if (item && newQuantity > 0) {
+    const product = products.find(p => p.key === productKey);
+    if (product) {
+      const resourceMap = resourcesToMap(product.resources);
+      item.quantity = newQuantity;
+      item.resources = {};
+      for (let i = 0; i < newQuantity; i++) {
+        for (const resource in resourceMap) {
+          item.resources[resource] = (item.resources[resource] || 0) + resourceMap[resource];
         }
       }
     }
+    renderCartView();
+  } else if (newQuantity <= 0) {
+    removeFromCart(productKey);
+  }
+}
 
-    // Initialize with New Entry active
-    updateButtonStates('new');
-
-    // Share Calculation
-    const quantityInput = document.getElementById('quantity');
-    const sellerShareEl = document.getElementById('sellerShare');
-    const yourShareEl = document.getElementById('yourShare');
-    const totalPriceEl = document.getElementById('totalPrice');
-    
-    function updateShares() { 
-      const q = Number(quantityInput.value) || 0;
-      const price = q * 2500;
-      totalPriceEl.textContent = formatCurrency(price);
-      sellerShareEl.textContent = formatCurrency(price * 0.7);
-      yourShareEl.textContent = formatCurrency(price * 0.3);
-    }
-    
-    quantityInput.addEventListener('input', updateShares);
-    updateShares();
-
-    // Form submit
-    document.getElementById('entryForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const buyer = document.getElementById('buyer').value.trim();
-      const seller = document.getElementById('seller').value.trim();
-      const quantity = Number(quantityInput.value);
-      
-      if (!buyer || !seller || !quantity) {
-        alert('Bitte füllen Sie alle Felder aus!');
-        return;
-      }
-      
-      const price = quantity * 2500;
-      const sellerShare = price * 0.7;
-      const yourShare = price * 0.3;
-      
-      const entry = {
-        buyer,
-        seller,
-        quantity,
-        price,
-        sellerShare,
-        yourShare,
-        date: formatDate(new Date()),
-        timestamp: Date.now()
-      };
-
-      try {
-        await push(entriesRef, entry);
-        e.target.reset();
-        updateShares();
-        
-        // Show success message
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          Erfolgreich gespeichert!
-        `;
-        submitBtn.classList.remove('bg-green-600');
-        submitBtn.classList.add('bg-green-500');
-        
-        setTimeout(() => {
-          submitBtn.innerHTML = originalText;
-          submitBtn.classList.remove('bg-green-500');
-          submitBtn.classList.add('bg-green-600');
-        }, 2000);
-        
-      } catch (error) {
-        console.error('Fehler beim Speichern:', error);
-        alert('Fehler beim Speichern der Daten!');
-      }
-    });
-
-    // Reset form
-    document.getElementById('resetForm').addEventListener('click', () => {
-      if (confirm('Möchten Sie das Formular wirklich zurücksetzen?')) {
-        document.getElementById('entryForm').reset(); 
-        updateShares();
-      }
-    });
-
-    // Real-time listener
-    onValue(entriesRef, snapshot => {
-      entries = [];
-      snapshot.forEach(child => {
-        const data = child.val();
-        data.key = child.key;
-        entries.push(data);
-      });
-      // Sortierung: Neueste oben
-      entries.sort((a, b) => b.timestamp - a.timestamp);
-      renderOverview();
-      renderAdminTable();
-    });
-
-    // Übersicht rendern
-    const entriesList = document.getElementById('entriesList');
-    function renderOverview() {
-      entriesList.innerHTML = '';
-      if (entries.length === 0) {
-        entriesList.innerHTML = '<div class="text-center py-8 text-gray-400"><p>Keine Einträge vorhanden.</p></div>'; 
-        return;
-      }
-      
-      entries.forEach(en => {
-        const el = document.createElement('div');
-        el.className = 'p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
-        el.innerHTML = `
-          <div class="flex justify-between items-start mb-2">
-            <div class="text-sm text-gray-400">${en.date}</div>
-            <div class="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">${en.quantity} Bricks</div>
+function renderCartView(){
+  elements.cartTableBody.innerHTML = '';
+  const totalResources = {};
+  
+  if (cart.length === 0) {
+    elements.cartTableBody.innerHTML = '<tr><td colspan="4" class="kv mobile-optimized-text" style="text-align:center;padding:20px">Warenkorb ist leer</td></tr>';
+  } else {
+    cart.forEach(entry => {
+      const tr = document.createElement('tr');
+      const resText = Object.entries(entry.resources).map(([k,v])=>`${k}: ${v}`).join(', ');
+      tr.innerHTML = `
+        <td class="mobile-optimized-text">${escapeHtml(entry.name)}</td>
+        <td class="mobile-optimized-text resource-text-fix">${escapeHtml(resText)}</td>
+        <td style="text-align:right" class="mobile-optimized-text">
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px">
+            <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity - 1})">-</button>
+            <span>${entry.quantity}</span>
+            <button class="btn small-btn" onclick="updateCartQuantity('${entry.key}', ${entry.quantity + 1})">+</button>
           </div>
-          <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
-          <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="bg-gray-800/40 p-2 rounded-lg">
-              <div class="text-gray-400">Gesamtpreis</div>
-              <div class="font-medium text-white">${formatCurrency(en.price)}</div>
-            </div>
-            <div class="bg-gray-800/40 p-2 rounded-lg">
-              <div class="text-gray-400">Verkäuferanteil</div>
-              <div class="font-medium text-green-400">${formatCurrency(en.sellerShare)}</div>
-            </div>
-            <div class="bg-gray-800/40 p-2 rounded-lg">
-              <div class="text-gray-400">Käuferanteil</div>
-              <div class="font-medium text-blue-400">${formatCurrency(en.yourShare)}</div>
-            </div>
-            <div class="bg-gray-800/40 p-2 rounded-lg">
-              <div class="text-gray-400">Pro Stück</div>
-              <div class="font-medium text-purple-400">${formatCurrency(en.price / en.quantity)}</div>
-            </div>
-          </div>
-        `;
-        entriesList.appendChild(el);
+        </td>
+        <td style="text-align:center">
+          <button class="btn small-btn" style="background:var(--error-color)" onclick="removeFromCart('${entry.key}')">🗑️</button>
+        </td>`;
+      elements.cartTableBody.appendChild(tr);
+      for(const k in entry.resources) totalResources[k] = (totalResources[k]||0) + entry.resources[k];
+    });
+  }
+  
+  const summary = Object.entries(totalResources).map(([k,v])=>`${k}: ${v}`).join(', ') || 'keine';
+  cartSummary.innerText = 'Gesamt Ressourcen: ' + summary;
+  
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  elements.cartCount.textContent = totalItems > 0 ? totalItems : '';
+  elements.cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+  
+  ensureOrderUiInCart();
+  if(saveOrderBtnEl) saveOrderBtnEl.disabled = (cart.length === 0);
+}
+
+elements.btnShop.addEventListener('click', ()=>{ 
+  elements.shopView.classList.remove('hidden-el'); 
+  elements.cartView.classList.add('hidden-el'); 
+});
+
+elements.btnCart.addEventListener('click', ()=>{ 
+  elements.shopView.classList.add('hidden-el'); 
+  elements.cartView.classList.remove('hidden-el'); 
+  renderCartView(); 
+});
+
+function generate4DigitCode(){ 
+  return Math.floor(1000 + Math.random() * 9000).toString(); 
+}
+
+function ensureOrderUiInCart(){
+  if(saveOrderBtnEl) return;
+  const wrapper = document.createElement('div');
+  wrapper.style.marginTop = '12px';
+  saveOrderBtnEl = document.createElement('button');
+  saveOrderBtnEl.className = 'btn';
+  saveOrderBtnEl.style.background = 'var(--success-color)';
+  saveOrderBtnEl.textContent = '✅ Bestellung speichern (Code erzeugen)';
+  saveOrderBtnEl.onclick = saveCartAsOrder;
+  wrapper.appendChild(saveOrderBtnEl);
+  orderCodeDisplayEl = document.createElement('div');
+  orderCodeDisplayEl.style.marginTop = '8px';
+  orderCodeDisplayEl.style.fontWeight = '700';
+  orderCodeDisplayEl.style.fontSize = '1.05rem';
+  orderCodeDisplayEl.className = 'success mobile-optimized-text';
+  orderCodeDisplayEl.textContent = '';
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'btn small-btn';
+  copyBtn.style.marginLeft = '8px';
+  copyBtn.textContent = '📋 Kopieren';
+  copyBtn.onclick = ()=> {
+    const txt = (orderCodeDisplayEl.textContent || '').replace('Bestellcode: ','').trim();
+    if(!txt) return showToast('Kein Bestellcode vorhanden', 'warning');
+    navigator.clipboard?.writeText(txt).then(()=> showToast('Code kopiert', 'success')).catch(()=> showToast('Kopieren nicht möglich', 'error'));
+  };
+  const codeWrap = document.createElement('div');
+  codeWrap.style.display = 'flex';
+  codeWrap.style.alignItems = 'center';
+  codeWrap.style.gap = '8px';
+  codeWrap.appendChild(orderCodeDisplayEl);
+  codeWrap.appendChild(copyBtn);
+  wrapper.appendChild(codeWrap);
+  elements.cartView.appendChild(wrapper);
+}
+
+// Bestellung speichern MIT Discord Webhook
+async function saveCartAsOrder(){
+  if(cart.length === 0) return showToast('Warenkorb ist leer', 'warning');
+  
+  const userName = prompt('Bitte Namen eingeben für Bestellung:');
+  const userPhone = prompt('Bitte Telefonnummer eingeben:');
+  
+  if(!userName || !userPhone) {
+    showToast('Bestellung abgebrochen: Name und Telefon werden benötigt', 'error');
+    return;
+  }
+  
+  const code = generate4DigitCode();
+  const orderData = { 
+    code: code, 
+    createdAt: Date.now(), 
+    items: cart, 
+    status: 'offen', 
+    userName: userName, 
+    phone: userPhone 
+  };
+  
+  try {
+    const newOrderRef = push(ordersRef);
+    await update(newOrderRef, orderData);
+    
+    // Discord Webhook senden
+    if (webhookSettings.enabled && webhookSettings.url) {
+      const webhookSuccess = await sendDiscordWebhook({
+        ...orderData,
+        key: newOrderRef.key
       });
-    }
-
-    // Admin
-    const adminLoginBtn = document.getElementById('adminLoginBtn');
-    const adminPassInput = document.getElementById('adminPass');
-    const adminError = document.getElementById('adminError');
-    const adminTableBody = document.getElementById('adminTableBody');
-    const totalCount = document.getElementById('totalCount');
-    const totalRevenue = document.getElementById('totalRevenue');
-    const exportCsv = document.getElementById('exportCsv');
-
-    adminLoginBtn.addEventListener('click', () => {
-      if (adminPassInput.value === ADMIN_PASSWORD) {
-        adminError.classList.add('hidden-el'); 
-        show(document.getElementById('adminContent')); 
-        renderAdminTable();
-        adminPassInput.value = ''; // Clear password field after login
+      
+      if (webhookSuccess) {
+        showToast(`Bestellung gespeichert mit Code: ${code} und an Discord gesendet`, 'success');
       } else {
-        adminError.classList.remove('hidden-el');
-        adminPassInput.value = ''; // Clear password field on error
-        adminPassInput.focus();
+        showToast(`Bestellung gespeichert mit Code: ${code} (Webhook fehlgeschlagen)`, 'warning');
       }
-    });
-
-    // Allow login with Enter key
-    adminPassInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        adminLoginBtn.click();
-      }
-    });
-
-    function renderAdminTable() {
-      adminTableBody.innerHTML = '';
-      let revenue = 0;
-      
-      entries.forEach(en => {
-        revenue += en.yourShare;
-        const tr = document.createElement('tr');
-        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-        tr.innerHTML = `
-          <td class="p-3 small-muted">${en.date}</td>
-          <td class="p-3">${en.buyer}</td>
-          <td class="p-3">${en.seller}</td>
-          <td class="p-3">${en.quantity} </td>
-          <td class="p-3">${formatCurrency(en.price)}</td>
-          <td class="p-3 text-green-400">${formatCurrency(en.sellerShare)}</td>
-          <td class="p-3 text-blue-400">${formatCurrency(en.yourShare)}</td>
-          <td class="p-3">
-            <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteEntry('${en.key}')">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
-              Löschen
-            </button>
-          </td>`;
-        adminTableBody.appendChild(tr);
-      });
-      
-      totalCount.innerText = entries.length;
-      totalRevenue.innerText = formatCurrency(revenue);
+    } else {
+      showToast(`Bestellung gespeichert mit Code: ${code}`, 'success');
     }
+    
+    if(!orderCodeDisplayEl) ensureOrderUiInCart();
+    orderCodeDisplayEl.textContent = 'Bestellcode: ' + code;
+    cart = [];
+    renderCartView();
+    
+  } catch (e) { 
+    console.error(e); 
+    showToast('Fehler beim Speichern der Bestellung', 'error'); 
+  }
+}
 
-    window.deleteEntry = function(key) {
-      if (confirm('Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
-        remove(ref(db, 'weed_entries/' + key));
-      }
+onValue(ordersRef, snapshot => {
+  allOrders = [];
+  snapshot.forEach(child => { 
+    const o = child.val(); 
+    o.key = child.key; 
+    allOrders.push(o); 
+  });
+  renderOrdersList();
+});
+
+// renderOrdersList - Zeigt nur nicht-bearbeitete Bestellungen an
+function renderOrdersList() {
+  elements.ordersList.innerHTML = '';
+  
+  const visibleOrders = allOrders.filter(o => 
+    o.status !== 'bearbeitet' && !o.removedFromOrders
+  );
+  
+  if(visibleOrders.length === 0){ 
+    elements.ordersList.innerHTML = '<div class="kv mobile-optimized-text">Keine offenen Bestellungen vorhanden.</div>'; 
+    return; 
+  }
+  
+  visibleOrders.sort((a,b)=> {
+    const statusOrder = { 'offen': 0, 'bearbeitet': 1, 'storniert': 2 };
+    const statusA = statusOrder[a.status] || 0;
+    const statusB = statusOrder[b.status] || 0;
+    
+    if (statusA !== statusB) {
+      return statusA - statusB;
     }
+    
+    return (b.createdAt||0) - (a.createdAt||0);
+  });
+  
+  visibleOrders.forEach(o=>{
+    const div = document.createElement('div');
+    div.className = 'order-card fade-in';
+    const name = o.userName || '— unbekannt —';
+    const phone = o.phone || '';
+    const total = o.items?.length || 0;
+    const date = o.createdAt ? new Date(o.createdAt).toLocaleString('de-DE') : '-';
+    
+    let statusClass = 'status-open';
+    let statusText = '● Offen';
+    if (o.status === 'bearbeitet') {
+      statusClass = 'status-processed';
+      statusText = '✓ Bearbeitet';
+    } else if (o.status === 'storniert') {
+      statusClass = 'status-cancelled';
+      statusText = '✗ Storniert';
+    }
+    
+    div.innerHTML = `
+      <div class="order-card-header">
+        <div class="mobile-optimized-text">
+          <strong>${escapeHtml(o.code)}</strong><br>
+          <div class="kv">${escapeHtml(date)}</div>
+          ${escapeHtml(name)} ${phone ? '📞 '+escapeHtml(phone) : ''}
+        </div>
+        <div>
+          <span class="status-badge ${statusClass}">${statusText}</span>
+          <div class="kv mobile-optimized-text" style="text-align:right;margin-top:4px">${total} Artikel</div>
+        </div>
+      </div>
+      <div class="order-card-actions">
+        <button class="btn small-btn" data-view="${escapeHtml(o.code)}">👁️ Ansehen</button>
+        <button class="btn small-btn" data-del="${escapeHtml(o.key)}" style="background:var(--error-color)">🗑️ Löschen</button>
+      </div>`;
+    elements.ordersList.appendChild(div);
+    
+    div.querySelector('[data-del]').onclick = ()=> { 
+      if(confirm('Bestellung wirklich löschen?')) 
+        remove(ref(db,'orders/'+o.key))
+          .then(() => showToast('Bestellung gelöscht', 'success'))
+          .catch(() => showToast('Fehler beim Löschen', 'error')); 
+    };
+    
+    div.querySelector('[data-view]').onclick = ()=> loadOrderByCode(o.code);
+  });
+}
 
-    // CSV Export
-    exportCsv.addEventListener('click', () => {
-      if (entries.length === 0) {
-        alert('Keine Einträge zum Exportieren vorhanden.');
-        return;
-      }
-      
-      // Sortierung: Neueste oben
-      const sortedEntries = [...entries].sort((a, b) => b.timestamp - a.timestamp);
-      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Preis ', 'Verkäuferanteil (60%)', 'Käuferanteil (40%)'];
-      const rows = sortedEntries.map(e => [
-        e.date,
-        `"${e.buyer}"`,
-        `"${e.seller}"`,
-        e.quantity,
-        e.price,
-        e.sellerShare,
-        e.yourShare
-      ].join(','));
-      
-      const csv = [header.join(','), ...rows].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      
-      // Generate filename with current date
-      const now = new Date();
-      const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
-      a.download = `weed_ankauf_${dateStr}.csv`;
-      
-      document.body.appendChild(a);
-      a.click();
-      URL.revokeObjectURL(url);
-      a.remove();
-    });
-  </script>
+elements.refreshOrdersBtn.addEventListener('click', () => {
+  get(ordersRef)
+    .then(() => showToast('Bestellungen aktualisiert', 'success'))
+    .catch(() => showToast('Aktualisieren fehlgeschlagen', 'error'));
+});
+
+elements.loadOrderBtn.addEventListener('click', ()=> {
+  const code = (elements.orderCodeInput.value||'').trim();
+  if(!code) return showToast('Code eingeben', 'warning');
+  loadOrderByCode(code);
+});
+
+function loadOrderByCode(code){
+  const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
+  if(!order) return showToast('Keine Bestellung mit diesem Code gefunden', 'error');
+  
+  selectedOrder = order;
+  elements.orderDetails.style.display = '';
+  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code}`;
+  elements.orderItems.innerHTML = '';
+  
+  (order.items || []).forEach(i=>{
+    const div = document.createElement('div');
+    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
+    elements.orderItems.appendChild(div);
+  });
+  
+  elements.orderUserName.value = order.userName || '';
+  elements.orderPhone.value = order.phone || '';
+  
+  elements.markOrderProcessedBtn.disabled = order.status === 'bearbeitet';
+  elements.markOrderOpenBtn.disabled = order.status === 'offen';
+  elements.markOrderCancelledBtn.disabled = order.status === 'storniert';
+}
+
+elements.saveOrderUserBtn.addEventListener('click', async ()=> {
+  if (!selectedOrder) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { 
+      userName: (elements.orderUserName.value||'').trim(), 
+      phone: (elements.orderPhone.value||'').trim() 
+    }); 
+    showToast('Kundendaten gespeichert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
+});
+
+// "Als bearbeitet" Button - Erhöht User-Stats
+elements.markOrderProcessedBtn.addEventListener('click', async ()=> {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung als bearbeitet markieren und aus Bestellungen entfernen?')) return;
+  try { 
+    await incrementUserStatsOnProcessed(selectedOrder);
+    
+    await update(ref(db,'orders/'+selectedOrder.key), { 
+      status: 'bearbeitet',
+      removedFromOrders: true
+    }); 
+    
+    elements.orderDetails.style.display = 'none';
+    elements.orderCodeInput.value = '';
+    selectedOrder = null;
+    
+    showToast('Bestellung als bearbeitet markiert und aus Bestellungen entfernt', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+elements.markOrderOpenBtn.addEventListener('click', async ()=> {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung als offen markieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'offen' }); 
+    showToast('Bestellung als offen markiert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+elements.markOrderCancelledBtn.addEventListener('click', async ()=> {
+  if(!selectedOrder) return;
+  if(!confirm('Bestellung stornieren?')) return;
+  try { 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'storniert' }); 
+    showToast('Bestellung storniert', 'success'); 
+  }
+  catch(e){ console.error(e); showToast('Fehler', 'error'); }
+});
+
+// Make functions globally available for onclick handlers
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
+window.resetUserTime = resetUserTime;
+
+// NEU: Bild-Uploads initialisieren
+setupProductImageUpload();
+setupHeaderImageUpload();
+
+// NEU: Klickbare Header-Elemente initialisieren
+setupClickableHeader();
+
+ensureOrderUiInCart();
+renderCartView();
+applySettings();
+
+elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
+elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
+elements.orderCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
+
+console.log('🚀 Bullet Farm v3 Shop initialisiert');
+</script>
 </body>
 </html>

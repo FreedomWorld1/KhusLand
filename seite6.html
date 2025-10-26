@@ -398,27 +398,6 @@ body {
   margin-right: 8px;
 }
 
-/* NEUE STILE FÜR DIE WERBUNG */
-.advertisement {
-  text-align: center;
-  font-size: 0.7rem;
-  color: var(--muted);
-  margin-top: 10px;
-  padding: 8px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-}
-
-.advertisement a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.advertisement a:hover {
-  color: #06b6d4;
-  text-decoration: underline;
-}
-
 /* Mobile Styles */
 @media (max-width: 768px) {
   .container {
@@ -724,19 +703,48 @@ body {
   background: rgba(239, 68, 68, 0.2);
   color: var(--error-color);
 }
+
+/* NEU: Logo und Titel als klickbare Links */
+.clickable-header {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable-header:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.created-by-link {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.created-by-link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
+}
 </style>
 </head>
 <body>
   <div class="container">
     <header class="card shadow-soft mb-6 flex items-center justify-between fade-in">
       <div class="flex items-center gap-4">
-        <!-- Bild mit Link zum Discord -->
-        <a href="https://discord.gg/n7JnaE67s8" target="_blank" style="text-decoration: none;">
-          <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" style="width:48px;height:48px;object-fit:cover;border-radius:8px; cursor: pointer;">
-        </a>
+        <!-- NEU: Klickbares Logo -->
+        <img id="headerLogo" src="https://via.placeholder.com/48" alt="Logo" 
+             style="width:48px;height:48px;object-fit:cover;border-radius:8px" 
+             class="clickable-header">
         <div>
-          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin:0" class="mobile-optimized-text">Bullet Farm v3</h1>
+          <!-- NEU: Klickbarer Titel -->
+          <h1 id="pageTitle" style="font-size:1.4rem;font-weight:700;color:var(--primary-color);margin:0" 
+              class="mobile-optimized-text clickable-header">Bullet Farm v3</h1>
           <div class="small-muted mobile-optimized-text">Shop System</div>
+          <!-- NEU: Created by Link -->
+          <div class="created-by-link mobile-optimized-text" id="createdByLink">Created by Colin</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -785,11 +793,6 @@ body {
         <div style="margin-top:12px;font-weight:700" id="cartSummary" class="mobile-optimized-text">Gesamt Ressourcen: keine</div>
       </section>
     </main>
-
-    <!-- Werbung Bereich -->
-    <div class="advertisement mobile-optimized-text">
-      Werbung erstellt von : <a href="https://discord.gg/Ps95KxmXFr" target="_blank">Rey Ehrlich</a>
-    </div>
   </div>
 
   <div id="settingsModal" class="modal-overlay hidden-el" aria-hidden="true">
@@ -1205,8 +1208,9 @@ const webhookRef = ref(db, 'webhook');
 
 const ADMIN_PASSWORD = 'T9"/TIF;9CGmSUzF]qafNT|/7j%]p';
 
-// NEU: Session Storage für Admin-Login
-const ADMIN_SESSION_KEY = 'adminLoggedIn';
+// NEU: Discord Links
+const LOGO_LINK = 'https://discord.gg/nnpUm8TNhB';
+const CREATED_BY_LINK = 'https://discord.gg/RQgwDjKUBd';
 
 // DOM Elemente
 const elements = {
@@ -1301,7 +1305,9 @@ const elements = {
   resetWebhookBtn: document.getElementById('resetWebhookBtn'),
   // NEU: Bild-Upload Elemente
   imagePreviewContainer: document.getElementById('imagePreviewContainer'),
-  headerImagePreviewContainer: document.getElementById('headerImagePreviewContainer')
+  headerImagePreviewContainer: document.getElementById('headerImagePreviewContainer'),
+  // NEU: Klickbare Links
+  createdByLink: document.getElementById('createdByLink')
 };
 
 let products = [];
@@ -1331,18 +1337,22 @@ const defaultColors = {
   card: '#0b1220'
 };
 
-// NEU: Admin-Login Status prüfen
-function checkAdminLoginStatus() {
-  return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'true';
-}
-
-// NEU: Admin-Login Status setzen
-function setAdminLoginStatus(loggedIn) {
-  if (loggedIn) {
-    sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
-  } else {
-    sessionStorage.removeItem(ADMIN_SESSION_KEY);
-  }
+// NEU: Logo und Titel als klickbare Links
+function setupClickableHeader() {
+  // Logo klickbar machen
+  elements.headerLogo.addEventListener('click', () => {
+    window.open(LOGO_LINK, '_blank');
+  });
+  
+  // Titel klickbar machen
+  elements.pageTitle.addEventListener('click', () => {
+    window.open(LOGO_LINK, '_blank');
+  });
+  
+  // "Created by Colin" Link
+  elements.createdByLink.addEventListener('click', () => {
+    window.open(CREATED_BY_LINK, '_blank');
+  });
 }
 
 // NEU: Vereinfachte Bild-Upload Funktion - verwendet Data URLs
@@ -1791,23 +1801,12 @@ function hideModal() {
   setTimeout(() => elements.settingsModal.classList.add('hidden-el'), 240); 
 }
 
-// NEU: Settings Modal öffnen mit Login-Status prüfung
 elements.openSettingsBtn.addEventListener('click', () => {
-  if (checkAdminLoginStatus()) {
-    // Bereits eingeloggt - zeige direkt den Editor
-    elements.settingsPassword.value = '';
-    elements.settingsLoginError.style.display = 'none';
-    elements.settingsLoginArea.style.display = 'none';
-    elements.settingsEditor.classList.remove('hidden-el');
-    showModal();
-  } else {
-    // Nicht eingeloggt - zeige Login-Bereich
-    elements.settingsPassword.value = '';
-    elements.settingsLoginError.style.display = 'none';
-    elements.settingsLoginArea.style.display = '';
-    elements.settingsEditor.classList.add('hidden-el');
-    showModal();
-  }
+  elements.settingsPassword.value = '';
+  elements.settingsLoginError.style.display = 'none';
+  elements.settingsLoginArea.style.display = '';
+  elements.settingsEditor.classList.add('hidden-el');
+  showModal();
 });
 
 elements.settingsCloseBtn.addEventListener('click', hideModal);
@@ -1830,25 +1829,6 @@ elements.tabBtns.forEach(btn => {
     if (tabName === 'orders') renderOrdersList();
     if (tabName === 'webhook') updateWebhookUI();
   });
-});
-
-// NEU: Admin-Login Funktion
-elements.settingsUnlockBtn.addEventListener('click', () => {
-  const password = (elements.settingsPassword.value || '').trim();
-  if(password === ADMIN_PASSWORD){
-    setAdminLoginStatus(true);
-    elements.settingsLoginError.style.display = 'none';
-    elements.settingsLoginArea.style.display = 'none';
-    elements.settingsEditor.classList.remove('hidden-el');
-    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
-    elements.tabBtns[0].classList.add('active');
-    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
-    document.getElementById('tabProducts').classList.remove('hidden-el');
-    showToast('Erfolgreich als Admin eingeloggt', 'success');
-  } else {
-    elements.settingsLoginError.style.display = '';
-    showToast('Falsches Passwort', 'error');
-  }
 });
 
 // Webhook Event Listener
@@ -2636,7 +2616,7 @@ function renderUserOrders(user) {
       const itemsList = document.createElement('div');
       itemsList.style.marginTop = '8px';
       order.items.forEach(item => {
-        const resourceText = Object.entries(item.resources || {}).map(([name, value]) => `${name}: ${value}`).join(', ');
+        const resourceText = Object.entries(item.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
         const itemDiv = document.createElement('div');
         itemDiv.style.marginBottom = '6px';
         itemDiv.style.padding = '6px';
@@ -2675,6 +2655,21 @@ function renderUserOrders(user) {
     elements.userOrdersDetails.appendChild(orderCard);
   });
 }
+
+elements.settingsUnlockBtn.addEventListener('click', () => {
+  const password = (elements.settingsPassword.value || '').trim();
+  if(password === ADMIN_PASSWORD){
+    elements.settingsLoginError.style.display = 'none';
+    elements.settingsLoginArea.style.display = 'none';
+    elements.settingsEditor.classList.remove('hidden-el');
+    elements.tabBtns.forEach(btn => btn.classList.remove('active'));
+    elements.tabBtns[0].classList.add('active');
+    elements.tabPanels.forEach(panel => panel.classList.add('hidden-el'));
+    document.getElementById('tabProducts').classList.remove('hidden-el');
+  } else {
+    elements.settingsLoginError.style.display = '';
+  }
+});
 
 function resourcesToMap(resourcesString){
   const map = {};
@@ -2956,40 +2951,20 @@ function renderOrdersList() {
   });
 }
 
-elements.refreshOrdersBtn.addEventListener('click', ()(o.code);
-  });
-}
-
 elements.refreshOrdersBtn.addEventListener('click', () => {
   get(ordersRef)
     .then(() => showToast('Bestellungen aktualisiert', 'success'))
-    .catch(() => showToast('Akt => {
-  get(ordersRef)
-    .then(() => showToast('Bestellungen aktualisiert', 'success'))
-    .catch(() => showToast('Aktualisieren fehlgeschlagen',ualisieren fehlgeschlagen', 'error'));
-});
-
-elements.load 'error'));
+    .catch(() => showToast('Aktualisieren fehlgeschlagen', 'error'));
 });
 
 elements.loadOrderBtn.addEventListener('click', ()=> {
   const code = (elements.orderCodeInput.value||'').trim();
-  if(!codeOrderBtn.addEventListener('click', ()=> {
-  const code = (elements.orderCodeInput.value||'').trim();
   if(!code) return showToast('Code eingeben', 'warning');
-  loadOrderByCode(code) return showToast('Code eingeben', 'warning');
   loadOrderByCode(code);
 });
 
 function loadOrderByCode(code){
-  const order = allOrders.find(o=> (o.code||);
-});
-
-function loadOrderByCode(code){
   const order = allOrders.find(o=> (o.code||'').toString() === code.toString());
-  if(!order) return showToast('Keine Bestellung mit diesem Code gefunden', 'error');
-  
-'').toString() === code.toString());
   if(!order) return showToast('Keine Bestellung mit diesem Code gefunden', 'error');
   
   selectedOrder = order;
@@ -2999,178 +2974,91 @@ function loadOrderByCode(code){
   
   (order.items || []).forEach(i=>{
     const div = document.createElement('div');
-    const resText =  selectedOrder = order;
-  elements.orderDetails.style.display = '';
-  elements.orderCodeDisplay.textContent = `Bestellcode: ${order.code}`;
-  elements.orderItems.innerHTML = '';
-  
-  (order.items || []).forEach(i=>{
-    const div = document.createElement('div');
-    const Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML = `<div resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
-    div.innerHTML style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity)) = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
-    elements.orderItems.appendChild(div);
-  });
-  
-  elements.orderquantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
+    const resText = Object.entries(i.resources || {}).map(([k,v])=>`${k}: ${v}`).join(', ');
+    div.innerHTML = `<div style="margin-bottom:6px" class="mobile-optimized-text"><b>${escapeHtml(i.name)}</b> — ${escapeHtml(String(i.quantity))}x</div><div class="kv mobile-optimized-text">${escapeHtml(resText)}</div>`;
     elements.orderItems.appendChild(div);
   });
   
   elements.orderUserName.value = order.userName || '';
-  elements.orderPhone.value =UserName.value = order.userName || '';
   elements.orderPhone.value = order.phone || '';
   
   elements.markOrderProcessedBtn.disabled = order.status === 'bearbeitet';
- order.phone || '';
-  
-  elements.markOrderProcessedBtn.disabled = order.status === 'bearbeitet';
   elements.markOrderOpenBtn.disabled = order.status === 'offen';
-  elements.mark  elements.markOrderOpenBtn.disabled = order.status === 'offen';
   elements.markOrderCancelledBtn.disabled = order.status === 'storniert';
 }
 
-elements.saveOrderOrderCancelledBtn.disabled = order.status === 'storniert';
-}
-
 elements.saveOrderUserBtn.addEventListener('click', async ()=> {
-  if (!selectedOrder)UserBtn.addEventListener('click', async ()=> {
   if (!selectedOrder) return;
   try { 
     await update(ref(db,'orders/'+selectedOrder.key), { 
-      userName: return;
-  try { 
-    await update(ref(db,'orders/'+selectedOrder.key), { 
       userName: (elements.orderUserName.value||'').trim(), 
-      phone: (elements.order (elements.orderUserName.value||'').trim(), 
       phone: (elements.orderPhone.value||'').trim() 
-    }); 
-    showToast('KPhone.value||'').trim() 
     }); 
     showToast('Kundendaten gespeichert', 'success'); 
   }
   catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
 });
 
-undendaten gespeichert', 'success'); 
-  }
-  catch(e){ console.error(e); showToast('Fehler beim Speichern', 'error'); }
-});
-
-//// "Als bearbeitet" Button - Erhöht User-Stats
-elements.markOrderProcessedBtn.addEventListener('click', async ( "Als bearbeitet" Button - Erhöht User-Stats
-elements.markOrderProcessedBtn.addEventListener('click', async ()=>)=> {
-  if(!selectedOrder) return;
-  if(!confirm('Bestellung als bearbeitet markieren und aus Bestellungen entfernen?')) return;
-  try { {
+// "Als bearbeitet" Button - Erhöht User-Stats
+elements.markOrderProcessedBtn.addEventListener('click', async ()=> {
   if(!selectedOrder) return;
   if(!confirm('Bestellung als bearbeitet markieren und aus Bestellungen entfernen?')) return;
   try { 
-    await incrementUserStatsOnProcessed( 
     await incrementUserStatsOnProcessed(selectedOrder);
-    
-    await update(ref(db,'orders/'+selectedOrder.keyselectedOrder);
     
     await update(ref(db,'orders/'+selectedOrder.key), { 
       status: 'bearbeitet',
       removedFromOrders: true
-    }), { 
-      status: 'bearbeitet',
-      removedFromOrders: true
     }); 
-    
-    elements.orderDetails.style.display = 'none); 
     
     elements.orderDetails.style.display = 'none';
     elements.orderCodeInput.value = '';
     selectedOrder = null;
     
-    showToast('Bestellung als bearbeitet markiert';
-    elements.orderCodeInput.value = '';
-    selectedOrder = null;
-    
-    showToast('Bestellung als bearbeitet markiert und und aus Bestellungen entfernt', 'success'); 
-  }
-  catch(e){ console.error(e); showToast('Fehler', 'error'); }
-});
-
-elements.markOrderOpenBtn aus Bestellungen entfernt', 'success'); 
+    showToast('Bestellung als bearbeitet markiert und aus Bestellungen entfernt', 'success'); 
   }
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
 
 elements.markOrderOpenBtn.addEventListener('click', async ()=> {
   if(!selectedOrder) return;
-  if.addEventListener('click', async ()=> {
-  if(!selectedOrder) return;
   if(!confirm('Bestellung als offen markieren?')) return;
-(!confirm('Bestellung als offen markieren?')) return;
   try { 
-    await update(ref(db,'orders/'+selectedOrder.key),  try { 
-    await update(ref(db,'orders/'+selectedOrder.key), { status { status: 'offen' }); 
-    showToast('Bestellung als offen markiert', 'success'); 
-  }
-  catch(e){ console: 'offen' }); 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'offen' }); 
     showToast('Bestellung als offen markiert', 'success'); 
   }
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
-});
-
-elements.mark.error(e); showToast('Fehler', 'error'); }
 });
 
 elements.markOrderCancelledBtn.addEventListener('click', async ()=> {
-  if(!selectedOrder)OrderCancelledBtn.addEventListener('click', async ()=> {
- return;
+  if(!selectedOrder) return;
   if(!confirm('Bestellung stornieren?')) return;
   try { 
-    await update(ref(db,'orders/'+selected  if(!selectedOrder) return;
-  if(!confirm('Bestellung stornieren?')) return;
-  try { 
-    await update(ref(db,'orders/'+selectedOrder.key), {Order.key), { status: 'storniert' }); 
-    showToast('Bestellung storn status: 'storniert' }); 
+    await update(ref(db,'orders/'+selectedOrder.key), { status: 'storniert' }); 
     showToast('Bestellung storniert', 'success'); 
-  }
-  catch(e){ console.error(e); showToast('Fehler', 'error'); }
-});
-
-// Make functions globally available for onclickiert', 'success'); 
   }
   catch(e){ console.error(e); showToast('Fehler', 'error'); }
 });
 
 // Make functions globally available for onclick handlers
 window.updateCartQuantity = updateCartQuantity;
-window.removeFrom handlers
-window.updateCartQuantity = updateCartQuantity;
 window.removeFromCart = removeFromCart;
-window.resetUserTime = resetUserTime;
-
-// NEUCart = removeFromCart;
 window.resetUserTime = resetUserTime;
 
 // NEU: Bild-Uploads initialisieren
 setupProductImageUpload();
 setupHeaderImageUpload();
 
-ensureOrderUiInCart();
-renderCartView();
-applySettings();
-
-elements.s: Bild-Uploads initialisieren
-setupProductImageUpload();
-setupHeaderImageUpload();
+// NEU: Klickbare Header-Elemente initialisieren
+setupClickableHeader();
 
 ensureOrderUiInCart();
 renderCartView();
 applySettings();
 
-elements.settingsPassword.addEventListener('keypress', (e) => {ettingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
-elements.newCategoryInput if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
-elements.newCategoryInput.addEventListener('keypress.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
-elements.orderCodeInput.addEventListener('', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
-elements.orderCodeInput.addEventListener('keypress', (e) => { if(e.keykeypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
-
-console.log('🚀 Bullet Farm v === 'Enter') elements.loadOrderBtn.click(); });
+elements.settingsPassword.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.settingsUnlockBtn.click(); });
+elements.newCategoryInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.addCategoryBtn.click(); });
+elements.orderCodeInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') elements.loadOrderBtn.click(); });
 
 console.log('🚀 Bullet Farm v3 Shop initialisiert');
 </script>

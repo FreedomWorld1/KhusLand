@@ -164,11 +164,11 @@
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-              <div class="small-muted mb-1">Verkäufer (60%)</div>
+              <div class="small-muted mb-1">Verkäufer (70%)</div>
               <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
             </div>
             <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-              <div class="small-muted mb-1">Käufer (40%)</div>
+              <div class="small-muted mb-1">Käufer (30%)</div>
               <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
             </div>
           </div>
@@ -368,8 +368,8 @@
       const q = Number(quantityInput.value) || 0;
       const price = q * 2500;
       totalPriceEl.textContent = formatCurrency(price);
-      sellerShareEl.textContent = formatCurrency(price * 0.6);
-      yourShareEl.textContent = formatCurrency(price * 0.4);
+      sellerShareEl.textContent = formatCurrency(price * 0.7);
+      yourShareEl.textContent = formatCurrency(price * 0.3);
     }
     
     quantityInput.addEventListener('input', updateShares);
@@ -388,8 +388,8 @@
       }
       
       const price = quantity * 2500;
-      const sellerShare = price * 0.6;
-      const yourShare = price * 0.4;
+      const sellerShare = price * 0.7;
+      const yourShare = price * 0.3;
       
       const entry = {
         buyer,

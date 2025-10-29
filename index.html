@@ -116,11 +116,16 @@
       </button>
       
       <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
-        <p>Zugriff verweigert. Du hast nicht die erforderliche Rolle.</p>
+        <p id="errorMessage">Zugriff verweigert. Du hast nicht die erforderliche Rolle.</p>
       </div>
       
       <div class="mt-6 text-sm text-gray-500">
         <p>Du benötigst eine autorisierte Discord-Rolle um auf diese Seite zugreifen zu können.</p>
+      </div>
+
+      <!-- DEBUG INFO (Kann später entfernt werden) -->
+      <div id="debugInfo" class="mt-4 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-xs hidden">
+        <p id="debugMessage"></p>
       </div>
     </div>
   </div>
@@ -284,7 +289,7 @@
   <script type="module">
     // Discord OAuth Konfiguration
     const DISCORD_CLIENT_ID = '1432942180770644079';
-    const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/';
+    const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
     
     // Deine Discord Rollen-IDs
     const AUTHORIZED_ROLE_IDS = [
@@ -331,7 +336,16 @@
     const mainContent = document.getElementById('mainContent');
     const discordLoginBtn = document.getElementById('discordLogin');
     const loginError = document.getElementById('loginError');
+    const errorMessage = document.getElementById('errorMessage');
     const logoutBtn = document.getElementById('logoutBtn');
+    const debugInfo = document.getElementById('debugInfo');
+    const debugMessage = document.getElementById('debugMessage');
+
+    // Debug-Funktion
+    function showDebugInfo(message) {
+      debugMessage.textContent = message;
+      debugInfo.classList.remove('hidden');
+    }
 
     // Überprüfe URL Parameters nach OAuth Redirect
     function checkOAuthResponse() {
@@ -340,12 +354,13 @@
       const error = urlParams.get('error');
 
       if (error) {
-        loginError.textContent = 'Fehler bei der Anmeldung: ' + error;
+        errorMessage.textContent = 'Fehler bei der Anmeldung: ' + error;
         loginError.classList.remove('hidden');
         return;
       }
 
       if (code) {
+        showDebugInfo('OAuth Code erhalten, tausche gegen Token...');
         exchangeCodeForToken(code);
       }
     }
@@ -353,6 +368,8 @@
     // Tausche Authorization Code gegen Access Token
     async function exchangeCodeForToken(code) {
       try {
+        showDebugInfo('Sende Anfrage an Worker...');
+        
         const response = await fetch(`${BACKEND_URL}/token`, {
           method: 'POST',
           headers: {
@@ -364,17 +381,27 @@
           })
         });
 
+        if (!response.ok) {
+          const errorText = await response.text();
+          showDebugInfo(`Worker Response Error: ${response.status} - ${errorText}`);
+          throw new Error(`Worker responded with status ${response.status}: ${errorText}`);
+        }
+
         const data = await response.json();
+        showDebugInfo('Worker Response erhalten');
 
         if (data.access_token) {
+          showDebugInfo('Access Token erhalten, überprüfe Rollen...');
           await checkUserRoles(data.access_token);
         } else {
+          showDebugInfo('Kein Access Token in Response');
           throw new Error('Kein Access Token erhalten');
         }
       } catch (error) {
         console.error('Fehler beim Token-Austausch:', error);
-        loginError.textContent = 'Fehler bei der Anmeldung. Bitte versuche es später erneut.';
+        errorMessage.textContent = 'Fehler bei der Anmeldung. Bitte versuche es später erneut.';
         loginError.classList.remove('hidden');
+        showDebugInfo(`Fehler: ${error.message}`);
       }
     }
 
@@ -382,6 +409,7 @@
     async function checkUserRoles(accessToken) {
       try {
         // Hole Benutzerinformationen
+        showDebugInfo('Hole Benutzerinformationen...');
         const userResponse = await fetch('https://discord.com/api/users/@me', {
           headers: {
             'Authorization': `Bearer ${accessToken}`
@@ -393,8 +421,10 @@
         }
         
         const userData = await userResponse.json();
+        showDebugInfo(`Benutzer: ${userData.username}`);
 
         // Hole Server-Informationen des Benutzers
+        showDebugInfo('Hole Server-Informationen...');
         const guildsResponse = await fetch('https://discord.com/api/users/@me/guilds', {
           headers: {
             'Authorization': `Bearer ${accessToken}`
@@ -406,11 +436,13 @@
         }
 
         const guilds = await guildsResponse.json();
+        showDebugInfo(`Anzahl Server: ${guilds.length}`);
         
         // Für jeden Server die Rollen überprüfen
         let hasAuthorizedRole = false;
         
         for (const guild of guilds) {
+          showDebugInfo(`Überprüfe Server: ${guild.name}`);
           const roleResponse = await fetch(`${BACKEND_URL}/verify-roles`, {
             method: 'POST',
             headers: {
@@ -427,26 +459,34 @@
           if (roleResponse.ok) {
             const roleData = await roleResponse.json();
             if (roleData.hasAuthorizedRole) {
+              showDebugInfo(`Autorisierte Rolle gefunden in: ${guild.name}`);
               hasAuthorizedRole = true;
               break;
+            } else {
+              showDebugInfo(`Keine autorisierte Rolle in: ${guild.name}`);
             }
+          } else {
+            showDebugInfo(`Rollen-Überprüfung fehlgeschlagen für: ${guild.name}`);
           }
         }
 
         if (hasAuthorizedRole) {
           // Erfolgreicher Login
+          showDebugInfo('Login erfolgreich!');
           localStorage.setItem('discord_user', JSON.stringify(userData));
           localStorage.setItem('discord_access_token', accessToken);
           showMainContent();
         } else {
-          loginError.textContent = 'Zugriff verweigert. Du hast keine der autorisierten Rollen.';
+          errorMessage.textContent = 'Zugriff verweigert. Du hast keine der autorisierten Rollen.';
           loginError.classList.remove('hidden');
           localStorage.clear();
+          showDebugInfo('Keine autorisierte Rolle gefunden');
         }
       } catch (error) {
         console.error('Fehler beim Überprüfen der Rollen:', error);
-        loginError.textContent = 'Fehler beim Überprüfen der Berechtigungen';
+        errorMessage.textContent = 'Fehler beim Überprüfen der Berechtigungen';
         loginError.classList.remove('hidden');
+        showDebugInfo(`Rollen-Überprüfungsfehler: ${error.message}`);
       }
     }
 
@@ -454,6 +494,7 @@
     function showMainContent() {
       loginScreen.classList.add('hidden');
       mainContent.classList.remove('hidden');
+      debugInfo.classList.add('hidden');
       
       // Setze URL zurück ohne Code-Parameter
       const cleanUrl = window.location.origin + window.location.pathname;
@@ -472,6 +513,7 @@
       authUrl.searchParams.set('scope', scope);
       authUrl.searchParams.set('state', state);
       
+      showDebugInfo('Starte OAuth Flow...');
       window.location.href = authUrl.toString();
     }
 
@@ -486,6 +528,7 @@
       mainContent.classList.add('hidden');
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
+      debugInfo.classList.add('hidden');
     }
 
     // Überprüfe gespeicherten Login beim Laden
@@ -494,7 +537,10 @@
       const token = localStorage.getItem('discord_access_token');
       
       if (user && token) {
+        showDebugInfo('Bereits eingeloggt');
         showMainContent();
+      } else {
+        showDebugInfo('Nicht eingeloggt');
       }
     }
 

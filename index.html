@@ -9,7 +9,6 @@
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
     }
     .card { 
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
@@ -96,51 +95,40 @@
     .hamburger-menu {
       z-index: 1001;
     }
-    .login-container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
   </style>
 </head>
-<body class="text-gray-100 antialiased">
-
-  <!-- LOGIN SCREEN (wird zuerst angezeigt) -->
-  <div id="loginScreen" class="login-container">
-    <div class="card p-8 shadow-soft w-full max-w-md">
-      <div class="text-center mb-8">
-        <div class="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center mx-auto mb-4">
-          <span class="text-2xl">🌿</span>
-        </div>
-        <h1 class="text-3xl font-bold gradient-text mb-2">Weed Ankauf</h1>
-        <p class="text-gray-400">Bitte mit Discord anmelden</p>
+<body class="text-gray-100 antialiased min-h-screen">
+  
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="card p-8 shadow-soft max-w-md w-full text-center">
+      <div class="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center mx-auto mb-6">
+        <span class="text-white text-2xl">🌿</span>
       </div>
+      <h1 class="text-3xl font-bold gradient-text mb-2">Weed Ankauf</h1>
+      <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
       
-      <button onclick="startDiscordLogin()" class="w-full py-4 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-3 text-lg">
-        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+      <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.18.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
         </svg>
         Mit Discord anmelden
       </button>
       
-      <div class="mt-4 text-center">
-        <button onclick="skipLogin()" class="text-sm text-gray-400 hover:text-gray-300 underline">
-          Oder ohne Login fortfahren (Test)
-        </button>
+      <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
+        <p>Zugriff verweigert. Du hast nicht die erforderliche Rolle.</p>
       </div>
       
-      <div id="loginError" class="mt-4 p-3 bg-red-900/30 border border-red-700 rounded-lg text-red-300 text-center hidden-el">
-        Login fehlgeschlagen. Bitte versuche es erneut.
+      <div class="mt-6 text-sm text-gray-500">
+        <p>Du benötigst eine bestimmte Discord-Rolle um auf diese Seite zugreifen zu können.</p>
       </div>
     </div>
   </div>
 
-  <!-- HAUPTPAGE (nur nach Login sichtbar) -->
-  <div id="mainApp" class="hidden-el">
-    <!-- Dein kompletter bisheriger App-Inhalt hier -->
+  <!-- MAIN CONTENT (Versteckt bis Login) -->
+  <div id="mainContent" class="hidden">
     <div class="max-w-4xl mx-auto p-4 md:p-6">
+
       <!-- HEADER -->
       <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
         <div class="flex items-center gap-3">
@@ -168,10 +156,12 @@
               <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
             </div>
           </div>
+          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">Logout</button>
         </div>
       </header>
 
       <div id="mainContainer" class="space-y-6 relative z-0">
+
         <!-- NEUER ANKAUF -->
         <div id="newEntry" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
@@ -239,19 +229,24 @@
 
         <!-- ADMIN -->
         <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-blue-400 flex items-center gap-2">
-              <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
-              Adminbereich
-            </h2>
-            <button onclick="logout()" class="px-3 py-1 bg-red-600 hover:bg-red-500 rounded-lg btn text-sm flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
+          <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
+            <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
+            Adminbereich
+          </h2>
+          <div id="adminLoginSection">
+            <div class="mb-4">
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
+              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
+            </div>
+            <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
               </svg>
-              Logout
+              Einloggen
             </button>
+            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
           </div>
-          <div id="adminContent">
+          <div id="adminContent" class="hidden-el">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
               <div class="small-muted">Gesamtanzahl: <span id="totalCount" class="font-bold text-white">0</span></div>
               <div class="small-muted">Gesamtumsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
@@ -281,15 +276,211 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
-  <script>
-    // Discord Login Funktionen - FIXED VERSION
-    const CLIENT_ID = '1432942180770644079';
+  <script type="module">
+    // Discord OAuth Konfiguration
+    const DISCORD_CLIENT_ID = '1432942180770644079';
+    const DISCORD_CLIENT_SECRET = 'OCJ_mJ5g04MA1rH5kde7AXajJG95xVee';
+    const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/';
+    const REQUIRED_ROLE_ID = 'DEINE_ROLLEN_ID_HIER'; // Ersetze mit der benötigten Rollen-ID
+    const DISCORD_GUILD_ID = 'DEINE_SERVER_ID_HIER'; // Ersetze mit deiner Server-ID
 
-    // UI Funktionen
+    // Firebase Import und Konfiguration
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    const entriesRef = ref(db,'weed_entries');
+
+    // DOM Elemente
+    const loginScreen = document.getElementById('loginScreen');
+    const mainContent = document.getElementById('mainContent');
+    const discordLoginBtn = document.getElementById('discordLogin');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Backend Service URL (ersetzte mit deinem Backend)
+    const BACKEND_URL = 'https://dein-backend.vercel.app/api';
+
+    // Überprüfe URL Parameters nach OAuth Redirect
+    function checkOAuthResponse() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const error = urlParams.get('error');
+
+      if (error) {
+        loginError.textContent = 'Fehler bei der Anmeldung: ' + error;
+        loginError.classList.remove('hidden');
+        return;
+      }
+
+      if (code) {
+        exchangeCodeForToken(code);
+      }
+    }
+
+    // Tausche Authorization Code gegen Access Token
+    async function exchangeCodeForToken(code) {
+      try {
+        // Verwende einen Proxy-Service für den Token-Austausch
+        const response = await fetch(`${BACKEND_URL}/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            code, 
+            redirect_uri: DISCORD_REDIRECT_URI,
+            client_id: DISCORD_CLIENT_ID,
+            client_secret: DISCORD_CLIENT_SECRET
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.access_token) {
+          await checkUserRoles(data.access_token);
+        } else {
+          throw new Error('Kein Access Token erhalten');
+        }
+      } catch (error) {
+        console.error('Fehler beim Token-Austausch:', error);
+        loginError.textContent = 'Fehler bei der Anmeldung. Bitte versuche es später erneut.';
+        loginError.classList.remove('hidden');
+        
+        // Fallback: Zeige Hauptinhalt ohne Überprüfung (für Entwicklung)
+        // showMainContent();
+      }
+    }
+
+    // Überprüfe Benutzerrollen
+    async function checkUserRoles(accessToken) {
+      try {
+        // Hole Benutzerinformationen
+        const userResponse = await fetch('https://discord.com/api/users/@me', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        
+        if (!userResponse.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        const userData = await userResponse.json();
+
+        // Überprüfe Rollen mit Backend
+        const roleResponse = await fetch(`${BACKEND_URL}/verify-role`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            accessToken, 
+            userId: userData.id,
+            roleId: REQUIRED_ROLE_ID,
+            guildId: DISCORD_GUILD_ID
+          })
+        });
+
+        const roleData = await roleResponse.json();
+
+        if (roleData.hasRole) {
+          // Erfolgreicher Login
+          localStorage.setItem('discord_user', JSON.stringify(userData));
+          localStorage.setItem('discord_access_token', accessToken);
+          showMainContent();
+        } else {
+          loginError.textContent = 'Zugriff verweigert. Du hast nicht die erforderliche Rolle.';
+          loginError.classList.remove('hidden');
+          localStorage.clear();
+        }
+      } catch (error) {
+        console.error('Fehler beim Überprüfen der Rollen:', error);
+        loginError.textContent = 'Fehler beim Überprüfen der Berechtigungen';
+        loginError.classList.remove('hidden');
+      }
+    }
+
+    // Zeige Hauptinhalt nach erfolgreichem Login
+    function showMainContent() {
+      loginScreen.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+      
+      // Setze URL zurück ohne Code-Parameter
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
+    // Discord OAuth Login
+    function startDiscordOAuth() {
+      const scope = 'identify guilds';
+      const state = generateRandomState();
+      
+      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+      authUrl.searchParams.set('response_type', 'code');
+      authUrl.searchParams.set('scope', scope);
+      authUrl.searchParams.set('state', state);
+      
+      window.location.href = authUrl.toString();
+    }
+
+    // Generiere random state für OAuth
+    function generateRandomState() {
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
+    // Logout Funktion
+    function logout() {
+      localStorage.clear();
+      mainContent.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      loginError.classList.add('hidden');
+    }
+
+    // Überprüfe gespeicherten Login beim Laden
+    function checkExistingLogin() {
+      const user = localStorage.getItem('discord_user');
+      const token = localStorage.getItem('discord_access_token');
+      
+      if (user && token) {
+        // Für Entwicklung: Zeige direkt den Hauptinhalt
+        showMainContent();
+      }
+    }
+
+    // Event Listeners
+    discordLoginBtn.addEventListener('click', startDiscordOAuth);
+    logoutBtn.addEventListener('click', logout);
+
+    // Initialisierung
+    checkExistingLogin();
+    checkOAuthResponse();
+
+    // Deine bestehenden Firebase-Funktionen
+    const ADMIN_PASSWORD = '1101';
+    let entries = [];
+
     function show(el) { 
       el.classList.remove('hidden-el'); 
       el.classList.add('fade-in');
@@ -298,508 +489,330 @@
       el.classList.add('hidden-el'); 
       el.classList.remove('fade-in');
     }
-
-    // Discord Login - SIMPLE VERSION die funktioniert
-    function startDiscordLogin() {
-      console.log('Discord Login gestartet...');
-      
-      const REDIRECT_URI = encodeURIComponent('https://freedomworld1.github.io/KhusLand/');
-      const SCOPE = encodeURIComponent('identify');
-      
-      // Discord OAuth URL
-      const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${SCOPE}`;
-      
-      console.log('Öffne Discord Login:', authUrl);
-      
-      // Öffne in neuem Tab statt Popup (besser für mobile Geräte)
-      window.open(authUrl, '_blank');
-      
-      // Starte Polling für Token in URL
-      startTokenPolling();
+    function formatCurrency(n) { 
+      return new Intl.NumberFormat('de-DE').format(Math.round(n)) + ' $'; 
+    }
+    function formatDate(d) {
+      const date = new Date(d);
+      const pad = n => n.toString().padStart(2,'0');
+      return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 
-    // Polling für Token im Hash
-    function startTokenPolling() {
-      console.log('Starte Token Polling...');
-      let pollCount = 0;
-      const maxPolls = 60; // 30 Sekunden
-      
-      const pollInterval = setInterval(() => {
-        pollCount++;
-        
-        // Prüfe ob Token im URL Hash ist
-        if (window.location.hash && window.location.hash.includes('access_token=')) {
-          clearInterval(pollInterval);
-          console.log('Token gefunden!');
-          handleTokenFromHash();
-        }
-        
-        // Prüfe localStorage (falls von anderem Tab)
-        const token = localStorage.getItem('discordToken');
-        if (token) {
-          clearInterval(pollInterval);
-          console.log('Token aus localStorage gefunden');
-          showMainApp();
-        }
-        
-        if (pollCount >= maxPolls) {
-          clearInterval(pollInterval);
-          console.log('Polling timeout');
-          showLoginError();
-        }
-      }, 500);
-    }
+    // Hamburger Menu
+    document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('hamburgerMenu').classList.toggle('hidden');
+    });
 
-    // Token aus URL Hash verarbeiten
-    function handleTokenFromHash() {
-      try {
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        const token = params.get('access_token');
-        
-        if (token) {
-          console.log('Token erhalten:', token.substring(0, 10) + '...');
-          localStorage.setItem('discordToken', token);
-          
-          // Hash aus URL entfernen
-          window.location.hash = '';
-          
-          getUserInfo(token);
-        } else {
-          throw new Error('Kein Token im Hash gefunden');
-        }
-      } catch (error) {
-        console.error('Fehler beim Token verarbeiten:', error);
-        showLoginError();
+    // Close hamburger menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const hamburgerMenu = document.getElementById('hamburgerMenu');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      
+      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        hamburgerMenu.classList.add('hidden');
       }
-    }
+    });
 
-    // User Info von Discord API holen
-    async function getUserInfo(token) {
-      try {
-        console.log('Hole User Info...');
-        const response = await fetch('https://discord.com/api/users/@me', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        
-        if (!response.ok) throw new Error(`API Fehler: ${response.status}`);
-        
-        const userData = await response.json();
-        console.log('User Daten erhalten:', userData.username);
-        
-        // In localStorage speichern
-        localStorage.setItem('discordUser', JSON.stringify(userData));
-        
-        // Zur Hauptapp wechseln
-        showMainApp();
-        
-      } catch (error) {
-        console.error('Fehler beim User Info holen:', error);
-        showLoginError();
-      }
-    }
-
-    // Hauptapp anzeigen nach Login
-    function showMainApp() {
-      console.log('Zeige Hauptapp...');
-      hide(document.getElementById('loginScreen'));
-      show(document.getElementById('mainApp'));
-      initApp();
-    }
-
-    // Login ohne Discord (für Test)
-    function skipLogin() {
-      console.log('Login übersprungen - Testmodus');
-      localStorage.setItem('testMode', 'true');
-      showMainApp();
-    }
-
-    // Login Fehler anzeigen
-    function showLoginError() {
-      const errorEl = document.getElementById('loginError');
-      errorEl.textContent = 'Login fehlgeschlagen. Bitte versuche es erneut oder überspringe den Login.';
-      show(errorEl);
-    }
-
-    // Logout
-    function logout() {
-      localStorage.removeItem('discordUser');
-      localStorage.removeItem('discordToken');
-      localStorage.removeItem('testMode');
-      location.reload();
-    }
-
-    // Auth Status prüfen beim Laden
-    function checkAuthStatus() {
-      const savedUser = localStorage.getItem('discordUser');
-      const testMode = localStorage.getItem('testMode');
-      
-      if (savedUser || testMode) {
-        console.log('Bereits eingeloggt oder Testmodus');
-        showMainApp();
-      } else {
-        console.log('Nicht eingeloggt - zeige Login');
-        // Prüfe ob Token im Hash ist (Rückkehr von Discord)
-        if (window.location.hash && window.location.hash.includes('access_token=')) {
-          console.log('Token in URL gefunden - verarbeite...');
-          handleTokenFromHash();
-        }
-      }
-    }
-
-    // App initialisieren
-    function initApp() {
-      console.log('App wird initialisiert...');
-      // Firebase und App Code hier...
-      initializeFirebase();
-    }
-
-    // Beim Laden prüfen
-    document.addEventListener('DOMContentLoaded', checkAuthStatus);
-  </script>
-
-  <script type="module">
-    // Firebase Initialisierung
-    async function initializeFirebase() {
-      console.log('Initialisiere Firebase...');
-      
-      try {
-        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js");
-        const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js");
-        const { getDatabase, ref, push, onValue, remove } = await import("https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js");
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-          authDomain: "khusland-b7d13.firebaseapp.com",
-          databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-          projectId: "khusland-b7d13",
-          storageBucket: "khusland-b7d13.firebasestorage.app",
-          messagingSenderId: "69573193613",
-          appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-          measurementId: "G-JSCWR4207G"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getDatabase(app);
-        const entriesRef = ref(db,'weed_entries');
-
-        window.entries = [];
-        window.db = db;
-        window.entriesRef = entriesRef;
-
-        // Restliche App-Funktionen hier...
-        initAppFunctions(db, entriesRef);
-        
-      } catch (error) {
-        console.error('Fehler bei Firebase Initialisierung:', error);
-      }
-    }
-
-    function initAppFunctions(db, entriesRef) {
-      console.log('Initialisiere App-Funktionen...');
-      
-      // Dein gesamter bestehender App-Code hier...
-      function formatCurrency(n) { 
-        return new Intl.NumberFormat('de-DE').format(Math.round(n)) + ' $'; 
-      }
-      
-      function formatDate(d) {
-        const date = new Date(d);
-        const pad = n => n.toString().padStart(2,'0');
-        return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
-      }
-
-      // Hamburger Menu
-      document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        document.getElementById('hamburgerMenu').classList.toggle('hidden');
-      });
-
-      // Close hamburger menu when clicking outside
-      document.addEventListener('click', (e) => {
-        const hamburgerMenu = document.getElementById('hamburgerMenu');
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        
-        if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-          hamburgerMenu.classList.add('hidden');
-        }
-      });
-
-      // Tabs Navigation
-      document.getElementById('btnNew').addEventListener('click', () => {
-        show(document.getElementById('newEntry')); 
-        hide(document.getElementById('overview')); 
-        hide(document.getElementById('adminPanel'));
-        updateButtonStates('new');
-      });
-      
-      document.getElementById('btnOverview').addEventListener('click', () => {
-        hide(document.getElementById('newEntry')); 
-        show(document.getElementById('overview')); 
-        hide(document.getElementById('adminPanel'));
-        renderOverview();
-        updateButtonStates('overview');
-      });
-      
-      document.getElementById('btnAdmin').addEventListener('click', () => {
-        hide(document.getElementById('newEntry')); 
-        hide(document.getElementById('overview')); 
-        show(document.getElementById('adminPanel'));
-        updateButtonStates('admin');
-      });
-
-      function updateButtonStates(activeButton) {
-        const buttons = {
-          new: document.getElementById('btnNew'),
-          overview: document.getElementById('btnOverview'),
-          admin: document.getElementById('btnAdmin')
-        };
-        
-        Object.values(buttons).forEach(btn => {
-          btn.classList.remove('pulse-glow', 'bg-green-600', 'bg-blue-600');
-          btn.classList.add('bg-gray-700');
-        });
-        
-        if (buttons[activeButton]) {
-          buttons[activeButton].classList.remove('bg-gray-700');
-          if (activeButton === 'new') {
-            buttons[activeButton].classList.add('bg-green-600', 'pulse-glow');
-          } else if (activeButton === 'admin') {
-            buttons[activeButton].classList.add('bg-blue-600');
-          } else {
-            buttons[activeButton].classList.add('bg-gray-600');
-          }
-        }
-      }
-
-      // Initialize with New Entry active
+    // Tabs Navigation
+    document.getElementById('btnNew').addEventListener('click', () => {
+      show(document.getElementById('newEntry')); 
+      hide(document.getElementById('overview')); 
+      hide(document.getElementById('adminPanel'));
       updateButtonStates('new');
+    });
+    
+    document.getElementById('btnOverview').addEventListener('click', () => {
+      hide(document.getElementById('newEntry')); 
+      show(document.getElementById('overview')); 
+      hide(document.getElementById('adminPanel'));
+      renderOverview();
+      updateButtonStates('overview');
+    });
+    
+    document.getElementById('btnAdmin').addEventListener('click', () => {
+      hide(document.getElementById('newEntry')); 
+      hide(document.getElementById('overview')); 
+      show(document.getElementById('adminPanel'));
+      updateButtonStates('admin');
+    });
 
-      // Share Calculation
-      const quantityInput = document.getElementById('quantity');
-      const sellerShareEl = document.getElementById('sellerShare');
-      const yourShareEl = document.getElementById('yourShare');
-      const totalPriceEl = document.getElementById('totalPrice');
+    function updateButtonStates(activeButton) {
+      const buttons = {
+        new: document.getElementById('btnNew'),
+        overview: document.getElementById('btnOverview'),
+        admin: document.getElementById('btnAdmin')
+      };
       
-      function updateShares() { 
-        const q = Number(quantityInput.value) || 0;
-        const price = q * 2500;
-        totalPriceEl.textContent = formatCurrency(price);
-        sellerShareEl.textContent = formatCurrency(price * 0.7);
-        yourShareEl.textContent = formatCurrency(price * 0.3);
-      }
+      Object.values(buttons).forEach(btn => {
+        btn.classList.remove('pulse-glow', 'bg-green-600', 'bg-blue-600');
+        btn.classList.add('bg-gray-700');
+      });
       
-      quantityInput.addEventListener('input', updateShares);
-      updateShares();
-
-      // Form submit
-      document.getElementById('entryForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const buyer = document.getElementById('buyer').value.trim();
-        const seller = document.getElementById('seller').value.trim();
-        const quantity = Number(quantityInput.value);
-        
-        if (!buyer || !seller || !quantity) {
-          alert('Bitte füllen Sie alle Felder aus!');
-          return;
-        }
-        
-        const price = quantity * 2500;
-        const sellerShare = price * 0.7;
-        const yourShare = price * 0.3;
-        
-        const entry = {
-          buyer,
-          seller,
-          quantity,
-          price,
-          sellerShare,
-          yourShare,
-          date: formatDate(new Date()),
-          timestamp: Date.now()
-        };
-
-        try {
-          await push(entriesRef, entry);
-          e.target.reset();
-          updateShares();
-          
-          // Show success message
-          const submitBtn = e.target.querySelector('button[type="submit"]');
-          const originalText = submitBtn.innerHTML;
-          submitBtn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
-            Erfolgreich gespeichert!
-          `;
-          submitBtn.classList.remove('bg-green-600');
-          submitBtn.classList.add('bg-green-500');
-          
-          setTimeout(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.classList.remove('bg-green-500');
-            submitBtn.classList.add('bg-green-600');
-          }, 2000);
-          
-        } catch (error) {
-          console.error('Fehler beim Speichern:', error);
-          alert('Fehler beim Speichern der Daten!');
-        }
-      });
-
-      // Reset form
-      document.getElementById('resetForm').addEventListener('click', () => {
-        if (confirm('Möchten Sie das Formular wirklich zurücksetzen?')) {
-          document.getElementById('entryForm').reset(); 
-          updateShares();
-        }
-      });
-
-      // Real-time listener
-      const { onValue } = require("firebase/database");
-      onValue(entriesRef, snapshot => {
-        window.entries = [];
-        snapshot.forEach(child => {
-          const data = child.val();
-          data.key = child.key;
-          window.entries.push(data);
-        });
-        // Sortierung: Neueste oben (absteigend nach timestamp)
-        window.entries.sort((a, b) => b.timestamp - a.timestamp);
-        renderOverview();
-        renderAdminTable();
-      });
-
-      // Übersicht rendern
-      const entriesList = document.getElementById('entriesList');
-      function renderOverview() {
-        entriesList.innerHTML = '';
-        if (window.entries.length === 0) {
-          entriesList.innerHTML = '<div class="text-center py-8 text-gray-400"><p>Keine Einträge vorhanden.</p></div>'; 
-          return;
-        }
-        
-        // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
-        window.entries.forEach(en => {
-          const el = document.createElement('div');
-          el.className = 'p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
-          el.innerHTML = `
-            <div class="flex justify-between items-start mb-2">
-              <div class="text-sm text-gray-400">${en.date}</div>
-              <div class="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">${en.quantity} Bricks</div>
-            </div>
-            <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
-            <div class="grid grid-cols-2 gap-3 text-sm">
-              <div class="bg-gray-800/40 p-2 rounded-lg">
-                <div class="text-gray-400">Gesamtpreis</div>
-                <div class="font-medium text-white">${formatCurrency(en.price)}</div>
-              </div>
-              <div class="bg-gray-800/40 p-2 rounded-lg">
-                <div class="text-gray-400">Verkäuferanteil</div>
-                <div class="font-medium text-green-400">${formatCurrency(en.sellerShare)}</div>
-              </div>
-              <div class="bg-gray-800/40 p-2 rounded-lg">
-                <div class="text-gray-400">Käuferanteil</div>
-                <div class="font-medium text-blue-400">${formatCurrency(en.yourShare)}</div>
-              </div>
-              <div class="bg-gray-800/40 p-2 rounded-lg">
-                <div class="text-gray-400">Pro Stück</div>
-                <div class="font-medium text-purple-400">${formatCurrency(en.price / en.quantity)}</div>
-              </div>
-            </div>
-          `;
-          entriesList.appendChild(el);
-        });
-      }
-
-      // Admin
-      const adminTableBody = document.getElementById('adminTableBody');
-      const totalCount = document.getElementById('totalCount');
-      const totalRevenue = document.getElementById('totalRevenue');
-      const exportCsv = document.getElementById('exportCsv');
-
-      function renderAdminTable() {
-        adminTableBody.innerHTML = '';
-        let revenue = 0;
-        
-        // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
-        window.entries.forEach(en => {
-          revenue += en.yourShare;
-          const tr = document.createElement('tr');
-          tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-          tr.innerHTML = `
-            <td class="p-3 small-muted">${en.date}</td>
-            <td class="p-3">${en.buyer}</td>
-            <td class="p-3">${en.seller}</td>
-            <td class="p-3">${en.quantity} </td>
-            <td class="p-3">${formatCurrency(en.price)}</td>
-            <td class="p-3 text-green-400">${formatCurrency(en.sellerShare)}</td>
-            <td class="p-3 text-blue-400">${formatCurrency(en.yourShare)}</td>
-            <td class="p-3">
-              <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteEntry('${en.key}')">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
-                Löschen
-              </button>
-            </td>`;
-          adminTableBody.appendChild(tr);
-        });
-        
-        totalCount.innerText = window.entries.length;
-        totalRevenue.innerText = formatCurrency(revenue);
-      }
-
-      window.deleteEntry = function(key) {
-        if (confirm('Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
-          const { remove, ref } = require("firebase/database");
-          remove(ref(db, 'weed_entries/' + key));
+      if (buttons[activeButton]) {
+        buttons[activeButton].classList.remove('bg-gray-700');
+        if (activeButton === 'new') {
+          buttons[activeButton].classList.add('bg-green-600', 'pulse-glow');
+        } else if (activeButton === 'admin') {
+          buttons[activeButton].classList.add('bg-blue-600');
+        } else {
+          buttons[activeButton].classList.add('bg-gray-600');
         }
       }
-
-      // CSV Export
-      exportCsv.addEventListener('click', () => {
-        if (window.entries.length === 0) {
-          alert('Keine Einträge zum Exportieren vorhanden.');
-          return;
-        }
-        
-        // Sortierung: Neueste oben
-        const sortedEntries = [...window.entries].sort((a, b) => b.timestamp - a.timestamp);
-        const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Preis ', 'Verkäuferanteil (70%)', 'Käuferanteil (30%)'];
-        const rows = sortedEntries.map(e => [
-          e.date,
-          `"${e.buyer}"`,
-          `"${e.seller}"`,
-          e.quantity,
-          e.price,
-          e.sellerShare,
-          e.yourShare
-        ].join(','));
-        
-        const csv = [header.join(','), ...rows].join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        
-        // Generate filename with current date
-        const now = new Date();
-        const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
-        a.download = `weed_ankauf_${dateStr}.csv`;
-        
-        document.body.appendChild(a);
-        a.click();
-        URL.revokeObjectURL(url);
-        a.remove();
-      });
-
-      console.log('App-Funktionen initialisiert!');
     }
+
+    // Initialize with New Entry active
+    updateButtonStates('new');
+
+    // Share Calculation
+    const quantityInput = document.getElementById('quantity');
+    const sellerShareEl = document.getElementById('sellerShare');
+    const yourShareEl = document.getElementById('yourShare');
+    const totalPriceEl = document.getElementById('totalPrice');
+    
+    function updateShares() { 
+      const q = Number(quantityInput.value) || 0;
+      const price = q * 2500;
+      totalPriceEl.textContent = formatCurrency(price);
+      sellerShareEl.textContent = formatCurrency(price * 0.7);
+      yourShareEl.textContent = formatCurrency(price * 0.3);
+    }
+    
+    quantityInput.addEventListener('input', updateShares);
+    updateShares();
+
+    // Form submit
+    document.getElementById('entryForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const buyer = document.getElementById('buyer').value.trim();
+      const seller = document.getElementById('seller').value.trim();
+      const quantity = Number(quantityInput.value);
+      
+      if (!buyer || !seller || !quantity) {
+        alert('Bitte füllen Sie alle Felder aus!');
+        return;
+      }
+      
+      const price = quantity * 2500;
+      const sellerShare = price * 0.7;
+      const yourShare = price * 0.3;
+      
+      const entry = {
+        buyer,
+        seller,
+        quantity,
+        price,
+        sellerShare,
+        yourShare,
+        date: formatDate(new Date()),
+        timestamp: Date.now()
+      };
+
+      try {
+        await push(entriesRef, entry);
+        e.target.reset();
+        updateShares();
+        
+        // Show success message
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Erfolgreich gespeichert!
+        `;
+        submitBtn.classList.remove('bg-green-600');
+        submitBtn.classList.add('bg-green-500');
+        
+        setTimeout(() => {
+          submitBtn.innerHTML = originalText;
+          submitBtn.classList.remove('bg-green-500');
+          submitBtn.classList.add('bg-green-600');
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Fehler beim Speichern:', error);
+        alert('Fehler beim Speichern der Daten!');
+      }
+    });
+
+    // Reset form
+    document.getElementById('resetForm').addEventListener('click', () => {
+      if (confirm('Möchten Sie das Formular wirklich zurücksetzen?')) {
+        document.getElementById('entryForm').reset(); 
+        updateShares();
+      }
+    });
+
+    // Real-time listener
+    onValue(entriesRef, snapshot => {
+      entries = [];
+      snapshot.forEach(child => {
+        const data = child.val();
+        data.key = child.key;
+        entries.push(data);
+      });
+      // Sortierung: Neueste oben (absteigend nach timestamp)
+      entries.sort((a, b) => b.timestamp - a.timestamp);
+      renderOverview();
+      renderAdminTable();
+    });
+
+    // Übersicht rendern
+    const entriesList = document.getElementById('entriesList');
+    function renderOverview() {
+      entriesList.innerHTML = '';
+      if (entries.length === 0) {
+        entriesList.innerHTML = '<div class="text-center py-8 text-gray-400"><p>Keine Einträge vorhanden.</p></div>'; 
+        return;
+      }
+      
+      // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
+      entries.forEach(en => {
+        const el = document.createElement('div');
+        el.className = 'p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
+        el.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <div class="text-sm text-gray-400">${en.date}</div>
+            <div class="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">${en.quantity} Bricks</div>
+          </div>
+          <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Gesamtpreis</div>
+              <div class="font-medium text-white">${formatCurrency(en.price)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Verkäuferanteil</div>
+              <div class="font-medium text-green-400">${formatCurrency(en.sellerShare)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Käuferanteil</div>
+              <div class="font-medium text-blue-400">${formatCurrency(en.yourShare)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Pro Stück</div>
+              <div class="font-medium text-purple-400">${formatCurrency(en.price / en.quantity)}</div>
+            </div>
+          </div>
+        `;
+        entriesList.appendChild(el);
+      });
+    }
+
+    // Admin
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminPassInput = document.getElementById('adminPass');
+    const adminError = document.getElementById('adminError');
+    const adminTableBody = document.getElementById('adminTableBody');
+    const totalCount = document.getElementById('totalCount');
+    const totalRevenue = document.getElementById('totalRevenue');
+    const exportCsv = document.getElementById('exportCsv');
+
+    adminLoginBtn.addEventListener('click', () => {
+      if (adminPassInput.value === ADMIN_PASSWORD) {
+        adminError.classList.add('hidden-el'); 
+        show(document.getElementById('adminContent')); 
+        renderAdminTable();
+        adminPassInput.value = ''; // Clear password field after login
+      } else {
+        adminError.classList.remove('hidden-el');
+        adminPassInput.value = ''; // Clear password field on error
+        adminPassInput.focus();
+      }
+    });
+
+    // Allow login with Enter key
+    adminPassInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        adminLoginBtn.click();
+      }
+    });
+
+    function renderAdminTable() {
+      adminTableBody.innerHTML = '';
+      let revenue = 0;
+      
+      // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
+      entries.forEach(en => {
+        revenue += en.yourShare;
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3 small-muted">${en.date}</td>
+          <td class="p-3">${en.buyer}</td>
+          <td class="p-3">${en.seller}</td>
+          <td class="p-3">${en.quantity} </td>
+          <td class="p-3">${formatCurrency(en.price)}</td>
+          <td class="p-3 text-green-400">${formatCurrency(en.sellerShare)}</td>
+          <td class="p-3 text-blue-400">${formatCurrency(en.yourShare)}</td>
+          <td class="p-3">
+            <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteEntry('${en.key}')">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+              Löschen
+            </button>
+          </td>`;
+        adminTableBody.appendChild(tr);
+      });
+      
+      totalCount.innerText = entries.length;
+      totalRevenue.innerText = formatCurrency(revenue);
+    }
+
+    window.deleteEntry = function(key) {
+      if (confirm('Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+        remove(ref(db, 'weed_entries/' + key));
+      }
+    }
+
+    // CSV Export
+    exportCsv.addEventListener('click', () => {
+      if (entries.length === 0) {
+        alert('Keine Einträge zum Exportieren vorhanden.');
+        return;
+      }
+      
+      // Sortierung: Neueste oben
+      const sortedEntries = [...entries].sort((a, b) => b.timestamp - a.timestamp);
+      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Preis ', 'Verkäuferanteil (70%)', 'Käuferanteil (30%)'];
+      const rows = sortedEntries.map(e => [
+        e.date,
+        `"${e.buyer}"`,
+        `"${e.seller}"`,
+        e.quantity,
+        e.price,
+        e.sellerShare,
+        e.yourShare
+      ].join(','));
+      
+      const csv = [header.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      // Generate filename with current date
+      const now = new Date();
+      const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+      a.download = `weed_ankauf_${dateStr}.csv`;
+      
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+    });
+
+    // Für Entwicklung: Direkten Zugang ermöglichen
+    // Entferne diesen Code für Produktion
+    setTimeout(() => {
+      if (!localStorage.getItem('discord_user')) {
+        // showMainContent(); // Auskommentieren für Produktion
+      }
+    }, 1000);
+
   </script>
 </body>
 </html>

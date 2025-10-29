@@ -116,11 +116,11 @@
       </button>
       
       <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
-        <p>Fehler beim Discord Login. Bitte versuche es erneut.</p>
+        <p>Zugriff verweigert. Du hast nicht die erforderliche Rolle.</p>
       </div>
-
-      <div id="loadingSpinner" class="mt-4 p-3 bg-blue-900/20 border border-blue-700 rounded-lg text-blue-400 hidden">
-        <p>Verbinde mit Discord...</p>
+      
+      <div class="mt-6 text-sm text-gray-500">
+        <p>Du benötigst eine autorisierte Discord-Rolle um auf diese Seite zugreifen zu können.</p>
       </div>
     </div>
   </div>
@@ -282,10 +282,28 @@
   </div>
 
   <script type="module">
-    // Discord OAuth Konfiguration - IMPLICIT GRANT FLOW
+    // Discord OAuth Konfiguration
     const DISCORD_CLIENT_ID = '1432942180770644079';
     const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/';
-    const DISCORD_SCOPE = 'identify';
+    
+    // Deine Discord Rollen-IDs
+    const AUTHORIZED_ROLE_IDS = [
+      '1420630384055554069',
+      '1420630262722723840', 
+      '1420630156611158137',
+      '1420630031188889610',
+      '1420629919972593766',
+      '1420629795934310510',
+      '1420629498805751891',
+      '1420629056201949257',
+      '1420628642920267886',
+      '1420628139436015748',
+      '1420627856412905513',
+      '1420622115157049505'
+    ];
+
+    // Backend Service URL - Cloudflare Worker
+    const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
     // Firebase Import und Konfiguration
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -313,36 +331,13 @@
     const mainContent = document.getElementById('mainContent');
     const discordLoginBtn = document.getElementById('discordLogin');
     const loginError = document.getElementById('loginError');
-    const loadingSpinner = document.getElementById('loadingSpinner');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Discord Implicit Grant Flow Login
-    function startDiscordOAuth() {
-      const state = generateRandomState();
-      localStorage.setItem('oauth_state', state);
-      
-      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-      authUrl.searchParams.set('response_type', 'token');
-      authUrl.searchParams.set('scope', DISCORD_SCOPE);
-      authUrl.searchParams.set('state', state);
-      
-      window.location.href = authUrl.toString();
-    }
-
-    // Überprüfe OAuth Response (wird nach Redirect aufgerufen)
+    // Überprüfe URL Parameters nach OAuth Redirect
     function checkOAuthResponse() {
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      
-      const accessToken = params.get('access_token');
-      const error = params.get('error');
-
-      // Entferne Token aus URL (Sicherheit)
-      if (accessToken || error) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const error = urlParams.get('error');
 
       if (error) {
         loginError.textContent = 'Fehler bei der Anmeldung: ' + error;
@@ -350,11 +345,108 @@
         return;
       }
 
-      if (accessToken) {
-        // Erfolgreicher Login - zeige Hauptinhalt
-        localStorage.setItem('discord_access_token', accessToken);
-        localStorage.setItem('login_time', Date.now().toString());
-        showMainContent();
+      if (code) {
+        exchangeCodeForToken(code);
+      }
+    }
+
+    // Tausche Authorization Code gegen Access Token
+    async function exchangeCodeForToken(code) {
+      try {
+        const response = await fetch(`${BACKEND_URL}/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            code, 
+            redirect_uri: DISCORD_REDIRECT_URI
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.access_token) {
+          await checkUserRoles(data.access_token);
+        } else {
+          throw new Error('Kein Access Token erhalten');
+        }
+      } catch (error) {
+        console.error('Fehler beim Token-Austausch:', error);
+        loginError.textContent = 'Fehler bei der Anmeldung. Bitte versuche es später erneut.';
+        loginError.classList.remove('hidden');
+      }
+    }
+
+    // Überprüfe Benutzerrollen
+    async function checkUserRoles(accessToken) {
+      try {
+        // Hole Benutzerinformationen
+        const userResponse = await fetch('https://discord.com/api/users/@me', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        
+        if (!userResponse.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
+        const userData = await userResponse.json();
+
+        // Hole Server-Informationen des Benutzers
+        const guildsResponse = await fetch('https://discord.com/api/users/@me/guilds', {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+
+        if (!guildsResponse.ok) {
+          throw new Error('Failed to fetch guild data');
+        }
+
+        const guilds = await guildsResponse.json();
+        
+        // Für jeden Server die Rollen überprüfen
+        let hasAuthorizedRole = false;
+        
+        for (const guild of guilds) {
+          const roleResponse = await fetch(`${BACKEND_URL}/verify-roles`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              accessToken, 
+              userId: userData.id,
+              guildId: guild.id,
+              roleIds: AUTHORIZED_ROLE_IDS
+            })
+          });
+
+          if (roleResponse.ok) {
+            const roleData = await roleResponse.json();
+            if (roleData.hasAuthorizedRole) {
+              hasAuthorizedRole = true;
+              break;
+            }
+          }
+        }
+
+        if (hasAuthorizedRole) {
+          // Erfolgreicher Login
+          localStorage.setItem('discord_user', JSON.stringify(userData));
+          localStorage.setItem('discord_access_token', accessToken);
+          showMainContent();
+        } else {
+          loginError.textContent = 'Zugriff verweigert. Du hast keine der autorisierten Rollen.';
+          loginError.classList.remove('hidden');
+          localStorage.clear();
+        }
+      } catch (error) {
+        console.error('Fehler beim Überprüfen der Rollen:', error);
+        loginError.textContent = 'Fehler beim Überprüfen der Berechtigungen';
+        loginError.classList.remove('hidden');
       }
     }
 
@@ -362,6 +454,25 @@
     function showMainContent() {
       loginScreen.classList.add('hidden');
       mainContent.classList.remove('hidden');
+      
+      // Setze URL zurück ohne Code-Parameter
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
+    // Discord OAuth Login
+    function startDiscordOAuth() {
+      const scope = 'identify guilds';
+      const state = generateRandomState();
+      
+      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+      authUrl.searchParams.set('response_type', 'code');
+      authUrl.searchParams.set('scope', scope);
+      authUrl.searchParams.set('state', state);
+      
+      window.location.href = authUrl.toString();
     }
 
     // Generiere random state für OAuth
@@ -371,8 +482,7 @@
 
     // Logout Funktion
     function logout() {
-      localStorage.removeItem('discord_access_token');
-      localStorage.removeItem('login_time');
+      localStorage.clear();
       mainContent.classList.add('hidden');
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
@@ -380,11 +490,10 @@
 
     // Überprüfe gespeicherten Login beim Laden
     function checkExistingLogin() {
+      const user = localStorage.getItem('discord_user');
       const token = localStorage.getItem('discord_access_token');
-      const loginTime = localStorage.getItem('login_time');
       
-      // Token ist 1 Stunde gültig
-      if (token && loginTime && (Date.now() - parseInt(loginTime)) < 3600000) {
+      if (user && token) {
         showMainContent();
       }
     }

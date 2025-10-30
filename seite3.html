@@ -184,12 +184,49 @@
       gap: 4px;
       margin-top: 8px;
     }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 12px;
+    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
   
-  <!-- MAIN CONTENT -->
-  <div id="mainContent">
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+    <div class="card p-8 shadow-soft max-w-md w-full text-center">
+      <div class="w-20 h-20 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center mx-auto mb-6">
+        <span class="text-white text-2xl">♻️</span>
+      </div>
+      <h1 class="text-3xl font-bold gradient-text mb-2">Materialrecycler</h1>
+      <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
+      
+      <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.18.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+        </svg>
+        Mit Discord anmelden
+      </button>
+      
+      <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
+        <p id="errorMessage">Zugriff verweigert. Du bist nicht autorisiert.</p>
+      </div>
+
+      <div id="debugInfo" class="mt-4 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-xs hidden">
+        <p id="debugMessage"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT (Versteckt bis Login) -->
+  <div id="mainContent" class="hidden">
     <div class="max-w-6xl mx-auto p-4 md:p-6">
 
       <!-- HEADER -->
@@ -201,8 +238,12 @@
           <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
         </div>
         <div class="flex items-center gap-2">
+          <div id="userInfo" class="user-info hidden">
+            <img id="userAvatar" class="user-avatar" src="" alt="Avatar">
+            <span id="userName" class="text-sm font-medium"></span>
+          </div>
           <button id="btnProducts" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
-          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm hidden" id="adminButton">Admin</button>
           <div class="hamburger-container">
             <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
@@ -215,6 +256,7 @@
               <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
               <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Routen</a>
               <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
+              <button id="logoutBtn" class="block w-full text-left px-4 py-3 hover:bg-gray-700 transition-colors text-red-400">Logout</button>
             </div>
           </div>
         </div>
@@ -340,7 +382,233 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    // Discord OAuth Konfiguration
+    const DISCORD_CLIENT_ID = '1432942180770644079';
+    const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+    const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+    // Firebase Import und Konfiguration
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+    import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    
+    // Firebase Referenzen
+    const productsRef = ref(db, 'materialrecycler/products');
+
+    // DOM Elemente
+    const loginScreen = document.getElementById('loginScreen');
+    const mainContent = document.getElementById('mainContent');
+    const discordLoginBtn = document.getElementById('discordLogin');
+    const loginError = document.getElementById('loginError');
+    const errorMessage = document.getElementById('errorMessage');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const debugInfo = document.getElementById('debugInfo');
+    const debugMessage = document.getElementById('debugMessage');
+    const userInfo = document.getElementById('userInfo');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const adminButton = document.getElementById('adminButton');
+
+    // Liste der autorisierten Admin-Benutzer-IDs
+    const AUTHORIZED_ADMIN_IDS = [
+      '123456789012345678', // Beispiel: Ersetze mit echten Discord User IDs
+      '987654321098765432'  // Beispiel: Ersetze mit echten Discord User IDs
+    ];
+
+    // Debug-Funktion
+    function showDebugInfo(message) {
+      debugMessage.textContent = message;
+      debugInfo.classList.remove('hidden');
+    }
+
+    // Discord OAuth Login
+    function startDiscordOAuth() {
+      const scope = 'identify';
+      const state = generateRandomState();
+      
+      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+      authUrl.searchParams.set('response_type', 'code');
+      authUrl.searchParams.set('scope', scope);
+      authUrl.searchParams.set('state', state);
+      
+      showDebugInfo('Starte OAuth Flow...');
+      window.location.href = authUrl.toString();
+    }
+
+    // Generiere random state für OAuth
+    function generateRandomState() {
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
+    // Token Austausch
+    async function exchangeCodeForToken(code) {
+      try {
+        showDebugInfo('Tausche Code gegen Token...');
+        
+        const response = await fetch(`${BACKEND_URL}/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            code, 
+            redirect_uri: DISCORD_REDIRECT_URI
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          showDebugInfo(`Worker Response Error: ${response.status} - ${errorText}`);
+          throw new Error(`Worker responded with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        showDebugInfo(`Token Response: ${JSON.stringify(data)}`);
+
+        if (data.access_token) {
+          showDebugInfo('Access Token erhalten, überprüfe Benutzer...');
+          await verifyUser(data.access_token);
+        } else {
+          showDebugInfo(`Kein Access Token: ${JSON.stringify(data)}`);
+          throw new Error('Kein Access Token erhalten');
+        }
+      } catch (error) {
+        console.error('Fehler beim Token-Austausch:', error);
+        showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
+        showDebugInfo(`Fehler: ${error.message}`);
+      }
+    }
+
+    // Benutzer überprüfen
+    async function verifyUser(accessToken) {
+      try {
+        showDebugInfo('Überprüfe Benutzer...');
+        
+        const response = await fetch(`${BACKEND_URL}/verify-user`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            accessToken
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Verification failed');
+        }
+
+        const data = await response.json();
+        showDebugInfo(`Verification Response: ${JSON.stringify(data)}`);
+
+        if (data.isAuthorized) {
+          showDebugInfo('Benutzer autorisiert!');
+          localStorage.setItem('discord_user', JSON.stringify(data.user));
+          localStorage.setItem('discord_access_token', accessToken);
+          showMainContent(data.user);
+        } else {
+          showError('Zugriff verweigert. Du bist nicht in der Liste der autorisierten Benutzer.');
+          showDebugInfo('Benutzer nicht autorisiert');
+        }
+      } catch (error) {
+        console.error('Fehler bei der Benutzerüberprüfung:', error);
+        showError('Fehler bei der Berechtigungsprüfung');
+        showDebugInfo(`Verification Error: ${error.message}`);
+      }
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      loginError.classList.remove('hidden');
+    }
+
+    function showMainContent(user) {
+      loginScreen.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+      debugInfo.classList.add('hidden');
+      
+      // Benutzerinformationen anzeigen
+      if (user) {
+        userInfo.classList.remove('hidden');
+        userName.textContent = user.username;
+        if (user.avatar) {
+          userAvatar.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+        } else {
+          userAvatar.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+        }
+        
+        // Admin-Berechtigungen prüfen
+        if (AUTHORIZED_ADMIN_IDS.includes(user.id)) {
+          adminButton.classList.remove('hidden');
+        }
+      }
+      
+      // Setze URL zurück ohne Code-Parameter
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+    }
+
+    function logout() {
+      localStorage.clear();
+      mainContent.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      loginError.classList.add('hidden');
+      debugInfo.classList.add('hidden');
+      userInfo.classList.add('hidden');
+      adminButton.classList.add('hidden');
+    }
+
+    // Überprüfe gespeicherten Login beim Laden
+    function checkExistingLogin() {
+      const userData = localStorage.getItem('discord_user');
+      const token = localStorage.getItem('discord_access_token');
+      
+      if (userData && token) {
+        const user = JSON.parse(userData);
+        showDebugInfo('Bereits eingeloggt');
+        showMainContent(user);
+      } else {
+        showDebugInfo('Nicht eingeloggt');
+      }
+    }
+
+    // Event Listeners
+    discordLoginBtn.addEventListener('click', startDiscordOAuth);
+    logoutBtn.addEventListener('click', logout);
+
+    // Initialisierung
+    checkExistingLogin();
+
+    // URL Parameters überprüfen
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      exchangeCodeForToken(code);
+    }
+
+    // Globale Variablen
+    let products = [];
+    const ADMIN_PASSWORD = '1101';
+    let currentMaterials = [];
+
     // Utility
     function show(el) { 
       el.classList.remove('hidden-el'); 
@@ -351,33 +619,48 @@
       el.classList.remove('fade-in');
     }
 
-    // Globale Variablen
-    let products = [];
-    const ADMIN_PASSWORD = '1101';
-    let currentMaterials = [];
-
-    // Bild zu Base64 konvertieren
-    function convertImageToBase64(file, callback) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        callback(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // Daten aus LocalStorage laden
-    function loadDataFromStorage() {
-      const savedProducts = localStorage.getItem('materialrecycler_products');
-      
-      if (savedProducts) {
-        products = JSON.parse(savedProducts);
+    // Firebase Funktionen
+    async function saveProduct(product) {
+      try {
+        await push(productsRef, product);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Speichern des Produkts:', error);
+        return false;
       }
     }
 
-    // Daten in LocalStorage speichern
-    function saveDataToStorage() {
-      localStorage.setItem('materialrecycler_products', JSON.stringify(products));
+    async function updateProduct(key, product) {
+      try {
+        await update(ref(db, `materialrecycler/products/${key}`), product);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren des Produkts:', error);
+        return false;
+      }
     }
+
+    async function deleteProductFromFirebase(key) {
+      try {
+        await remove(ref(db, `materialrecycler/products/${key}`));
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Löschen des Produkts:', error);
+        return false;
+      }
+    }
+
+    // Firebase Listener
+    onValue(productsRef, (snapshot) => {
+      products = [];
+      snapshot.forEach((childSnap) => {
+        const data = childSnap.val();
+        data.key = childSnap.key;
+        products.push(data);
+      });
+      renderProducts();
+      renderAdminTable();
+    });
 
     // Hamburger Menu
     document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
@@ -556,6 +839,15 @@
     const addMaterialBtn = document.getElementById('addMaterialBtn');
     const materialsList = document.getElementById('materialsList');
     const productMaterialsInput = document.getElementById('productMaterials');
+
+    // Bild zu Base64 konvertieren
+    function convertImageToBase64(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        callback(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
 
     // Material hinzufügen
     addMaterialBtn.addEventListener('click', () => {
@@ -766,7 +1058,7 @@
       }
     });
 
-    productForm.addEventListener('submit', (e) => {
+    productForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const name = document.getElementById('productName').value;
@@ -786,42 +1078,39 @@
         productData.imageData = imageData;
       }
       
+      let success;
       if (key) {
         // Bestehendes Produkt aktualisieren
-        const index = products.findIndex(p => p.key === key);
-        if (index !== -1) {
-          products[index] = { ...products[index], ...productData };
-        }
+        success = await updateProduct(key, productData);
       } else {
         // Neues Produkt erstellen
-        productData.key = Date.now().toString();
-        products.push(productData);
+        success = await saveProduct(productData);
       }
       
-      saveDataToStorage();
-      hide(productModal);
-      productForm.reset();
-      imagePreview.style.display = 'none';
-      productImageData.value = '';
-      currentMaterials = [];
-      renderMaterialsList();
-      renderProducts();
-      renderAdminTable();
+      if (success) {
+        hide(productModal);
+        productForm.reset();
+        imagePreview.style.display = 'none';
+        productImageData.value = '';
+        currentMaterials = [];
+        renderMaterialsList();
+      } else {
+        alert(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`);
+      }
     });
 
     // Löschfunktion
-    window.deleteProduct = function(key) { 
+    window.deleteProduct = async function(key) { 
       if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        products = products.filter(p => p.key !== key);
-        saveDataToStorage();
-        renderProducts();
-        renderAdminTable();
+        const success = await deleteProductFromFirebase(key);
+        if (!success) {
+          alert('Fehler beim Löschen des Produkts!');
+        }
       }
     }
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
-      loadDataFromStorage();
       renderProducts();
       updateButtonStates('products');
       

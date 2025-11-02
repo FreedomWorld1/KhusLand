@@ -8,12 +8,11 @@
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
-      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     }
     .card { 
-      background: linear-gradient(135deg, rgba(41, 37, 36, 0.8) 0%, rgba(28, 25, 23, 0.9) 100%); 
-      border: 1px solid rgba(245, 158, 11, 0.3); 
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
+      border: 1px solid rgba(34, 197, 94, 0.2); 
       border-radius: 16px; 
       backdrop-filter: blur(10px);
     }
@@ -23,7 +22,7 @@
                   inset 0 1px 0 rgba(255, 255, 255, 0.1); 
     }
     .small-muted { 
-      color: #a8a29e; 
+      color: #94a3b8; 
       font-size: 0.85rem; 
     }
     .btn { 
@@ -44,24 +43,24 @@
     }
     input:focus, select:focus, textarea:focus { 
       outline: none; 
-      border-color: #f59e0b; 
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3); 
+      border-color: #22c55e; 
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3); 
     }
     .active-link { 
-      background-color: #d97706 !important; 
+      background-color: #22c55e !important; 
       color: #fff !important; 
       font-weight: 600; 
     }
     .gradient-text {
-      background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+      background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .glass-effect {
-      background: rgba(41, 37, 36, 0.7);
+      background: rgba(30, 41, 59, 0.7);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(245, 158, 11, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.1);
     }
     .fade-in {
       animation: fadeIn 0.3s ease-in-out;
@@ -74,19 +73,19 @@
       animation: pulseGlow 2s infinite;
     }
     @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+      0% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
     }
     .scrollbar-custom::-webkit-scrollbar {
       width: 6px;
     }
     .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(41, 37, 36, 0.5);
+      background: rgba(30, 41, 59, 0.5);
       border-radius: 10px;
     }
     .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #f59e0b;
+      background: #22c55e;
       border-radius: 10px;
     }
     .hamburger-container {
@@ -167,8 +166,8 @@
     }
     .material-tag {
       display: inline-block;
-      background: rgba(245, 158, 11, 0.2);
-      color: #f59e0b;
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
       padding: 4px 8px;
       border-radius: 12px;
       font-size: 0.75rem;
@@ -185,81 +184,37 @@
       gap: 4px;
       margin-top: 8px;
     }
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-right: 12px;
-    }
-    .user-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-    }
   </style>
 </head>
-<body class="text-amber-50 antialiased min-h-screen">
+<body class="text-gray-100 antialiased min-h-screen">
   
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
-    <div class="card p-8 shadow-soft max-w-md w-full text-center">
-      <div class="w-20 h-20 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center mx-auto mb-6">
-        <span class="text-white text-2xl">🏭</span>
-      </div>
-      <h1 class="text-3xl font-bold gradient-text mb-2">Materialrecycler</h1>
-      <p class="text-amber-200 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
-      
-      <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.18.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
-        </svg>
-        Mit Discord anmelden
-      </button>
-      
-      <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
-        <p id="errorMessage">Zugriff verweigert. Du bist nicht autorisiert.</p>
-      </div>
-
-      <div id="debugInfo" class="mt-4 p-3 bg-amber-900/20 border border-amber-700 rounded-lg text-amber-400 text-xs hidden">
-        <p id="debugMessage"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN CONTENT (Versteckt bis Login) -->
-  <div id="mainContent" class="hidden">
+  <!-- MAIN CONTENT -->
+  <div id="mainContent">
     <div class="max-w-6xl mx-auto p-4 md:p-6">
 
       <!-- HEADER -->
       <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 flex items-center justify-center">
-            <span class="text-white font-bold">🏭</span>
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center">
+            <span class="text-white font-bold">♻️</span>
           </div>
           <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
         </div>
         <div class="flex items-center gap-2">
-          <div id="userInfo" class="user-info hidden">
-            <img id="userAvatar" class="user-avatar" src="" alt="Avatar">
-            <span id="userName" class="text-sm font-medium"></span>
-          </div>
-          <button id="btnProducts" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
-          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm hidden" id="adminButton">Admin</button>
+          <button id="btnProducts" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
           <div class="hamburger-container">
-            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-amber-900/50 hover:bg-amber-800/50">
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
+            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
-            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-amber-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Weed</a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Kokain</a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">30% Rechner</a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Herstellung</a>
-              <a href="seite3.html" class="block px-4 py-3 hover:bg-amber-800/50 active-link transition-colors">Materialrecycler</a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Routen</a>
-            
-              <button id="logoutBtn" class="block w-full text-left px-4 py-3 hover:bg-amber-800/50 transition-colors text-red-400">Logout</button>
+            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Weed</a>
+              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
+              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
+              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Routen</a>
+              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
             </div>
           </div>
         </div>
@@ -270,8 +225,8 @@
         <!-- SUCHLEISTE -->
         <div class="card p-4 shadow-soft">
           <div class="relative">
-            <input type="text" id="searchInput" placeholder="Produkt oder Material suchen..." class="w-full p-4 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500 pl-12">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <input type="text" id="searchInput" placeholder="Produkt oder Material suchen..." class="w-full p-4 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500 pl-12">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -279,8 +234,8 @@
 
         <!-- PRODUKTE -->
         <div id="productsSection" class="card p-6 shadow-soft fade-in">
-          <h2 class="text-xl font-semibold mb-4 text-amber-400 flex items-center gap-2">
-            <span class="bg-amber-900/30 p-2 rounded-lg">📦</span>
+          <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
+            <span class="bg-green-900/30 p-2 rounded-lg">📦</span>
              Produkte
           </h2>
           
@@ -298,8 +253,8 @@
           </h2>
           <div id="adminLoginSection">
             <div class="mb-4">
-              <label for="adminPass" class="block text-sm font-medium text-amber-300 mb-1">Admin-Passwort</label>
-              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-blue-500"/>
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
+              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
             </div>
             <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -310,10 +265,10 @@
             <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
           </div>
           <div id="adminContent" class="hidden-el">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-amber-900/20">
-              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-amber-50">0</span></div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
+              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-white">0</span></div>
               <div class="flex gap-2">
-                <button id="addProductBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                <button id="addProductBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
@@ -322,16 +277,16 @@
               </div>
             </div>
             
-            <div class="overflow-auto max-h-[50vh] rounded-lg border border-amber-800 scrollbar-custom">
+            <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
               <table class="w-full text-left text-sm">
-                <thead class="text-amber-400 bg-amber-900/50 sticky top-0">
+                <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
                   <tr>
                     <th class="p-3 font-medium">Name</th>
                     <th class="p-3 font-medium">Materialien</th>
                     <th class="p-3 font-medium">Aktion</th>
                   </tr>
                 </thead>
-                <tbody id="adminTableBody" class="divide-y divide-amber-800"></tbody>
+                <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
               </table>
             </div>
           </div>
@@ -343,18 +298,18 @@
     <!-- Modal für Produkt hinzufügen -->
     <div id="productModal" class="modal-overlay hidden-el">
       <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-amber-400" id="productModalTitle">Produkt hinzufügen</h3>
+        <h3 class="text-lg font-semibold mb-4 text-green-400" id="productModalTitle">Produkt hinzufügen</h3>
         <form id="productForm" class="space-y-4">
           <input type="hidden" id="productKey">
           <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Name</label>
-            <input type="text" id="productName" class="p-3 rounded-lg bg-amber-900/20 border border-amber-800 w-full focus:border-amber-500" placeholder="z.B.: Aluminium-Dose" required/>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+            <input type="text" id="productName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="z.B.: Aluminium-Dose" required/>
           </div>
           <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Materialien</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Materialien</label>
             <div class="material-input-container">
-              <input type="text" id="newMaterial" class="flex-1 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500" placeholder="z.B.: Aluminium"/>
-              <button type="button" id="addMaterialBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">+</button>
+              <input type="text" id="newMaterial" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500" placeholder="z.B.: Aluminium"/>
+              <button type="button" id="addMaterialBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">+</button>
             </div>
             <div id="materialsList" class="material-list">
               <!-- Materialien werden hier dynamisch hinzugefügt -->
@@ -362,9 +317,9 @@
             <input type="hidden" id="productMaterials">
           </div>
           <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Bild hochladen</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">Bild hochladen</label>
             <div class="file-input-wrapper">
-              <button type="button" class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 hover:bg-amber-800/30 flex items-center justify-center gap-2">
+              <button type="button" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700/50 flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
@@ -372,246 +327,20 @@
               </button>
               <input type="file" id="productImageFile" accept="image/*" class="file-input">
             </div>
-            <div class="text-xs text-amber-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
+            <div class="text-xs text-gray-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
             <img id="imagePreview" class="image-preview" alt="Vorschau">
             <input type="hidden" id="productImageData">
           </div>
           <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">Speichern</button>
-            <button type="button" id="cancelProduct" class="px-4 py-3 bg-amber-900/50 hover:bg-amber-800/50 rounded-lg btn font-medium">Abbrechen</button>
+            <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">Speichern</button>
+            <button type="button" id="cancelProduct" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 
-  <script type="module">
-    // Discord OAuth Konfiguration
-    const DISCORD_CLIENT_ID = '1432942180770644079';
-    const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-    const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
-    // Firebase Import und Konfiguration
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-      authDomain: "khusland-b7d13.firebaseapp.com",
-      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-      projectId: "khusland-b7d13",
-      storageBucket: "khusland-b7d13.firebasestorage.app",
-      messagingSenderId: "69573193613",
-      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-      measurementId: "G-JSCWR4207G"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getDatabase(app);
-    
-    // Firebase Referenzen
-    const productsRef = ref(db, 'materialrecycler/products');
-
-    // DOM Elemente
-    const loginScreen = document.getElementById('loginScreen');
-    const mainContent = document.getElementById('mainContent');
-    const discordLoginBtn = document.getElementById('discordLogin');
-    const loginError = document.getElementById('loginError');
-    const errorMessage = document.getElementById('errorMessage');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const debugInfo = document.getElementById('debugInfo');
-    const debugMessage = document.getElementById('debugMessage');
-    const userInfo = document.getElementById('userInfo');
-    const userAvatar = document.getElementById('userAvatar');
-    const userName = document.getElementById('userName');
-    const adminButton = document.getElementById('adminButton');
-
-    // Liste der autorisierten Admin-Benutzer-IDs
-    const AUTHORIZED_ADMIN_IDS = [
-      '123456789012345678', // Beispiel: Ersetze mit echten Discord User IDs
-      '987654321098765432'  // Beispiel: Ersetze mit echten Discord User IDs
-    ];
-
-    // Debug-Funktion
-    function showDebugInfo(message) {
-      debugMessage.textContent = message;
-      debugInfo.classList.remove('hidden');
-    }
-
-    // Discord OAuth Login
-    function startDiscordOAuth() {
-      const scope = 'identify';
-      const state = generateRandomState();
-      
-      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-      authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', scope);
-      authUrl.searchParams.set('state', state);
-      
-      showDebugInfo('Starte OAuth Flow...');
-      window.location.href = authUrl.toString();
-    }
-
-    // Generiere random state für OAuth
-    function generateRandomState() {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
-
-    // Token Austausch
-    async function exchangeCodeForToken(code) {
-      try {
-        showDebugInfo('Tausche Code gegen Token...');
-        
-        const response = await fetch(`${BACKEND_URL}/token`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            code, 
-            redirect_uri: DISCORD_REDIRECT_URI
-          })
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          showDebugInfo(`Worker Response Error: ${response.status} - ${errorText}`);
-          throw new Error(`Worker responded with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        showDebugInfo(`Token Response: ${JSON.stringify(data)}`);
-
-        if (data.access_token) {
-          showDebugInfo('Access Token erhalten, überprüfe Benutzer...');
-          await verifyUser(data.access_token);
-        } else {
-          showDebugInfo(`Kein Access Token: ${JSON.stringify(data)}`);
-          throw new Error('Kein Access Token erhalten');
-        }
-      } catch (error) {
-        console.error('Fehler beim Token-Austausch:', error);
-        showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-        showDebugInfo(`Fehler: ${error.message}`);
-      }
-    }
-
-    // Benutzer überprüfen
-    async function verifyUser(accessToken) {
-      try {
-        showDebugInfo('Überprüfe Benutzer...');
-        
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Verification failed');
-        }
-
-        const data = await response.json();
-        showDebugInfo(`Verification Response: ${JSON.stringify(data)}`);
-
-        if (data.isAuthorized) {
-          showDebugInfo('Benutzer autorisiert!');
-          localStorage.setItem('discord_user', JSON.stringify(data.user));
-          localStorage.setItem('discord_access_token', accessToken);
-          showMainContent(data.user);
-        } else {
-          showError('Zugriff verweigert. Du bist nicht in der Liste der autorisierten Benutzer.');
-          showDebugInfo('Benutzer nicht autorisiert');
-        }
-      } catch (error) {
-        console.error('Fehler bei der Benutzerüberprüfung:', error);
-        showError('Fehler bei der Berechtigungsprüfung');
-        showDebugInfo(`Verification Error: ${error.message}`);
-      }
-    }
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      loginError.classList.remove('hidden');
-    }
-
-    function showMainContent(user) {
-      loginScreen.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-      debugInfo.classList.add('hidden');
-      
-      // Benutzerinformationen anzeigen
-      if (user) {
-        userInfo.classList.remove('hidden');
-        userName.textContent = user.username;
-        if (user.avatar) {
-          userAvatar.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-        } else {
-          userAvatar.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
-        }
-        
-        // Admin-Berechtigungen prüfen
-        if (AUTHORIZED_ADMIN_IDS.includes(user.id)) {
-          adminButton.classList.remove('hidden');
-        }
-      }
-      
-      // Setze URL zurück ohne Code-Parameter
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-    }
-
-    function logout() {
-      localStorage.clear();
-      mainContent.classList.add('hidden');
-      loginScreen.classList.remove('hidden');
-      loginError.classList.add('hidden');
-      debugInfo.classList.add('hidden');
-      userInfo.classList.add('hidden');
-      adminButton.classList.add('hidden');
-    }
-
-    // Überprüfe gespeicherten Login beim Laden
-    function checkExistingLogin() {
-      const userData = localStorage.getItem('discord_user');
-      const token = localStorage.getItem('discord_access_token');
-      
-      if (userData && token) {
-        const user = JSON.parse(userData);
-        showDebugInfo('Bereits eingeloggt');
-        showMainContent(user);
-      } else {
-        showDebugInfo('Nicht eingeloggt');
-      }
-    }
-
-    // Event Listeners
-    discordLoginBtn.addEventListener('click', startDiscordOAuth);
-    logoutBtn.addEventListener('click', logout);
-
-    // Initialisierung
-    checkExistingLogin();
-
-    // URL Parameters überprüfen
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      exchangeCodeForToken(code);
-    }
-
-    // Globale Variablen
-    let products = [];
-    const ADMIN_PASSWORD = '1101';
-    let currentMaterials = [];
-
+  <script>
     // Utility
     function show(el) { 
       el.classList.remove('hidden-el'); 
@@ -622,48 +351,33 @@
       el.classList.remove('fade-in');
     }
 
-    // Firebase Funktionen
-    async function saveProduct(product) {
-      try {
-        await push(productsRef, product);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Speichern des Produkts:', error);
-        return false;
+    // Globale Variablen
+    let products = [];
+    const ADMIN_PASSWORD = '1101';
+    let currentMaterials = [];
+
+    // Bild zu Base64 konvertieren
+    function convertImageToBase64(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        callback(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Daten aus LocalStorage laden
+    function loadDataFromStorage() {
+      const savedProducts = localStorage.getItem('materialrecycler_products');
+      
+      if (savedProducts) {
+        products = JSON.parse(savedProducts);
       }
     }
 
-    async function updateProduct(key, product) {
-      try {
-        await update(ref(db, `materialrecycler/products/${key}`), product);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Aktualisieren des Produkts:', error);
-        return false;
-      }
+    // Daten in LocalStorage speichern
+    function saveDataToStorage() {
+      localStorage.setItem('materialrecycler_products', JSON.stringify(products));
     }
-
-    async function deleteProductFromFirebase(key) {
-      try {
-        await remove(ref(db, `materialrecycler/products/${key}`));
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Löschen des Produkts:', error);
-        return false;
-      }
-    }
-
-    // Firebase Listener
-    onValue(productsRef, (snapshot) => {
-      products = [];
-      snapshot.forEach((childSnap) => {
-        const data = childSnap.val();
-        data.key = childSnap.key;
-        products.push(data);
-      });
-      renderProducts();
-      renderAdminTable();
-    });
 
     // Hamburger Menu
     document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
@@ -701,14 +415,14 @@
       };
       
       Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-amber-600', 'bg-blue-600');
-        btn.classList.add('bg-amber-900/50');
+        btn.classList.remove('pulse-glow', 'bg-green-600', 'bg-blue-600');
+        btn.classList.add('bg-gray-700');
       });
       
       if (buttons[activeButton]) {
-        buttons[activeButton].classList.remove('bg-amber-900/50');
+        buttons[activeButton].classList.remove('bg-gray-700');
         if (activeButton === 'products') {
-          buttons[activeButton].classList.add('bg-amber-600', 'pulse-glow');
+          buttons[activeButton].classList.add('bg-green-600', 'pulse-glow');
         } else if (activeButton === 'admin') {
           buttons[activeButton].classList.add('bg-blue-600');
         }
@@ -721,19 +435,19 @@
       productsGrid.innerHTML = '';
       
       if (products.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte vorhanden.</p></div>';
+        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Produkte vorhanden.</p></div>';
         return;
       }
       
       products.forEach(product => {
         const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-amber-900/20 border border-amber-800 hover:border-amber-500/30 transition-all duration-200';
+        el.className = 'product-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
         
         let imageHtml = '';
         if (product.imageData) {
           imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
         } else {
-          imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
+          imageHtml = `<div class="product-image bg-gray-700 flex items-center justify-center text-gray-400">Kein Bild</div>`;
         }
         
         let materialsHtml = '';
@@ -780,19 +494,19 @@
       productsGrid.innerHTML = '';
       
       if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte gefunden.</p></div>';
+        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Produkte gefunden.</p></div>';
         return;
       }
       
       filteredProducts.forEach(product => {
         const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-amber-900/20 border border-amber-800 hover:border-amber-500/30 transition-all duration-200';
+        el.className = 'product-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
         
         let imageHtml = '';
         if (product.imageData) {
           imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
         } else {
-          imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
+          imageHtml = `<div class="product-image bg-gray-700 flex items-center justify-center text-gray-400">Kein Bild</div>`;
         }
         
         let materialsHtml = '';
@@ -842,15 +556,6 @@
     const addMaterialBtn = document.getElementById('addMaterialBtn');
     const materialsList = document.getElementById('materialsList');
     const productMaterialsInput = document.getElementById('productMaterials');
-
-    // Bild zu Base64 konvertieren
-    function convertImageToBase64(file, callback) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        callback(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
 
     // Material hinzufügen
     addMaterialBtn.addEventListener('click', () => {
@@ -946,7 +651,7 @@
       // Produkte in Admin-Tabelle
       products.forEach(product => {
         const tr = document.createElement('tr');
-        tr.className = 'border-t border-amber-800 hover:bg-amber-800/30 transition-colors';
+        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         
         let materialsText = '';
         if (product.materials && product.materials.length > 0) {
@@ -1061,7 +766,7 @@
       }
     });
 
-    productForm.addEventListener('submit', async (e) => {
+    productForm.addEventListener('submit', (e) => {
       e.preventDefault();
       
       const name = document.getElementById('productName').value;
@@ -1081,39 +786,42 @@
         productData.imageData = imageData;
       }
       
-      let success;
       if (key) {
         // Bestehendes Produkt aktualisieren
-        success = await updateProduct(key, productData);
+        const index = products.findIndex(p => p.key === key);
+        if (index !== -1) {
+          products[index] = { ...products[index], ...productData };
+        }
       } else {
         // Neues Produkt erstellen
-        success = await saveProduct(productData);
+        productData.key = Date.now().toString();
+        products.push(productData);
       }
       
-      if (success) {
-        hide(productModal);
-        productForm.reset();
-        imagePreview.style.display = 'none';
-        productImageData.value = '';
-        currentMaterials = [];
-        renderMaterialsList();
-      } else {
-        alert(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`);
-      }
+      saveDataToStorage();
+      hide(productModal);
+      productForm.reset();
+      imagePreview.style.display = 'none';
+      productImageData.value = '';
+      currentMaterials = [];
+      renderMaterialsList();
+      renderProducts();
+      renderAdminTable();
     });
 
     // Löschfunktion
-    window.deleteProduct = async function(key) { 
+    window.deleteProduct = function(key) { 
       if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        const success = await deleteProductFromFirebase(key);
-        if (!success) {
-          alert('Fehler beim Löschen des Produkts!');
-        }
+        products = products.filter(p => p.key !== key);
+        saveDataToStorage();
+        renderProducts();
+        renderAdminTable();
       }
     }
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
+      loadDataFromStorage();
       renderProducts();
       updateButtonStates('products');
       

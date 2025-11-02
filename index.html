@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Weed Ankauf</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
     }
     .card { 
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
@@ -95,9 +97,92 @@
     .hamburger-menu {
       z-index: 1001;
     }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.success {
+      background-color: #10b981;
+    }
+    .notification.error {
+      background-color: #ef4444;
+    }
+    .notification.info {
+      background-color: #3b82f6;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid rgba(74, 222, 128, 0.1);
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    .search-box {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(74, 222, 128, 0.2);
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+    }
+    .search-box input {
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .search-box input::placeholder {
+      color: #94a3b8;
+    }
+    .search-box input:focus {
+      outline: none;
+      box-shadow: none;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
+  
+  <!-- Notification System -->
+  <div id="notification" class="notification hidden-el"></div>
   
   <!-- LOGIN SCREEN -->
   <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
@@ -109,9 +194,7 @@
       <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
       
       <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.18.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
-        </svg>
+        <i class="fab fa-discord text-xl"></i>
         Mit Discord anmelden
       </button>
       
@@ -127,7 +210,7 @@
 
   <!-- MAIN CONTENT (Versteckt bis Login) -->
   <div id="mainContent" class="hidden">
-    <div class="max-w-4xl mx-auto p-4 md:p-6">
+    <div class="max-w-6xl mx-auto p-4 md:p-6">
 
       <!-- HEADER -->
       <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
@@ -135,12 +218,21 @@
           <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
             <span class="text-white font-bold">🌿</span>
           </div>
-          <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Weed Ankauf</h1>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Weed Ankauf</h1>
+            <p id="userInfo" class="text-sm text-gray-400">Eingeloggt als: <span id="username">Unbekannt</span></p>
+          </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btnNew" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Neuer Ankauf</button>
-          <button id="btnOverview" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">Übersicht</button>
-          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
+          <button id="btnNew" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">
+            <i class="fas fa-plus mr-1"></i> Neuer Ankauf
+          </button>
+          <button id="btnOverview" class="btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg shadow-sm">
+            <i class="fas fa-list mr-1"></i> Übersicht
+          </button>
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
+            <i class="fas fa-cog mr-1"></i> Admin
+          </button>
           <div class="hamburger-container">
             <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
@@ -148,16 +240,29 @@
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
             <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Weed</a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
-              <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Materialrecycler</a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Routen</a>
-              
+              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
+                <i class="fas fa-cannabis mr-2"></i> Weed
+              </a>
+              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-pills mr-2"></i> Kokain
+              </a>
+              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-calculator mr-2"></i> 30% Rechner
+              </a>
+              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-industry mr-2"></i> Herstellung
+              </a>
+              <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-recycle mr-2"></i> Materialrecycler
+              </a>
+              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-route mr-2"></i> Routen
+              </a>
             </div>
           </div>
-          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">Logout</button>
+          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">
+            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+          </button>
         </div>
       </header>
 
@@ -166,53 +271,61 @@
         <!-- NEUER ANKAUF -->
         <div id="newEntry" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
-            <span class="bg-green-900/30 p-2 rounded-lg">💰</span>
+            <i class="fas fa-shopping-cart"></i>
             Neuer Ankauf
           </h2>
           <form id="entryForm" class="space-y-5">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label for="buyer" class="block text-sm font-medium text-gray-300 mb-1">Käufer</label>
+                <label for="buyer" class="block text-sm font-medium text-gray-300 mb-1">
+                  <i class="fas fa-user mr-1"></i> Käufer
+                </label>
                 <input id="buyer" type="text" placeholder="Name des Käufers" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required/>
               </div>
               <div>
-                <label for="seller" class="block text-sm font-medium text-gray-300 mb-1">Verkäufer</label>
+                <label for="seller" class="block text-sm font-medium text-gray-300 mb-1">
+                  <i class="fas fa-user-tag mr-1"></i> Verkäufer
+                </label>
                 <input id="seller" type="text" placeholder="Name des Verkäufers" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required/>
               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">Menge</label>
+                <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">
+                  <i class="fas fa-weight-hanging mr-1"></i> Menge (Bricks)
+                </label>
                 <input id="quantity" type="number" min="1" placeholder="Geben Sie die Menge ein" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500"/>
               </div>
               <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 flex items-center justify-center">
                 <div class="text-center">
-                  <div class="small-muted mb-0.5">Gesamtpreis</div>
+                  <div class="small-muted mb-0.5">
+                    <i class="fas fa-dollar-sign mr-1"></i> Gesamtpreis
+                  </div>
                   <div id="totalPrice" class="text-lg font-bold text-purple-400">0 $</div>
                 </div>
               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-                <div class="small-muted mb-1">Verkäufer (70%)</div>
+                <div class="small-muted mb-1">
+                  <i class="fas fa-user-tag mr-1"></i> Verkäufer (70%)
+                </div>
                 <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
               </div>
               <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-                <div class="small-muted mb-1">Käufer (30%)</div>
+                <div class="small-muted mb-1">
+                  <i class="fas fa-user mr-1"></i> Käufer (30%)
+                </div>
                 <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
               </div>
             </div>
             <div class="flex gap-3 pt-2">
               <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-save"></i>
                 Speichern
               </button>
               <button type="button" id="resetForm" class="px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-undo"></i>
                 Zurücksetzen
               </button>
             </div>
@@ -222,39 +335,65 @@
         <!-- ÜBERSICHT -->
         <div id="overview" class="card p-5 shadow-soft hidden-el fade-in">
           <h2 class="text-lg font-semibold mb-4 text-green-400 flex items-center gap-2">
-            <span class="bg-green-900/30 p-2 rounded-lg">📋</span>
+            <i class="fas fa-list"></i>
             Übersicht
           </h2>
+          
+          <!-- Statistik-Karten -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Gesamtumsatz</div>
+              <div id="totalRevenueOverview" class="stat-value text-green-400">0 $</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Anzahl Ankäufe</div>
+              <div id="totalCountOverview" class="stat-value text-blue-400">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Durchschnitt pro Ankauf</div>
+              <div id="avgPerPurchase" class="stat-value text-purple-400">0 $</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Dein Gesamtanteil</div>
+              <div id="yourTotalShare" class="stat-value text-yellow-400">0 $</div>
+            </div>
+          </div>
+          
+          <!-- Suchfeld -->
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Nach Käufer oder Verkäufer suchen...">
+          </div>
+          
           <div id="entriesList" class="space-y-3 max-h-[55vh] overflow-auto scrollbar-custom p-1"></div>
         </div>
 
         <!-- ADMIN -->
         <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
           <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-            <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
+            <i class="fas fa-cog"></i>
             Adminbereich
           </h2>
           <div id="adminLoginSection">
             <div class="mb-4">
-              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
+                <i class="fas fa-key mr-1"></i> Admin-Passwort
+              </label>
               <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
             </div>
             <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-              </svg>
+              <i class="fas fa-sign-in-alt"></i>
               Einloggen
             </button>
-            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
+            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">
+              <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
+            </span>
           </div>
           <div id="adminContent" class="hidden-el">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
               <div class="small-muted">Gesamtanzahl: <span id="totalCount" class="font-bold text-white">0</span></div>
               <div class="small-muted">Gesamtumsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
               <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm btn flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-file-export mr-1"></i>
                 CSV Export
               </button>
             </div>
@@ -318,6 +457,23 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const debugInfo = document.getElementById('debugInfo');
     const debugMessage = document.getElementById('debugMessage');
+    const usernameElement = document.getElementById('username');
+    const notification = document.getElementById('notification');
+
+    // Notification System
+    function showNotification(message, type = 'info', duration = 5000) {
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.classList.remove('hidden-el');
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          notification.classList.add('hidden-el');
+        }, 300);
+      }, duration);
+    }
 
     // Debug-Funktion
     function showDebugInfo(message) {
@@ -412,6 +568,7 @@
           localStorage.setItem('discord_user', JSON.stringify(data.user));
           localStorage.setItem('discord_access_token', accessToken);
           showMainContent();
+          showNotification(`Erfolgreich eingeloggt als ${data.user.username}`, 'success');
         } else {
           showError('Zugriff verweigert. Du bist nicht in der Liste der autorisierten Benutzer.');
           showDebugInfo('Benutzer nicht autorisiert');
@@ -433,6 +590,12 @@
       mainContent.classList.remove('hidden');
       debugInfo.classList.add('hidden');
       
+      // Benutzerinformationen anzeigen
+      const user = JSON.parse(localStorage.getItem('discord_user'));
+      if (user) {
+        usernameElement.textContent = user.username;
+      }
+      
       // Setze URL zurück ohne Code-Parameter
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
@@ -444,6 +607,7 @@
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
       debugInfo.classList.add('hidden');
+      showNotification('Erfolgreich ausgeloggt', 'info');
     }
 
     // Überprüfe gespeicherten Login beim Laden
@@ -476,6 +640,7 @@
     // Deine bestehenden Firebase-Funktionen
     const ADMIN_PASSWORD = '1101';
     let entries = [];
+    let filteredEntries = [];
 
     function show(el) { 
       el.classList.remove('hidden-el'); 
@@ -585,7 +750,7 @@
       const quantity = Number(quantityInput.value);
       
       if (!buyer || !seller || !quantity) {
-        alert('Bitte füllen Sie alle Felder aus!');
+        showNotification('Bitte füllen Sie alle Felder aus!', 'error');
         return;
       }
       
@@ -605,31 +770,23 @@
       };
 
       try {
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<div class="loading mr-2"></div> Speichere...';
+        submitBtn.disabled = true;
+        
         await push(entriesRef, entry);
         e.target.reset();
         updateShares();
         
-        // Show success message
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-          </svg>
-          Erfolgreich gespeichert!
-        `;
-        submitBtn.classList.remove('bg-green-600');
-        submitBtn.classList.add('bg-green-500');
+        showNotification('Eintrag erfolgreich gespeichert!', 'success');
         
-        setTimeout(() => {
-          submitBtn.innerHTML = originalText;
-          submitBtn.classList.remove('bg-green-500');
-          submitBtn.classList.add('bg-green-600');
-        }, 2000);
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
         
       } catch (error) {
         console.error('Fehler beim Speichern:', error);
-        alert('Fehler beim Speichern der Daten!');
+        showNotification('Fehler beim Speichern der Daten!', 'error');
       }
     });
 
@@ -638,6 +795,7 @@
       if (confirm('Möchten Sie das Formular wirklich zurücksetzen?')) {
         document.getElementById('entryForm').reset(); 
         updateShares();
+        showNotification('Formular zurückgesetzt', 'info');
       }
     });
 
@@ -651,21 +809,55 @@
       });
       // Sortierung: Neueste oben (absteigend nach timestamp)
       entries.sort((a, b) => b.timestamp - a.timestamp);
+      filteredEntries = [...entries];
       renderOverview();
       renderAdminTable();
+    });
+
+    // Suchfunktion
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      if (searchTerm.trim() === '') {
+        filteredEntries = [...entries];
+      } else {
+        filteredEntries = entries.filter(entry => 
+          entry.buyer.toLowerCase().includes(searchTerm) || 
+          entry.seller.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      renderOverview();
     });
 
     // Übersicht rendern
     const entriesList = document.getElementById('entriesList');
     function renderOverview() {
       entriesList.innerHTML = '';
-      if (entries.length === 0) {
+      if (filteredEntries.length === 0) {
         entriesList.innerHTML = '<div class="text-center py-8 text-gray-400"><p>Keine Einträge vorhanden.</p></div>'; 
         return;
       }
       
-      // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
-      entries.forEach(en => {
+      // Statistiken berechnen
+      let totalRevenue = 0;
+      let yourTotalShare = 0;
+      
+      filteredEntries.forEach(entry => {
+        totalRevenue += entry.price;
+        yourTotalShare += entry.yourShare;
+      });
+      
+      const avgPerPurchase = filteredEntries.length > 0 ? totalRevenue / filteredEntries.length : 0;
+      
+      // Statistiken anzeigen
+      document.getElementById('totalRevenueOverview').textContent = formatCurrency(totalRevenue);
+      document.getElementById('totalCountOverview').textContent = filteredEntries.length;
+      document.getElementById('avgPerPurchase').textContent = formatCurrency(avgPerPurchase);
+      document.getElementById('yourTotalShare').textContent = formatCurrency(yourTotalShare);
+      
+      // Einträge anzeigen
+      filteredEntries.forEach(en => {
         const el = document.createElement('div');
         el.className = 'p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
         el.innerHTML = `
@@ -712,10 +904,12 @@
         show(document.getElementById('adminContent')); 
         renderAdminTable();
         adminPassInput.value = ''; // Clear password field after login
+        showNotification('Admin-Bereich erfolgreich betreten', 'success');
       } else {
         adminError.classList.remove('hidden-el');
         adminPassInput.value = ''; // Clear password field on error
         adminPassInput.focus();
+        showNotification('Falsches Admin-Passwort', 'error');
       }
     });
 
@@ -745,9 +939,7 @@
           <td class="p-3 text-blue-400">${formatCurrency(en.yourShare)}</td>
           <td class="p-3">
             <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1" onclick="deleteEntry('${en.key}')">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
+              <i class="fas fa-trash mr-1"></i>
               Löschen
             </button>
           </td>`;
@@ -761,13 +953,14 @@
     window.deleteEntry = function(key) {
       if (confirm('Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
         remove(ref(db, 'weed_entries/' + key));
+        showNotification('Eintrag erfolgreich gelöscht', 'success');
       }
     }
 
     // CSV Export
     exportCsv.addEventListener('click', () => {
       if (entries.length === 0) {
-        alert('Keine Einträge zum Exportieren vorhanden.');
+        showNotification('Keine Einträge zum Exportieren vorhanden.', 'error');
         return;
       }
       
@@ -799,6 +992,8 @@
       a.click();
       URL.revokeObjectURL(url);
       a.remove();
+      
+      showNotification('CSV erfolgreich exportiert', 'success');
     });
 
   </script>

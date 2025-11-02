@@ -258,6 +258,27 @@
       align-items: center;
       gap: 6px;
     }
+    .resource-input-container {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .resource-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .resource-tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(147, 51, 234, 0.2);
+      color: #a855f7;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin: 2px;
+    }
   </style>
 </head>
 <body class="text-amber-50 antialiased min-h-screen">
@@ -349,13 +370,6 @@
                   </svg>
                   Produkt
                 </button>
-                <button id="manageResourcesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
-                    <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
-                  </svg>
-                  Ressourcen
-                </button>
               </div>
             </div>
             
@@ -397,7 +411,18 @@
             <div id="materialsList" class="material-list">
               <!-- Materialien werden hier dynamisch hinzugefügt -->
             </div>
-            <input type="hidden" id="productMaterials">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-amber-300 mb-1">Ressourcen</label>
+            <div class="resource-input-container">
+              <input type="text" id="newResourceName" class="flex-1 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Ressourcenname"/>
+              <input type="number" id="newResourceMin" class="w-20 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Min" min="1"/>
+              <input type="number" id="newResourceMax" class="w-20 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Max" min="1"/>
+              <button type="button" id="addResourceBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">+</button>
+            </div>
+            <div id="resourcesList" class="resource-list">
+              <!-- Ressourcen werden hier dynamisch hinzugefügt -->
+            </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-amber-300 mb-1">Bild hochladen</label>
@@ -421,28 +446,6 @@
         </form>
       </div>
     </div>
-
-    <!-- Modal für Ressourcen verwalten -->
-    <div id="resourcesModal" class="modal-overlay hidden-el">
-      <div class="card p-6 m-4 max-w-2xl w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-purple-400">Ressourcen verwalten</h3>
-        <div class="space-y-4">
-          <div class="flex gap-4 mb-4">
-            <input type="text" id="newResourceName" class="flex-1 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Ressourcenname">
-            <input type="number" id="newResourceMin" class="w-20 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Min" min="1">
-            <input type="number" id="newResourceMax" class="w-20 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Max" min="1">
-            <button id="addResourceBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">+</button>
-          </div>
-          <div id="resourcesListAdmin" class="space-y-2 max-h-60 overflow-y-auto">
-            <!-- Ressourcen werden hier dynamisch geladen -->
-          </div>
-          <div class="flex gap-3 pt-4">
-            <button type="button" id="saveResources" class="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">Speichern</button>
-            <button type="button" id="cancelResources" class="px-4 py-3 bg-amber-900/50 hover:bg-amber-800/50 rounded-lg btn font-medium">Abbrechen</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -458,18 +461,9 @@
 
     // Globale Variablen
     let products = [];
-    let resources = [];
     const ADMIN_PASSWORD = '1101';
     let currentMaterials = [];
-
-    // Standard-Ressourcen
-    const defaultResources = [
-      { name: "Aluminium", min: 10, max: 24 },
-      { name: "Kupfer", min: 8, max: 20 },
-      { name: "Eisen", min: 12, max: 30 },
-      { name: "Plastik", min: 15, max: 35 },
-      { name: "Glas", min: 6, max: 18 }
-    ];
+    let currentResources = [];
 
     // Bild zu Base64 konvertieren
     function convertImageToBase64(file, callback) {
@@ -483,29 +477,15 @@
     // Daten aus LocalStorage laden
     function loadDataFromStorage() {
       const savedProducts = localStorage.getItem('materialrecycler_products');
-      const savedResources = localStorage.getItem('materialrecycler_resources');
       
       if (savedProducts) {
         products = JSON.parse(savedProducts);
-      }
-      
-      if (savedResources) {
-        resources = JSON.parse(savedResources);
-      } else {
-        // Standard-Ressourcen verwenden
-        resources = [...defaultResources];
-        saveResourcesToStorage();
       }
     }
 
     // Daten in LocalStorage speichern
     function saveDataToStorage() {
       localStorage.setItem('materialrecycler_products', JSON.stringify(products));
-    }
-
-    // Ressourcen in LocalStorage speichern
-    function saveResourcesToStorage() {
-      localStorage.setItem('materialrecycler_resources', JSON.stringify(resources));
     }
 
     // Hamburger Menu
@@ -586,6 +566,14 @@
           ).join('');
         }
         
+        // Ressourcen für dieses Produkt
+        let resourcesHtml = '';
+        if (product.resources && product.resources.length > 0) {
+          resourcesHtml = product.resources.map(resource => 
+            `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
+          ).join('');
+        }
+        
         el.innerHTML = `
           <div class="product-card">
             <div class="flex-shrink-0">
@@ -593,9 +581,10 @@
             </div>
             <div class="flex-grow">
               <div class="font-semibold text-lg mb-2">${product.name}</div>
-              <div class="material-list mb-3">
+              <div class="material-list mb-2">
                 ${materialsHtml}
               </div>
+              ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
               
               <!-- Ressourcen Rechner -->
               <div class="calculator-section">
@@ -633,12 +622,15 @@
           const quantity = parseInt(quantityInput.value) || 1;
           resultsContainer.innerHTML = '';
           
-          if (resources.length === 0) {
-            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen definiert</div>';
+          // Nur die Ressourcen dieses spezifischen Produkts verwenden
+          const productResources = product.resources || [];
+          
+          if (productResources.length === 0) {
+            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen für dieses Produkt definiert</div>';
             return;
           }
           
-          resources.forEach(resource => {
+          productResources.forEach(resource => {
             const minTotal = resource.min * quantity;
             const maxTotal = resource.max * quantity;
             
@@ -689,6 +681,9 @@
         product.name.toLowerCase().includes(searchTerm) || 
         (product.materials && product.materials.some(material => 
           material.toLowerCase().includes(searchTerm)
+        )) ||
+        (product.resources && product.resources.some(resource => 
+          resource.name.toLowerCase().includes(searchTerm)
         ))
       );
       
@@ -718,6 +713,14 @@
           ).join('');
         }
         
+        // Ressourcen für dieses Produkt
+        let resourcesHtml = '';
+        if (product.resources && product.resources.length > 0) {
+          resourcesHtml = product.resources.map(resource => 
+            `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
+          ).join('');
+        }
+        
         el.innerHTML = `
           <div class="product-card">
             <div class="flex-shrink-0">
@@ -725,9 +728,10 @@
             </div>
             <div class="flex-grow">
               <div class="font-semibold text-lg mb-2">${product.name}</div>
-              <div class="material-list mb-3">
+              <div class="material-list mb-2">
                 ${materialsHtml}
               </div>
+              ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
               
               <!-- Ressourcen Rechner -->
               <div class="calculator-section">
@@ -765,12 +769,15 @@
           const quantity = parseInt(quantityInput.value) || 1;
           resultsContainer.innerHTML = '';
           
-          if (resources.length === 0) {
-            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen definiert</div>';
+          // Nur die Ressourcen dieses spezifischen Produkts verwenden
+          const productResources = product.resources || [];
+          
+          if (productResources.length === 0) {
+            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen für dieses Produkt definiert</div>';
             return;
           }
           
-          resources.forEach(resource => {
+          productResources.forEach(resource => {
             const minTotal = resource.min * quantity;
             const maxTotal = resource.max * quantity;
             
@@ -815,7 +822,6 @@
     const adminTableBody = document.getElementById('adminTableBody');
     const totalProducts = document.getElementById('totalProducts');
     const addProductBtn = document.getElementById('addProductBtn');
-    const manageResourcesBtn = document.getElementById('manageResourcesBtn');
     
     // Modal Elemente
     const productModal = document.getElementById('productModal');
@@ -831,17 +837,13 @@
     const newMaterialInput = document.getElementById('newMaterial');
     const addMaterialBtn = document.getElementById('addMaterialBtn');
     const materialsList = document.getElementById('materialsList');
-    const productMaterialsInput = document.getElementById('productMaterials');
-
-    // Ressourcen Modal Elemente
-    const resourcesModal = document.getElementById('resourcesModal');
+    
+    // Ressourcen Elemente
     const newResourceName = document.getElementById('newResourceName');
     const newResourceMin = document.getElementById('newResourceMin');
     const newResourceMax = document.getElementById('newResourceMax');
     const addResourceBtn = document.getElementById('addResourceBtn');
-    const resourcesListAdmin = document.getElementById('resourcesListAdmin');
-    const saveResources = document.getElementById('saveResources');
-    const cancelResources = document.getElementById('cancelResources');
+    const resourcesList = document.getElementById('resourcesList');
 
     // Material hinzufügen
     addMaterialBtn.addEventListener('click', () => {
@@ -885,6 +887,53 @@
           const index = parseInt(this.getAttribute('data-index'));
           currentMaterials.splice(index, 1);
           renderMaterialsList();
+        });
+      });
+    }
+
+    // Ressource hinzufügen
+    addResourceBtn.addEventListener('click', () => {
+      const resourceName = newResourceName.value.trim();
+      const resourceMin = parseInt(newResourceMin.value);
+      const resourceMax = parseInt(newResourceMax.value);
+      
+      if (resourceName && resourceMin && resourceMax && resourceMin <= resourceMax) {
+        currentResources.push({
+          name: resourceName,
+          min: resourceMin,
+          max: resourceMax
+        });
+        renderResourcesList();
+        newResourceName.value = '';
+        newResourceMin.value = '';
+        newResourceMax.value = '';
+        newResourceName.focus();
+      }
+    });
+
+    // Ressourcen Liste rendern
+    function renderResourcesList() {
+      resourcesList.innerHTML = '';
+      currentResources.forEach((resource, index) => {
+        const span = document.createElement('span');
+        span.className = 'resource-tag flex items-center';
+        span.innerHTML = `
+          ${resource.name} (${resource.min}-${resource.max})
+          <button type="button" class="ml-1 text-red-400 hover:text-red-300 remove-resource" data-index="${index}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        `;
+        resourcesList.appendChild(span);
+      });
+      
+      // Event Listener für Löschen-Buttons
+      document.querySelectorAll('.remove-resource').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          currentResources.splice(index, 1);
+          renderResourcesList();
         });
       });
     }
@@ -944,10 +993,17 @@
           materialsText = product.materials.join(', ');
         }
         
+        let resourcesText = '';
+        if (product.resources && product.resources.length > 0) {
+          resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
+        } else {
+          resourcesText = 'Keine Ressourcen';
+        }
+        
         tr.innerHTML = `
           <td class="p-3">${product.name}</td>
           <td class="p-3">${materialsText}</td>
-          <td class="p-3">${resources.length} Ressourcen</td>
+          <td class="p-3">${resourcesText}</td>
           <td class="p-3">
             <div class="flex gap-2">
               <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-product" data-key="${product.key}">
@@ -999,6 +1055,10 @@
       currentMaterials = product.materials ? [...product.materials] : [];
       renderMaterialsList();
       
+      // Ressourcen setzen
+      currentResources = product.resources ? [...product.resources] : [];
+      renderResourcesList();
+      
       // Bild-Daten setzen
       if (product.imageData) {
         imagePreview.src = product.imageData;
@@ -1024,7 +1084,9 @@
       imagePreview.style.display = 'none';
       productImageData.value = '';
       currentMaterials = [];
+      currentResources = [];
       renderMaterialsList();
+      renderResourcesList();
       
       // Modal-Titel ändern
       productModalTitle.textContent = 'Produkt hinzufügen';
@@ -1038,7 +1100,9 @@
       imagePreview.style.display = 'none';
       productImageData.value = '';
       currentMaterials = [];
+      currentResources = [];
       renderMaterialsList();
+      renderResourcesList();
     });
 
     // Modal schließen, wenn außerhalb geklickt wird
@@ -1049,99 +1113,9 @@
         imagePreview.style.display = 'none';
         productImageData.value = '';
         currentMaterials = [];
+        currentResources = [];
         renderMaterialsList();
-      }
-    });
-
-    // Ressourcen Modal
-    manageResourcesBtn.addEventListener('click', () => {
-      renderResourcesAdmin();
-      show(resourcesModal);
-    });
-
-    function renderResourcesAdmin() {
-      resourcesListAdmin.innerHTML = '';
-      
-      if (resources.length === 0) {
-        resourcesListAdmin.innerHTML = '<div class="text-amber-400 text-center py-4">Keine Ressourcen definiert</div>';
-        return;
-      }
-      
-      resources.forEach((resource, index) => {
-        const resourceEl = document.createElement('div');
-        resourceEl.className = 'resource-item';
-        resourceEl.innerHTML = `
-          <div class="flex-1">
-            <input type="text" value="${resource.name}" class="resource-name-input p-2 rounded bg-amber-900/20 border border-amber-800 focus:border-purple-500 w-full">
-          </div>
-          <div class="flex gap-2">
-            <input type="number" value="${resource.min}" class="resource-min-input p-2 rounded bg-amber-900/20 border border-amber-800 focus:border-purple-500 w-16" min="1">
-            <span class="text-amber-400">-</span>
-            <input type="number" value="${resource.max}" class="resource-max-input p-2 rounded bg-amber-900/20 border border-amber-800 focus:border-purple-500 w-16" min="1">
-            <button class="remove-resource px-2 py-1 bg-red-600 hover:bg-red-500 rounded text-sm" data-index="${index}">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        `;
-        resourcesListAdmin.appendChild(resourceEl);
-      });
-      
-      // Event Listener für Löschen-Buttons
-      document.querySelectorAll('.remove-resource').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          resources.splice(index, 1);
-          renderResourcesAdmin();
-        });
-      });
-    }
-
-    // Neue Ressource hinzufügen
-    addResourceBtn.addEventListener('click', () => {
-      const name = newResourceName.value.trim();
-      const min = parseInt(newResourceMin.value);
-      const max = parseInt(newResourceMax.value);
-      
-      if (name && min && max && min <= max) {
-        resources.push({ name, min, max });
-        newResourceName.value = '';
-        newResourceMin.value = '';
-        newResourceMax.value = '';
-        renderResourcesAdmin();
-      }
-    });
-
-    // Ressourcen speichern
-    saveResources.addEventListener('click', () => {
-      // Eingabefelder aktualisieren
-      const nameInputs = resourcesListAdmin.querySelectorAll('.resource-name-input');
-      const minInputs = resourcesListAdmin.querySelectorAll('.resource-min-input');
-      const maxInputs = resourcesListAdmin.querySelectorAll('.resource-max-input');
-      
-      resources.forEach((resource, index) => {
-        if (nameInputs[index] && minInputs[index] && maxInputs[index]) {
-          resource.name = nameInputs[index].value.trim();
-          resource.min = parseInt(minInputs[index].value);
-          resource.max = parseInt(maxInputs[index].value);
-        }
-      });
-      
-      saveResourcesToStorage();
-      hide(resourcesModal);
-      renderProducts(); // Produkte neu rendern, um Rechner zu aktualisieren
-      renderAdminTable();
-    });
-
-    cancelResources.addEventListener('click', () => {
-      hide(resourcesModal);
-    });
-
-    // Modal schließen, wenn außerhalb geklickt wird
-    resourcesModal.addEventListener('click', (e) => {
-      if (e.target === resourcesModal) {
-        hide(resourcesModal);
+        renderResourcesList();
       }
     });
 
@@ -1156,6 +1130,7 @@
       const productData = {
         name,
         materials: [...currentMaterials],
+        resources: [...currentResources],
         date: new Date().toISOString(),
         timestamp: Date.now()
       };
@@ -1183,7 +1158,9 @@
       imagePreview.style.display = 'none';
       productImageData.value = '';
       currentMaterials = [];
+      currentResources = [];
       renderMaterialsList();
+      renderResourcesList();
       renderProducts();
       renderAdminTable();
     });
@@ -1206,7 +1183,6 @@
       
       // Sicherstellen, dass alle Modals versteckt sind
       hide(productModal);
-      hide(resourcesModal);
     });
   </script>
 </body>

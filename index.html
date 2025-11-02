@@ -10,6 +10,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Deine bestehenden CSS-Stile hier */
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -125,6 +126,9 @@
     .notification.info {
       background-color: #3b82f6;
     }
+    .notification.warning {
+      background-color: #f59e0b;
+    }
     .loading {
       display: inline-block;
       width: 20px;
@@ -190,6 +194,24 @@
       flex: 1;
       min-width: 120px;
     }
+    .access-badge {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+    }
+    .access-permanent {
+      background-color: #10b981;
+      color: white;
+    }
+    .access-temporary {
+      background-color: #f59e0b;
+      color: black;
+    }
+    .access-expired {
+      background-color: #ef4444;
+      color: white;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -233,7 +255,10 @@
           </div>
           <div>
             <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Weed Ankauf</h1>
-            <p id="userInfo" class="text-sm text-gray-400">Eingeloggt als: <span id="username">Unbekannt</span></p>
+            <p id="userInfo" class="text-sm text-gray-400">
+              Eingeloggt als: <span id="username">Unbekannt</span>
+              <span id="accessBadge" class="access-badge access-permanent hidden-el">Permanent</span>
+            </p>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -485,6 +510,7 @@
     const debugMessage = document.getElementById('debugMessage');
     const usernameElement = document.getElementById('username');
     const notification = document.getElementById('notification');
+    const accessBadge = document.getElementById('accessBadge');
 
     // Notification System
     function showNotification(message, type = 'info', duration = 5000) {
@@ -567,10 +593,10 @@
       }
     }
 
-    // Benutzer überprüfen
+    // Benutzer überprüfen mit Lifetime-Check
     async function verifyUser(accessToken) {
       try {
-        showDebugInfo('Überprüfe Benutzer...');
+        showDebugInfo('Überprüfe Benutzer mit Lifetime-Check...');
         
         const response = await fetch(`${BACKEND_URL}/verify-user`, {
           method: 'POST',
@@ -593,11 +619,20 @@
           showDebugInfo('Benutzer autorisiert!');
           localStorage.setItem('discord_user', JSON.stringify(data.user));
           localStorage.setItem('discord_access_token', accessToken);
-          showMainContent();
+          localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo));
+          showMainContent(data.accessInfo);
           showNotification(`Erfolgreich eingeloggt als ${data.user.username}`, 'success');
         } else {
-          showError('Zugriff verweigert. Du bist nicht in der Liste der autorisierten Benutzer.');
-          showDebugInfo('Benutzer nicht autorisiert');
+          let errorMsg = 'Zugriff verweigert. ';
+          if (data.accessInfo && data.accessInfo.message === 'access expired') {
+            errorMsg += 'Dein Zugang ist abgelaufen.';
+          } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
+            errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
+          } else {
+            errorMsg += 'Du bist nicht autorisiert.';
+          }
+          showError(errorMsg);
+          showDebugInfo('Benutzer nicht autorisiert: ' + (data.accessInfo?.message || 'unknown reason'));
         }
       } catch (error) {
         console.error('Fehler bei der Benutzerüberprüfung:', error);
@@ -612,7 +647,7 @@
       const user = localStorage.getItem('discord_user');
       
       if (!token || !user) {
-        return false;
+        return { isAuthorized: false, reason: 'No token or user' };
       }
       
       try {
@@ -631,20 +666,24 @@
         }
 
         const data = await response.json();
-        return data.isAuthorized;
+        return data;
         
       } catch (error) {
         console.error('Fehler bei der Autorisierungsprüfung:', error);
-        return false;
+        return { isAuthorized: false, reason: error.message };
       }
     }
 
     // Alle 2 Minuten überprüfen ob User noch berechtigt ist
     setInterval(async () => {
       if (localStorage.getItem('discord_user')) {
-        const isStillAuthorized = await checkUserAuthorization();
-        if (!isStillAuthorized) {
-          showNotification('Deine Berechtigung wurde widerrufen', 'error');
+        const authResult = await checkUserAuthorization();
+        if (!authResult.isAuthorized) {
+          let message = 'Deine Berechtigung wurde widerrufen';
+          if (authResult.accessInfo?.message === 'access expired') {
+            message = 'Dein Zugang ist abgelaufen';
+          }
+          showNotification(message, 'error');
           setTimeout(() => {
             logout();
           }, 3000);
@@ -655,9 +694,13 @@
     // Auch beim Seitenwechsel überprüfen
     document.addEventListener('visibilitychange', async () => {
       if (!document.hidden && localStorage.getItem('discord_user')) {
-        const isStillAuthorized = await checkUserAuthorization();
-        if (!isStillAuthorized) {
-          showNotification('Deine Berechtigung wurde widerrufen', 'error');
+        const authResult = await checkUserAuthorization();
+        if (!authResult.isAuthorized) {
+          let message = 'Deine Berechtigung wurde widerrufen';
+          if (authResult.accessInfo?.message === 'access expired') {
+            message = 'Dein Zugang ist abgelaufen';
+          }
+          showNotification(message, 'error');
           setTimeout(() => {
             logout();
           }, 2000);
@@ -667,9 +710,13 @@
 
     // Überprüfung bei wichtigen Aktionen
     async function validateAccess() {
-      const isAuthorized = await checkUserAuthorization();
-      if (!isAuthorized && localStorage.getItem('discord_user')) {
-        showNotification('Zugriff wurde entzogen', 'error');
+      const authResult = await checkUserAuthorization();
+      if (!authResult.isAuthorized && localStorage.getItem('discord_user')) {
+        let message = 'Zugriff wurde entzogen';
+        if (authResult.accessInfo?.message === 'access expired') {
+          message = 'Dein Zugang ist abgelaufen';
+        }
+        showNotification(message, 'error');
         setTimeout(logout, 2000);
         return false;
       }
@@ -681,7 +728,7 @@
       loginError.classList.remove('hidden');
     }
 
-    function showMainContent() {
+    function showMainContent(accessInfo) {
       loginScreen.classList.add('hidden');
       mainContent.classList.remove('hidden');
       debugInfo.classList.add('hidden');
@@ -690,6 +737,18 @@
       const user = JSON.parse(localStorage.getItem('discord_user'));
       if (user) {
         usernameElement.textContent = user.username;
+      }
+      
+      // Access Badge anzeigen
+      if (accessInfo) {
+        accessBadge.classList.remove('hidden-el');
+        if (accessInfo.isPermanent) {
+          accessBadge.textContent = 'Permanent';
+          accessBadge.className = 'access-badge access-permanent';
+        } else {
+          accessBadge.textContent = accessInfo.message;
+          accessBadge.className = 'access-badge access-temporary';
+        }
       }
       
       // Setze URL zurück ohne Code-Parameter
@@ -701,12 +760,14 @@
       // Alle gespeicherten Daten löschen
       localStorage.removeItem('discord_user');
       localStorage.removeItem('discord_access_token');
+      localStorage.removeItem('user_access_info');
       
       // UI zurücksetzen
       mainContent.classList.add('hidden');
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
       debugInfo.classList.add('hidden');
+      accessBadge.classList.add('hidden-el');
       
       // Formular zurücksetzen
       document.getElementById('entryForm').reset();
@@ -720,10 +781,11 @@
     function checkExistingLogin() {
       const user = localStorage.getItem('discord_user');
       const token = localStorage.getItem('discord_access_token');
+      const accessInfo = localStorage.getItem('user_access_info');
       
       if (user && token) {
         showDebugInfo('Bereits eingeloggt');
-        showMainContent();
+        showMainContent(accessInfo ? JSON.parse(accessInfo) : null);
       } else {
         showDebugInfo('Nicht eingeloggt');
       }
@@ -743,27 +805,22 @@
       exchangeCodeForToken(code);
     }
 
-    // Deine bestehenden Firebase-Funktionen
+    // Deine bestehenden Firebase-Funktionen (gekürzt für Lesbarkeit)
     const ADMIN_PASSWORD = '1101';
     let entries = [];
     let filteredEntries = [];
 
-    function show(el) { 
-      el.classList.remove('hidden-el'); 
-      el.classList.add('fade-in');
-    }
-    function hide(el) { 
-      el.classList.add('hidden-el'); 
-      el.classList.remove('fade-in');
-    }
-    function formatCurrency(n) { 
-      return new Intl.NumberFormat('de-DE').format(Math.round(n)) + ' $'; 
-    }
+    function show(el) { el.classList.remove('hidden-el'); el.classList.add('fade-in'); }
+    function hide(el) { el.classList.add('hidden-el'); el.classList.remove('fade-in'); }
+    function formatCurrency(n) { return new Intl.NumberFormat('de-DE').format(Math.round(n)) + ' $'; }
     function formatDate(d) {
       const date = new Date(d);
       const pad = n => n.toString().padStart(2,'0');
       return `${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
+
+    // ... (Deine restlichen Firebase-Funktionen bleiben gleich)
+    // Hamburger Menu, Tabs Navigation, Share Calculation, etc.
 
     // Hamburger Menu
     document.getElementById('hamburgerBtn').addEventListener('click', (e) => {

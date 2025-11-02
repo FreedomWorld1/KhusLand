@@ -161,21 +161,22 @@
       gap: 1rem;
       align-items: start;
     }
-    .material-tag {
-      display: inline-block;
-      background: rgba(245, 158, 11, 0.2);
-      color: #f59e0b;
+    .resource-tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(147, 51, 234, 0.2);
+      color: #a855f7;
       padding: 4px 8px;
       border-radius: 12px;
       font-size: 0.75rem;
       margin: 2px;
     }
-    .material-input-container {
+    .resource-input-container {
       display: flex;
       gap: 8px;
       margin-bottom: 8px;
     }
-    .material-list {
+    .resource-list {
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
@@ -255,27 +256,6 @@
       align-items: center;
       gap: 6px;
     }
-    .resource-input-container {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .resource-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 8px;
-    }
-    .resource-tag {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(147, 51, 234, 0.2);
-      color: #a855f7;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      margin: 2px;
-    }
     .search-type-selector {
       display: flex;
       gap: 8px;
@@ -340,12 +320,8 @@
 
         <!-- SUCHLEISTE -->
         <div class="card p-4 shadow-soft">
-          <div class="search-type-selector" id="searchTypeSelector">
-            <button class="search-type-btn active" data-type="material">Nach Material suchen</button>
-            <button class="search-type-btn" data-type="product">Nach Produkt suchen</button>
-          </div>
           <div class="relative">
-            <input type="text" id="searchInput" placeholder="Material suchen..." class="w-full p-4 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500 pl-12">
+            <input type="text" id="searchInput" placeholder="Ressourcen suchen..." class="w-full p-4 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500 pl-12">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -412,7 +388,6 @@
                 <thead class="text-amber-400 bg-amber-900/50 sticky top-0">
                   <tr>
                     <th class="p-3 font-medium">Name</th>
-                    <th class="p-3 font-medium">Materialien</th>
                     <th class="p-3 font-medium">Ressourcen</th>
                     <th class="p-3 font-medium">Aktion</th>
                   </tr>
@@ -435,16 +410,6 @@
           <div>
             <label class="block text-sm font-medium text-amber-300 mb-1">Name</label>
             <input type="text" id="productName" class="p-3 rounded-lg bg-amber-900/20 border border-amber-800 w-full focus:border-amber-500" placeholder="z.B.: Aluminium-Dose" required/>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Materialien</label>
-            <div class="material-input-container">
-              <input type="text" id="newMaterial" class="flex-1 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500" placeholder="z.B.: Aluminium"/>
-              <button type="button" id="addMaterialBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">+</button>
-            </div>
-            <div id="materialsList" class="material-list">
-              <!-- Materialien werden hier dynamisch hinzugefügt -->
-            </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-amber-300 mb-1">Ressourcen</label>
@@ -496,9 +461,7 @@
     // Globale Variablen
     let products = [];
     const ADMIN_PASSWORD = '1101';
-    let currentMaterials = [];
     let currentResources = [];
-    let currentSearchType = 'material'; // Standard: Nach Material suchen
 
     // Bild zu Base64 konvertieren
     function convertImageToBase64(file, callback) {
@@ -573,32 +536,6 @@
       }
     }
 
-    // Suchtyp-Buttons
-    document.querySelectorAll('.search-type-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Aktiven Button markieren
-        document.querySelectorAll('.search-type-btn').forEach(b => {
-          b.classList.remove('active');
-        });
-        this.classList.add('active');
-        
-        // Suchtyp ändern
-        currentSearchType = this.getAttribute('data-type');
-        
-        // Platzhaltertext anpassen
-        const searchInput = document.getElementById('searchInput');
-        if (currentSearchType === 'material') {
-          searchInput.placeholder = 'Material suchen...';
-        } else {
-          searchInput.placeholder = 'Produkt suchen...';
-        }
-        
-        // Suche zurücksetzen
-        searchInput.value = '';
-        renderProducts();
-      });
-    });
-
     // Produkte rendern
     function renderProducts() {
       const productsGrid = document.getElementById('productsGrid');
@@ -620,13 +557,6 @@
           imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
         }
         
-        let materialsHtml = '';
-        if (product.materials && product.materials.length > 0) {
-          materialsHtml = product.materials.map(material => 
-            `<span class="material-tag">${material}</span>`
-          ).join('');
-        }
-        
         // Ressourcen für dieses Produkt
         let resourcesHtml = '';
         if (product.resources && product.resources.length > 0) {
@@ -642,9 +572,6 @@
             </div>
             <div class="flex-grow">
               <div class="font-semibold text-lg mb-2">${product.name}</div>
-              <div class="material-list mb-2">
-                ${materialsHtml}
-              </div>
               ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
               
               <!-- Ressourcen Rechner -->
@@ -729,7 +656,7 @@
       });
     }
 
-    // Suchfunktion
+    // Suchfunktion - nur nach Ressourcen
     document.getElementById('searchInput').addEventListener('input', function() {
       const searchTerm = this.value.toLowerCase();
       
@@ -738,30 +665,18 @@
         return;
       }
       
-      let filteredProducts = [];
-      
-      if (currentSearchType === 'material') {
-        // Nach Materialien suchen
-        filteredProducts = products.filter(product => 
-          product.materials && product.materials.some(material => 
-            material.toLowerCase().includes(searchTerm)
-          )
-        );
-      } else {
-        // Nach Produkten suchen
-        filteredProducts = products.filter(product => 
-          product.name.toLowerCase().includes(searchTerm) ||
-          (product.resources && product.resources.some(resource => 
-            resource.name.toLowerCase().includes(searchTerm)
-          ))
-        );
-      }
+      // Nur nach Ressourcen suchen
+      const filteredProducts = products.filter(product => 
+        product.resources && product.resources.some(resource => 
+          resource.name.toLowerCase().includes(searchTerm)
+        )
+      );
       
       const productsGrid = document.getElementById('productsGrid');
       productsGrid.innerHTML = '';
       
       if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte gefunden.</p></div>';
+        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte mit dieser Ressource gefunden.</p></div>';
         return;
       }
       
@@ -774,13 +689,6 @@
           imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
         } else {
           imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
-        }
-        
-        let materialsHtml = '';
-        if (product.materials && product.materials.length > 0) {
-          materialsHtml = product.materials.map(material => 
-            `<span class="material-tag">${material}</span>`
-          ).join('');
         }
         
         // Ressourcen für dieses Produkt
@@ -798,9 +706,6 @@
             </div>
             <div class="flex-grow">
               <div class="font-semibold text-lg mb-2">${product.name}</div>
-              <div class="material-list mb-2">
-                ${materialsHtml}
-              </div>
               ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
               
               <!-- Ressourcen Rechner -->
@@ -903,63 +808,12 @@
     const imagePreview = document.getElementById('imagePreview');
     const productImageData = document.getElementById('productImageData');
     
-    // Materialien Elemente
-    const newMaterialInput = document.getElementById('newMaterial');
-    const addMaterialBtn = document.getElementById('addMaterialBtn');
-    const materialsList = document.getElementById('materialsList');
-    
     // Ressourcen Elemente
     const newResourceName = document.getElementById('newResourceName');
     const newResourceMin = document.getElementById('newResourceMin');
     const newResourceMax = document.getElementById('newResourceMax');
     const addResourceBtn = document.getElementById('addResourceBtn');
     const resourcesList = document.getElementById('resourcesList');
-
-    // Material hinzufügen
-    addMaterialBtn.addEventListener('click', () => {
-      const materialName = newMaterialInput.value.trim();
-      if (materialName && !currentMaterials.includes(materialName)) {
-        currentMaterials.push(materialName);
-        renderMaterialsList();
-        newMaterialInput.value = '';
-        newMaterialInput.focus();
-      }
-    });
-
-    // Material mit Enter hinzufügen
-    newMaterialInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addMaterialBtn.click();
-      }
-    });
-
-    // Materialien Liste rendern
-    function renderMaterialsList() {
-      materialsList.innerHTML = '';
-      currentMaterials.forEach((material, index) => {
-        const span = document.createElement('span');
-        span.className = 'material-tag flex items-center';
-        span.innerHTML = `
-          ${material}
-          <button type="button" class="ml-1 text-red-400 hover:text-red-300 remove-material" data-index="${index}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-          </button>
-        `;
-        materialsList.appendChild(span);
-      });
-      
-      // Event Listener für Löschen-Buttons
-      document.querySelectorAll('.remove-material').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          currentMaterials.splice(index, 1);
-          renderMaterialsList();
-        });
-      });
-    }
 
     // Ressource hinzufügen
     addResourceBtn.addEventListener('click', () => {
@@ -978,6 +832,14 @@
         newResourceMin.value = '';
         newResourceMax.value = '';
         newResourceName.focus();
+      }
+    });
+
+    // Ressourcen mit Enter hinzufügen
+    newResourceName.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addResourceBtn.click();
       }
     });
 
@@ -1058,11 +920,6 @@
         const tr = document.createElement('tr');
         tr.className = 'border-t border-amber-800 hover:bg-amber-800/30 transition-colors';
         
-        let materialsText = '';
-        if (product.materials && product.materials.length > 0) {
-          materialsText = product.materials.join(', ');
-        }
-        
         let resourcesText = '';
         if (product.resources && product.resources.length > 0) {
           resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
@@ -1072,7 +929,6 @@
         
         tr.innerHTML = `
           <td class="p-3">${product.name}</td>
-          <td class="p-3">${materialsText}</td>
           <td class="p-3">${resourcesText}</td>
           <td class="p-3">
             <div class="flex gap-2">
@@ -1122,10 +978,7 @@
       }
       
       const filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm) || 
-        (product.materials && product.materials.some(material => 
-          material.toLowerCase().includes(searchTerm)
-        )) ||
+        product.name.toLowerCase().includes(searchTerm) ||
         (product.resources && product.resources.some(resource => 
           resource.name.toLowerCase().includes(searchTerm)
         ))
@@ -1134,18 +987,13 @@
       adminTableBody.innerHTML = '';
       
       if (filteredProducts.length === 0) {
-        adminTableBody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-amber-400">Keine Produkte gefunden</td></tr>';
+        adminTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-amber-400">Keine Produkte gefunden</td></tr>';
         return;
       }
       
       filteredProducts.forEach(product => {
         const tr = document.createElement('tr');
         tr.className = 'border-t border-amber-800 hover:bg-amber-800/30 transition-colors';
-        
-        let materialsText = '';
-        if (product.materials && product.materials.length > 0) {
-          materialsText = product.materials.join(', ');
-        }
         
         let resourcesText = '';
         if (product.resources && product.resources.length > 0) {
@@ -1156,7 +1004,6 @@
         
         tr.innerHTML = `
           <td class="p-3">${product.name}</td>
-          <td class="p-3">${materialsText}</td>
           <td class="p-3">${resourcesText}</td>
           <td class="p-3">
             <div class="flex gap-2">
@@ -1203,10 +1050,6 @@
       document.getElementById('productName').value = product.name;
       productKeyInput.value = key;
       
-      // Materialien setzen
-      currentMaterials = product.materials ? [...product.materials] : [];
-      renderMaterialsList();
-      
       // Ressourcen setzen
       currentResources = product.resources ? [...product.resources] : [];
       renderResourcesList();
@@ -1235,9 +1078,7 @@
       productKeyInput.value = '';
       imagePreview.style.display = 'none';
       productImageData.value = '';
-      currentMaterials = [];
       currentResources = [];
-      renderMaterialsList();
       renderResourcesList();
       
       // Modal-Titel ändern
@@ -1251,9 +1092,7 @@
       productForm.reset();
       imagePreview.style.display = 'none';
       productImageData.value = '';
-      currentMaterials = [];
       currentResources = [];
-      renderMaterialsList();
       renderResourcesList();
     });
 
@@ -1264,9 +1103,7 @@
         productForm.reset();
         imagePreview.style.display = 'none';
         productImageData.value = '';
-        currentMaterials = [];
         currentResources = [];
-        renderMaterialsList();
         renderResourcesList();
       }
     });
@@ -1281,7 +1118,6 @@
       // Produkt-Objekt erstellen
       const productData = {
         name,
-        materials: [...currentMaterials],
         resources: [...currentResources],
         date: new Date().toISOString(),
         timestamp: Date.now()
@@ -1309,9 +1145,7 @@
       productForm.reset();
       imagePreview.style.display = 'none';
       productImageData.value = '';
-      currentMaterials = [];
       currentResources = [];
-      renderMaterialsList();
       renderResourcesList();
       renderProducts();
       renderAdminTable();

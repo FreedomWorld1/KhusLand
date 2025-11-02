@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Drogenrouten</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
     }
     .card { 
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
@@ -155,9 +157,102 @@
       height: 100%;
       cursor: pointer;
     }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.success {
+      background-color: #10b981;
+    }
+    .notification.error {
+      background-color: #ef4444;
+    }
+    .notification.info {
+      background-color: #3b82f6;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .search-box {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+    }
+    .search-box input {
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .search-box input::placeholder {
+      color: #94a3b8;
+    }
+    .search-box input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid rgba(34, 197, 94, 0.1);
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    .export-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    .export-btn {
+      flex: 1;
+      min-width: 120px;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
+  
+  <!-- Notification System -->
+  <div id="notification" class="notification hidden-el"></div>
   
   <!-- LOGIN SCREEN -->
   <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
@@ -169,9 +264,7 @@
       <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
       
       <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.18.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
-        </svg>
+        <i class="fab fa-discord text-xl"></i>
         Mit Discord anmelden
       </button>
       
@@ -195,11 +288,18 @@
           <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center">
             <span class="text-white font-bold">💰</span>
           </div>
-          <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Drogenrouten Manager</h1>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Drogenrouten Manager</h1>
+            <p id="userInfo" class="text-sm text-gray-400">Eingeloggt als: <span id="username">Unbekannt</span></p>
+          </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btnRoutes" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Routen</button>
-          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
+          <button id="btnRoutes" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">
+            <i class="fas fa-route mr-1"></i> Routen
+          </button>
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
+            <i class="fas fa-cog mr-1"></i> Admin
+          </button>
           <div class="hamburger-container">
             <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
@@ -207,17 +307,29 @@
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
             <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Weed</a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
-              <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Materialrecycler</a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Routen</a>
-              
-              
+              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-cannabis mr-2"></i> Weed
+              </a>
+              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-pills mr-2"></i> Kokain
+              </a>
+              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-calculator mr-2"></i> 30% Rechner
+              </a>
+              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-industry mr-2"></i> Herstellung
+              </a>
+              <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-recycle mr-2"></i> Materialrecycler
+              </a>
+              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
+                <i class="fas fa-route mr-2"></i> Routen
+              </a>
             </div>
           </div>
-          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">Logout</button>
+          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">
+            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+          </button>
         </div>
       </header>
 
@@ -226,13 +338,36 @@
         <!-- ROUTEN -->
         <div id="routesSection" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
-            <span class="bg-green-900/30 p-2 rounded-lg">📍</span>
-             Drogenrouten
+            <i class="fas fa-route"></i>
+            Drogenrouten
           </h2>
+          
+          <!-- Statistik-Karten -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Gesamt Routen</div>
+              <div id="totalRoutesOverview" class="stat-value text-green-400">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Kategorien</div>
+              <div id="totalCategories" class="stat-value text-blue-400">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Letzte hinzugefügt</div>
+              <div id="lastAdded" class="stat-value text-purple-400">-</div>
+            </div>
+          </div>
+          
+          <!-- Suchfeld -->
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Nach Route oder Kategorie suchen...">
+          </div>
           
           <!-- Kategorien Filter -->
           <div class="flex flex-wrap gap-2 mb-6" id="categoriesContainer">
-            <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">Alle</button>
+            <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">
+              <i class="fas fa-layer-group mr-1"></i> Alle
+            </button>
             <!-- Kategorien werden hier dynamisch geladen -->
           </div>
           
@@ -245,37 +380,39 @@
         <!-- ADMIN -->
         <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
           <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-            <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
+            <i class="fas fa-cog"></i>
             Adminbereich
           </h2>
           <div id="adminLoginSection">
             <div class="mb-4">
-              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
+                <i class="fas fa-key mr-1"></i> Admin-Passwort
+              </label>
               <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
             </div>
             <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-              </svg>
+              <i class="fas fa-sign-in-alt"></i>
               Einloggen
             </button>
-            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
+            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">
+              <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
+            </span>
           </div>
           <div id="adminContent" class="hidden-el">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
               <div class="small-muted">Routen: <span id="totalRoutes" class="font-bold text-white">0</span></div>
               <div class="flex gap-2">
                 <button id="addRouteBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
+                  <i class="fas fa-plus mr-1"></i>
                   Route
                 </button>
                 <button id="manageCategoriesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                  </svg>
+                  <i class="fas fa-tags mr-1"></i>
                   Kategorien
+                </button>
+                <button id="exportCsv" class="px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <i class="fas fa-file-export mr-1"></i>
+                  CSV Export
                 </button>
               </div>
             </div>
@@ -302,34 +439,44 @@
     <!-- Modal für Route hinzufügen -->
     <div id="routeModal" class="modal-overlay hidden-el">
       <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-green-400" id="routeModalTitle">Route hinzufügen</h3>
+        <h3 class="text-lg font-semibold mb-4 text-green-400" id="routeModalTitle">
+          <i class="fas fa-plus mr-2"></i> Route hinzufügen
+        </h3>
         <form id="routeForm" class="space-y-4">
           <input type="hidden" id="routeKey">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-tag mr-1"></i> Name
+            </label>
             <input type="text" id="routeName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="z.B.: Meth-Lieferung Nord" required/>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Kategorie</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-folder mr-1"></i> Kategorie
+            </label>
             <select id="routeCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required>
               <!-- Kategorien werden dynamisch geladen -->
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Zeitaufwand</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-clock mr-1"></i> Zeitaufwand
+            </label>
             <input type="text" id="routeTime" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="z.B.: 15-20 Minuten" required/>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Beschreibung</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-file-alt mr-1"></i> Beschreibung
+            </label>
             <textarea id="routeDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" rows="3" placeholder="z.B.:&#10;- Start: Labor&#10;- Ziel: Treffpunkt Nord&#10;- Risiko: Mittel"></textarea>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Bild hochladen</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-image mr-1"></i> Bild hochladen
+            </label>
             <div class="file-input-wrapper">
               <button type="button" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700/50 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-upload mr-1"></i>
                 Bild auswählen
               </button>
               <input type="file" id="routeImageFile" accept="image/*" class="file-input">
@@ -339,8 +486,14 @@
             <input type="hidden" id="routeImageData">
           </div>
           <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">Speichern</button>
-            <button type="button" id="cancelRoute" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+            <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i>
+              Speichern
+            </button>
+            <button type="button" id="cancelRoute" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
+              Abbrechen
+            </button>
           </div>
         </form>
       </div>
@@ -349,24 +502,39 @@
     <!-- Modal für Kategorien verwalten -->
     <div id="categoriesModal" class="modal-overlay hidden-el">
       <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-purple-400">Kategorien verwalten</h3>
+        <h3 class="text-lg font-semibold mb-4 text-purple-400">
+          <i class="fas fa-tags mr-2"></i> Kategorien verwalten
+        </h3>
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Neue Kategorie</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-plus mr-1"></i> Neue Kategorie
+            </label>
             <div class="flex gap-2">
               <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
-              <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">Hinzufügen</button>
+              <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                <i class="fas fa-plus"></i>
+                Hinzufügen
+              </button>
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Vorhandene Kategorien</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-list mr-1"></i> Vorhandene Kategorien
+            </label>
             <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
               <!-- Kategorien werden hier dynamisch geladen -->
             </div>
           </div>
           <div class="flex gap-3 pt-2">
-            <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">Speichern</button>
-            <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+            <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i>
+              Speichern
+            </button>
+            <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
+              Abbrechen
+            </button>
           </div>
         </div>
       </div>
@@ -412,6 +580,23 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const debugInfo = document.getElementById('debugInfo');
     const debugMessage = document.getElementById('debugMessage');
+    const usernameElement = document.getElementById('username');
+    const notification = document.getElementById('notification');
+
+    // Notification System
+    function showNotification(message, type = 'info', duration = 5000) {
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.classList.remove('hidden-el');
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          notification.classList.add('hidden-el');
+        }, 300);
+      }, duration);
+    }
 
     // Debug-Funktion
     function showDebugInfo(message) {
@@ -506,6 +691,7 @@
           localStorage.setItem('discord_user', JSON.stringify(data.user));
           localStorage.setItem('discord_access_token', accessToken);
           showMainContent();
+          showNotification(`Erfolgreich eingeloggt als ${data.user.username}`, 'success');
         } else {
           showError('Zugriff verweigert. Du bist nicht in der Liste der autorisierten Benutzer.');
           showDebugInfo('Benutzer nicht autorisiert');
@@ -527,6 +713,12 @@
       mainContent.classList.remove('hidden');
       debugInfo.classList.add('hidden');
       
+      // Benutzerinformationen anzeigen
+      const user = JSON.parse(localStorage.getItem('discord_user'));
+      if (user) {
+        usernameElement.textContent = user.username;
+      }
+      
       // Setze URL zurück ohne Code-Parameter
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
@@ -538,6 +730,7 @@
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
       debugInfo.classList.add('hidden');
+      showNotification('Erfolgreich ausgeloggt', 'info');
     }
 
     // Überprüfe gespeicherten Login beim Laden
@@ -570,6 +763,7 @@
     // Globale Variablen
     let categories = [];
     let routes = [];
+    let filteredRoutes = [];
     let tempCategories = [];
     const ADMIN_PASSWORD = '1101';
 
@@ -581,15 +775,6 @@
     function hide(el) { 
       el.classList.add('hidden-el'); 
       el.classList.remove('fade-in');
-    }
-
-    // Bild zu Base64 konvertieren
-    function convertImageToBase64(file, callback) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        callback(e.target.result);
-      };
-      reader.readAsDataURL(file);
     }
 
     // Firebase Funktionen
@@ -641,8 +826,10 @@
         data.key = childSnap.key;
         routes.push(data);
       });
+      filteredRoutes = [...routes];
       renderRoutes();
       renderAdminTable();
+      updateStatistics();
     });
 
     onValue(categoriesRef, (snapshot) => {
@@ -651,6 +838,7 @@
         categories = data;
         renderCategories();
         loadCategoriesToDropdown();
+        updateStatistics();
       }
     });
 
@@ -704,18 +892,35 @@
       }
     }
 
+    // Suchfunktion
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      if (searchTerm.trim() === '') {
+        filteredRoutes = [...routes];
+      } else {
+        filteredRoutes = routes.filter(route => 
+          route.name.toLowerCase().includes(searchTerm) || 
+          route.category.toLowerCase().includes(searchTerm) ||
+          route.description.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      renderRoutes();
+    });
+
     // Kategorien Filter rendern
     function renderCategories() {
       const categoriesContainer = document.getElementById('categoriesContainer');
       // Behalte den "Alle" Button
-      categoriesContainer.innerHTML = '<button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">Alle</button>';
+      categoriesContainer.innerHTML = '<button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all"><i class="fas fa-layer-group mr-1"></i> Alle</button>';
       
       // Füge alle Kategorien hinzu
       categories.forEach(category => {
         const btn = document.createElement('button');
         btn.className = 'category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg';
         btn.setAttribute('data-category', category);
-        btn.textContent = category;
+        btn.innerHTML = `<i class="fas fa-folder mr-1"></i> ${category}`;
         categoriesContainer.appendChild(btn);
       });
       
@@ -746,16 +951,18 @@
     }
 
     // Routen rendern
-    function renderRoutes(category = 'all') {
+    function renderRoutes() {
       const routesGrid = document.getElementById('routesGrid');
       routesGrid.innerHTML = '';
       
-      const filteredRoutes = category === 'all' 
-        ? routes 
-        : routes.filter(w => w.category === category);
-      
       if (filteredRoutes.length === 0) {
-        routesGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Routen in dieser Kategorie.</p></div>';
+        routesGrid.innerHTML = `
+          <div class="col-span-full text-center py-8 text-gray-400">
+            <i class="fas fa-route text-4xl mb-4 text-gray-600"></i>
+            <p>Keine Routen gefunden.</p>
+            <p class="text-sm mt-2">Fügen Sie Routen im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+          </div>
+        `;
         return;
       }
       
@@ -772,16 +979,42 @@
           ${imageHtml}
           <div class="flex justify-between items-start mb-2">
             <div class="font-semibold text-lg">${route.name}</div>
-            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-green-400">${route.time}</div>
+            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-green-400">
+              <i class="fas fa-clock mr-1"></i>${route.time}
+            </div>
           </div>
-          <div class="text-sm text-gray-400 whitespace-pre-line">${route.description}</div>
+          <div class="text-xs text-gray-400 mb-2">
+            <i class="fas fa-folder mr-1"></i>${route.category}
+          </div>
+          <div class="text-sm text-gray-300 whitespace-pre-line">${route.description}</div>
         `;
         routesGrid.appendChild(el);
       });
     }
 
     function filterRoutes(category) {
-      renderRoutes(category);
+      if (category === 'all') {
+        filteredRoutes = [...routes];
+      } else {
+        filteredRoutes = routes.filter(w => w.category === category);
+      }
+      renderRoutes();
+    }
+
+    // Statistiken aktualisieren
+    function updateStatistics() {
+      document.getElementById('totalRoutesOverview').textContent = routes.length;
+      document.getElementById('totalCategories').textContent = categories.length;
+      
+      // Letzte hinzugefügte Route
+      if (routes.length > 0) {
+        const lastRoute = routes.reduce((latest, current) => {
+          return new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest;
+        });
+        document.getElementById('lastAdded').textContent = lastRoute.name;
+      } else {
+        document.getElementById('lastAdded').textContent = '-';
+      }
     }
 
     // Adminbereich
@@ -792,6 +1025,7 @@
     const totalRoutes = document.getElementById('totalRoutes');
     const addRouteBtn = document.getElementById('addRouteBtn');
     const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
+    const exportCsv = document.getElementById('exportCsv');
     
     // Modal Elemente
     const routeModal = document.getElementById('routeModal');
@@ -816,7 +1050,7 @@
       if (file) {
         // Dateigröße prüfen (max. 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          alert('Die Datei ist zu groß. Maximale Größe: 5MB');
+          showNotification('Die Datei ist zu groß. Maximale Größe: 5MB', 'error');
           this.value = '';
           return;
         }
@@ -838,10 +1072,12 @@
         show(document.getElementById('adminContent')); 
         renderAdminTable(); 
         adminPassInput.value = '';
+        showNotification('Admin-Bereich erfolgreich betreten', 'success');
       } else {
         adminError.classList.remove('hidden-el');
         adminPassInput.value = '';
         adminPassInput.focus();
+        showNotification('Falsches Admin-Passwort', 'error');
       }
     });
 
@@ -866,15 +1102,11 @@
           <td class="p-3">
             <div class="flex gap-2">
               <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-route" data-key="${route.key}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg>
+                <i class="fas fa-edit mr-1"></i>
                 Bearbeiten
               </button>
               <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-route" data-key="${route.key}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-trash mr-1"></i>
                 Löschen
               </button>
             </div>
@@ -924,7 +1156,7 @@
       }
       
       // Modal-Titel ändern
-      routeModalTitle.textContent = 'Route bearbeiten';
+      routeModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Route bearbeiten';
       
       // Modal anzeigen
       show(routeModal);
@@ -939,7 +1171,7 @@
       routeImageData.value = '';
       
       // Modal-Titel ändern
-      routeModalTitle.textContent = 'Route hinzufügen';
+      routeModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Route hinzufügen';
       
       loadCategoriesToDropdown();
       show(routeModal);
@@ -971,8 +1203,11 @@
         const div = document.createElement('div');
         div.className = 'category-input';
         div.innerHTML = `
-          <input type="text" value="${category}" class="flex-1 p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 category-edit" data-index="${index}">
-          <button type="button" class="px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg btn remove-category" data-index="${index}">Löschen</button>
+          <input type="text" value="${category}" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 category-edit" data-index="${index}">
+          <button type="button" class="px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn remove-category flex items-center gap-2" data-index="${index}">
+            <i class="fas fa-trash"></i>
+            Löschen
+          </button>
         `;
         categoriesList.appendChild(div);
       });
@@ -985,6 +1220,9 @@
         tempCategories.push(categoryName);
         renderCategoriesList();
         newCategoryName.value = '';
+        showNotification('Kategorie hinzugefügt', 'success');
+      } else if (tempCategories.includes(categoryName)) {
+        showNotification('Kategorie existiert bereits', 'error');
       }
     });
 
@@ -995,11 +1233,12 @@
         // Überprüfen ob Kategorie in Verwendung ist
         const categoryInUse = routes.some(wb => wb.category === tempCategories[index]);
         if (categoryInUse) {
-          alert('Diese Kategorie wird noch von Routen verwendet und kann nicht gelöscht werden!');
+          showNotification('Diese Kategorie wird noch von Routen verwendet und kann nicht gelöscht werden!', 'error');
           return;
         }
         tempCategories.splice(index, 1);
         renderCategoriesList();
+        showNotification('Kategorie entfernt', 'info');
       }
     });
 
@@ -1029,9 +1268,11 @@
         renderCategories();
         renderRoutes();
         renderAdminTable();
+        updateStatistics();
         hide(categoriesModal);
+        showNotification('Kategorien erfolgreich gespeichert', 'success');
       } else {
-        alert('Fehler beim Speichern der Kategorien!');
+        showNotification('Fehler beim Speichern der Kategorien!', 'error');
       }
     });
 
@@ -1052,6 +1293,11 @@
 
     routeForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<div class="loading mr-2"></div> Speichere...';
+      submitBtn.disabled = true;
       
       const name = document.getElementById('routeName').value;
       const category = document.getElementById('routeCategory').value;
@@ -1089,20 +1335,60 @@
         routeForm.reset();
         imagePreview.style.display = 'none';
         routeImageData.value = '';
+        showNotification(`Route erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
       } else {
-        alert(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} der Route!`);
+        showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} der Route!`, 'error');
       }
+      
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
     });
 
     // Löschfunktion
     window.deleteRoute = async function(key) { 
       if (confirm('Route wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
         const success = await deleteRouteFromFirebase(key);
-        if (!success) {
-          alert('Fehler beim Löschen der Route!');
+        if (success) {
+          showNotification('Route erfolgreich gelöscht', 'success');
+        } else {
+          showNotification('Fehler beim Löschen der Route!', 'error');
         }
       }
     }
+
+    // CSV Export
+    exportCsv.addEventListener('click', () => {
+      if (routes.length === 0) {
+        showNotification('Keine Routen zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      
+      const header = ['Name', 'Kategorie', 'Zeitaufwand', 'Beschreibung'];
+      const rows = routes.map(route => [
+        `"${route.name}"`,
+        `"${route.category}"`,
+        `"${route.time}"`,
+        `"${route.description.replace(/"/g, '""')}"`
+      ].join(';'));
+      
+      const csv = [header.join(';'), ...rows].join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      // Generate filename with current date
+      const now = new Date();
+      const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+      a.download = `drogenrouten_${dateStr}.csv`;
+      
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+      
+      showNotification('CSV erfolgreich exportiert', 'success');
+    });
 
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {

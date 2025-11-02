@@ -8,11 +8,11 @@
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
     }
     .card { 
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
-      border: 1px solid rgba(34, 197, 94, 0.2); 
+      background: linear-gradient(135deg, rgba(41, 37, 36, 0.8) 0%, rgba(28, 25, 23, 0.9) 100%); 
+      border: 1px solid rgba(245, 158, 11, 0.3); 
       border-radius: 16px; 
       backdrop-filter: blur(10px);
     }
@@ -22,7 +22,7 @@
                   inset 0 1px 0 rgba(255, 255, 255, 0.1); 
     }
     .small-muted { 
-      color: #94a3b8; 
+      color: #a8a29e; 
       font-size: 0.85rem; 
     }
     .btn { 
@@ -43,24 +43,24 @@
     }
     input:focus, select:focus, textarea:focus { 
       outline: none; 
-      border-color: #22c55e; 
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3); 
+      border-color: #f59e0b; 
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3); 
     }
     .active-link { 
-      background-color: #22c55e !important; 
+      background-color: #d97706 !important; 
       color: #fff !important; 
       font-weight: 600; 
     }
     .gradient-text {
-      background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+      background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
+      background: rgba(41, 37, 36, 0.7);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
     }
     .fade-in {
       animation: fadeIn 0.3s ease-in-out;
@@ -73,19 +73,19 @@
       animation: pulseGlow 2s infinite;
     }
     @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.5); }
+      0% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
     }
     .scrollbar-custom::-webkit-scrollbar {
       width: 6px;
     }
     .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
+      background: rgba(41, 37, 36, 0.5);
       border-radius: 10px;
     }
     .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #22c55e;
+      background: #f59e0b;
       border-radius: 10px;
     }
     .hamburger-container {
@@ -166,8 +166,8 @@
     }
     .material-tag {
       display: inline-block;
-      background: rgba(34, 197, 94, 0.2);
-      color: #22c55e;
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
       padding: 4px 8px;
       border-radius: 12px;
       font-size: 0.75rem;
@@ -186,7 +186,7 @@
     }
   </style>
 </head>
-<body class="text-gray-100 antialiased min-h-screen">
+<body class="text-amber-50 antialiased min-h-screen">
   
   <!-- MAIN CONTENT -->
   <div id="mainContent">
@@ -195,26 +195,26 @@
       <!-- HEADER -->
       <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-600 to-green-500 flex items-center justify-center">
-            <span class="text-white font-bold">♻️</span>
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 flex items-center justify-center">
+            <span class="text-white font-bold">🏭</span>
           </div>
           <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btnProducts" class="btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
+          <button id="btnProducts" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
           <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
           <div class="hamburger-container">
-            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
-              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-amber-900/50 hover:bg-amber-800/50">
+              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
+              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
+              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
             </button>
-            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Weed</a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Kokain</a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">Routen</a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">30% Rechner</a>
+            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-amber-700 rounded-lg shadow-lg overflow-hidden">
+              <a href="index.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Weed</a>
+              <a href="seite2.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Kokain</a>
+              <a href="seite4.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Herstellung</a>
+              <a href="seite5.html" class="block px-4 py-3 hover:bg-amber-800/50 active-link transition-colors">Routen</a>
+              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">30% Rechner</a>
             </div>
           </div>
         </div>
@@ -225,8 +225,8 @@
         <!-- SUCHLEISTE -->
         <div class="card p-4 shadow-soft">
           <div class="relative">
-            <input type="text" id="searchInput" placeholder="Produkt oder Material suchen..." class="w-full p-4 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500 pl-12">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <input type="text" id="searchInput" placeholder="Produkt oder Material suchen..." class="w-full p-4 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500 pl-12">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -234,8 +234,8 @@
 
         <!-- PRODUKTE -->
         <div id="productsSection" class="card p-6 shadow-soft fade-in">
-          <h2 class="text-xl font-semibold mb-4 text-green-400 flex items-center gap-2">
-            <span class="bg-green-900/30 p-2 rounded-lg">📦</span>
+          <h2 class="text-xl font-semibold mb-4 text-amber-400 flex items-center gap-2">
+            <span class="bg-amber-900/30 p-2 rounded-lg">📦</span>
              Produkte
           </h2>
           
@@ -253,8 +253,8 @@
           </h2>
           <div id="adminLoginSection">
             <div class="mb-4">
-              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">Admin-Passwort</label>
-              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
+              <label for="adminPass" class="block text-sm font-medium text-amber-300 mb-1">Admin-Passwort</label>
+              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-blue-500"/>
             </div>
             <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -265,10 +265,10 @@
             <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
           </div>
           <div id="adminContent" class="hidden-el">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-white">0</span></div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-amber-900/20">
+              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-amber-50">0</span></div>
               <div class="flex gap-2">
-                <button id="addProductBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                <button id="addProductBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
@@ -277,16 +277,16 @@
               </div>
             </div>
             
-            <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
+            <div class="overflow-auto max-h-[50vh] rounded-lg border border-amber-800 scrollbar-custom">
               <table class="w-full text-left text-sm">
-                <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
+                <thead class="text-amber-400 bg-amber-900/50 sticky top-0">
                   <tr>
                     <th class="p-3 font-medium">Name</th>
                     <th class="p-3 font-medium">Materialien</th>
                     <th class="p-3 font-medium">Aktion</th>
                   </tr>
                 </thead>
-                <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+                <tbody id="adminTableBody" class="divide-y divide-amber-800"></tbody>
               </table>
             </div>
           </div>
@@ -298,18 +298,18 @@
     <!-- Modal für Produkt hinzufügen -->
     <div id="productModal" class="modal-overlay hidden-el">
       <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-green-400" id="productModalTitle">Produkt hinzufügen</h3>
+        <h3 class="text-lg font-semibold mb-4 text-amber-400" id="productModalTitle">Produkt hinzufügen</h3>
         <form id="productForm" class="space-y-4">
           <input type="hidden" id="productKey">
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Name</label>
-            <input type="text" id="productName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="z.B.: Aluminium-Dose" required/>
+            <label class="block text-sm font-medium text-amber-300 mb-1">Name</label>
+            <input type="text" id="productName" class="p-3 rounded-lg bg-amber-900/20 border border-amber-800 w-full focus:border-amber-500" placeholder="z.B.: Aluminium-Dose" required/>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Materialien</label>
+            <label class="block text-sm font-medium text-amber-300 mb-1">Materialien</label>
             <div class="material-input-container">
-              <input type="text" id="newMaterial" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500" placeholder="z.B.: Aluminium"/>
-              <button type="button" id="addMaterialBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">+</button>
+              <input type="text" id="newMaterial" class="flex-1 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500" placeholder="z.B.: Aluminium"/>
+              <button type="button" id="addMaterialBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">+</button>
             </div>
             <div id="materialsList" class="material-list">
               <!-- Materialien werden hier dynamisch hinzugefügt -->
@@ -317,9 +317,9 @@
             <input type="hidden" id="productMaterials">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">Bild hochladen</label>
+            <label class="block text-sm font-medium text-amber-300 mb-1">Bild hochladen</label>
             <div class="file-input-wrapper">
-              <button type="button" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700/50 flex items-center justify-center gap-2">
+              <button type="button" class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 hover:bg-amber-800/30 flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
@@ -327,13 +327,13 @@
               </button>
               <input type="file" id="productImageFile" accept="image/*" class="file-input">
             </div>
-            <div class="text-xs text-gray-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
+            <div class="text-xs text-amber-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
             <img id="imagePreview" class="image-preview" alt="Vorschau">
             <input type="hidden" id="productImageData">
           </div>
           <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">Speichern</button>
-            <button type="button" id="cancelProduct" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium">Abbrechen</button>
+            <button type="submit" class="flex-1 px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">Speichern</button>
+            <button type="button" id="cancelProduct" class="px-4 py-3 bg-amber-900/50 hover:bg-amber-800/50 rounded-lg btn font-medium">Abbrechen</button>
           </div>
         </form>
       </div>
@@ -415,14 +415,14 @@
       };
       
       Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-green-600', 'bg-blue-600');
-        btn.classList.add('bg-gray-700');
+        btn.classList.remove('pulse-glow', 'bg-amber-600', 'bg-blue-600');
+        btn.classList.add('bg-amber-900/50');
       });
       
       if (buttons[activeButton]) {
-        buttons[activeButton].classList.remove('bg-gray-700');
+        buttons[activeButton].classList.remove('bg-amber-900/50');
         if (activeButton === 'products') {
-          buttons[activeButton].classList.add('bg-green-600', 'pulse-glow');
+          buttons[activeButton].classList.add('bg-amber-600', 'pulse-glow');
         } else if (activeButton === 'admin') {
           buttons[activeButton].classList.add('bg-blue-600');
         }
@@ -435,19 +435,19 @@
       productsGrid.innerHTML = '';
       
       if (products.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Produkte vorhanden.</p></div>';
+        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte vorhanden.</p></div>';
         return;
       }
       
       products.forEach(product => {
         const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
+        el.className = 'product-item p-4 rounded-lg bg-amber-900/20 border border-amber-800 hover:border-amber-500/30 transition-all duration-200';
         
         let imageHtml = '';
         if (product.imageData) {
           imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
         } else {
-          imageHtml = `<div class="product-image bg-gray-700 flex items-center justify-center text-gray-400">Kein Bild</div>`;
+          imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
         }
         
         let materialsHtml = '';
@@ -494,19 +494,19 @@
       productsGrid.innerHTML = '';
       
       if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-400"><p>Keine Produkte gefunden.</p></div>';
+        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte gefunden.</p></div>';
         return;
       }
       
       filteredProducts.forEach(product => {
         const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
+        el.className = 'product-item p-4 rounded-lg bg-amber-900/20 border border-amber-800 hover:border-amber-500/30 transition-all duration-200';
         
         let imageHtml = '';
         if (product.imageData) {
           imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
         } else {
-          imageHtml = `<div class="product-image bg-gray-700 flex items-center justify-center text-gray-400">Kein Bild</div>`;
+          imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
         }
         
         let materialsHtml = '';
@@ -651,7 +651,7 @@
       // Produkte in Admin-Tabelle
       products.forEach(product => {
         const tr = document.createElement('tr');
-        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
+        tr.className = 'border-t border-amber-800 hover:bg-amber-800/30 transition-colors';
         
         let materialsText = '';
         if (product.materials && product.materials.length > 0) {

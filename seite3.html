@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Materialrecycler - Produkte</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
     }
     .card { 
-      background: linear-gradient(135deg, rgba(41, 37, 36, 0.8) 0%, rgba(28, 25, 23, 0.9) 100%); 
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
       border: 1px solid rgba(245, 158, 11, 0.3); 
       border-radius: 16px; 
       backdrop-filter: blur(10px);
@@ -22,7 +24,7 @@
                   inset 0 1px 0 rgba(255, 255, 255, 0.1); 
     }
     .small-muted { 
-      color: #a8a29e; 
+      color: #94a3b8; 
       font-size: 0.85rem; 
     }
     .btn { 
@@ -58,7 +60,7 @@
       background-clip: text;
     }
     .glass-effect {
-      background: rgba(41, 37, 36, 0.7);
+      background: rgba(30, 41, 59, 0.7);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(245, 158, 11, 0.2);
     }
@@ -81,7 +83,7 @@
       width: 6px;
     }
     .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(41, 37, 36, 0.5);
+      background: rgba(30, 41, 59, 0.5);
       border-radius: 10px;
     }
     .scrollbar-custom::-webkit-scrollbar-thumb {
@@ -143,7 +145,6 @@
       height: 100%;
       cursor: pointer;
     }
-    /* GEÄNDERT: Nur 2 Spalten auch bei großen Bildschirmen */
     .product-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -154,7 +155,6 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-    /* ENTFERNT: repeat(3, 1fr) für große Bildschirme */
     .product-card {
       display: grid;
       grid-template-columns: 100px 1fr;
@@ -223,7 +223,7 @@
       text-align: center;
       padding: 6px 8px;
       border-radius: 6px;
-      background: rgba(41, 37, 36, 0.5);
+      background: rgba(30, 41, 59, 0.5);
       border: 1px solid rgba(245, 158, 11, 0.3);
       color: #f59e0b;
       font-weight: 600;
@@ -256,9 +256,92 @@
       align-items: center;
       gap: 6px;
     }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.success {
+      background-color: #10b981;
+    }
+    .notification.error {
+      background-color: #ef4444;
+    }
+    .notification.info {
+      background-color: #3b82f6;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .search-box {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+    }
+    .search-box input {
+      background: transparent;
+      border: none;
+      width: 100%;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .search-box input::placeholder {
+      color: #94a3b8;
+    }
+    .search-box input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid rgba(245, 158, 11, 0.1);
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
   </style>
 </head>
-<body class="text-amber-50 antialiased min-h-screen">
+<body class="text-gray-100 antialiased min-h-screen">
+  
+  <!-- Notification System -->
+  <div id="notification" class="notification hidden-el"></div>
   
   <!-- LOGIN SCREEN -->
   <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
@@ -267,12 +350,10 @@
         <span class="text-white text-2xl">🏭</span>
       </div>
       <h1 class="text-3xl font-bold gradient-text mb-2">Materialrecycler</h1>
-      <p class="text-amber-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
+      <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
       
       <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.18.33.25c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
-        </svg>
+        <i class="fab fa-discord text-xl"></i>
         Mit Discord anmelden
       </button>
       
@@ -280,7 +361,7 @@
         <p id="errorMessage">Zugriff verweigert. Du bist nicht autorisiert.</p>
       </div>
 
-      <div id="debugInfo" class="mt-4 p-3 bg-amber-900/20 border border-amber-700 rounded-lg text-amber-400 text-xs hidden">
+      <div id="debugInfo" class="mt-4 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-xs hidden">
         <p id="debugMessage"></p>
       </div>
     </div>
@@ -296,32 +377,48 @@
           <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 flex items-center justify-center">
             <span class="text-white font-bold">🏭</span>
           </div>
-          <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
+            <p id="userInfo" class="text-sm text-gray-400">Eingeloggt als: <span id="username">Unbekannt</span></p>
+          </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btnProducts" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
-          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
+          <button id="btnProducts" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm pulse-glow">
+            <i class="fas fa-box mr-1"></i> Produkte
+          </button>
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
+            <i class="fas fa-cog mr-1"></i> Admin
+          </button>
           <div class="hamburger-container">
-            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-amber-900/50 hover:bg-amber-800/50">
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
+            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
-            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-amber-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Weed</a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">Kokain</a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">30% Rechner</a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Herstellung</a>
-              <a href="seite3.html" class="block px-4 py-3 hover:bg-amber-800/50 active-link transition-colors">Materialrecycler</a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">Routen</a>
-              <button id="logoutBtn" class="w-full text-left px-4 py-3 hover:bg-red-600/50 text-red-400 transition-colors flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd" />
-                </svg>
-                Logout
-              </button>
+            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-cannabis mr-2"></i> Weed
+              </a>
+              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-pills mr-2"></i> Kokain
+              </a>
+              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-calculator mr-2"></i> 30% Rechner
+              </a>
+              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-industry mr-2"></i> Herstellung
+              </a>
+              <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
+                <i class="fas fa-recycle mr-2"></i> Materialrecycler
+              </a>
+              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-route mr-2"></i> Routen
+              </a>
             </div>
           </div>
+          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">
+            <i class="fas fa-sign-out-alt mr-1"></i> Logout
+          </button>
         </div>
       </header>
 
@@ -329,20 +426,34 @@
 
         <!-- SUCHLEISTE -->
         <div class="card p-4 shadow-soft">
-          <div class="relative">
-            <input type="text" id="searchInput" placeholder="Ressourcen suchen..." class="w-full p-4 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-amber-500 pl-12">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400 absolute left-4 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+          <div class="search-box">
+            <i class="fas fa-search text-gray-400 mr-2"></i>
+            <input type="text" id="searchInput" placeholder="Ressourcen suchen...">
           </div>
         </div>
 
         <!-- PRODUKTE -->
         <div id="productsSection" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-amber-400 flex items-center gap-2">
-            <span class="bg-amber-900/30 p-2 rounded-lg">📦</span>
-             Produkte
+            <i class="fas fa-box"></i>
+            Produkte
           </h2>
+          
+          <!-- Statistik-Karten -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Gesamt Produkte</div>
+              <div id="totalProductsOverview" class="stat-value text-amber-400">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Ressourcen</div>
+              <div id="totalResources" class="stat-value text-blue-400">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Letzte hinzugefügt</div>
+              <div id="lastAdded" class="stat-value text-green-400">-</div>
+            </div>
+          </div>
           
           <!-- Products Grid -->
           <div id="productsGrid" class="product-grid">
@@ -353,55 +464,55 @@
         <!-- ADMIN -->
         <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
           <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-            <span class="bg-blue-900/30 p-2 rounded-lg">🔐</span>
+            <i class="fas fa-cog"></i>
             Adminbereich
           </h2>
           <div id="adminLoginSection">
             <div class="mb-4">
-              <label for="adminPass" class="block text-sm font-medium text-amber-300 mb-1">Admin-Passwort</label>
-              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-blue-500"/>
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
+                <i class="fas fa-key mr-1"></i> Admin-Passwort
+              </label>
+              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
             </div>
             <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-              </svg>
+              <i class="fas fa-sign-in-alt"></i>
               Einloggen
             </button>
-            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">❌ Falsches Passwort</span>
+            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">
+              <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
+            </span>
           </div>
           <div id="adminContent" class="hidden-el">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-amber-900/20">
-              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-amber-50">0</span></div>
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
+              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-white">0</span></div>
               <div class="flex gap-2">
-                <button id="addProductBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
+                <button id="addProductBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <i class="fas fa-plus mr-1"></i>
                   Produkt
+                </button>
+                <button id="exportCsv" class="px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <i class="fas fa-file-export mr-1"></i>
+                  CSV Export
                 </button>
               </div>
             </div>
             
             <!-- Admin-Suchleiste -->
-            <div class="mb-4">
-              <div class="relative">
-                <input type="text" id="adminSearchInput" placeholder="Produkt in Adminbereich suchen..." class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-blue-500 pl-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-400 absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
+            <div class="search-box mb-4">
+              <i class="fas fa-search text-gray-400 mr-2"></i>
+              <input type="text" id="adminSearchInput" placeholder="Produkt in Adminbereich suchen...">
             </div>
             
-            <div class="overflow-auto max-h-[50vh] rounded-lg border border-amber-800 scrollbar-custom">
+            <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
               <table class="w-full text-left text-sm">
-                <thead class="text-amber-400 bg-amber-900/50 sticky top-0">
+                <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
                   <tr>
                     <th class="p-3 font-medium">Name</th>
                     <th class="p-3 font-medium">Ressourcen</th>
                     <th class="p-3 font-medium">Aktion</th>
                   </tr>
                 </thead>
-                <tbody id="adminTableBody" class="divide-y divide-amber-800"></tbody>
+                <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
               </table>
             </div>
           </div>
@@ -413,43 +524,57 @@
     <!-- Modal für Produkt hinzufügen -->
     <div id="productModal" class="modal-overlay hidden-el">
       <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-amber-400" id="productModalTitle">Produkt hinzufügen</h3>
+        <h3 class="text-lg font-semibold mb-4 text-amber-400" id="productModalTitle">
+          <i class="fas fa-plus mr-2"></i> Produkt hinzufügen
+        </h3>
         <form id="productForm" class="space-y-4">
           <input type="hidden" id="productKey">
           <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Name</label>
-            <input type="text" id="productName" class="p-3 rounded-lg bg-amber-900/20 border border-amber-800 w-full focus:border-amber-500" placeholder="z.B.: Aluminium-Dose" required/>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-tag mr-1"></i> Name
+            </label>
+            <input type="text" id="productName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-amber-500" placeholder="z.B.: Aluminium-Dose" required/>
           </div>
           <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Ressourcen</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-cubes mr-1"></i> Ressourcen
+            </label>
             <div class="resource-input-container">
-              <input type="text" id="newResourceName" class="flex-1 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Ressourcenname"/>
-              <input type="number" id="newResourceMin" class="w-20 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Min" min="1"/>
-              <input type="number" id="newResourceMax" class="w-20 p-3 rounded-lg bg-amber-900/20 border border-amber-800 focus:border-purple-500" placeholder="Max" min="1"/>
-              <button type="button" id="addResourceBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">+</button>
+              <input type="text" id="newResourceName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Ressourcenname"/>
+              <input type="number" id="newResourceMin" class="w-20 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Min" min="1"/>
+              <input type="number" id="newResourceMax" class="w-20 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Max" min="1"/>
+              <button type="button" id="addResourceBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium">
+                <i class="fas fa-plus"></i>
+              </button>
             </div>
             <div id="resourcesList" class="resource-list">
               <!-- Ressourcen werden hier dynamisch hinzugefügt -->
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-amber-300 mb-1">Bild hochladen</label>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-image mr-1"></i> Bild hochladen
+            </label>
             <div class="file-input-wrapper">
-              <button type="button" class="w-full p-3 rounded-lg bg-amber-900/20 border border-amber-800 hover:bg-amber-800/30 flex items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
+              <button type="button" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700/50 flex items-center justify-center gap-2">
+                <i class="fas fa-upload mr-2"></i>
                 Bild auswählen
               </button>
               <input type="file" id="productImageFile" accept="image/*" class="file-input">
             </div>
-            <div class="text-xs text-amber-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
+            <div class="text-xs text-gray-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
             <img id="imagePreview" class="image-preview" alt="Vorschau">
             <input type="hidden" id="productImageData">
           </div>
           <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">Speichern</button>
-            <button type="button" id="cancelProduct" class="px-4 py-3 bg-amber-900/50 hover:bg-amber-800/50 rounded-lg btn font-medium">Abbrechen</button>
+            <button type="submit" class="flex-1 px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i>
+              Speichern
+            </button>
+            <button type="button" id="cancelProduct" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
+              Abbrechen
+            </button>
           </div>
         </form>
       </div>
@@ -462,6 +587,29 @@
     const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
     const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
+    // Firebase Import und Konfiguration
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+    import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase(app);
+    
+    // Firebase Referenzen
+    const productsRef = ref(db, 'materialrecycler/products');
+
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
     const mainContent = document.getElementById('mainContent');
@@ -471,6 +619,23 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const debugInfo = document.getElementById('debugInfo');
     const debugMessage = document.getElementById('debugMessage');
+    const usernameElement = document.getElementById('username');
+    const notification = document.getElementById('notification');
+
+    // Notification System
+    function showNotification(message, type = 'info', duration = 5000) {
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      notification.classList.remove('hidden-el');
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          notification.classList.add('hidden-el');
+        }, 300);
+      }, duration);
+    }
 
     // Debug-Funktion
     function showDebugInfo(message) {
@@ -565,6 +730,7 @@
           localStorage.setItem('discord_user', JSON.stringify(data.user));
           localStorage.setItem('discord_access_token', accessToken);
           showMainContent();
+          showNotification(`Erfolgreich eingeloggt als ${data.user.username}`, 'success');
         } else {
           showError('Zugriff verweigert. Du bist nicht in der Liste der autorisierten Benutzer.');
           showDebugInfo('Benutzer nicht autorisiert');
@@ -586,6 +752,12 @@
       mainContent.classList.remove('hidden');
       debugInfo.classList.add('hidden');
       
+      // Benutzerinformationen anzeigen
+      const user = JSON.parse(localStorage.getItem('discord_user'));
+      if (user) {
+        usernameElement.textContent = user.username;
+      }
+      
       // Setze URL zurück ohne Code-Parameter
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
@@ -597,6 +769,7 @@
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
       debugInfo.classList.add('hidden');
+      showNotification('Erfolgreich ausgeloggt', 'info');
     }
 
     // Überprüfe gespeicherten Login beim Laden
@@ -626,10 +799,11 @@
       exchangeCodeForToken(code);
     }
 
-    // Deine bestehenden Materialrecycler-Funktionen
-    const ADMIN_PASSWORD = '1101';
+    // Globale Variablen
     let products = [];
+    let filteredProducts = [];
     let currentResources = [];
+    const ADMIN_PASSWORD = '1101';
 
     // Utility
     function show(el) { 
@@ -641,28 +815,50 @@
       el.classList.remove('fade-in');
     }
 
-    // Bild zu Base64 konvertieren
-    function convertImageToBase64(file, callback) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        callback(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // Daten aus LocalStorage laden
-    function loadDataFromStorage() {
-      const savedProducts = localStorage.getItem('materialrecycler_products');
-      
-      if (savedProducts) {
-        products = JSON.parse(savedProducts);
+    // Firebase Funktionen
+    async function saveProduct(product) {
+      try {
+        await push(productsRef, product);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Speichern des Produkts:', error);
+        return false;
       }
     }
 
-    // Daten in LocalStorage speichern
-    function saveDataToStorage() {
-      localStorage.setItem('materialrecycler_products', JSON.stringify(products));
+    async function updateProduct(key, product) {
+      try {
+        await update(ref(db, `materialrecycler/products/${key}`), product);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren des Produkts:', error);
+        return false;
+      }
     }
+
+    async function deleteProductFromFirebase(key) {
+      try {
+        await remove(ref(db, `materialrecycler/products/${key}`));
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Löschen des Produkts:', error);
+        return false;
+      }
+    }
+
+    // Firebase Listener
+    onValue(productsRef, (snapshot) => {
+      products = [];
+      snapshot.forEach((childSnap) => {
+        const data = childSnap.val();
+        data.key = childSnap.key;
+        products.push(data);
+      });
+      filteredProducts = [...products];
+      renderProducts();
+      renderAdminTable();
+      updateStatistics();
+    });
 
     // Hamburger Menu
     document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
@@ -701,11 +897,11 @@
       
       Object.values(buttons).forEach(btn => {
         btn.classList.remove('pulse-glow', 'bg-amber-600', 'bg-blue-600');
-        btn.classList.add('bg-amber-900/50');
+        btn.classList.add('bg-gray-700');
       });
       
       if (buttons[activeButton]) {
-        buttons[activeButton].classList.remove('bg-amber-900/50');
+        buttons[activeButton].classList.remove('bg-gray-700');
         if (activeButton === 'products') {
           buttons[activeButton].classList.add('bg-amber-600', 'pulse-glow');
         } else if (activeButton === 'admin') {
@@ -714,25 +910,51 @@
       }
     }
 
+    // Suchfunktion
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      if (searchTerm.trim() === '') {
+        filteredProducts = [...products];
+      } else {
+        filteredProducts = products.filter(product => 
+          product.name.toLowerCase().includes(searchTerm) || 
+          (product.resources && product.resources.some(resource => 
+            resource.name.toLowerCase().includes(searchTerm)
+          ))
+        );
+      }
+      
+      renderProducts();
+    });
+
     // Produkte rendern
     function renderProducts() {
       const productsGrid = document.getElementById('productsGrid');
       productsGrid.innerHTML = '';
       
-      if (products.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte vorhanden.</p></div>';
+      if (filteredProducts.length === 0) {
+        productsGrid.innerHTML = `
+          <div class="col-span-full text-center py-8 text-gray-400">
+            <i class="fas fa-box text-4xl mb-4 text-gray-600"></i>
+            <p>Keine Produkte gefunden.</p>
+            <p class="text-sm mt-2">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+          </div>
+        `;
         return;
       }
       
-      products.forEach(product => {
+      filteredProducts.forEach(product => {
         const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-amber-900/20 border border-amber-800 hover:border-amber-500/30 transition-all duration-200';
+        el.className = 'product-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-amber-500/30 transition-all duration-200';
         
         let imageHtml = '';
         if (product.imageData) {
           imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
         } else {
-          imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
+          imageHtml = `<div class="product-image bg-gray-700 flex items-center justify-center text-gray-400">
+            <i class="fas fa-image text-3xl"></i>
+          </div>`;
         }
         
         // Ressourcen für dieses Produkt
@@ -755,17 +977,19 @@
               <!-- Ressourcen Rechner -->
               <div class="calculator-section">
                 <div class="calculator-title">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13z" clip-rule="evenodd" />
-                  </svg>
+                  <i class="fas fa-calculator"></i>
                   Ressourcen Rechner
                 </div>
                 
                 <div class="quantity-controls">
-                  <button class="quantity-btn decrease-quantity">-</button>
+                  <button class="quantity-btn decrease-quantity">
+                    <i class="fas fa-minus"></i>
+                  </button>
                   <input type="number" value="1" min="1" class="quantity-input product-quantity">
-                  <button class="quantity-btn increase-quantity">+</button>
-                  <span class="text-amber-300 ml-2 text-sm">Produkt(e)</span>
+                  <button class="quantity-btn increase-quantity">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                  <span class="text-gray-300 ml-2 text-sm">Produkt(e)</span>
                 </div>
                 
                 <div class="calculation-results">
@@ -792,7 +1016,7 @@
           const productResources = product.resources || [];
           
           if (productResources.length === 0) {
-            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen für dieses Produkt definiert</div>';
+            resultsContainer.innerHTML = '<div class="text-gray-400 text-center py-2 text-sm">Keine Ressourcen für dieses Produkt definiert</div>';
             return;
           }
           
@@ -834,139 +1058,26 @@
       });
     }
 
-    // Suchfunktion - nur nach Ressourcen
-    document.getElementById('searchInput').addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase();
+    // Statistiken aktualisieren
+    function updateStatistics() {
+      document.getElementById('totalProductsOverview').textContent = products.length;
       
-      if (searchTerm === '') {
-        renderProducts();
-        return;
+      // Gesamtzahl der Ressourcen berechnen
+      const totalResources = products.reduce((total, product) => {
+        return total + (product.resources ? product.resources.length : 0);
+      }, 0);
+      document.getElementById('totalResources').textContent = totalResources;
+      
+      // Letzte hinzugefügte Produkt
+      if (products.length > 0) {
+        const lastProduct = products.reduce((latest, current) => {
+          return new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest;
+        });
+        document.getElementById('lastAdded').textContent = lastProduct.name;
+      } else {
+        document.getElementById('lastAdded').textContent = '-';
       }
-      
-      // Nur nach Ressourcen suchen
-      const filteredProducts = products.filter(product => 
-        product.resources && product.resources.some(resource => 
-          resource.name.toLowerCase().includes(searchTerm)
-        )
-      );
-      
-      const productsGrid = document.getElementById('productsGrid');
-      productsGrid.innerHTML = '';
-      
-      if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-amber-400"><p>Keine Produkte mit dieser Ressource gefunden.</p></div>';
-        return;
-      }
-      
-      filteredProducts.forEach(product => {
-        const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-amber-900/20 border border-amber-800 hover:border-amber-500/30 transition-all duration-200';
-        
-        let imageHtml = '';
-        if (product.imageData) {
-          imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
-        } else {
-          imageHtml = `<div class="product-image bg-amber-800/50 flex items-center justify-center text-amber-400">Kein Bild</div>`;
-        }
-        
-        // Ressourcen für dieses Produkt
-        let resourcesHtml = '';
-        if (product.resources && product.resources.length > 0) {
-          resourcesHtml = product.resources.map(resource => 
-            `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
-          ).join('');
-        }
-        
-        el.innerHTML = `
-          <div class="product-card">
-            <div class="flex-shrink-0">
-              ${imageHtml}
-            </div>
-            <div class="flex-grow">
-              <div class="font-semibold text-lg mb-2">${product.name}</div>
-              ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
-              
-              <!-- Ressourcen Rechner -->
-              <div class="calculator-section">
-                <div class="calculator-title">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13z" clip-rule="evenodd" />
-                  </svg>
-                  Ressourcen Rechner
-                </div>
-                
-                <div class="quantity-controls">
-                  <button class="quantity-btn decrease-quantity">-</button>
-                  <input type="number" value="1" min="1" class="quantity-input product-quantity">
-                  <button class="quantity-btn increase-quantity">+</button>
-                  <span class="text-amber-300 ml-2 text-sm">Produkt(e)</span>
-                </div>
-                
-                <div class="calculation-results">
-                  <!-- Ergebnisse werden hier dynamisch eingefügt -->
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        productsGrid.appendChild(el);
-        
-        // Event Listener für Quantity Controls
-        const quantityInput = el.querySelector('.product-quantity');
-        const decreaseBtn = el.querySelector('.decrease-quantity');
-        const increaseBtn = el.querySelector('.increase-quantity');
-        const resultsContainer = el.querySelector('.calculation-results');
-        
-        // Berechnung für dieses Produkt
-        const updateCalculation = () => {
-          const quantity = parseInt(quantityInput.value) || 1;
-          resultsContainer.innerHTML = '';
-          
-          // Nur die Ressourcen dieses spezifischen Produkts verwenden
-          const productResources = product.resources || [];
-          
-          if (productResources.length === 0) {
-            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen für dieses Produkt definiert</div>';
-            return;
-          }
-          
-          productResources.forEach(resource => {
-            const minTotal = resource.min * quantity;
-            const maxTotal = resource.max * quantity;
-            
-            const resultEl = document.createElement('div');
-            resultEl.className = 'result-item';
-            resultEl.innerHTML = `
-              <div class="flex-1 font-medium text-sm">${resource.name}</div>
-              <div class="result-range text-sm">${minTotal}-${maxTotal}</div>
-            `;
-            resultsContainer.appendChild(resultEl);
-          });
-        };
-        
-        // Initiale Berechnung
-        updateCalculation();
-        
-        // Event Listener
-        decreaseBtn.addEventListener('click', () => {
-          const current = parseInt(quantityInput.value) || 1;
-          if (current > 1) {
-            quantityInput.value = current - 1;
-            updateCalculation();
-          }
-        });
-
-        increaseBtn.addEventListener('click', () => {
-          const current = parseInt(quantityInput.value) || 1;
-          quantityInput.value = current + 1;
-          updateCalculation();
-        });
-
-        quantityInput.addEventListener('input', () => {
-          updateCalculation();
-        });
-      });
-    });
+    }
 
     // Adminbereich
     const adminLoginBtn = document.getElementById('adminLoginBtn');
@@ -975,6 +1086,7 @@
     const adminTableBody = document.getElementById('adminTableBody');
     const totalProducts = document.getElementById('totalProducts');
     const addProductBtn = document.getElementById('addProductBtn');
+    const exportCsv = document.getElementById('exportCsv');
     
     // Modal Elemente
     const productModal = document.getElementById('productModal');
@@ -1010,6 +1122,9 @@
         newResourceMin.value = '';
         newResourceMax.value = '';
         newResourceName.focus();
+        showNotification('Ressource hinzugefügt', 'success');
+      } else {
+        showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
       }
     });
 
@@ -1030,9 +1145,7 @@
         span.innerHTML = `
           ${resource.name} (${resource.min}-${resource.max})
           <button type="button" class="ml-1 text-red-400 hover:text-red-300 remove-resource" data-index="${index}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
+            <i class="fas fa-times"></i>
           </button>
         `;
         resourcesList.appendChild(span);
@@ -1044,6 +1157,7 @@
           const index = parseInt(this.getAttribute('data-index'));
           currentResources.splice(index, 1);
           renderResourcesList();
+          showNotification('Ressource entfernt', 'info');
         });
       });
     }
@@ -1054,7 +1168,7 @@
       if (file) {
         // Dateigröße prüfen (max. 5MB)
         if (file.size > 5 * 1024 * 1024) {
-          alert('Die Datei ist zu groß. Maximale Größe: 5MB');
+          showNotification('Die Datei ist zu groß. Maximale Größe: 5MB', 'error');
           this.value = '';
           return;
         }
@@ -1076,10 +1190,12 @@
         show(document.getElementById('adminContent')); 
         renderAdminTable(); 
         adminPassInput.value = '';
+        showNotification('Admin-Bereich erfolgreich betreten', 'success');
       } else {
         adminError.classList.remove('hidden-el');
         adminPassInput.value = '';
         adminPassInput.focus();
+        showNotification('Falsches Admin-Passwort', 'error');
       }
     });
 
@@ -1096,7 +1212,7 @@
       // Produkte in Admin-Tabelle
       products.forEach(product => {
         const tr = document.createElement('tr');
-        tr.className = 'border-t border-amber-800 hover:bg-amber-800/30 transition-colors';
+        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         
         let resourcesText = '';
         if (product.resources && product.resources.length > 0) {
@@ -1111,15 +1227,11 @@
           <td class="p-3">
             <div class="flex gap-2">
               <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-product" data-key="${product.key}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg>
+                <i class="fas fa-edit mr-1"></i>
                 Bearbeiten
               </button>
               <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-product" data-key="${product.key}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-trash mr-1"></i>
                 Löschen
               </button>
             </div>
@@ -1165,13 +1277,13 @@
       adminTableBody.innerHTML = '';
       
       if (filteredProducts.length === 0) {
-        adminTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-amber-400">Keine Produkte gefunden</td></tr>';
+        adminTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Keine Produkte gefunden</td></tr>';
         return;
       }
       
       filteredProducts.forEach(product => {
         const tr = document.createElement('tr');
-        tr.className = 'border-t border-amber-800 hover:bg-amber-800/30 transition-colors';
+        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         
         let resourcesText = '';
         if (product.resources && product.resources.length > 0) {
@@ -1186,15 +1298,11 @@
           <td class="p-3">
             <div class="flex gap-2">
               <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-product" data-key="${product.key}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg>
+                <i class="fas fa-edit mr-1"></i>
                 Bearbeiten
               </button>
               <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-product" data-key="${product.key}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 000-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                </svg>
+                <i class="fas fa-trash mr-1"></i>
                 Löschen
               </button>
             </div>
@@ -1243,7 +1351,7 @@
       }
       
       // Modal-Titel ändern
-      productModalTitle.textContent = 'Produkt bearbeiten';
+      productModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Produkt bearbeiten';
       
       // Modal anzeigen
       show(productModal);
@@ -1260,7 +1368,7 @@
       renderResourcesList();
       
       // Modal-Titel ändern
-      productModalTitle.textContent = 'Produkt hinzufügen';
+      productModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Produkt hinzufügen';
       
       show(productModal);
     });
@@ -1286,8 +1394,13 @@
       }
     });
 
-    productForm.addEventListener('submit', (e) => {
+    productForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<div class="loading mr-2"></div> Speichere...';
+      submitBtn.disabled = true;
       
       const name = document.getElementById('productName').value;
       const imageData = productImageData.value;
@@ -1306,42 +1419,83 @@
         productData.imageData = imageData;
       }
       
+      let success;
       if (key) {
         // Bestehendes Produkt aktualisieren
-        const index = products.findIndex(p => p.key === key);
-        if (index !== -1) {
-          products[index] = { ...products[index], ...productData };
-        }
+        success = await updateProduct(key, productData);
       } else {
         // Neues Produkt erstellen
-        productData.key = Date.now().toString();
-        products.push(productData);
+        success = await saveProduct(productData);
       }
       
-      saveDataToStorage();
-      hide(productModal);
-      productForm.reset();
-      imagePreview.style.display = 'none';
-      productImageData.value = '';
-      currentResources = [];
-      renderResourcesList();
-      renderProducts();
-      renderAdminTable();
+      if (success) {
+        hide(productModal);
+        productForm.reset();
+        imagePreview.style.display = 'none';
+        productImageData.value = '';
+        currentResources = [];
+        renderResourcesList();
+        showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
+      } else {
+        showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
+      }
+      
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
     });
 
     // Löschfunktion
-    window.deleteProduct = function(key) { 
+    window.deleteProduct = async function(key) { 
       if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        products = products.filter(p => p.key !== key);
-        saveDataToStorage();
-        renderProducts();
-        renderAdminTable();
+        const success = await deleteProductFromFirebase(key);
+        if (success) {
+          showNotification('Produkt erfolgreich gelöscht', 'success');
+        } else {
+          showNotification('Fehler beim Löschen des Produkts!', 'error');
+        }
       }
     }
 
+    // CSV Export
+    exportCsv.addEventListener('click', () => {
+      if (products.length === 0) {
+        showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      
+      const header = ['Name', 'Ressourcen'];
+      const rows = products.map(product => {
+        const resourcesText = product.resources && product.resources.length > 0 
+          ? product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join('; ')
+          : 'Keine Ressourcen';
+        
+        return [
+          `"${product.name}"`,
+          `"${resourcesText.replace(/"/g, '""')}"`
+        ].join(';');
+      });
+      
+      const csv = [header.join(';'), ...rows].join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      // Generate filename with current date
+      const now = new Date();
+      const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+      a.download = `materialrecycler_${dateStr}.csv`;
+      
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+      
+      showNotification('CSV erfolgreich exportiert', 'success');
+    });
+
     // Initialisierung
     document.addEventListener('DOMContentLoaded', () => {
-      loadDataFromStorage();
       renderProducts();
       updateButtonStates('products');
       

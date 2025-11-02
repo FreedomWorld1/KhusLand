@@ -177,6 +177,16 @@
       outline: none;
       box-shadow: none;
     }
+    .export-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+    .export-btn {
+      flex: 1;
+      min-width: 120px;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -392,11 +402,24 @@
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
               <div class="small-muted">Gesamtanzahl: <span id="totalCount" class="font-bold text-white">0</span></div>
               <div class="small-muted">Gesamtumsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
-              <button id="exportCsv" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm btn flex items-center gap-2">
-                <i class="fas fa-file-export mr-1"></i>
-                CSV Export
+            </div>
+
+            <!-- Export-Optionen -->
+            <div class="export-options">
+              <button id="exportCsvDetailed" class="export-btn px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg shadow-sm btn flex items-center gap-2">
+                <i class="fas fa-file-csv mr-1"></i>
+                Detailliertes CSV
+              </button>
+              <button id="exportCsvSummary" class="export-btn px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm btn flex items-center gap-2">
+                <i class="fas fa-file-alt mr-1"></i>
+                Zusammenfassung CSV
+              </button>
+              <button id="exportCsvMonthly" class="export-btn px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg shadow-sm btn flex items-center gap-2">
+                <i class="fas fa-calendar-alt mr-1"></i>
+                Monatsbericht
               </button>
             </div>
+
             <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
               <table class="w-full text-left text-sm">
                 <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
@@ -896,7 +919,6 @@
     const adminTableBody = document.getElementById('adminTableBody');
     const totalCount = document.getElementById('totalCount');
     const totalRevenue = document.getElementById('totalRevenue');
-    const exportCsv = document.getElementById('exportCsv');
 
     adminLoginBtn.addEventListener('click', () => {
       if (adminPassInput.value === ADMIN_PASSWORD) {
@@ -957,8 +979,8 @@
       }
     }
 
-    // CSV Export
-    exportCsv.addEventListener('click', () => {
+    // CSV Export Funktionen
+    function generateDetailedCSV() {
       if (entries.length === 0) {
         showNotification('Keine Einträge zum Exportieren vorhanden.', 'error');
         return;
@@ -966,19 +988,170 @@
       
       // Sortierung: Neueste oben
       const sortedEntries = [...entries].sort((a, b) => b.timestamp - a.timestamp);
-      const header = ['Datum', 'Käufer', 'Verkäufer', 'Menge ', 'Preis ', 'Verkäuferanteil (70%)', 'Käuferanteil (30%)'];
-      const rows = sortedEntries.map(e => [
-        e.date,
-        `"${e.buyer}"`,
-        `"${e.seller}"`,
-        e.quantity,
-        e.price,
-        e.sellerShare,
-        e.yourShare
-      ].join(','));
       
-      const csv = [header.join(','), ...rows].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      // Header mit deutschen Beschreibungen
+      const header = [
+        'Datum',
+        'Uhrzeit', 
+        'Käufer',
+        'Verkäufer',
+        'Menge (Bricks)',
+        'Stückpreis ($)',
+        'Gesamtpreis ($)',
+        'Verkäuferanteil 70% ($)',
+        'Käuferanteil 30% ($)',
+        'Transaktions-ID'
+      ];
+      
+      // Datenzeilen mit besserer Formatierung
+      const rows = sortedEntries.map((e, index) => {
+        const dateTime = e.date.split(' ');
+        const date = dateTime[0];
+        const time = dateTime[1] || '';
+        const pricePerUnit = e.price / e.quantity;
+        
+        return [
+          date,
+          time,
+          `"${e.buyer}"`,
+          `"${e.seller}"`,
+          e.quantity,
+          Math.round(pricePerUnit),
+          Math.round(e.price),
+          Math.round(e.sellerShare),
+          Math.round(e.yourShare),
+          e.key || `T-${index + 1}`
+        ].join(';'); // Semikolon als Trennzeichen für bessere Kompatibilität mit Excel
+      });
+      
+      const csv = [header.join(';'), ...rows].join('\n');
+      downloadCSV(csv, 'detailliert');
+    }
+
+    function generateSummaryCSV() {
+      if (entries.length === 0) {
+        showNotification('Keine Einträge zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      
+      // Zusammenfassung nach Käufer
+      const buyerSummary = {};
+      let totalRevenue = 0;
+      let totalYourShare = 0;
+      
+      entries.forEach(entry => {
+        if (!buyerSummary[entry.buyer]) {
+          buyerSummary[entry.buyer] = {
+            transactions: 0,
+            totalQuantity: 0,
+            totalSpent: 0,
+            yourShare: 0
+          };
+        }
+        
+        buyerSummary[entry.buyer].transactions++;
+        buyerSummary[entry.buyer].totalQuantity += entry.quantity;
+        buyerSummary[entry.buyer].totalSpent += entry.price;
+        buyerSummary[entry.buyer].yourShare += entry.yourShare;
+        
+        totalRevenue += entry.price;
+        totalYourShare += entry.yourShare;
+      });
+      
+      // Header für Zusammenfassung
+      const header = [
+        'Käufer',
+        'Anzahl Transaktionen',
+        'Gesamtmenge (Bricks)',
+        'Gesamtausgaben ($)',
+        'Durchschnitt pro Transaktion ($)',
+        'Ihr Gesamtanteil ($)'
+      ];
+      
+      // Datenzeilen
+      const rows = Object.entries(buyerSummary).map(([buyer, data]) => [
+        `"${buyer}"`,
+        data.transactions,
+        data.totalQuantity,
+        Math.round(data.totalSpent),
+        Math.round(data.totalSpent / data.transactions),
+        Math.round(data.yourShare)
+      ].join(';'));
+      
+      // Gesamtsummen hinzufügen
+      rows.push('');
+      rows.push(['GESAMT', entries.length, '', Math.round(totalRevenue), '', Math.round(totalYourShare)].join(';'));
+      
+      const csv = [header.join(';'), ...rows].join('\n');
+      downloadCSV(csv, 'zusammenfassung');
+    }
+
+    function generateMonthlyReport() {
+      if (entries.length === 0) {
+        showNotification('Keine Einträge zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      
+      // Gruppierung nach Monat
+      const monthlyData = {};
+      
+      entries.forEach(entry => {
+        const date = new Date(entry.timestamp);
+        const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+        const monthName = date.toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+        
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = {
+            monthName: monthName,
+            transactions: 0,
+            totalQuantity: 0,
+            totalRevenue: 0,
+            yourShare: 0,
+            buyers: new Set(),
+            sellers: new Set()
+          };
+        }
+        
+        monthlyData[monthKey].transactions++;
+        monthlyData[monthKey].totalQuantity += entry.quantity;
+        monthlyData[monthKey].totalRevenue += entry.price;
+        monthlyData[monthKey].yourShare += entry.yourShare;
+        monthlyData[monthKey].buyers.add(entry.buyer);
+        monthlyData[monthKey].sellers.add(entry.seller);
+      });
+      
+      // Header für Monatsbericht
+      const header = [
+        'Monat',
+        'Anzahl Transaktionen',
+        'Gesamtmenge (Bricks)',
+        'Gesamtumsatz ($)',
+        'Ihr Anteil ($)',
+        'Durchschnitt pro Transaktion ($)',
+        'Eindeutige Käufer',
+        'Eindeutige Verkäufer'
+      ];
+      
+      // Datenzeilen
+      const rows = Object.entries(monthlyData)
+        .sort((a, b) => b[0].localeCompare(a[0])) // Neueste Monate zuerst
+        .map(([key, data]) => [
+          `"${data.monthName}"`,
+          data.transactions,
+          data.totalQuantity,
+          Math.round(data.totalRevenue),
+          Math.round(data.yourShare),
+          Math.round(data.totalRevenue / data.transactions),
+          data.buyers.size,
+          data.sellers.size
+        ].join(';'));
+      
+      const csv = [header.join(';'), ...rows].join('\n');
+      downloadCSV(csv, 'monatsbericht');
+    }
+
+    function downloadCSV(csvData, type) {
+      const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -986,15 +1159,20 @@
       // Generate filename with current date
       const now = new Date();
       const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
-      a.download = `weed_ankauf_${dateStr}.csv`;
+      a.download = `weed_ankauf_${type}_${dateStr}.csv`;
       
       document.body.appendChild(a);
       a.click();
       URL.revokeObjectURL(url);
       a.remove();
       
-      showNotification('CSV erfolgreich exportiert', 'success');
-    });
+      showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} CSV erfolgreich exportiert`, 'success');
+    }
+
+    // Event Listener für CSV-Export Buttons
+    document.getElementById('exportCsvDetailed').addEventListener('click', generateDetailedCSV);
+    document.getElementById('exportCsvSummary').addEventListener('click', generateSummaryCSV);
+    document.getElementById('exportCsvMonthly').addEventListener('click', generateMonthlyReport);
 
   </script>
 </body>

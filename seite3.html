@@ -143,21 +143,18 @@
       height: 100%;
       cursor: pointer;
     }
+    /* GEÄNDERT: Nur 2 Spalten auch bei großen Bildschirmen */
     .product-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 1.5rem;
     }
     @media (min-width: 768px) {
       .product-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
-    @media (min-width: 1024px) {
-      .product-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
+    /* ENTFERNT: repeat(3, 1fr) für große Bildschirme */
     .product-card {
       display: grid;
       grid-template-columns: 100px 1fr;

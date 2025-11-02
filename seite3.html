@@ -160,9 +160,9 @@
     }
     .product-card {
       display: grid;
-      grid-template-columns: 100px 1fr auto;
+      grid-template-columns: 100px 1fr;
       gap: 1rem;
-      align-items: center;
+      align-items: start;
     }
     .material-tag {
       display: inline-block;
@@ -201,6 +201,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      margin: 12px 0;
     }
     .quantity-btn {
       width: 32px;
@@ -220,26 +221,42 @@
       transform: scale(1.05);
     }
     .quantity-input {
-      width: 60px;
+      width: 80px;
       text-align: center;
-      padding: 4px 8px;
+      padding: 6px 8px;
       border-radius: 6px;
       background: rgba(41, 37, 36, 0.5);
       border: 1px solid rgba(245, 158, 11, 0.3);
       color: #f59e0b;
+      font-weight: 600;
     }
     .result-item {
       display: flex;
-      justify-content: between;
+      justify-content: space-between;
       align-items: center;
       padding: 8px 12px;
       background: rgba(245, 158, 11, 0.1);
       border-radius: 8px;
       margin-bottom: 6px;
+      font-size: 0.9rem;
     }
     .result-range {
       color: #f59e0b;
       font-weight: 600;
+    }
+    .calculator-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .calculator-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f59e0b;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
   </style>
 </head>
@@ -260,7 +277,6 @@
         <div class="flex items-center gap-2">
           <button id="btnProducts" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm pulse-glow">Produkte</button>
           <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">Admin</button>
-          <button id="btnResources" class="btn px-3 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg shadow-sm">Ressourcen</button>
           <div class="hamburger-container">
             <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-amber-900/50 hover:bg-amber-800/50">
               <span class="block h-0.5 bg-amber-100 rounded-full"></span>
@@ -301,42 +317,6 @@
           <!-- Products Grid -->
           <div id="productsGrid" class="product-grid">
             <!-- Produkte werden hier dynamisch geladen -->
-          </div>
-        </div>
-
-        <!-- RESSOURCEN RECHNER -->
-        <div id="resourcesSection" class="card p-6 shadow-soft hidden-el fade-in">
-          <h2 class="text-xl font-semibold mb-4 text-purple-400 flex items-center gap-2">
-            <span class="bg-purple-900/30 p-2 rounded-lg">🧮</span>
-            Ressourcen Rechner
-          </h2>
-          
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-amber-300 mb-3">Anzahl der recycelten Produkte:</label>
-            <div class="flex items-center gap-4">
-              <button id="decreaseQuantity" class="quantity-btn">-</button>
-              <input type="number" id="recycleQuantity" value="1" min="1" class="quantity-input">
-              <button id="increaseQuantity" class="quantity-btn">+</button>
-              <span class="text-amber-300 ml-2">Produkt(e)</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Verfügbare Ressourcen -->
-            <div>
-              <h3 class="text-lg font-semibold mb-3 text-amber-400">Ressourcen</h3>
-              <div id="resourcesList" class="space-y-2">
-                <!-- Ressourcen werden hier dynamisch geladen -->
-              </div>
-            </div>
-
-            <!-- Berechnete Ergebnisse -->
-            <div>
-              <h3 class="text-lg font-semibold mb-3 text-green-400">Ergebnis</h3>
-              <div id="calculationResults" class="space-y-2">
-                <div class="text-amber-400 text-center py-4">Geben Sie die Anzahl der Produkte ein, um die Ressourcen zu berechnen</div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -548,34 +528,23 @@
     document.getElementById('btnProducts').addEventListener('click', () => {
       show(document.getElementById('productsSection')); 
       hide(document.getElementById('adminPanel'));
-      hide(document.getElementById('resourcesSection'));
       updateButtonStates('products');
     });
     
     document.getElementById('btnAdmin').addEventListener('click', () => {
       hide(document.getElementById('productsSection')); 
       show(document.getElementById('adminPanel'));
-      hide(document.getElementById('resourcesSection'));
       updateButtonStates('admin');
-    });
-
-    document.getElementById('btnResources').addEventListener('click', () => {
-      hide(document.getElementById('productsSection')); 
-      hide(document.getElementById('adminPanel'));
-      show(document.getElementById('resourcesSection'));
-      updateButtonStates('resources');
-      renderResourcesCalculator();
     });
 
     function updateButtonStates(activeButton) {
       const buttons = {
         products: document.getElementById('btnProducts'),
-        admin: document.getElementById('btnAdmin'),
-        resources: document.getElementById('btnResources')
+        admin: document.getElementById('btnAdmin')
       };
       
       Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-amber-600', 'bg-blue-600', 'bg-purple-600');
+        btn.classList.remove('pulse-glow', 'bg-amber-600', 'bg-blue-600');
         btn.classList.add('bg-amber-900/50');
       });
       
@@ -585,8 +554,6 @@
           buttons[activeButton].classList.add('bg-amber-600', 'pulse-glow');
         } else if (activeButton === 'admin') {
           buttons[activeButton].classList.add('bg-blue-600');
-        } else if (activeButton === 'resources') {
-          buttons[activeButton].classList.add('bg-purple-600');
         }
       }
     }
@@ -625,68 +592,87 @@
               ${imageHtml}
             </div>
             <div class="flex-grow">
-              <div class="font-semibold text-lg mb-1">${product.name}</div>
-              <div class="material-list">
+              <div class="font-semibold text-lg mb-2">${product.name}</div>
+              <div class="material-list mb-3">
                 ${materialsHtml}
+              </div>
+              
+              <!-- Ressourcen Rechner -->
+              <div class="calculator-section">
+                <div class="calculator-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13z" clip-rule="evenodd" />
+                  </svg>
+                  Ressourcen Rechner
+                </div>
+                
+                <div class="quantity-controls">
+                  <button class="quantity-btn decrease-quantity">-</button>
+                  <input type="number" value="1" min="1" class="quantity-input product-quantity">
+                  <button class="quantity-btn increase-quantity">+</button>
+                  <span class="text-amber-300 ml-2 text-sm">Produkt(e)</span>
+                </div>
+                
+                <div class="calculation-results">
+                  <!-- Ergebnisse werden hier dynamisch eingefügt -->
+                </div>
               </div>
             </div>
           </div>
         `;
         productsGrid.appendChild(el);
-      });
-    }
-
-    // Ressourcen Rechner rendern
-    function renderResourcesCalculator() {
-      const resourcesList = document.getElementById('resourcesList');
-      resourcesList.innerHTML = '';
-      
-      if (resources.length === 0) {
-        resourcesList.innerHTML = '<div class="text-amber-400 text-center py-4">Keine Ressourcen definiert</div>';
-        return;
-      }
-      
-      resources.forEach(resource => {
-        const resourceEl = document.createElement('div');
-        resourceEl.className = 'resource-item';
-        resourceEl.innerHTML = `
-          <div class="flex-1">
-            <span class="font-medium">${resource.name}</span>
-          </div>
-          <div class="resource-range">
-            ${resource.min}-${resource.max}
-          </div>
-        `;
-        resourcesList.appendChild(resourceEl);
-      });
-      
-      // Berechnung aktualisieren
-      updateCalculation();
-    }
-
-    // Berechnung aktualisieren
-    function updateCalculation() {
-      const quantity = parseInt(document.getElementById('recycleQuantity').value) || 1;
-      const resultsContainer = document.getElementById('calculationResults');
-      
-      resultsContainer.innerHTML = '';
-      
-      if (resources.length === 0) {
-        resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-4">Keine Ressourcen definiert</div>';
-        return;
-      }
-      
-      resources.forEach(resource => {
-        const minTotal = resource.min * quantity;
-        const maxTotal = resource.max * quantity;
         
-        const resultEl = document.createElement('div');
-        resultEl.className = 'result-item';
-        resultEl.innerHTML = `
-          <div class="flex-1 font-medium">${resource.name}</div>
-          <div class="result-range">${minTotal}-${maxTotal}</div>
-        `;
-        resultsContainer.appendChild(resultEl);
+        // Event Listener für Quantity Controls
+        const quantityInput = el.querySelector('.product-quantity');
+        const decreaseBtn = el.querySelector('.decrease-quantity');
+        const increaseBtn = el.querySelector('.increase-quantity');
+        const resultsContainer = el.querySelector('.calculation-results');
+        
+        // Berechnung für dieses Produkt
+        const updateCalculation = () => {
+          const quantity = parseInt(quantityInput.value) || 1;
+          resultsContainer.innerHTML = '';
+          
+          if (resources.length === 0) {
+            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen definiert</div>';
+            return;
+          }
+          
+          resources.forEach(resource => {
+            const minTotal = resource.min * quantity;
+            const maxTotal = resource.max * quantity;
+            
+            const resultEl = document.createElement('div');
+            resultEl.className = 'result-item';
+            resultEl.innerHTML = `
+              <div class="flex-1 font-medium text-sm">${resource.name}</div>
+              <div class="result-range text-sm">${minTotal}-${maxTotal}</div>
+            `;
+            resultsContainer.appendChild(resultEl);
+          });
+        };
+        
+        // Initiale Berechnung
+        updateCalculation();
+        
+        // Event Listener
+        decreaseBtn.addEventListener('click', () => {
+          const current = parseInt(quantityInput.value) || 1;
+          if (current > 1) {
+            quantityInput.value = current - 1;
+            updateCalculation();
+          }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+          const current = parseInt(quantityInput.value) || 1;
+          quantityInput.value = current + 1;
+          updateCalculation();
+        });
+
+        quantityInput.addEventListener('input', () => {
+          updateCalculation();
+        });
       });
     }
 
@@ -738,14 +724,87 @@
               ${imageHtml}
             </div>
             <div class="flex-grow">
-              <div class="font-semibold text-lg mb-1">${product.name}</div>
-              <div class="material-list">
+              <div class="font-semibold text-lg mb-2">${product.name}</div>
+              <div class="material-list mb-3">
                 ${materialsHtml}
+              </div>
+              
+              <!-- Ressourcen Rechner -->
+              <div class="calculator-section">
+                <div class="calculator-title">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13z" clip-rule="evenodd" />
+                  </svg>
+                  Ressourcen Rechner
+                </div>
+                
+                <div class="quantity-controls">
+                  <button class="quantity-btn decrease-quantity">-</button>
+                  <input type="number" value="1" min="1" class="quantity-input product-quantity">
+                  <button class="quantity-btn increase-quantity">+</button>
+                  <span class="text-amber-300 ml-2 text-sm">Produkt(e)</span>
+                </div>
+                
+                <div class="calculation-results">
+                  <!-- Ergebnisse werden hier dynamisch eingefügt -->
+                </div>
               </div>
             </div>
           </div>
         `;
         productsGrid.appendChild(el);
+        
+        // Event Listener für Quantity Controls
+        const quantityInput = el.querySelector('.product-quantity');
+        const decreaseBtn = el.querySelector('.decrease-quantity');
+        const increaseBtn = el.querySelector('.increase-quantity');
+        const resultsContainer = el.querySelector('.calculation-results');
+        
+        // Berechnung für dieses Produkt
+        const updateCalculation = () => {
+          const quantity = parseInt(quantityInput.value) || 1;
+          resultsContainer.innerHTML = '';
+          
+          if (resources.length === 0) {
+            resultsContainer.innerHTML = '<div class="text-amber-400 text-center py-2 text-sm">Keine Ressourcen definiert</div>';
+            return;
+          }
+          
+          resources.forEach(resource => {
+            const minTotal = resource.min * quantity;
+            const maxTotal = resource.max * quantity;
+            
+            const resultEl = document.createElement('div');
+            resultEl.className = 'result-item';
+            resultEl.innerHTML = `
+              <div class="flex-1 font-medium text-sm">${resource.name}</div>
+              <div class="result-range text-sm">${minTotal}-${maxTotal}</div>
+            `;
+            resultsContainer.appendChild(resultEl);
+          });
+        };
+        
+        // Initiale Berechnung
+        updateCalculation();
+        
+        // Event Listener
+        decreaseBtn.addEventListener('click', () => {
+          const current = parseInt(quantityInput.value) || 1;
+          if (current > 1) {
+            quantityInput.value = current - 1;
+            updateCalculation();
+          }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+          const current = parseInt(quantityInput.value) || 1;
+          quantityInput.value = current + 1;
+          updateCalculation();
+        });
+
+        quantityInput.addEventListener('input', () => {
+          updateCalculation();
+        });
       });
     });
 
@@ -783,30 +842,6 @@
     const resourcesListAdmin = document.getElementById('resourcesListAdmin');
     const saveResources = document.getElementById('saveResources');
     const cancelResources = document.getElementById('cancelResources');
-
-    // Quantity Controls
-    const decreaseQuantity = document.getElementById('decreaseQuantity');
-    const increaseQuantity = document.getElementById('increaseQuantity');
-    const recycleQuantity = document.getElementById('recycleQuantity');
-
-    // Quantity Controls Event Listener
-    decreaseQuantity.addEventListener('click', () => {
-      const current = parseInt(recycleQuantity.value) || 1;
-      if (current > 1) {
-        recycleQuantity.value = current - 1;
-        updateCalculation();
-      }
-    });
-
-    increaseQuantity.addEventListener('click', () => {
-      const current = parseInt(recycleQuantity.value) || 1;
-      recycleQuantity.value = current + 1;
-      updateCalculation();
-    });
-
-    recycleQuantity.addEventListener('input', () => {
-      updateCalculation();
-    });
 
     // Material hinzufügen
     addMaterialBtn.addEventListener('click', () => {
@@ -1095,7 +1130,7 @@
       
       saveResourcesToStorage();
       hide(resourcesModal);
-      renderResourcesCalculator();
+      renderProducts(); // Produkte neu rendern, um Rechner zu aktualisieren
       renderAdminTable();
     });
 
@@ -1167,7 +1202,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadDataFromStorage();
       renderProducts();
-      renderResourcesCalculator();
       updateButtonStates('products');
       
       // Sicherstellen, dass alle Modals versteckt sind

@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Weed Ankauf</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -603,6 +606,76 @@
       }
     }
 
+    // Regelmäßige Überprüfung ob User noch autorisiert ist
+    async function checkUserAuthorization() {
+      const token = localStorage.getItem('discord_access_token');
+      const user = localStorage.getItem('discord_user');
+      
+      if (!token || !user) {
+        return false;
+      }
+      
+      try {
+        const response = await fetch(`${BACKEND_URL}/verify-user`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            accessToken: token
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Verification failed');
+        }
+
+        const data = await response.json();
+        return data.isAuthorized;
+        
+      } catch (error) {
+        console.error('Fehler bei der Autorisierungsprüfung:', error);
+        return false;
+      }
+    }
+
+    // Alle 2 Minuten überprüfen ob User noch berechtigt ist
+    setInterval(async () => {
+      if (localStorage.getItem('discord_user')) {
+        const isStillAuthorized = await checkUserAuthorization();
+        if (!isStillAuthorized) {
+          showNotification('Deine Berechtigung wurde widerrufen', 'error');
+          setTimeout(() => {
+            logout();
+          }, 3000);
+        }
+      }
+    }, 120000); // 2 Minuten
+
+    // Auch beim Seitenwechsel überprüfen
+    document.addEventListener('visibilitychange', async () => {
+      if (!document.hidden && localStorage.getItem('discord_user')) {
+        const isStillAuthorized = await checkUserAuthorization();
+        if (!isStillAuthorized) {
+          showNotification('Deine Berechtigung wurde widerrufen', 'error');
+          setTimeout(() => {
+            logout();
+          }, 2000);
+        }
+      }
+    });
+
+    // Überprüfung bei wichtigen Aktionen
+    async function validateAccess() {
+      const isAuthorized = await checkUserAuthorization();
+      if (!isAuthorized && localStorage.getItem('discord_user')) {
+        showNotification('Zugriff wurde entzogen', 'error');
+        setTimeout(logout, 2000);
+        return false;
+      }
+      return true;
+    }
+
     function showError(message) {
       errorMessage.textContent = message;
       loginError.classList.remove('hidden');
@@ -625,12 +698,22 @@
     }
 
     function logout() {
-      localStorage.clear();
+      // Alle gespeicherten Daten löschen
+      localStorage.removeItem('discord_user');
+      localStorage.removeItem('discord_access_token');
+      
+      // UI zurücksetzen
       mainContent.classList.add('hidden');
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
       debugInfo.classList.add('hidden');
-      showNotification('Erfolgreich ausgeloggt', 'info');
+      
+      // Formular zurücksetzen
+      document.getElementById('entryForm').reset();
+      updateShares();
+      
+      // Cache leeren erzwingen
+      window.location.href = window.location.origin + window.location.pathname + '?t=' + Date.now();
     }
 
     // Überprüfe gespeicherten Login beim Laden
@@ -699,14 +782,16 @@
     });
 
     // Tabs Navigation
-    document.getElementById('btnNew').addEventListener('click', () => {
+    document.getElementById('btnNew').addEventListener('click', async () => {
+      await validateAccess();
       show(document.getElementById('newEntry')); 
       hide(document.getElementById('overview')); 
       hide(document.getElementById('adminPanel'));
       updateButtonStates('new');
     });
     
-    document.getElementById('btnOverview').addEventListener('click', () => {
+    document.getElementById('btnOverview').addEventListener('click', async () => {
+      await validateAccess();
       hide(document.getElementById('newEntry')); 
       show(document.getElementById('overview')); 
       hide(document.getElementById('adminPanel'));
@@ -714,7 +799,8 @@
       updateButtonStates('overview');
     });
     
-    document.getElementById('btnAdmin').addEventListener('click', () => {
+    document.getElementById('btnAdmin').addEventListener('click', async () => {
+      await validateAccess();
       hide(document.getElementById('newEntry')); 
       hide(document.getElementById('overview')); 
       show(document.getElementById('adminPanel'));
@@ -768,6 +854,13 @@
     // Form submit
     document.getElementById('entryForm').addEventListener('submit', async e => {
       e.preventDefault();
+      
+      const hasAccess = await validateAccess();
+      if (!hasAccess) {
+        e.preventDefault();
+        return;
+      }
+      
       const buyer = document.getElementById('buyer').value.trim();
       const seller = document.getElementById('seller').value.trim();
       const quantity = Number(quantityInput.value);

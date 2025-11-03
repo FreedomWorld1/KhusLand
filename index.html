@@ -39,8 +39,8 @@
       transform: translateY(-2px); 
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
-    .hidden-el { 
-      display: none; 
+    .hidden { 
+      display: none !important; 
     }
     input { 
       transition: all 0.2s ease; 
@@ -236,10 +236,10 @@
 <body class="text-gray-100 antialiased min-h-screen">
   
   <!-- Notification System -->
-  <div id="notification" class="notification hidden-el"></div>
+  <div id="notification" class="notification hidden"></div>
   
   <!-- Force Check Button -->
-  <div id="forceCheckBtn" class="force-check-btn hidden-el" title="Sofort-Überprüfung">
+  <div id="forceCheckBtn" class="force-check-btn hidden" title="Sofort-Überprüfung">
     <i class="fas fa-shield-alt"></i>
   </div>
   
@@ -281,7 +281,7 @@
             <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Weed Ankauf</h1>
             <p id="userInfo" class="text-sm text-gray-400">
               Eingeloggt als: <span id="username">Unbekannt</span>
-              <span id="accessBadge" class="access-badge access-permanent hidden-el">Permanent</span>
+              <span id="accessBadge" class="access-badge access-permanent hidden">Permanent</span>
             </p>
           </div>
         </div>
@@ -395,7 +395,7 @@
         </div>
 
         <!-- ÜBERSICHT -->
-        <div id="overview" class="card p-5 shadow-soft hidden-el fade-in">
+        <div id="overview" class="card p-5 shadow-soft hidden fade-in">
           <h2 class="text-lg font-semibold mb-4 text-green-400 flex items-center gap-2">
             <i class="fas fa-list"></i>
             Übersicht
@@ -430,7 +430,7 @@
         </div>
 
         <!-- ADMIN -->
-        <div id="adminPanel" class="card p-5 shadow-soft hidden-el fade-in">
+        <div id="adminPanel" class="card p-5 shadow-soft hidden fade-in">
           <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
             <i class="fas fa-cog"></i>
             Adminbereich
@@ -446,11 +446,11 @@
               <i class="fas fa-sign-in-alt"></i>
               Einloggen
             </button>
-            <span id="adminError" class="text-red-400 mt-3 block hidden-el text-center text-sm py-2 bg-red-900/20 rounded-lg">
+            <span id="adminError" class="text-red-400 mt-3 block hidden text-center text-sm py-2 bg-red-900/20 rounded-lg">
               <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
             </span>
           </div>
-          <div id="adminContent" class="hidden-el">
+          <div id="adminContent" class="hidden">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
               <div class="small-muted">Gesamtanzahl: <span id="totalCount" class="font-bold text-white">0</span></div>
               <div class="small-muted">Gesamtumsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
@@ -541,13 +541,13 @@
     function showNotification(message, type = 'info', duration = 5000) {
       notification.textContent = message;
       notification.className = `notification ${type}`;
-      notification.classList.remove('hidden-el');
+      notification.classList.remove('hidden');
       notification.classList.add('show');
       
       setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => {
-          notification.classList.add('hidden-el');
+          notification.classList.add('hidden');
         }, 300);
       }, duration);
     }
@@ -800,11 +800,11 @@
     function showMainContent(accessInfo) {
       console.log('Zeige Main Content an...');
       
-      // WICHTIG: Korrekte Klassen verwenden
+      // WICHTIG: Korrekte Klassen verwenden - nur 'hidden'
       loginScreen.classList.add('hidden');
       mainContent.classList.remove('hidden');
       debugInfo.classList.add('hidden');
-      forceCheckBtn.classList.remove('hidden-el');
+      forceCheckBtn.classList.remove('hidden');
       
       // Benutzerinformationen anzeigen
       const user = JSON.parse(localStorage.getItem('discord_user'));
@@ -814,7 +814,7 @@
       
       // Access Badge anzeigen
       if (accessInfo) {
-        accessBadge.classList.remove('hidden-el');
+        accessBadge.classList.remove('hidden');
         if (accessInfo.isPermanent) {
           accessBadge.textContent = 'Permanent';
           accessBadge.className = 'access-badge access-permanent';
@@ -828,7 +828,6 @@
       const cleanUrl = window.location.origin + window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
       
-      // Debug info
       console.log('Main Content sollte jetzt sichtbar sein');
     }
 
@@ -840,13 +839,13 @@
       localStorage.removeItem('discord_access_token');
       localStorage.removeItem('user_access_info');
       
-      // UI zurücksetzen
+      // UI zurücksetzen - nur 'hidden' verwenden
       mainContent.classList.add('hidden');
       loginScreen.classList.remove('hidden');
       loginError.classList.add('hidden');
       debugInfo.classList.add('hidden');
-      accessBadge.classList.add('hidden-el');
-      forceCheckBtn.classList.add('hidden-el');
+      accessBadge.classList.add('hidden');
+      forceCheckBtn.classList.add('hidden');
       
       // Formular zurücksetzen
       document.getElementById('entryForm').reset();
@@ -906,14 +905,14 @@
     let entries = [];
     let filteredEntries = [];
 
+    // KORRIGIERT: Einheitliche hide/show Funktionen
     function show(el) { 
-      el.classList.remove('hidden-el'); 
-      el.classList.add('fade-in');
+      el.classList.remove('hidden'); 
     }
     function hide(el) { 
-      el.classList.add('hidden-el'); 
-      el.classList.remove('fade-in');
+      el.classList.add('hidden'); 
     }
+
     function formatCurrency(n) { 
       return new Intl.NumberFormat('de-DE').format(Math.round(n)) + ' $'; 
     }
@@ -1173,13 +1172,13 @@
 
     adminLoginBtn.addEventListener('click', () => {
       if (adminPassInput.value === ADMIN_PASSWORD) {
-        adminError.classList.add('hidden-el'); 
+        adminError.classList.add('hidden'); 
         show(document.getElementById('adminContent')); 
         renderAdminTable();
         adminPassInput.value = ''; // Clear password field after login
         showNotification('Admin-Bereich erfolgreich betreten', 'success');
       } else {
-        adminError.classList.remove('hidden-el');
+        adminError.classList.remove('hidden');
         adminPassInput.value = ''; // Clear password field on error
         adminPassInput.focus();
         showNotification('Falsches Admin-Passwort', 'error');

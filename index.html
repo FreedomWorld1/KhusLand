@@ -340,9 +340,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label for="buyer" class="block text-sm font-medium text-gray-300 mb-1">
-                  <i class="fas fa-user mr-1"></i> Käufer
+                  <i class="fas fa-user mr-1"></i> Käufer (Cloudflare Username)
                 </label>
-                <input id="buyer" type="text" placeholder="Name des Käufers" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required/>
+                <input id="buyer" type="text" placeholder="Name des Käufers - muss autorisierter Cloudflare User sein" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required list="buyer-options"/>
               </div>
               <div>
                 <label for="seller" class="block text-sm font-medium text-gray-300 mb-1">
@@ -496,6 +496,14 @@
     </div>
   </div>
 
+  <!-- Datalist für Cloudflare Username Autocomplete -->
+  <datalist id="buyer-options">
+    <option value="Rey Ehrlich">
+    <option value="Philipp Yane">
+    <option value="Kai Dimauro">
+    <option value="Lisa Ehrlich">
+  </datalist>
+
   <script type="module">
     // Discord OAuth Konfiguration
     const DISCORD_CLIENT_ID = '1432942180770644079';
@@ -522,6 +530,21 @@
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
     const entriesRef = ref(db,'weed_entries');
+
+    // CLOUDFLARE USERNAME VALIDIERUNG - KÄUFER MUSS AUTORISIERTER CLOUDFLARE USER SEIN
+    const CLOUDFLARE_USERNAMES = ['Rey Ehrlich', 'Philipp Yane', 'Kai Dimauro', 'Lisa Ehrlich'];
+
+    function validateBuyerName(buyerName) {
+      return CLOUDFLARE_USERNAMES.includes(buyerName);
+    }
+
+    // Event-Listener für Käufer-Feld-Änderungen
+    document.getElementById('buyer').addEventListener('blur', function() {
+      const buyerName = this.value.trim();
+      if (buyerName && !validateBuyerName(buyerName)) {
+        showNotification('Hinweis: Der eingegebene Name stimmt nicht mit einem autorisierten Cloudflare-Benutzernamen überein.', 'warning');
+      }
+    });
 
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
@@ -1008,7 +1031,7 @@
     quantityInput.addEventListener('input', updateShares);
     updateShares();
 
-    // Form submit
+    // Form submit MIT CLOUDFLARE USERNAME VALIDIERUNG
     document.getElementById('entryForm').addEventListener('submit', async e => {
       e.preventDefault();
       
@@ -1021,6 +1044,12 @@
       const buyer = document.getElementById('buyer').value.trim();
       const seller = document.getElementById('seller').value.trim();
       const quantity = Number(quantityInput.value);
+      
+      // KÄUFER-VALIDIERUNG: Muss autorisierter Cloudflare User sein
+      if (!validateBuyerName(buyer)) {
+        showNotification('Fehler: Bitte geben Sie einen gültigen Cloudflare-Benutzernamen als Käufer ein. Erlaubte Namen: ' + CLOUDFLARE_USERNAMES.join(', '), 'error');
+        return;
+      }
       
       if (!buyer || !seller || !quantity) {
         showNotification('Bitte füllen Sie alle Felder aus!', 'error');

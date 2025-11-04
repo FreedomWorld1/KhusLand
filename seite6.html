@@ -10,96 +10,144 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --primary: #7e22ce;
+      --primary-light: #a855f7;
+      --secondary: #ec4899;
+      --dark: #0f172a;
+      --dark-light: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
       min-height: 100vh;
+      color: var(--text);
     }
+    
     .card { 
       background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
       border: 1px solid rgba(168, 85, 247, 0.2); 
       border-radius: 12px; 
       backdrop-filter: blur(10px);
     }
+    
     .shadow-soft { 
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 
                   0 4px 8px rgba(0, 0, 0, 0.3),
                   inset 0 1px 0 rgba(255, 255, 255, 0.1); 
     }
+    
     .small-muted { 
-      color: #94a3b8; 
+      color: var(--text-muted); 
       font-size: 0.75rem; 
     }
+    
     .btn { 
       transition: all 0.2s ease; 
       font-size: 0.8rem; 
       font-weight: 500;
+      border: none;
+      cursor: pointer;
     }
+    
     .btn:hover { 
       transform: translateY(-1px); 
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
     .hidden { 
       display: none !important; 
     }
+    
     input, textarea { 
       transition: all 0.2s ease; 
       font-size: 0.85rem; 
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(100, 116, 139, 0.5);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      width: 100%;
     }
+    
     input:focus, textarea:focus { 
       outline: none; 
-      border-color: #a855f7; 
+      border-color: var(--primary-light); 
       box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3); 
     }
+    
+    input::placeholder, textarea::placeholder {
+      color: var(--text-muted);
+    }
+    
     .active-link { 
-      background-color: #7e22ce !important; 
+      background-color: var(--primary) !important; 
       color: #fff !important; 
       font-weight: 600; 
     }
+    
     .gradient-text {
-      background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+      background: linear-gradient(90deg, var(--primary-light) 0%, var(--secondary) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
+    
     .glass-effect {
       background: rgba(30, 41, 59, 0.7);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(168, 85, 247, 0.1);
     }
+    
     .fade-in {
       animation: fadeIn 0.3s ease-in-out;
     }
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    
     .pulse-glow {
       animation: pulseGlow 2s infinite;
     }
+    
     @keyframes pulseGlow {
       0% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.5); }
       50% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
       100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.5); }
     }
+    
     .scrollbar-custom::-webkit-scrollbar {
       width: 4px;
     }
+    
     .scrollbar-custom::-webkit-scrollbar-track {
       background: rgba(30, 41, 59, 0.5);
       border-radius: 8px;
     }
+    
     .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #a855f7;
+      background: var(--primary-light);
       border-radius: 8px;
     }
+    
     .hamburger-container {
       position: relative;
       z-index: 1000;
     }
+    
     .hamburger-menu {
       z-index: 1001;
     }
+    
     .notification {
       position: fixed;
       top: 15px;
@@ -114,21 +162,27 @@
       transform: translateX(150%);
       transition: transform 0.3s ease;
     }
+    
     .notification.show {
       transform: translateX(0);
     }
+    
     .notification.success {
       background-color: #10b981;
     }
+    
     .notification.error {
       background-color: #ef4444;
     }
+    
     .notification.info {
       background-color: #3b82f6;
     }
+    
     .notification.warning {
       background-color: #f59e0b;
     }
+    
     .loading {
       display: inline-block;
       width: 16px;
@@ -138,17 +192,21 @@
       border-top-color: #fff;
       animation: spin 1s ease-in-out infinite;
     }
+    
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    
     .text-item {
       transition: all 0.2s ease;
       cursor: pointer;
     }
+    
     .text-item:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+    
     .color-preview {
       width: 20px;
       height: 20px;
@@ -156,6 +214,144 @@
       display: inline-block;
       margin-right: 8px;
       border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    /* Neue Styles für verbesserte UI */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+    
+    .empty-state i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+    
+    .text-content-preview {
+      white-space: pre-wrap;
+      max-height: 100px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .text-content-preview::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: linear-gradient(transparent, rgba(30, 41, 59, 0.8));
+    }
+    
+    .webhook-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.25rem;
+    }
+    
+    .webhook-valid {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+    }
+    
+    .webhook-invalid {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+    
+    .webhook-empty {
+      background: rgba(156, 163, 175, 0.2);
+      color: #9ca3af;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    
+    .action-buttons button {
+      flex: 1;
+      padding: 0.4rem 0.5rem;
+      font-size: 0.7rem;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+    
+    .search-container {
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    
+    .search-container i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    
+    .search-container input {
+      padding-left: 2.25rem;
+    }
+    
+    .character-count {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    
+    .character-count.warning {
+      color: #f59e0b;
+    }
+    
+    .character-count.error {
+      color: #ef4444;
+    }
+    
+    .text-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+    
+    @media (max-width: 640px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .text-grid {
+        grid-template-columns: 1fr !important;
+      }
     }
   </style>
 </head>
@@ -189,55 +385,57 @@
     <div class="max-w-6xl mx-auto p-3 md:p-4">
 
       <!-- HEADER -->
-      <header class="glass-effect rounded-xl shadow-soft mb-4 p-3 md:p-4 flex justify-between items-center relative z-10">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
-            <span class="text-white font-bold text-sm">💬</span>
-          </div>
-          <div>
-            <h1 class="text-xl md:text-2xl font-bold gradient-text tracking-tight">Text Manager</h1>
-            <p id="userInfo" class="text-xs text-gray-400">
-              Eingeloggt als: <span id="username">Unbekannt</span>
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-1">
-          <button id="btnMain" class="btn px-2.5 py-1.5 bg-purple-600 hover:bg-purple-500 rounded-lg shadow-sm pulse-glow">
-            <i class="fas fa-home text-xs mr-1"></i> Hauptbereich
-          </button>
-          <button id="btnSettings" class="btn px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
-            <i class="fas fa-cog text-xs mr-1"></i> Einstellungen
-          </button>
-          <div class="hamburger-container">
-            <button id="hamburgerBtn" class="p-1.5 flex flex-col justify-between h-5 w-7 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
-              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
-            </button>
-            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-1.5 w-40 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
-                <i class="fas fa-cannabis mr-2 text-xs"></i> Weed
-              </a>
-              <a href="seite2.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
-                <i class="fas fa-pills mr-2 text-xs"></i> Kokain
-              </a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
-                <i class="fas fa-calculator mr-2 text-xs"></i> 30% Rechner
-              </a>
-              <a href="seite4.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
-                <i class="fas fa-industry mr-2 text-xs"></i> Herstellung
-              </a>
-              <a href="seite3.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
-                <i class="fas fa-recycle mr-2 text-xs"></i> Materialrecycler
-              </a>
-              <a href="seite5.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
-                <i class="fas fa-route mr-2 text-xs"></i> Routen
-              </a>
+      <header class="glass-effect rounded-xl shadow-soft mb-4 p-3 md:p-4 relative z-10">
+        <div class="header-content flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+              <span class="text-white font-bold text-sm">💬</span>
+            </div>
+            <div>
+              <h1 class="text-xl md:text-2xl font-bold gradient-text tracking-tight">Text Manager</h1>
+              <p id="userInfo" class="text-xs text-gray-400">
+                Eingeloggt als: <span id="username">Unbekannt</span>
+              </p>
             </div>
           </div>
-          <button id="logoutBtn" class="btn px-2.5 py-1.5 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-1">
-            <i class="fas fa-sign-out-alt text-xs mr-1"></i> Logout
-          </button>
+          <div class="header-actions flex items-center gap-1">
+            <button id="btnMain" class="btn px-2.5 py-1.5 bg-purple-600 hover:bg-purple-500 rounded-lg shadow-sm pulse-glow">
+              <i class="fas fa-home text-xs mr-1"></i> Hauptbereich
+            </button>
+            <button id="btnSettings" class="btn px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
+              <i class="fas fa-cog text-xs mr-1"></i> Einstellungen
+            </button>
+            <div class="hamburger-container">
+              <button id="hamburgerBtn" class="p-1.5 flex flex-col justify-between h-5 w-7 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
+                <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+                <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+                <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              </button>
+              <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-1.5 w-40 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+                <a href="index.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                  <i class="fas fa-cannabis mr-2 text-xs"></i> Weed
+                </a>
+                <a href="seite2.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                  <i class="fas fa-pills mr-2 text-xs"></i> Kokain
+                </a>
+                <a href="https://khusland.github.io/KhusLand2/" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                  <i class="fas fa-calculator mr-2 text-xs"></i> 30% Rechner
+                </a>
+                <a href="seite4.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                  <i class="fas fa-industry mr-2 text-xs"></i> Herstellung
+                </a>
+                <a href="seite3.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                  <i class="fas fa-recycle mr-2 text-xs"></i> Materialrecycler
+                </a>
+                <a href="seite5.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                  <i class="fas fa-route mr-2 text-xs"></i> Routen
+                </a>
+              </div>
+            </div>
+            <button id="logoutBtn" class="btn px-2.5 py-1.5 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-1">
+              <i class="fas fa-sign-out-alt text-xs mr-1"></i> Logout
+            </button>
+          </div>
         </div>
       </header>
 
@@ -245,31 +443,44 @@
 
         <!-- HAUPTBEREICH -->
         <div id="mainArea" class="card p-4 shadow-soft fade-in">
-          <h2 class="text-lg font-semibold mb-3 text-purple-400 flex items-center gap-1">
-            <i class="fas fa-home text-sm"></i>
-            Hauptbereich
-          </h2>
+          <div class="section-title">
+            <i class="fas fa-home text-purple-400"></i>
+            <h2 class="text-lg font-semibold text-purple-400">Hauptbereich</h2>
+          </div>
+          
+          <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchTexts" placeholder="Texte durchsuchen...">
+          </div>
           
           <div class="mb-4 p-3 bg-gray-800/30 rounded-lg border border-gray-700">
             <p class="text-sm text-gray-300 mb-2">Wähle einen Text aus und klicke darauf, um ihn zu verwenden:</p>
-            <div id="textList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div id="textList" class="text-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               <!-- Text-Elemente werden hier dynamisch geladen -->
             </div>
           </div>
           
           <!-- Text verwenden und bearbeiten Bereich -->
           <div id="textUseSection" class="hidden p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-            <h3 class="text-base font-medium mb-2 text-blue-400">Text verwenden und bearbeiten</h3>
+            <h3 class="text-base font-medium mb-2 text-blue-400 flex items-center gap-1">
+              <i class="fas fa-edit text-sm"></i>
+              Text verwenden und bearbeiten
+            </h3>
             <div class="mb-3">
               <label for="editTextContent" class="block text-xs font-medium text-gray-300 mb-1">
                 <i class="fas fa-align-left mr-1 text-xs"></i> Text bearbeiten (nur für dich sichtbar)
               </label>
               <textarea id="editTextContent" rows="6" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
+              <div id="editCharCount" class="character-count">0 Zeichen</div>
             </div>
             <div class="flex gap-2">
               <button id="sendTextBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-paper-plane text-xs"></i>
                 An Discord senden
+              </button>
+              <button id="copyTextBtn" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
+                <i class="fas fa-copy text-xs"></i>
+                Kopieren
               </button>
               <button id="cancelUseBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-times text-xs"></i>
@@ -281,10 +492,10 @@
 
         <!-- EINSTELLUNGEN -->
         <div id="settingsArea" class="card p-4 shadow-soft hidden fade-in">
-          <h2 class="text-lg font-semibold mb-3 text-blue-400 flex items-center gap-1">
-            <i class="fas fa-cog text-sm"></i>
-            Einstellungen
-          </h2>
+          <div class="section-title">
+            <i class="fas fa-cog text-blue-400"></i>
+            <h2 class="text-lg font-semibold text-blue-400">Einstellungen</h2>
+          </div>
           
           <div id="adminLoginSection" class="mb-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
             <div class="mb-3">
@@ -305,7 +516,10 @@
           <div id="adminContent" class="hidden">
             <!-- Text hinzufügen -->
             <div class="mb-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-              <h3 class="text-base font-medium mb-2 text-green-400">Text hinzufügen</h3>
+              <h3 class="text-base font-medium mb-2 text-green-400 flex items-center gap-1">
+                <i class="fas fa-plus text-sm"></i>
+                Text hinzufügen
+              </h3>
               <div class="mb-3">
                 <label for="newTextTitle" class="block text-xs font-medium text-gray-300 mb-1">
                   <i class="fas fa-heading mr-1 text-xs"></i> Titel
@@ -317,6 +531,7 @@
                   <i class="fas fa-align-left mr-1 text-xs"></i> Inhalt
                 </label>
                 <textarea id="newTextContent" rows="4" placeholder="Inhalt des Texts" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
+                <div id="newCharCount" class="character-count">0 Zeichen</div>
               </div>
               <div class="mb-3">
                 <label for="newTextWebhook" class="block text-xs font-medium text-gray-300 mb-1">
@@ -341,7 +556,10 @@
             
             <!-- Text bearbeiten/löschen -->
             <div class="p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-              <h3 class="text-base font-medium mb-2 text-yellow-400">Texte verwalten</h3>
+              <h3 class="text-base font-medium mb-2 text-yellow-400 flex items-center gap-1">
+                <i class="fas fa-edit text-sm"></i>
+                Texte verwalten
+              </h3>
               <div id="textManagementList" class="space-y-3">
                 <!-- Verwaltete Texte werden hier geladen -->
               </div>
@@ -380,8 +598,10 @@
     const textList = document.getElementById('textList');
     const textUseSection = document.getElementById('textUseSection');
     const sendTextBtn = document.getElementById('sendTextBtn');
+    const copyTextBtn = document.getElementById('copyTextBtn');
     const cancelUseBtn = document.getElementById('cancelUseBtn');
     const editTextContent = document.getElementById('editTextContent');
+    const editCharCount = document.getElementById('editCharCount');
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const adminPassInput = document.getElementById('adminPass');
     const adminError = document.getElementById('adminError');
@@ -392,9 +612,11 @@
     const newTextWebhook = document.getElementById('newTextWebhook');
     const newTextColor = document.getElementById('newTextColor');
     const newTextColorValue = document.getElementById('newTextColorValue');
+    const newCharCount = document.getElementById('newCharCount');
     const textManagementList = document.getElementById('textManagementList');
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const searchTexts = document.getElementById('searchTexts');
 
     // Text-Daten (lokale Speicherung)
     let texts = JSON.parse(localStorage.getItem('text_manager_texts')) || [
@@ -403,13 +625,16 @@
         title: "Blacklist", 
         content: "**User** <@>\n**Blood Out von** <@>\nBlacklist-Grund\nVerräter", 
         webhook: "",
-        color: "#a855f7"
+        color: "#a855f7",
+        createdAt: new Date().toISOString(),
+        lastUsed: null
       }
     ];
 
     // Aktuell ausgewählter Text
     let selectedText = null;
     let originalContent = "";
+    let filteredTexts = [...texts];
 
     // Notification System
     function showNotification(message, type = 'info', duration = 4000) {
@@ -546,23 +771,57 @@
     function renderTextList() {
       textList.innerHTML = '';
       
-      if (texts.length === 0) {
-        textList.innerHTML = '<div class="col-span-full text-center py-6 text-gray-400 text-sm"><p>Keine Texte vorhanden.</p></div>';
+      if (filteredTexts.length === 0) {
+        textList.innerHTML = `
+          <div class="empty-state col-span-full">
+            <i class="fas fa-file-alt"></i>
+            <p>Keine Texte gefunden.</p>
+            ${searchTexts.value ? '<p class="text-xs mt-2">Versuche einen anderen Suchbegriff.</p>' : ''}
+          </div>
+        `;
         return;
       }
       
-      texts.forEach(text => {
+      filteredTexts.forEach(text => {
         const textElement = document.createElement('div');
         textElement.className = 'text-item p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-purple-500/30';
+        
+        // Webhook-Status
+        let webhookStatus = 'webhook-empty';
+        let webhookText = 'Kein Webhook';
+        
+        if (text.webhook) {
+          if (text.webhook.startsWith('https://discord.com/api/webhooks/')) {
+            webhookStatus = 'webhook-valid';
+            webhookText = 'Webhook gültig';
+          } else {
+            webhookStatus = 'webhook-invalid';
+            webhookText = 'Webhook ungültig';
+          }
+        }
+        
         textElement.innerHTML = `
-          <div class="flex items-center mb-1">
-            <span class="color-preview" style="background-color: ${text.color}"></span>
-            <h3 class="font-semibold text-sm text-white">${text.title}</h3>
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center">
+              <span class="color-preview" style="background-color: ${text.color}"></span>
+              <h3 class="font-semibold text-sm text-white">${text.title}</h3>
+            </div>
+            <span class="webhook-status ${webhookStatus}">
+              <i class="fas ${webhookStatus === 'webhook-valid' ? 'fa-check' : webhookStatus === 'webhook-invalid' ? 'fa-exclamation-triangle' : 'fa-minus'} text-xs"></i>
+              ${webhookText}
+            </span>
           </div>
-          <p class="text-xs text-gray-300 truncate">${text.content}</p>
-          <div class="mt-2 flex justify-end">
-            <button class="use-text-btn px-2 py-1 bg-green-600 hover:bg-green-500 rounded text-xs" data-id="${text.id}">
-              <i class="fas fa-paper-plane text-xs"></i> Verwenden
+          <div class="text-content-preview text-xs text-gray-300">${text.content}</div>
+          <div class="text-stats">
+            <span>${text.content.length} Zeichen</span>
+            <span>${text.lastUsed ? new Date(text.lastUsed).toLocaleDateString('de-DE') : 'Noch nie'}</span>
+          </div>
+          <div class="action-buttons">
+            <button class="use-text-btn bg-green-600 hover:bg-green-500" data-id="${text.id}">
+              <i class="fas fa-paper-plane text-xs"></i> Senden
+            </button>
+            <button class="copy-text-btn bg-blue-600 hover:bg-blue-500" data-id="${text.id}">
+              <i class="fas fa-copy text-xs"></i> Kopieren
             </button>
           </div>
         `;
@@ -577,6 +836,14 @@
           useText(id);
         });
       });
+      
+      // Event-Listener für Kopieren-Buttons
+      document.querySelectorAll('.copy-text-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          copyText(id);
+        });
+      });
     }
 
     // Text verwenden
@@ -587,10 +854,31 @@
       // Originalen Textinhalt speichern und in Textarea laden
       originalContent = selectedText.content;
       editTextContent.value = selectedText.content;
+      updateCharCount(editTextContent, editCharCount);
       
       // Verwenden-Bereich anzeigen
       textUseSection.classList.remove('hidden');
       showNotification(`Text "${selectedText.title}" ausgewählt - Du kannst ihn jetzt bearbeiten`, 'info');
+    }
+
+    // Text kopieren
+    function copyText(id) {
+      const text = texts.find(t => t.id === id);
+      if (!text) return;
+      
+      navigator.clipboard.writeText(text.content)
+        .then(() => {
+          showNotification(`Text "${text.title}" in die Zwischenablage kopiert`, 'success');
+          
+          // Aktualisiere lastUsed Zeitstempel
+          text.lastUsed = new Date().toISOString();
+          saveTexts();
+          renderTextList();
+        })
+        .catch(err => {
+          console.error('Fehler beim Kopieren: ', err);
+          showNotification('Fehler beim Kopieren des Texts', 'error');
+        });
     }
 
     // Text an Discord senden
@@ -621,6 +909,11 @@
         await sendToDiscordWebhook(selectedText, editedContent);
         showNotification(`Text "${selectedText.title}" wurde an Discord gesendet`, 'success');
         
+        // Aktualisiere lastUsed Zeitstempel
+        selectedText.lastUsed = new Date().toISOString();
+        saveTexts();
+        renderTextList();
+        
         // Zurücksetzen
         textUseSection.classList.add('hidden');
         selectedText = null;
@@ -640,6 +933,31 @@
       }
     });
 
+    // Text in Zwischenablage kopieren
+    copyTextBtn.addEventListener('click', () => {
+      const editedContent = editTextContent.value.trim();
+      if (!editedContent) {
+        showNotification('Text darf nicht leer sein', 'error');
+        return;
+      }
+      
+      navigator.clipboard.writeText(editedContent)
+        .then(() => {
+          showNotification('Text in die Zwischenablage kopiert', 'success');
+          
+          // Aktualisiere lastUsed Zeitstempel
+          if (selectedText) {
+            selectedText.lastUsed = new Date().toISOString();
+            saveTexts();
+            renderTextList();
+          }
+        })
+        .catch(err => {
+          console.error('Fehler beim Kopieren: ', err);
+          showNotification('Fehler beim Kopieren des Texts', 'error');
+        });
+    });
+
     // Abbrechen
     cancelUseBtn.addEventListener('click', () => {
       // Text auf Original zurücksetzen
@@ -651,6 +969,33 @@
       selectedText = null;
       originalContent = "";
       showNotification('Bearbeitung abgebrochen - Text wurde nicht gesendet', 'info');
+    });
+
+    // Zeichenzähler aktualisieren
+    function updateCharCount(textarea, counter) {
+      const length = textarea.value.length;
+      counter.textContent = `${length} Zeichen`;
+      
+      // Warnung bei vielen Zeichen
+      if (length > 1800) {
+        counter.classList.add('error');
+        counter.classList.remove('warning');
+      } else if (length > 1500) {
+        counter.classList.add('warning');
+        counter.classList.remove('error');
+      } else {
+        counter.classList.remove('warning', 'error');
+      }
+    }
+
+    // Zeichenzähler für Edit-Textarea
+    editTextContent.addEventListener('input', () => {
+      updateCharCount(editTextContent, editCharCount);
+    });
+
+    // Zeichenzähler für Neue-Text-Textarea
+    newTextContent.addEventListener('input', () => {
+      updateCharCount(newTextContent, newCharCount);
     });
 
     // Admin-Login
@@ -701,7 +1046,9 @@
         title,
         content,
         webhook,
-        color
+        color,
+        createdAt: new Date().toISOString(),
+        lastUsed: null
       };
       
       texts.push(newText);
@@ -713,6 +1060,7 @@
       newTextWebhook.value = '';
       newTextColor.value = '#a855f7';
       newTextColorValue.textContent = '#a855f7';
+      newCharCount.textContent = '0 Zeichen';
       
       // Listen aktualisieren
       renderTextList();
@@ -733,6 +1081,21 @@
       texts.forEach(text => {
         const textElement = document.createElement('div');
         textElement.className = 'p-3 rounded-lg bg-gray-800/50 border border-gray-700';
+        
+        // Webhook-Status
+        let webhookStatus = 'webhook-empty';
+        let webhookText = 'Kein Webhook';
+        
+        if (text.webhook) {
+          if (text.webhook.startsWith('https://discord.com/api/webhooks/')) {
+            webhookStatus = 'webhook-valid';
+            webhookText = 'Webhook gültig';
+          } else {
+            webhookStatus = 'webhook-invalid';
+            webhookText = 'Webhook ungültig';
+          }
+        }
+        
         textElement.innerHTML = `
           <div class="flex justify-between items-start mb-2">
             <div class="flex items-center">
@@ -748,10 +1111,21 @@
               </button>
             </div>
           </div>
-          <p class="text-xs text-gray-300 mb-2">${text.content}</p>
+          <div class="text-xs text-gray-300 mb-2">${text.content}</div>
           <div class="text-xs text-gray-400">
-            <div class="truncate"><span class="font-medium">Webhook:</span> ${text.webhook || 'Nicht konfiguriert'}</div>
-            <div><span class="font-medium">Farbe:</span> ${text.color}</div>
+            <div class="flex justify-between">
+              <span class="font-medium">Erstellt:</span> ${new Date(text.createdAt).toLocaleDateString('de-DE')}
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Zuletzt verwendet:</span> ${text.lastUsed ? new Date(text.lastUsed).toLocaleDateString('de-DE') : 'Noch nie'}
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Webhook:</span> 
+              <span class="${webhookStatus}">${webhookText}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Farbe:</span> ${text.color}
+            </div>
           </div>
         `;
         
@@ -825,6 +1199,22 @@
         showNotification(`Text "${text.title}" gelöscht`, 'success');
       }
     }
+
+    // Suchfunktion
+    searchTexts.addEventListener('input', () => {
+      const searchTerm = searchTexts.value.toLowerCase().trim();
+      
+      if (searchTerm === '') {
+        filteredTexts = [...texts];
+      } else {
+        filteredTexts = texts.filter(text => 
+          text.title.toLowerCase().includes(searchTerm) || 
+          text.content.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      renderTextList();
+    });
 
     // Initialisierung
     checkExistingLogin();

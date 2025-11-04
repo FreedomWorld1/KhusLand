@@ -83,6 +83,21 @@
       color: #fff !important;
       font-weight: 600;
     }
+    .hamburger-container {
+      position: relative;
+      z-index: 1000;
+    }
+    .hamburger-menu {
+      z-index: 1001;
+    }
+    .color-preview {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-right: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -115,7 +130,7 @@
     <div class="max-w-6xl mx-auto p-3 md:p-4">
 
       <!-- HEADER -->
-      <header class="glass-effect rounded-xl shadow-soft mb-4 p-3 md:p-4 flex justify-between items-center">
+      <header class="glass-effect rounded-xl shadow-soft mb-4 p-3 md:p-4 flex justify-between items-center relative z-10">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
             <span class="text-white font-bold text-sm">💬</span>
@@ -136,6 +151,33 @@
             <i class="fas fa-cog text-xs"></i>
             Einstellungen
           </button>
+          <div class="hamburger-container">
+            <button id="hamburgerBtn" class="p-1.5 flex flex-col justify-between h-5 w-7 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+              <span class="block h-0.5 bg-gray-100 rounded-full"></span>
+            </button>
+            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-1.5 w-40 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+              <a href="./" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                <i class="fas fa-cannabis mr-2 text-xs"></i> Weed
+              </a>
+              <a href="seite2.html" class="block px-3 py-2 hover:bg-gray-700 active-link transition-colors text-sm">
+                <i class="fas fa-pills mr-2 text-xs"></i> Kokain
+              </a>
+              <a href="https://khusland.github.io/KhusLand2/" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                <i class="fas fa-calculator mr-2 text-xs"></i> 30% Rechner
+              </a>
+              <a href="seite4.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                <i class="fas fa-industry mr-2 text-xs"></i> Herstellung
+              </a>
+              <a href="seite3.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                <i class="fas fa-recycle mr-2 text-xs"></i> Materialrecycler
+              </a>
+              <a href="seite5.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                <i class="fas fa-route mr-2 text-xs"></i> Routen
+              </a>
+            </div>
+          </div>
           <button id="logoutBtn" class="px-2.5 py-1.5 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm font-medium flex items-center gap-1">
             <i class="fas fa-sign-out-alt text-xs"></i>
             Logout
@@ -172,6 +214,33 @@
                 An Discord senden
               </button>
               <button id="cancelSendBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-medium flex items-center justify-center gap-1">
+                <i class="fas fa-times text-xs"></i>
+                Abbrechen
+              </button>
+            </div>
+          </div>
+
+          <!-- Text bearbeiten Bereich -->
+          <div id="textEditSection" class="hidden p-4 bg-gray-800/30 rounded-lg border border-gray-700 mt-4">
+            <h3 class="text-base font-medium mb-2 text-yellow-400">Text bearbeiten</h3>
+            <div class="mb-3">
+              <label for="editTextTitle" class="block text-xs font-medium text-gray-300 mb-1">
+                <i class="fas fa-heading mr-1 text-xs"></i> Titel
+              </label>
+              <input id="editTextTitle" type="text" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
+            </div>
+            <div class="mb-3">
+              <label for="editTextContent" class="block text-xs font-medium text-gray-300 mb-1">
+                <i class="fas fa-align-left mr-1 text-xs"></i> Inhalt
+              </label>
+              <textarea id="editTextContent" rows="4" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
+            </div>
+            <div class="flex gap-2">
+              <button id="saveEditBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-medium flex items-center justify-center gap-1">
+                <i class="fas fa-save text-xs"></i>
+                Speichern
+              </button>
+              <button id="cancelEditBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-times text-xs"></i>
                 Abbrechen
               </button>
@@ -218,6 +287,21 @@
                 </label>
                 <textarea id="newTextContent" rows="4" placeholder="Inhalt des Texts" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
               </div>
+              <div class="mb-3">
+                <label for="newTextWebhook" class="block text-xs font-medium text-gray-300 mb-1">
+                  <i class="fas fa-link mr-1 text-xs"></i> Webhook URL
+                </label>
+                <input id="newTextWebhook" type="text" placeholder="Discord Webhook URL" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
+              </div>
+              <div class="mb-3">
+                <label for="newTextColor" class="block text-xs font-medium text-gray-300 mb-1">
+                  <i class="fas fa-palette mr-1 text-xs"></i> Farbe
+                </label>
+                <div class="flex items-center gap-2">
+                  <input id="newTextColor" type="color" value="#a855f7" class="w-10 h-10 rounded-lg cursor-pointer">
+                  <span id="newTextColorValue" class="text-xs text-gray-300">#a855f7</span>
+                </div>
+              </div>
               <button id="addTextBtn" class="w-full py-2 bg-green-600 hover:bg-green-500 rounded-lg font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-plus text-xs"></i>
                 Text hinzufügen
@@ -244,9 +328,6 @@
     const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
     const ADMIN_PASSWORD = '1101';
 
-    // Webhook URL (ersetzen Sie diese mit Ihrer eigenen Discord Webhook URL)
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/...';
-
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
     const mainContent = document.getElementById('mainContent');
@@ -272,17 +353,46 @@
     const addTextBtn = document.getElementById('addTextBtn');
     const newTextTitle = document.getElementById('newTextTitle');
     const newTextContent = document.getElementById('newTextContent');
+    const newTextWebhook = document.getElementById('newTextWebhook');
+    const newTextColor = document.getElementById('newTextColor');
+    const newTextColorValue = document.getElementById('newTextColorValue');
     const textManagementList = document.getElementById('textManagementList');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const textEditSection = document.getElementById('textEditSection');
+    const editTextTitle = document.getElementById('editTextTitle');
+    const editTextContent = document.getElementById('editTextContent');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
 
     // Text-Daten (würde normalerweise in einer Datenbank gespeichert)
     let texts = [
-      { id: 1, title: "Willkommen", content: "Willkommen auf unserer Plattform!" },
-      { id: 2, title: "Information", content: "Hier finden Sie wichtige Informationen." },
-      { id: 3, title: "Angebot", content: "Spezielles Angebot nur für Sie!" }
+      { 
+        id: 1, 
+        title: "Willkommen", 
+        content: "Willkommen auf unserer Plattform!", 
+        webhook: "",
+        color: "#a855f7"
+      },
+      { 
+        id: 2, 
+        title: "Information", 
+        content: "Hier finden Sie wichtige Informationen.", 
+        webhook: "",
+        color: "#3b82f6"
+      },
+      { 
+        id: 3, 
+        title: "Angebot", 
+        content: "Spezielles Angebot nur für Sie!", 
+        webhook: "",
+        color: "#10b981"
+      }
     ];
 
     // Aktuell ausgewählter Text
     let selectedText = null;
+    let textToEdit = null;
 
     // Notification System
     function showNotification(message, type = 'info', duration = 4000) {
@@ -457,6 +567,18 @@
       btnSettings.classList.add('active-link');
     }
 
+    // Hamburger Menu
+    hamburgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hamburgerMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        hamburgerMenu.classList.add('hidden');
+      }
+    });
+
     // Text-Liste rendern
     function renderTextList() {
       textList.innerHTML = '';
@@ -470,18 +592,60 @@
         const textElement = document.createElement('div');
         textElement.className = 'text-item p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-purple-500/30';
         textElement.innerHTML = `
-          <h3 class="font-semibold text-sm mb-1 text-white">${text.title}</h3>
+          <div class="flex items-center mb-1">
+            <span class="color-preview" style="background-color: ${text.color}"></span>
+            <h3 class="font-semibold text-sm text-white">${text.title}</h3>
+          </div>
           <p class="text-xs text-gray-300 truncate">${text.content}</p>
+          <div class="mt-2 flex justify-between items-center">
+            <button class="edit-self-btn px-2 py-1 bg-blue-600 hover:bg-blue-500 rounded text-xs" data-id="${text.id}">
+              <i class="fas fa-edit text-xs"></i> Bearbeiten
+            </button>
+            <button class="use-text-btn px-2 py-1 bg-green-600 hover:bg-green-500 rounded text-xs" data-id="${text.id}">
+              <i class="fas fa-paper-plane text-xs"></i> Verwenden
+            </button>
+          </div>
         `;
-        
-        textElement.addEventListener('click', () => {
-          selectedText = text;
-          textInputSection.classList.remove('hidden');
-          showNotification(`Text "${text.title}" ausgewählt`, 'info');
-        });
         
         textList.appendChild(textElement);
       });
+      
+      // Event-Listener für Bearbeiten-Buttons
+      document.querySelectorAll('.edit-self-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          editTextSelf(id);
+        });
+      });
+      
+      // Event-Listener für Verwenden-Buttons
+      document.querySelectorAll('.use-text-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          useText(id);
+        });
+      });
+    }
+
+    // Text bearbeiten (im Hauptbereich)
+    function editTextSelf(id) {
+      textToEdit = texts.find(t => t.id === id);
+      if (!textToEdit) return;
+      
+      editTextTitle.value = textToEdit.title;
+      editTextContent.value = textToEdit.content;
+      
+      textEditSection.classList.remove('hidden');
+      showNotification(`Bearbeite Text "${textToEdit.title}"`, 'info');
+    }
+
+    // Text verwenden
+    function useText(id) {
+      selectedText = texts.find(t => t.id === id);
+      if (!selectedText) return;
+      
+      textInputSection.classList.remove('hidden');
+      showNotification(`Text "${selectedText.title}" ausgewählt`, 'info');
     }
 
     // Text an Discord senden
@@ -499,10 +663,12 @@
       
       try {
         // Hier würde der Webhook-Call stattfinden
-        // await sendToDiscordWebhook(selectedText, textId);
-        
-        // Simulierte Antwort für Demo-Zwecke
-        showNotification(`Text "${selectedText.title}" mit ID "${textId}" wurde an Discord gesendet`, 'success');
+        if (selectedText.webhook) {
+          await sendToDiscordWebhook(selectedText, textId);
+          showNotification(`Text "${selectedText.title}" mit ID "${textId}" wurde an Discord gesendet`, 'success');
+        } else {
+          showNotification(`Text "${selectedText.title}" mit ID "${textId}" bereit (kein Webhook konfiguriert)`, 'info');
+        }
         
         // Zurücksetzen
         textIdInput.value = '';
@@ -520,6 +686,38 @@
       textInputSection.classList.add('hidden');
       selectedText = null;
       showNotification('Vorgang abgebrochen', 'info');
+    });
+
+    // Text bearbeiten speichern
+    saveEditBtn.addEventListener('click', () => {
+      if (!textToEdit) return;
+      
+      const title = editTextTitle.value.trim();
+      const content = editTextContent.value.trim();
+      
+      if (!title || !content) {
+        showNotification('Bitte Titel und Inhalt ausfüllen', 'error');
+        return;
+      }
+      
+      textToEdit.title = title;
+      textToEdit.content = content;
+      
+      // Listen aktualisieren
+      renderTextList();
+      
+      // Bearbeitungsbereich ausblenden
+      textEditSection.classList.add('hidden');
+      textToEdit = null;
+      
+      showNotification('Text erfolgreich bearbeitet', 'success');
+    });
+
+    // Bearbeiten abbrechen
+    cancelEditBtn.addEventListener('click', () => {
+      textEditSection.classList.add('hidden');
+      textToEdit = null;
+      showNotification('Bearbeitung abgebrochen', 'info');
     });
 
     // Admin-Login
@@ -544,10 +742,17 @@
       }
     });
 
+    // Farbe ändern Event
+    newTextColor.addEventListener('input', (e) => {
+      newTextColorValue.textContent = e.target.value;
+    });
+
     // Text hinzufügen
     addTextBtn.addEventListener('click', () => {
       const title = newTextTitle.value.trim();
       const content = newTextContent.value.trim();
+      const webhook = newTextWebhook.value.trim();
+      const color = newTextColor.value;
       
       if (!title || !content) {
         showNotification('Bitte Titel und Inhalt ausfüllen', 'error');
@@ -558,7 +763,9 @@
       const newText = {
         id: texts.length > 0 ? Math.max(...texts.map(t => t.id)) + 1 : 1,
         title,
-        content
+        content,
+        webhook,
+        color
       };
       
       texts.push(newText);
@@ -566,6 +773,9 @@
       // Formular zurücksetzen
       newTextTitle.value = '';
       newTextContent.value = '';
+      newTextWebhook.value = '';
+      newTextColor.value = '#a855f7';
+      newTextColorValue.textContent = '#a855f7';
       
       // Listen aktualisieren
       renderTextList();
@@ -588,7 +798,10 @@
         textElement.className = 'p-3 rounded-lg bg-gray-800/50 border border-gray-700';
         textElement.innerHTML = `
           <div class="flex justify-between items-start mb-2">
-            <h3 class="font-semibold text-sm text-white">${text.title}</h3>
+            <div class="flex items-center">
+              <span class="color-preview" style="background-color: ${text.color}"></span>
+              <h3 class="font-semibold text-sm text-white">${text.title}</h3>
+            </div>
             <div class="flex gap-1">
               <button class="edit-text-btn px-2 py-1 bg-blue-600 hover:bg-blue-500 rounded text-xs" data-id="${text.id}">
                 <i class="fas fa-edit text-xs"></i> Bearbeiten
@@ -598,7 +811,11 @@
               </button>
             </div>
           </div>
-          <p class="text-xs text-gray-300">${text.content}</p>
+          <p class="text-xs text-gray-300 mb-2">${text.content}</p>
+          <div class="text-xs text-gray-400">
+            <div class="truncate"><span class="font-medium">Webhook:</span> ${text.webhook || 'Nicht konfiguriert'}</div>
+            <div><span class="font-medium">Farbe:</span> ${text.color}</div>
+          </div>
         `;
         
         textManagementList.appendChild(textElement);
@@ -608,7 +825,7 @@
       document.querySelectorAll('.edit-text-btn').forEach(button => {
         button.addEventListener('click', (e) => {
           const id = parseInt(e.target.closest('button').getAttribute('data-id'));
-          editText(id);
+          editTextAdmin(id);
         });
       });
       
@@ -621,8 +838,8 @@
       });
     }
 
-    // Text bearbeiten
-    function editText(id) {
+    // Text bearbeiten (Admin)
+    function editTextAdmin(id) {
       const text = texts.find(t => t.id === id);
       if (!text) return;
       
@@ -632,8 +849,16 @@
       const newContent = prompt('Neuen Inhalt eingeben:', text.content);
       if (newContent === null) return; // Benutzer hat abgebrochen
       
+      const newWebhook = prompt('Neue Webhook URL eingeben:', text.webhook);
+      if (newWebhook === null) return; // Benutzer hat abgebrochen
+      
+      const newColor = prompt('Neue Farbe eingeben (Hex-Code):', text.color);
+      if (newColor === null) return; // Benutzer hat abgebrochen
+      
       text.title = newTitle.trim();
       text.content = newContent.trim();
+      text.webhook = newWebhook.trim();
+      text.color = newColor.trim();
       
       // Listen aktualisieren
       renderTextList();
@@ -673,7 +898,7 @@
       // Hier ist ein Beispiel, wie das aussehen könnte:
       
       /*
-      const response = await fetch(DISCORD_WEBHOOK_URL, {
+      const response = await fetch(text.webhook, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -684,7 +909,7 @@
           embeds: [
             {
               title: text.title,
-              color: 0x9932CC,
+              color: parseInt(text.color.replace('#', ''), 16),
               timestamp: new Date().toISOString()
             }
           ]

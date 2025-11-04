@@ -408,6 +408,18 @@
       color: white;
     }
     
+    .user-banner {
+      background: linear-gradient(90deg, #7e22ce 0%, #ec4899 100%);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
     @media (max-width: 640px) {
       .header-content {
         flex-direction: column;
@@ -509,7 +521,7 @@
                 <a href="https://khusland.github.io/KhusLand2/" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
                   <i class="fas fa-calculator mr-2 text-xs"></i> 30% Rechner
                 </a>
-                <a href="seite4.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+                <a href="seite4.html" id="seite4Link" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm hidden">
                   <i class="fas fa-industry mr-2 text-xs"></i> Herstellung
                 </a>
                 <a href="seite3.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
@@ -529,6 +541,12 @@
           </div>
         </div>
       </header>
+
+      <!-- USER BANNER -->
+      <div id="userBanner" class="user-banner hidden">
+        <i class="fas fa-crown mr-2"></i>
+        <span id="bannerMessage">Willkommen bei KhusLand Management</span>
+      </div>
 
       <div id="mainContainer" class="space-y-4 relative z-0">
 
@@ -679,11 +697,35 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, remove, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // Firebase Konfiguration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    // Firebase initialisieren
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const textsRef = ref(db, 'khusland_texts');
+
     // Discord OAuth Konfiguration (1:1 aus Ihrem Script)
     const DISCORD_CLIENT_ID = '1432942180770644079';
     const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
     const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+    // Zugriffsbeschränkung für seite4.html
+    const ALLOWED_MESSAGES_FOR_SEITE4 = ['11er', '12er', '10er'];
 
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
@@ -724,33 +766,17 @@
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     const searchTexts = document.getElementById('searchTexts');
+    const userBanner = document.getElementById('userBanner');
+    const bannerMessage = document.getElementById('bannerMessage');
+    const seite4Link = document.getElementById('seite4Link');
 
-    // Text-Daten (lokale Speicherung)
-    let texts = JSON.parse(localStorage.getItem('khusland_texts')) || [
-      { 
-        id: 1, 
-        title: "Blacklist", 
-        content: "**User** <@>\n**Blood Out von** <@>\nBlacklist-Grund\nVerräter", 
-        webhook: "",
-        color: "#a855f7",
-        createdAt: new Date().toISOString(),
-        lastUsed: null
-      },
-      { 
-        id: 2, 
-        title: "Willkommen", 
-        content: "Herzlich willkommen auf unserem Server! :tada:\n\nBitte lies unsere Regeln und stelle dich vor.", 
-        webhook: "",
-        color: "#10b981",
-        createdAt: new Date().toISOString(),
-        lastUsed: null
-      }
-    ];
+    // Text-Daten (werden jetzt von Firebase geladen)
+    let texts = [];
+    let filteredTexts = [];
 
     // Aktuell ausgewählter Text
     let selectedText = null;
     let originalContent = "";
-    let filteredTexts = [...texts];
 
     // Notification System
     function showNotification(message, type = 'info', duration = 4000) {
@@ -950,52 +976,6 @@
       }
     }
 
-    setInterval(async () => {
-      if (localStorage.getItem('discord_user')) {
-        const authResult = await checkUserAuthorization();
-        if (!authResult.isAuthorized) {
-          let message = 'Berechtigung widerrufen';
-          if (authResult.accessInfo?.message === 'access expired') {
-            message = 'Zugang abgelaufen';
-          }
-          showNotification(message, 'error');
-          setTimeout(() => {
-            logout();
-          }, 3000);
-        }
-      }
-    }, 30000);
-
-    document.addEventListener('visibilitychange', async () => {
-      if (!document.hidden && localStorage.getItem('discord_user')) {
-        const authResult = await checkUserAuthorization();
-        if (!authResult.isAuthorized) {
-          let message = 'Berechtigung widerrufen';
-          if (authResult.accessInfo?.message === 'access expired') {
-            message = 'Zugang abgelaufen';
-          }
-          showNotification(message, 'error');
-          setTimeout(() => {
-            logout();
-          }, 2000);
-        }
-      }
-    });
-
-    async function validateAccess() {
-      const authResult = await checkUserAuthorization();
-      if (!authResult.isAuthorized && localStorage.getItem('discord_user')) {
-        let message = 'Zugriff entzogen';
-        if (authResult.accessInfo?.message === 'access expired') {
-          message = 'Zugang abgelaufen';
-        }
-        showNotification(message, 'error');
-        setTimeout(logout, 2000);
-        return false;
-      }
-      return true;
-    }
-
     function showError(message) {
       errorMessage.textContent = message;
       loginError.classList.remove('hidden');
@@ -1012,6 +992,17 @@
       const user = JSON.parse(localStorage.getItem('discord_user'));
       if (user) {
         usernameElement.textContent = user.username;
+        
+        // User Banner anzeigen
+        if (accessInfo && accessInfo.message) {
+          userBanner.classList.remove('hidden');
+          bannerMessage.textContent = accessInfo.message;
+        }
+        
+        // Seitennavigation basierend auf Message anpassen
+        if (accessInfo && accessInfo.message && ALLOWED_MESSAGES_FOR_SEITE4.includes(accessInfo.message)) {
+          seite4Link.classList.remove('hidden');
+        }
       }
       
       if (accessInfo) {
@@ -1029,7 +1020,7 @@
       window.history.replaceState({}, document.title, cleanUrl);
       
       // Text-Liste rendern
-      renderTextList();
+      loadTextsFromFirebase();
       
       // Bereiche zurücksetzen
       showMainArea();
@@ -1050,6 +1041,8 @@
       debugInfo.classList.add('hidden');
       accessBadge.classList.add('hidden');
       forceCheckBtn.classList.add('hidden');
+      userBanner.classList.add('hidden');
+      seite4Link.classList.add('hidden');
       
       showNotification('Ausgeloggt', 'info');
     }
@@ -1096,9 +1089,77 @@
       exchangeCodeForToken(code);
     }
 
-    // Texte speichern
-    function saveTexts() {
-      localStorage.setItem('khusland_texts', JSON.stringify(texts));
+    // Firebase-Funktionen
+    function loadTextsFromFirebase() {
+      onValue(textsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          texts = Object.values(data);
+          // IDs aus Firebase-Keys setzen
+          Object.keys(data).forEach((key, index) => {
+            if (texts[index]) texts[index].id = key;
+          });
+        } else {
+          // Initiale Texte in Firebase speichern
+          const initialTexts = [
+            { 
+              title: "Blacklist", 
+              content: "**User** <@>\n**Blood Out von** <@>\nBlacklist-Grund\nVerräter", 
+              webhook: "",
+              color: "#a855f7",
+              createdAt: new Date().toISOString(),
+              lastUsed: null
+            },
+            { 
+              title: "Willkommen", 
+              content: "Herzlich willkommen auf unserem Server! :tada:\n\nBitte lies unsere Regeln und stelle dich vor.", 
+              webhook: "",
+              color: "#10b981",
+              createdAt: new Date().toISOString(),
+              lastUsed: null
+            }
+          ];
+          
+          initialTexts.forEach(text => {
+            push(textsRef, text);
+          });
+          
+          texts = initialTexts;
+        }
+        
+        filteredTexts = [...texts];
+        renderTextList();
+      });
+    }
+
+    function saveTextToFirebase(text) {
+      if (text.id) {
+        // Text aktualisieren
+        const textRef = ref(db, `khusland_texts/${text.id}`);
+        set(textRef, {
+          title: text.title,
+          content: text.content,
+          webhook: text.webhook,
+          color: text.color,
+          createdAt: text.createdAt,
+          lastUsed: text.lastUsed
+        });
+      } else {
+        // Neuen Text hinzufügen
+        push(textsRef, {
+          title: text.title,
+          content: text.content,
+          webhook: text.webhook,
+          color: text.color,
+          createdAt: new Date().toISOString(),
+          lastUsed: null
+        });
+      }
+    }
+
+    function deleteTextFromFirebase(id) {
+      const textRef = ref(db, `khusland_texts/${id}`);
+      remove(textRef);
     }
 
     // Navigation
@@ -1196,7 +1257,7 @@
       // Event-Listener für Verwenden-Buttons
       document.querySelectorAll('.use-text-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          const id = e.target.closest('button').getAttribute('data-id');
           useText(id);
         });
       });
@@ -1204,7 +1265,7 @@
       // Event-Listener für Kopieren-Buttons
       document.querySelectorAll('.copy-text-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          const id = e.target.closest('button').getAttribute('data-id');
           copyText(id);
         });
       });
@@ -1236,7 +1297,7 @@
           
           // Aktualisiere lastUsed Zeitstempel
           text.lastUsed = new Date().toISOString();
-          saveTexts();
+          saveTextToFirebase(text);
           renderTextList();
         })
         .catch(err => {
@@ -1275,7 +1336,7 @@
         
         // Aktualisiere lastUsed Zeitstempel
         selectedText.lastUsed = new Date().toISOString();
-        saveTexts();
+        saveTextToFirebase(selectedText);
         renderTextList();
         
         // Zurücksetzen
@@ -1312,7 +1373,7 @@
           // Aktualisiere lastUsed Zeitstempel
           if (selectedText) {
             selectedText.lastUsed = new Date().toISOString();
-            saveTexts();
+            saveTextToFirebase(selectedText);
             renderTextList();
           }
         })
@@ -1401,12 +1462,8 @@
         return;
       }
       
-      // Neue ID generieren
-      const newId = texts.length > 0 ? Math.max(...texts.map(t => t.id)) + 1 : 1;
-      
       // Neuen Text erstellen
       const newText = {
-        id: newId,
         title,
         content,
         webhook,
@@ -1415,8 +1472,7 @@
         lastUsed: null
       };
       
-      texts.push(newText);
-      saveTexts();
+      saveTextToFirebase(newText);
       
       // Formular zurücksetzen
       newTextTitle.value = '';
@@ -1425,10 +1481,6 @@
       newTextColor.value = '#a855f7';
       newTextColorValue.textContent = '#a855f7';
       newCharCount.textContent = '0 Zeichen';
-      
-      // Listen aktualisieren
-      renderTextList();
-      renderTextManagementList();
       
       showNotification(`Text "${title}" hinzugefügt`, 'success');
     });
@@ -1499,7 +1551,7 @@
       // Event-Listener für Bearbeiten-Buttons
       document.querySelectorAll('.edit-text-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          const id = e.target.closest('button').getAttribute('data-id');
           editTextAdmin(id);
         });
       });
@@ -1507,7 +1559,7 @@
       // Event-Listener für Löschen-Buttons
       document.querySelectorAll('.delete-text-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-          const id = parseInt(e.target.closest('button').getAttribute('data-id'));
+          const id = e.target.closest('button').getAttribute('data-id');
           deleteText(id);
         });
       });
@@ -1535,12 +1587,8 @@
       text.webhook = newWebhook.trim();
       text.color = newColor.trim();
       
-      // Texte speichern
-      saveTexts();
-      
-      // Listen aktualisieren
-      renderTextList();
-      renderTextManagementList();
+      // Text in Firebase speichern
+      saveTextToFirebase(text);
       
       showNotification(`Text "${text.title}" bearbeitet`, 'success');
     }
@@ -1551,15 +1599,7 @@
       if (!text) return;
       
       if (confirm(`Text "${text.title}" wirklich löschen?`)) {
-        texts = texts.filter(t => t.id !== id);
-        
-        // Texte speichern
-        saveTexts();
-        
-        // Listen aktualisieren
-        renderTextList();
-        renderTextManagementList();
-        
+        deleteTextFromFirebase(id);
         showNotification(`Text "${text.title}" gelöscht`, 'success');
       }
     }
@@ -1620,6 +1660,39 @@
       
       return response;
     }
+
+    // Regelmäßige Zugriffsüberprüfung
+    setInterval(async () => {
+      if (localStorage.getItem('discord_user')) {
+        const authResult = await checkUserAuthorization();
+        if (!authResult.isAuthorized) {
+          let message = 'Berechtigung widerrufen';
+          if (authResult.accessInfo?.message === 'access expired') {
+            message = 'Zugang abgelaufen';
+          }
+          showNotification(message, 'error');
+          setTimeout(() => {
+            logout();
+          }, 3000);
+        }
+      }
+    }, 30000);
+
+    document.addEventListener('visibilitychange', async () => {
+      if (!document.hidden && localStorage.getItem('discord_user')) {
+        const authResult = await checkUserAuthorization();
+        if (!authResult.isAuthorized) {
+          let message = 'Berechtigung widerrufen';
+          if (authResult.accessInfo?.message === 'access expired') {
+            message = 'Zugang abgelaufen';
+          }
+          showNotification(message, 'error');
+          setTimeout(() => {
+            logout();
+          }, 2000);
+        }
+      }
+    });
   </script>
 </body>
 </html>

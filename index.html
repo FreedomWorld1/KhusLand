@@ -238,38 +238,20 @@
       margin-left: 5px;
       font-weight: 600;
     }
-    .discount-15 {
-      background-color: #3b82f6;
-      color: white;
-    }
-    .discount-20 {
-      background-color: #10b981;
-      color: white;
-    }
-    .discount-10 {
-      background-color: #f59e0b;
-      color: black;
-    }
     .discount-btn {
       transition: all 0.2s ease;
-      font-size: 0.8rem;
-      padding: 6px 10px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(30, 41, 59, 0.6);
     }
     .discount-btn.active {
-      transform: scale(1.05);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-    }
-    .discount-btn-15.active {
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-    }
-    .discount-btn-20.active {
-      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
-    }
-    .discount-btn-10.active {
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.5);
+      transform: scale(1.02);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
     }
     .price-change {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       margin-top: 2px;
     }
     .price-increase {
@@ -277,6 +259,19 @@
     }
     .price-decrease {
       color: #ef4444;
+    }
+    .discount-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .settings-section {
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(74, 222, 128, 0.1);
     }
   </style>
 </head>
@@ -385,27 +380,16 @@
           </h2>
           <form id="entryForm" class="space-y-5">
             
-            <!-- RABATT-SYSTEM - GANZ OBEN -->
-            <div class="bg-gray-800/30 p-3 rounded-lg border border-gray-700">
+            <!-- RABATT-SYSTEM - UNTERSCHEIDLICH UND KLEIN -->
+            <div class="bg-gray-800/20 p-3 rounded-lg border border-gray-700">
               <label class="block text-sm font-medium text-gray-300 mb-2 text-center">
                 <i class="fas fa-percentage mr-1"></i> Rabatt auswählen
               </label>
-              <div class="flex gap-2 justify-center">
-                <button type="button" id="discount15" class="discount-btn discount-btn-15 px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-all duration-200">
-                  <div class="font-bold">15%</div>
-                  <div class="text-xs opacity-90">Einkäufer</div>
-                </button>
-                <button type="button" id="discount20" class="discount-btn discount-btn-20 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-medium transition-all duration-200">
-                  <div class="font-bold">20%</div>
-                  <div class="text-xs opacity-90">Normal</div>
-                </button>
-                <button type="button" id="discount10" class="discount-btn discount-btn-10 px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg font-medium transition-all duration-200">
-                  <div class="font-bold">10%</div>
-                  <div class="text-xs opacity-90">Mitarbeiter</div>
-                </button>
+              <div id="discountButtonsContainer" class="discount-grid">
+                <!-- Discount buttons will be generated here -->
               </div>
               <div class="mt-2 text-xs text-gray-400 text-center">
-                Aktiver Rabatt: <span id="activeDiscountText" class="font-bold text-white">20% (Normal)</span>
+                Aktiver Rabatt: <span id="activeDiscountText" class="font-bold text-white">0%</span>
               </div>
             </div>
 
@@ -529,19 +513,8 @@
           </div>
           
           <!-- Rabatt-Filter -->
-          <div class="flex gap-2 mb-4 flex-wrap">
-            <button class="discount-filter-btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all" data-discount="all">
-              Alle Rabatte
-            </button>
-            <button class="discount-filter-btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm transition-all" data-discount="15">
-              15% Einkäufer
-            </button>
-            <button class="discount-filter-btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm transition-all" data-discount="20">
-              20% Normal
-            </button>
-            <button class="discount-filter-btn px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-sm transition-all" data-discount="10">
-              10% Mitarbeiter
-            </button>
+          <div class="flex gap-2 mb-4 flex-wrap" id="discountFilterContainer">
+            <!-- Discount filter buttons will be generated here -->
           </div>
           
           <!-- Suchfeld -->
@@ -574,6 +547,37 @@
             </span>
           </div>
           <div id="adminContent" class="hidden">
+            
+            <!-- RABATT-EINSTELLUNGEN -->
+            <div class="settings-section">
+              <h3 class="text-md font-semibold mb-3 text-purple-400 flex items-center gap-2">
+                <i class="fas fa-percentage"></i>
+                Rabatt-Einstellungen
+              </h3>
+              
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  Verfügbare Rabatte verwalten
+                </label>
+                <div class="space-y-2">
+                  <div class="flex gap-2">
+                    <input type="number" id="newDiscountValue" min="0" max="100" placeholder="Rabatt in %" class="flex-1 p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500"/>
+                    <input type="text" id="newDiscountLabel" placeholder="Bezeichnung" class="flex-1 p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500"/>
+                    <button id="addDiscountBtn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn">
+                      <i class="fas fa-plus"></i> Hinzufügen
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-800/30 rounded-lg p-3">
+                <div class="text-sm font-medium text-gray-300 mb-2">Aktive Rabatte:</div>
+                <div id="discountSettingsList" class="space-y-2">
+                  <!-- Discount settings will be listed here -->
+                </div>
+              </div>
+            </div>
+
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
               <div class="small-muted">Gesamtanzahl: <span id="totalCount" class="font-bold text-white">0</span></div>
               <div class="small-muted">Gesamtumsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
@@ -637,7 +641,7 @@
     // Firebase Import und Konfiguration
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
@@ -654,6 +658,7 @@
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
     const entriesRef = ref(db,'weed_entries');
+    const discountsRef = ref(db,'discount_settings');
 
     // CLOUDFLARE USERNAME VALIDIERUNG - KÄUFER MUSS AUTORISIERTER CLOUDFLARE USER SEIN
     const CLOUDFLARE_USERNAMES = ['Rey Ehrlich', 'Philipp Yane', 'Kai Dimauro', 'Lisa Ehrlich'];
@@ -663,9 +668,13 @@
     }
 
     // RABATT-SYSTEM VARIABLEN
-    let currentDiscount = 20; // Standardrabatt 20%
-    let baseSellerShare = 0;
-    let baseYourShare = 0;
+    let currentDiscount = 0; // Standard: Kein Rabatt
+    let availableDiscounts = [
+      { value: 0, label: 'Kein Rabatt', color: 'gray' },
+      { value: 10, label: 'Mitarbeiter', color: 'yellow' },
+      { value: 15, label: 'Einkäufer', color: 'blue' },
+      { value: 20, label: 'Normal', color: 'green' }
+    ];
 
     // Event-Listener für Käufer-Feld-Änderungen
     document.getElementById('buyer').addEventListener('blur', function() {
@@ -1143,54 +1152,146 @@
     // Initialize with New Entry active
     updateButtonStates('new');
 
-    // RABATT-SYSTEM FUNKTIONEN - KORRIGIERT: Rabatt wirkt sich auf Anteile aus
-    function setupDiscountSystem() {
-      const discountButtons = {
-        15: document.getElementById('discount15'),
-        20: document.getElementById('discount20'),
-        10: document.getElementById('discount10')
-      };
+    // RABATT-SYSTEM FUNKTIONEN - KORRIGIERTE BERECHNUNG
+    function loadDiscountSettings() {
+      onValue(discountsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          availableDiscounts = Object.values(data);
+          renderDiscountButtons();
+          renderDiscountFilters();
+          renderDiscountSettings();
+        } else {
+          // Standard-Rabatte setzen, falls keine in Firebase existieren
+          set(discountsRef, availableDiscounts);
+        }
+      });
+    }
 
-      // Event Listener für Rabatt-Buttons
-      Object.entries(discountButtons).forEach(([discount, button]) => {
+    function renderDiscountButtons() {
+      const container = document.getElementById('discountButtonsContainer');
+      container.innerHTML = '';
+      
+      availableDiscounts.sort((a, b) => a.value - b.value).forEach(discount => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
+        button.innerHTML = `
+          <div class="font-bold text-xs">${discount.value}%</div>
+          <div class="text-xs opacity-90">${discount.label}</div>
+        `;
         button.addEventListener('click', () => {
           // Entferne aktive Klasse von allen Buttons
-          Object.values(discountButtons).forEach(btn => {
+          document.querySelectorAll('.discount-btn').forEach(btn => {
             btn.classList.remove('active');
           });
           
           // Setze aktiven Button
           button.classList.add('active');
-          currentDiscount = parseInt(discount);
+          currentDiscount = discount.value;
           
           // Aktualisiere Anzeige
           updateDiscountDisplay();
           updateShares();
           
-          showNotification(`Rabatt auf ${discount}% gesetzt - Käuferanteil reduziert`, 'info', 2000);
+          if (discount.value > 0) {
+            showNotification(`${discount.value}% Rabatt aktiv - Käuferanteil reduziert`, 'info', 2000);
+          } else {
+            showNotification('Kein Rabatt aktiv', 'info', 2000);
+          }
         });
+        
+        container.appendChild(button);
       });
-
-      // Setze Standard-Rabatt (20%)
-      discountButtons[20].classList.add('active');
+      
       updateDiscountDisplay();
     }
 
-    function updateDiscountDisplay() {
-      const discountTexts = {
-        15: '15% (Einkäufer)',
-        20: '20% (Normal)',
-        10: '10% (Mitarbeiter)'
-      };
+    function renderDiscountFilters() {
+      const container = document.getElementById('discountFilterContainer');
+      container.innerHTML = '';
       
-      document.getElementById('activeDiscountText').textContent = discountTexts[currentDiscount] || '20% (Normal)';
+      // "Alle" Button
+      const allButton = document.createElement('button');
+      allButton.className = 'px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all';
+      allButton.textContent = 'Alle Rabatte';
+      allButton.setAttribute('data-discount', 'all');
+      allButton.addEventListener('click', () => {
+        filteredEntries = [...entries];
+        renderOverview();
+      });
+      container.appendChild(allButton);
+      
+      // Rabatt-Filter Buttons
+      availableDiscounts.sort((a, b) => a.value - b.value).forEach(discount => {
+        if (discount.value === 0) return; // "Kein Rabatt" nicht als Filter anzeigen
+        
+        const button = document.createElement('button');
+        button.className = 'px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all';
+        button.textContent = `${discount.value}% ${discount.label}`;
+        button.setAttribute('data-discount', discount.value);
+        button.addEventListener('click', () => {
+          filteredEntries = entries.filter(entry => entry.discount === discount.value);
+          renderOverview();
+        });
+        container.appendChild(button);
+      });
     }
 
-    // NEUE FUNKTION: Berechne Anteile mit Rabatt-Effekt
+    function renderDiscountSettings() {
+      const container = document.getElementById('discountSettingsList');
+      container.innerHTML = '';
+      
+      availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between p-2 bg-gray-700/30 rounded';
+        item.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="font-medium">${discount.value}%</span>
+            <span class="text-sm text-gray-300">${discount.label}</span>
+          </div>
+          <button class="delete-discount-btn px-2 py-1 bg-red-600 hover:bg-red-500 rounded text-xs" data-index="${index}">
+            <i class="fas fa-trash"></i>
+          </button>
+        `;
+        
+        container.appendChild(item);
+      });
+      
+      // Event Listener für Lösch-Buttons
+      document.querySelectorAll('.delete-discount-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = parseInt(e.target.closest('button').getAttribute('data-index'));
+          deleteDiscount(index);
+        });
+      });
+    }
+
+    function updateDiscountDisplay() {
+      const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
+      if (activeDiscount) {
+        document.getElementById('activeDiscountText').textContent = 
+          currentDiscount === 0 ? '0% (Kein Rabatt)' : `${activeDiscount.value}% (${activeDiscount.label})`;
+      }
+    }
+
+    // NEUE FUNKTION: Korrekte Rabatt-Berechnung
     function calculateSharesWithDiscount(standardPrice) {
       // Basisanteile ohne Rabatt (70/30)
       const baseSellerShare = standardPrice * 0.7;
       const baseYourShare = standardPrice * 0.3;
+      
+      if (currentDiscount === 0) {
+        return {
+          baseSellerShare: Math.round(baseSellerShare),
+          baseYourShare: Math.round(baseYourShare),
+          discountAmount: 0,
+          finalSellerShare: Math.round(baseSellerShare),
+          finalYourShare: Math.round(baseYourShare),
+          sellerIncrease: 0,
+          yourDecrease: 0
+        };
+      }
       
       // Rabattbetrag (wird komplett vom Käuferanteil abgezogen)
       const discountAmount = baseYourShare * (currentDiscount / 100);
@@ -1210,7 +1311,7 @@
       };
     }
 
-    // Share Calculation MIT RABATT-EFFEKT AUF ANTEILE
+    // Share Calculation MIT KORRIGIERTER RABATT-BERECHNUNG
     const quantityInput = document.getElementById('quantity');
     const sellerShareEl = document.getElementById('sellerShare');
     const yourShareEl = document.getElementById('yourShare');
@@ -1257,10 +1358,60 @@
     quantityInput.addEventListener('input', updateShares);
     
     // Rabatt-System initialisieren
-    setupDiscountSystem();
+    loadDiscountSettings();
     updateShares();
 
-    // Form submit MIT CLOUDFLARE USERNAME VALIDIERUNG UND RABATT-EFFEKT
+    // RABATT-EINSTELLUNGEN FUNKTIONEN
+    document.getElementById('addDiscountBtn').addEventListener('click', () => {
+      const value = parseInt(document.getElementById('newDiscountValue').value);
+      const label = document.getElementById('newDiscountLabel').value.trim();
+      
+      if (isNaN(value) || value < 0 || value > 100) {
+        showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein.', 'error');
+        return;
+      }
+      
+      if (!label) {
+        showNotification('Bitte geben Sie eine Bezeichnung für den Rabatt ein.', 'error');
+        return;
+      }
+      
+      if (availableDiscounts.some(d => d.value === value)) {
+        showNotification('Ein Rabatt mit diesem Wert existiert bereits.', 'error');
+        return;
+      }
+      
+      const newDiscount = {
+        value: value,
+        label: label,
+        color: 'gray' // Standardfarbe
+      };
+      
+      availableDiscounts.push(newDiscount);
+      set(discountsRef, availableDiscounts);
+      
+      // Felder zurücksetzen
+      document.getElementById('newDiscountValue').value = '';
+      document.getElementById('newDiscountLabel').value = '';
+      
+      showNotification(`Rabatt ${value}% (${label}) hinzugefügt`, 'success');
+    });
+
+    function deleteDiscount(index) {
+      if (availableDiscounts.length <= 1) {
+        showNotification('Mindestens ein Rabatt muss vorhanden sein.', 'error');
+        return;
+      }
+      
+      const discount = availableDiscounts[index];
+      if (confirm(`Möchten Sie den Rabatt ${discount.value}% (${discount.label}) wirklich löschen?`)) {
+        availableDiscounts.splice(index, 1);
+        set(discountsRef, availableDiscounts);
+        showNotification(`Rabatt ${discount.value}% gelöscht`, 'success');
+      }
+    }
+
+    // Form submit MIT KORRIGIERTER RABATT-BERECHNUNG
     document.getElementById('entryForm').addEventListener('submit', async e => {
       e.preventDefault();
       
@@ -1288,12 +1439,15 @@
       const standardPrice = quantity * 2500;
       const shares = calculateSharesWithDiscount(standardPrice);
       
+      const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
+      
       const entry = {
         buyer,
         seller,
         quantity,
         standardPrice: standardPrice,
         discount: currentDiscount,
+        discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
         discountAmount: shares.discountAmount,
         price: standardPrice, // Gesamtpreis bleibt gleich
         sellerShare: shares.finalSellerShare,
@@ -1314,7 +1468,11 @@
         e.target.reset();
         updateShares();
         
-        showNotification(`Eintrag mit ${currentDiscount}% Rabatt gespeichert! Käuferanteil reduziert um ${formatCurrency(shares.yourDecrease)}`, 'success');
+        if (currentDiscount > 0) {
+          showNotification(`Eintrag mit ${currentDiscount}% Rabatt gespeichert! Käuferanteil reduziert um ${formatCurrency(shares.yourDecrease)}`, 'success');
+        } else {
+          showNotification('Eintrag ohne Rabatt gespeichert!', 'success');
+        }
         
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
@@ -1365,39 +1523,7 @@
       renderOverview();
     });
 
-    // Rabatt-Filter Funktion
-    function setupDiscountFilter() {
-      const filterButtons = document.querySelectorAll('.discount-filter-btn');
-      
-      filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const discount = button.getAttribute('data-discount');
-          
-          // Aktiven Filter-Button markieren
-          filterButtons.forEach(btn => {
-            btn.classList.remove('bg-blue-600', 'bg-green-600', 'bg-yellow-600');
-            btn.classList.add('bg-gray-700');
-          });
-          
-          if (discount === 'all') {
-            filteredEntries = [...entries];
-            button.classList.remove('bg-gray-700');
-            button.classList.add('bg-blue-600');
-          } else {
-            const discountValue = parseInt(discount);
-            filteredEntries = entries.filter(entry => entry.discount === discountValue);
-            button.classList.remove('bg-gray-700');
-            if (discountValue === 15) button.classList.add('bg-blue-600');
-            else if (discountValue === 20) button.classList.add('bg-green-600');
-            else if (discountValue === 10) button.classList.add('bg-yellow-600');
-          }
-          
-          renderOverview();
-        });
-      });
-    }
-
-    // Übersicht rendern MIT RABATT-EFFEKT ANZEIGE
+    // Übersicht rendern MIT KORRIGIERTER RABATT-ANZEIGE
     const entriesList = document.getElementById('entriesList');
     function renderOverview() {
       entriesList.innerHTML = '';
@@ -1425,8 +1551,7 @@
       
       // Einträge anzeigen
       filteredEntries.forEach(en => {
-        const discountBadgeClass = `discount-${en.discount}`;
-        const discountText = en.discount === 15 ? 'Einkäufer' : en.discount === 20 ? 'Normal' : 'Mitarbeiter';
+        const discountText = en.discountLabel || (en.discount === 0 ? 'Kein Rabatt' : `${en.discount}%`);
         
         const el = document.createElement('div');
         el.className = 'p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
@@ -1435,7 +1560,7 @@
             <div class="text-sm text-gray-400">${en.date}</div>
             <div class="flex gap-2">
               <div class="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">${en.quantity} Bricks</div>
-              <div class="discount-badge ${discountBadgeClass}">${en.discount}% ${discountText}</div>
+              <div class="discount-badge bg-gray-600">${discountText}</div>
             </div>
           </div>
           <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
@@ -1464,7 +1589,7 @@
             </div>
             <div class="bg-gray-800/40 p-2 rounded-lg">
               <div class="text-gray-400">Rabattwirkung</div>
-              <div class="font-medium text-yellow-400">${en.discount}% auf Käuferanteil</div>
+              <div class="font-medium text-yellow-400">${en.discount > 0 ? `${en.discount}% auf Käuferanteil` : 'Kein Rabatt'}</div>
             </div>
           </div>
         `;
@@ -1485,6 +1610,7 @@
         adminError.classList.add('hidden'); 
         show(document.getElementById('adminContent')); 
         renderAdminTable();
+        renderDiscountSettings();
         adminPassInput.value = ''; // Clear password field after login
         showNotification('Admin-Bereich erfolgreich betreten', 'success');
       } else {
@@ -1509,8 +1635,7 @@
       // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
       entries.forEach(en => {
         revenue += en.yourShare;
-        const discountText = en.discount === 15 ? 'Einkäufer' : en.discount === 20 ? 'Normal' : 'Mitarbeiter';
-        const discountBadgeClass = `discount-${en.discount}`;
+        const discountText = en.discountLabel || (en.discount === 0 ? 'Kein Rabatt' : `${en.discount}%`);
         
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
@@ -1520,7 +1645,7 @@
           <td class="p-3">${en.seller}</td>
           <td class="p-3">${en.quantity}</td>
           <td class="p-3">
-            <span class="discount-badge ${discountBadgeClass}">${en.discount}% ${discountText}</span>
+            <span class="discount-badge bg-gray-600">${discountText}</span>
           </td>
           <td class="p-3">${formatCurrency(en.price)}</td>
           <td class="p-3 text-green-400">
@@ -1551,7 +1676,7 @@
       }
     }
 
-    // CSV Export Funktionen MIT RABATT-EFFEKT
+    // CSV Export Funktionen MIT KORRIGIERTEN RABATT-DATEN
     function generateDetailedCSV() {
       if (entries.length === 0) {
         showNotification('Keine Einträge zum Exportieren vorhanden.', 'error');
@@ -1584,7 +1709,7 @@
         const dateTime = e.date.split(' ');
         const date = dateTime[0];
         const time = dateTime[1] || '';
-        const discountType = e.discount === 15 ? 'Einkäufer' : e.discount === 20 ? 'Normal' : 'Mitarbeiter';
+        const discountType = e.discountLabel || (e.discount === 0 ? 'Kein Rabatt' : `${e.discount}% Rabatt`);
         
         return [
           date,
@@ -1625,7 +1750,7 @@
           buyerSummary[key] = {
             buyer: entry.buyer,
             discount: entry.discount,
-            discountType: entry.discount === 15 ? 'Einkäufer' : entry.discount === 20 ? 'Normal' : 'Mitarbeiter',
+            discountType: entry.discountLabel || (entry.discount === 0 ? 'Kein Rabatt' : `${entry.discount}% Rabatt`),
             transactions: 0,
             totalQuantity: 0,
             totalSpent: 0,
@@ -1773,9 +1898,6 @@
     document.getElementById('exportCsvDetailed').addEventListener('click', generateDetailedCSV);
     document.getElementById('exportCsvSummary').addEventListener('click', generateSummaryCSV);
     document.getElementById('exportCsvMonthly').addEventListener('click', generateMonthlyReport);
-
-    // Rabatt-Filter initialisieren
-    setupDiscountFilter();
 
   </script>
 </body>

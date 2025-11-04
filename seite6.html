@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Emblem Webhook Sender</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial; max-width: 950px; margin: 26px auto; padding: 18px; color:#111; }
+  h1 { margin-top:0 }
+  .cols { display:flex; gap:18px; align-items:flex-start; }
+  .card { background:#f8f9fb; border:1px solid #e3e6ea; padding:14px; border-radius:8px; flex:1; }
+  label { display:block; margin-top:8px; font-size:14px; }
+  input[type=text], textarea, select { width:100%; padding:8px; box-sizing:border-box; margin-top:6px; border-radius:6px; border:1px solid #cfd6dd; }
+  input[type=file] { margin-top:8px; }
+  button { margin-top:10px; padding:10px 14px; border-radius:8px; border:none; cursor:pointer; background:#2563eb; color:white; }
+  button.ghost { background:#e6eefb; color:#064e9e; }
+  .list { max-height:320px; overflow:auto; margin-top:8px; border:1px dashed #e0e6ef; padding:8px; border-radius:6px; background:white; }
+  .item { padding:8px; border-bottom:1px solid #f0f4fb; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .item:last-child { border-bottom: none; }
+  small { color:#555 }
+  .log { white-space:pre-wrap; background:#111827; color:#dbeafe; padding:8px; border-radius:6px; margin-top:10px; max-height:240px; overflow:auto; }
+  .thumb { max-width:64px; max-height:64px; border-radius:6px; object-fit:cover; border:1px solid #d0d7df; margin-right:8px; }
+  .row { display:flex; gap:8px; align-items:center; }
+  .emblem-actions button { margin-left:6px; padding:6px 8px; background:#ef4444; }
+  .hint { background:#fff8e6; padding:10px; border-radius:6px; margin-top:12px; border:1px solid #f1dcae; }
+  footer { margin-top:18px; font-size:13px; color:#555 }
+</style>
+</head>
+<body>
+  <h1>Emblem Webhook Sender (Ein Datei)</h1>
+  <p>Verwalte Embleme (Bild + Text) und sende sie an Discord-Webhook-URLs. Alle Einstellungen werden im Browser <strong>localStorage</strong> gespeichert.</p>
+
+  <div class="cols">
+    <div class="card" style="flex:0.9">
+      <h3>1) Embleme verwalten</h3>
+      <form id="emblemForm">
+        <label>Emblem-Name<input type="text" id="emblemName" required></label>
+        <label>Standard-Text / Nachricht (optional)<textarea id="emblemText" rows="2"></textarea></label>
+        <label>Bild-URL (optional)<input type="text" id="emblemImageUrl" placeholder="https://..."></label>
+        <label>oder Bild hochladen (optional)<input type="file" id="emblemFile" accept="image/*"></label>
+        <div style="display:flex;gap:8px">
+          <button id="saveEmblemBtn" type="button">Emblem hinzufügen</button>
+          <button id="clearForm" type="button" class="ghost">Zurücksetzen</button>
+        </div>
+      </form>
+
+      <div class="list" id="emblemList" aria-live="polite"></div>
+    </div>
+
+    <div class="card" style="flex:0.7">
+      <h3>2) Webhooks verwalten</h3>
+      <label>Name für Webhook<input type="text" id="webhookName" placeholder="z.B. #general"></label>
+      <label>Webhook URL<input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/..." /></label>
+      <div style="display:flex;gap:8px">
+        <button id="addWebhook">Webhook speichern</button>
+        <button id="clearWebForm" type="button" class="ghost">Zurücksetzen</button>
+      </div>
+
+      <div class="list" id="webhookList" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>3) Senden</h3>
+    <label>Wähle Emblem<select id="chooseEmblem"></select></label>
+    <label>Wähle Webhook<select id="chooseWebhook"></select></label>
+    <label>Überschreibender Nachrichtentext (optional)<input type="text" id="overrideText" placeholder="Wenn leer, wird Standardtext verwendet"></label>
+    <div style="display:flex; gap:8px; align-items:center">
+      <button id="sendBtn">Senden</button>
+      <button id="testBtn" class="ghost">Test (nur JSON mit Bild-URL)</button>
+      <div style="flex:1"></div>
+      <div id="status" style="font-size:14px;color:#555"></div>
+    </div>
+
+    <div class="hint" id="corsHint">
+      Hinweis: Manche Plattformen (z. B. Discord) erlauben direkte Browser-Anfragen an Webhooks nicht wegen CORS. Wenn der Versand im Browser fehlschlägt, findest du unten eine kurze Anleitung für einen kleinen Node.js-Proxy, den du lokal betreiben kannst.
+    </div>
+
+    <h4 style="margin-top:12px">Log / Ergebnis</h4>
+    <div id="log" class="log">Bereit.</div>
+  </div>
+
+  <footer>
+    <strong>Kurzer Proxy-Hinweis:</strong> Falls der Browser eine CORS-Fehlermeldung zeigt, kannst du einen einfachen Node.js-Proxy starten. Kopiere dazu (optional) den Code aus dem Hilfebereich im Log.
+  </footer>
+
+<script>
+(() => {
+  // Util: localStorage keys
+  const KEY_EMBLEMS = 'emblems_v1';
+  const KEY_WEBHOOKS = 'webhooks_v1';
+
+  // Elements
+  const emblemForm = document.getElementById('emblemForm');
+  const emblemName = document.getElementById('emblemName');
+  const emblemText = document.getElementById('emblemText');
+  const emblemImageUrl = document.getElementById('emblemImageUrl');
+  const emblemFile = document.getElementById('emblemFile');
+  const saveEmblemBtn = document.getElementById('saveEmblemBtn');
+  const clearForm = document.getElementById('clearForm');
+  const emblemList = document.getElementById('emblemList');
+
+  const webhookName = document.getElementById('webhookName');
+  const webhookUrl = document.getElementById('webhookUrl');
+  const addWebhookBtn = document.getElementById('addWebhook');
+  const clearWebForm = document.getElementById('clearWebForm');
+  const webhookList = document.getElementById('webhookList');
+
+  const chooseEmblem = document.getElementById('chooseEmblem');
+  const chooseWebhook = document.getElementById('chooseWebhook');
+  const overrideText = document.getElementById('overrideText');
+  const sendBtn = document.getElementById('sendBtn');
+  const testBtn = document.getElementById('testBtn');
+  const logEl = document.getElementById('log');
+  const statusEl = document.getElementById('status');
+
+  // State
+  let emblems = loadEmblems();
+  let webhooks = loadWebhooks();
+
+  function loadEmblems() {
+    try {
+      return JSON.parse(localStorage.getItem(KEY_EMBLEMS) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveEmblems() {
+    localStorage.setItem(KEY_EMBLEMS, JSON.stringify(emblems));
+    renderEmblems();
+    renderSelectors();
+  }
+
+  function loadWebhooks() {
+    try {
+      return JSON.parse(localStorage.getItem(KEY_WEBHOOKS) || '[]');
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveWebhooks() {
+    localStorage.setItem(KEY_WEBHOOKS, JSON.stringify(webhooks));
+    renderWebhooks();
+    renderSelectors();
+  }
+
+  // Helpers
+  function id() { return Math.random().toString(36).slice(2,9); }
+  function formatJson(obj) { try { return JSON.stringify(obj, null, 2); } catch(e){ return String(obj);} }
+
+  // Render lists
+  function renderEmblems() {
+    emblemList.innerHTML = '';
+    if (emblems.length === 0) {
+      emblemList.innerHTML = '<div style="padding:8px"><small>Keine Embleme</small></div>';
+      return;
+    }
+    emblems.forEach(e => {
+      const div = document.createElement('div'); div.className='item';
+      const left = document.createElement('div'); left.style.display='flex'; left.style.alignItems='center';
+      if (e.imageDataUrl || e.imageUrl) {
+        const img = document.createElement('img'); img.className='thumb';
+        img.src = e.imageDataUrl || e.imageUrl;
+        left.appendChild(img);
+      }
+      const meta = document.createElement('div');
+      meta.innerHTML = `<strong>${escapeHtml(e.name)}</strong><div><small>${escapeHtml(e.text || '')}</small></div>`;
+      left.appendChild(meta);
+      div.appendChild(left);
+
+      const actions = document.createElement('div');
+      actions.innerHTML = `
+        <button class="ghost" data-id="${e.id}" data-action="apply">Auswählen</button>
+        <button data-id="${e.id}" data-action="edit">✏️</button>
+        <button data-id="${e.id}" data-action="del" style="background:#ef4444;color:white">🗑️</button>
+      `;
+      div.appendChild(actions);
+
+      emblemList.appendChild(div);
+    });
+  }
+
+  function renderWebhooks() {
+    webhookList.innerHTML = '';
+    if (webhooks.length===0) {
+      webhookList.innerHTML = '<div style="padding:8px"><small>Keine Webhooks</small></div>'; return;
+    }
+    webhooks.forEach(w => {
+      const div = document.createElement('div'); div.className='item';
+      const left = document.createElement('div'); left.innerHTML = `<strong>${escapeHtml(w.name || '(kein name)')}</strong><div><small>${shorten(w.url)}</small></div>`;
+      div.appendChild(left);
+      const actions = document.createElement('div');
+      actions.innerHTML = `<button class="ghost" data-id="${w.id}" data-action="use">Benutzen</button>
+                           <button data-id="${w.id}" data-action="del" style="background:#ef4444;color:white">Löschen</button>`;
+      div.appendChild(actions);
+      webhookList.appendChild(div);
+    });
+  }
+
+  function renderSelectors() {
+    chooseEmblem.innerHTML = '';
+    chooseWebhook.innerHTML = '';
+
+    const optEmptyE = document.createElement('option'); optEmptyE.value=''; optEmptyE.text='-- Emblem wählen --'; chooseEmblem.appendChild(optEmptyE);
+    emblems.forEach(e => {
+      const o = document.createElement('option'); o.value=e.id; o.text = e.name; chooseEmblem.appendChild(o);
+    });
+
+    const optEmptyW = document.createElement('option'); optEmptyW.value=''; optEmptyW.text='-- Webhook wählen --'; chooseWebhook.appendChild(optEmptyW);
+    webhooks.forEach(w => {
+      const o = document.createElement('option'); o.value=w.id; o.text = w.name || shorten(w.url); chooseWebhook.appendChild(o);
+    });
+  }
+
+  // Events
+  saveEmblemBtn.addEventListener('click', async () => {
+    const name = emblemName.value.trim();
+    if (!name) { alert('Bitte Emblem-Name angeben'); return; }
+    const text = emblemText.value || '';
+    const url = emblemImageUrl.value.trim();
+
+    // If file selected, read as dataURL
+    let dataUrl = null;
+    if (emblemFile.files && emblemFile.files[0]) {
+      try {
+        dataUrl = await fileToDataUrl(emblemFile.files[0]);
+      } catch(e) {}
+    }
+
+    // create or update?
+    const editingId = saveEmblemBtn.dataset.editing;
+    if (editingId) {
+      const idx = emblems.findIndex(x=>x.id===editingId);
+      if (idx>=0) {
+        emblems[idx].name = name;
+        emblems[idx].text = text;
+        if (dataUrl) { emblems[idx].imageDataUrl = dataUrl; emblems[idx].imageUrl = ''; }
+        else if (url) { emblems[idx].imageUrl = url; emblems[idx].imageDataUrl = ''; }
+        else { /* keep existing if neither */ }
+      }
+      delete saveEmblemBtn.dataset.editing;
+      saveEmblemBtn.textContent = 'Emblem hinzufügen';
+    } else {
+      emblems.push({ id: id(), name, text, imageUrl: url||'', imageDataUrl: dataUrl||'' });
+    }
+
+    emblemForm.reset();
+    saveEmblems();
+    log('Emblem gespeichert.');
+  });
+
+  clearForm.addEventListener('click', () => { emblemForm.reset(); delete saveEmblemBtn.dataset.editing; saveEmblemBtn.textContent='Emblem hinzufügen'; });
+
+  emblemList.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const eid = btn.dataset.id;
+    if (action==='del') {
+      emblems = emblems.filter(x=>x.id!==eid); saveEmblems(); log('Emblem gelöscht.');
+    } else if (action==='edit') {
+      const e = emblems.find(x=>x.id===eid);
+      if (!e) return;
+      emblemName.value = e.name; emblemText.value = e.text||''; emblemImageUrl.value = e.imageUrl||'';
+      delete emblemFile.value; saveEmblemBtn.dataset.editing = e.id; saveEmblemBtn.textContent='Änderungen speichern';
+      window.scrollTo({top:0, behavior:'smooth'});
+    } else if (action==='apply') {
+      chooseEmblem.value = eid;
+      log('Emblem ausgewählt für Senden.');
+    }
+  });
+
+  addWebhookBtn.addEventListener('click', () => {
+    const name = webhookName.value.trim();
+    const url = webhookUrl.value.trim();
+    if (!url) { alert('Bitte Webhook URL eintragen'); return; }
+    webhooks.push({ id: id(), name, url });
+    webhookName.value=''; webhookUrl.value=''; saveWebhooks(); log('Webhook gespeichert.');
+  });
+
+  clearWebForm.addEventListener('click', ()=>{ webhookName.value=''; webhookUrl.value=''; });
+
+  webhookList.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    const wid = btn.dataset.id;
+    if (action==='del') { webhooks = webhooks.filter(x=>x.id!==wid); saveWebhooks(); log('Webhook gelöscht.'); }
+    if (action==='use') { chooseWebhook.value = wid; log('Webhook ausgewählt.'); }
+  });
+
+  sendBtn.addEventListener('click', async () => {
+    const emblemId = chooseEmblem.value;
+    const webhookId = chooseWebhook.value;
+    if (!emblemId || !webhookId) { alert('Bitte Emblem und Webhook auswählen.'); return; }
+    const emblem = emblems.find(e=>e.id===emblemId);
+    const webhook = webhooks.find(w=>w.id===webhookId);
+    if (!emblem || !webhook) { alert('Auswahl ungültig.'); return; }
+    const messageText = overrideText.value.trim() || emblem.text || '';
+
+    setStatus('Sende...');
+    try {
+      const res = await sendToWebhook(webhook.url, messageText, emblem);
+      log('Sendeergebnis:\n' + formatJson(res));
+      setStatus('Gesendet ✓');
+    } catch (err) {
+      // If CORS or network error -> show helpful steps
+      console.error(err);
+      const msg = (err && err.message) ? err.message : String(err);
+      log('Fehler beim Senden:\n' + msg + '\n\nMöglicherweise blockiert CORS direkte Browser-Requests an Discord. Sieh den Proxy-Hinweis weiter unten (Node.js Snippet).');
+      setStatus('Fehler ❌');
+      // also show proxy snippet in log for convenience
+      showProxySnippet();
+    }
+  });
+
+  testBtn.addEventListener('click', async () => {
+    // test sending JSON embed when image URL exists (no file)
+    const emblemId = chooseEmblem.value;
+    const webhookId = chooseWebhook.value;
+    if (!emblemId || !webhookId) { alert('Bitte Emblem und Webhook auswählen.'); return; }
+    const emblem = emblems.find(e=>e.id===emblemId);
+    const webhook = webhooks.find(w=>w.id===webhookId);
+    if (!emblem.imageUrl) { alert('Testmodus benötigt eine Bild-URL im Emblem.'); return; }
+    try {
+      setStatus('Teste JSON POST...');
+      const payload = { content: overrideText.value.trim() || emblem.text || '', embeds: [{ image: { url: emblem.imageUrl } }] };
+      const r = await fetch(webhook.url, { method:'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(payload) });
+      const text = await r.text();
+      if (!r.ok) throw new Error('Status ' + r.status + ': ' + text);
+      log('Test erfolgreich. Antwort:\n' + text);
+      setStatus('Test gesendet ✓');
+    } catch (e) {
+      log('Test fehlgeschlagen:\n' + (e.message || e));
+      setStatus('Test Fehler ❌');
+      showProxySnippet();
+    }
+  });
+
+  // send logic: if emblem has dataUrl (uploaded file) -> use multipart/form-data with payload_json + file
+  // if emblem has imageUrl -> send JSON embed (best chance)
+  async function sendToWebhook(webhookUrlStr, message, emblem) {
+    // prefer imageUrl as JSON embed (simpler)
+    if (emblem.imageUrl && emblem.imageUrl.trim()) {
+      const payload = { content: message || '', embeds: [{ image: { url: emblem.imageUrl } }] };
+      const resp = await fetch(webhookUrlStr, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const text = await resp.text();
+      if (!resp.ok) throw new Error('Status ' + resp.status + ': ' + text);
+      return { ok: true, status: resp.status, text };
+    }
+
+    // if there's an uploaded image (data url)
+    if (emblem.imageDataUrl && emblem.imageDataUrl.startsWith('data:')) {
+      // convert to blob
+      const blob = dataURLtoBlob(emblem.imageDataUrl);
+      const fd = new FormData();
+      // payload_json with content
+      fd.append('payload_json', JSON.stringify({ content: message || '' }));
+      // append file (discord expects file field, name 'file' or any)
+      fd.append('file', blob, (emblem.name || 'emblem') + '.png');
+
+      const resp = await fetch(webhookUrlStr, { method: 'POST', body: fd });
+      const text = await resp.text();
+      if (!resp.ok) throw new Error('Status ' + resp.status + ': ' + text);
+      return { ok: true, status: resp.status, text };
+    }
+
+    // otherwise plain content
+    const resp = await fetch(webhookUrlStr, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ content: message||'' }) });
+    const text = await resp.text();
+    if (!resp.ok) throw new Error('Status ' + resp.status + ': ' + text);
+    return { ok:true, status:resp.status, text };
+  }
+
+  // Utilities
+  function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(new Error('Fehler beim Lesen der Datei'));
+      r.readAsDataURL(file);
+    });
+  }
+  function dataURLtoBlob(dataurl) {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new Blob([u8arr], { type: mime });
+  }
+  function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]); }
+  function shorten(s){ if(!s) return ''; return s.length>40? s.slice(0,36)+'...'+s.slice(-8): s; }
+  function log(msg){ logEl.textContent = '[' + new Date().toLocaleString() + ']\\n' + msg; }
+  function setStatus(s){ statusEl.textContent = s; }
+
+  function showProxySnippet() {
+    const snippet = `# Node.js Proxy (schnell)
+# Speichere als proxy.js, dann: npm init -y && npm i express node-fetch cors multer
+# und: node proxy.js
+# Proxy leitet POST an Ziel-Webhook weiter (CORS-freundlich)
+const express = require('express');
+const fetch = require('node-fetch');
+const cors = require('cors');
+const app = express();
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+
+app.post('/proxy', async (req, res) => {
+  const { webhookUrl, payload } = req.body;
+  if(!webhookUrl) return res.status(400).json({error:'webhookUrl fehlt'});
+  try{
+    const r = await fetch(webhookUrl, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const text = await r.text();
+    res.status(r.status).send(text);
+  }catch(e){
+    res.status(500).json({error: e.message});
+  }
+});
+
+app.listen(3001, ()=>console.log('Proxy läuft auf http://localhost:3001'));`;
+    log('Proxy-Snippet (Node.js) im Clipboard. Füge den Proxy lokal ein und ändere UI-Webhook URL auf http://localhost:3001/proxy.\\n' + snippet);
+    try { navigator.clipboard && navigator.clipboard.writeText(snippet); } catch(e){}
+  }
+
+  // init
+  renderEmblems(); renderWebhooks(); renderSelectors();
+  log('Bereit. Embleme & Webhooks aus localStorage geladen.');
+
+  // expose some debug to window
+  window._emblemApp = { emblems, webhooks, saveEmblems, saveWebhooks, sendToWebhook };
+
+})();
+</script>
+</body>
+</html>

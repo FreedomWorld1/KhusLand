@@ -1,59 +1,71 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Text Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    
-    // Firebase Konfiguration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-      authDomain: "khusland-b7d13.firebaseapp.com",
-      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-      projectId: "khusland-b7d13",
-      storageBucket: "khusland-b7d13.firebasestorage.app",
-      messagingSenderId: "69573193613",
-      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-      measurementId: "G-JSCWR4207G"
-    };
-
-    // Firebase initialisieren
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    
-    // Globale Firebase-Referenzen verfügbar machen
-    window.firebaseDb = db;
-    window.firebaseRef = ref;
-    window.firebaseSet = set;
-    window.firebaseOnValue = onValue;
-    window.firebasePush = push;
-    window.firebaseRemove = remove;
-  </script>
   <style>
-    body {
+    body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       min-height: 100vh;
     }
-    .card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-      border: 1px solid rgba(168, 85, 247, 0.2);
-      border-radius: 12px;
+    .card { 
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
+      border: 1px solid rgba(168, 85, 247, 0.2); 
+      border-radius: 12px; 
       backdrop-filter: blur(10px);
     }
-    .shadow-soft {
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5),
+    .shadow-soft { 
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 
                   0 4px 8px rgba(0, 0, 0, 0.3),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1); 
     }
-    .hidden {
-      display: none !important;
+    .small-muted { 
+      color: #94a3b8; 
+      font-size: 0.75rem; 
+    }
+    .btn { 
+      transition: all 0.2s ease; 
+      font-size: 0.8rem; 
+      font-weight: 500;
+    }
+    .btn:hover { 
+      transform: translateY(-1px); 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .hidden { 
+      display: none !important; 
+    }
+    input, textarea { 
+      transition: all 0.2s ease; 
+      font-size: 0.85rem; 
+    }
+    input:focus, textarea:focus { 
+      outline: none; 
+      border-color: #a855f7; 
+      box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.3); 
+    }
+    .active-link { 
+      background-color: #7e22ce !important; 
+      color: #fff !important; 
+      font-weight: 600; 
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .glass-effect {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(168, 85, 247, 0.1);
     }
     .fade-in {
       animation: fadeIn 0.3s ease-in-out;
@@ -61,6 +73,32 @@
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.5); }
+      50% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.5); }
+    }
+    .scrollbar-custom::-webkit-scrollbar {
+      width: 4px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+    }
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+      background: #a855f7;
+      border-radius: 8px;
+    }
+    .hamburger-container {
+      position: relative;
+      z-index: 1000;
+    }
+    .hamburger-menu {
+      z-index: 1001;
     }
     .notification {
       position: fixed;
@@ -88,44 +126,8 @@
     .notification.info {
       background-color: #3b82f6;
     }
-    .gradient-text {
-      background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(168, 85, 247, 0.1);
-    }
-    .text-item {
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .text-item:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    .active-link {
-      background-color: #7e22ce !important;
-      color: #fff !important;
-      font-weight: 600;
-    }
-    .hamburger-container {
-      position: relative;
-      z-index: 1000;
-    }
-    .hamburger-menu {
-      z-index: 1001;
-    }
-    .color-preview {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
-      display: inline-block;
-      margin-right: 8px;
-      border: 1px solid rgba(255,255,255,0.2);
+    .notification.warning {
+      background-color: #f59e0b;
     }
     .loading {
       display: inline-block;
@@ -138,6 +140,22 @@
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+    .text-item {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .text-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .color-preview {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-right: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
     }
   </style>
 </head>
@@ -155,7 +173,7 @@
       <h1 class="text-2xl font-bold gradient-text mb-2">Text Manager</h1>
       <p class="text-gray-400 text-sm mb-4">Bitte mit Discord einloggen um fortzufahren</p>
       
-      <button id="discordLogin" class="w-full py-2.5 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-200">
+      <button id="discordLogin" class="w-full py-2.5 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-2 transition-all duration-200">
         <i class="fab fa-discord text-lg"></i>
         Mit Discord anmelden
       </button>
@@ -184,13 +202,11 @@
           </div>
         </div>
         <div class="flex items-center gap-1">
-          <button id="btnMain" class="px-2.5 py-1.5 bg-purple-600 hover:bg-purple-500 rounded-lg shadow-sm font-medium flex items-center gap-1">
-            <i class="fas fa-home text-xs"></i>
-            Hauptbereich
+          <button id="btnMain" class="btn px-2.5 py-1.5 bg-purple-600 hover:bg-purple-500 rounded-lg shadow-sm pulse-glow">
+            <i class="fas fa-home text-xs mr-1"></i> Hauptbereich
           </button>
-          <button id="btnSettings" class="px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm font-medium flex items-center gap-1">
-            <i class="fas fa-cog text-xs"></i>
-            Einstellungen
+          <button id="btnSettings" class="btn px-2.5 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
+            <i class="fas fa-cog text-xs mr-1"></i> Einstellungen
           </button>
           <div class="hamburger-container">
             <button id="hamburgerBtn" class="p-1.5 flex flex-col justify-between h-5 w-7 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
@@ -199,10 +215,10 @@
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
             <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-1.5 w-40 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="./" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
+              <a href="index.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
                 <i class="fas fa-cannabis mr-2 text-xs"></i> Weed
               </a>
-              <a href="seite2.html" class="block px-3 py-2 hover:bg-gray-700 active-link transition-colors text-sm">
+              <a href="seite2.html" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
                 <i class="fas fa-pills mr-2 text-xs"></i> Kokain
               </a>
               <a href="https://khusland.github.io/KhusLand2/" class="block px-3 py-2 hover:bg-gray-700 transition-colors text-sm">
@@ -219,14 +235,14 @@
               </a>
             </div>
           </div>
-          <button id="logoutBtn" class="px-2.5 py-1.5 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm font-medium flex items-center gap-1">
-            <i class="fas fa-sign-out-alt text-xs"></i>
-            Logout
+          <button id="logoutBtn" class="btn px-2.5 py-1.5 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-1">
+            <i class="fas fa-sign-out-alt text-xs mr-1"></i> Logout
           </button>
         </div>
       </header>
 
-      <div id="mainContainer" class="space-y-4">
+      <div id="mainContainer" class="space-y-4 relative z-0">
+
         <!-- HAUPTBEREICH -->
         <div id="mainArea" class="card p-4 shadow-soft fade-in">
           <h2 class="text-lg font-semibold mb-3 text-purple-400 flex items-center gap-1">
@@ -250,11 +266,11 @@
               <input id="textId" type="text" placeholder="ID für den Text" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
             </div>
             <div class="flex gap-2">
-              <button id="sendTextBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-medium flex items-center justify-center gap-1">
+              <button id="sendTextBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-paper-plane text-xs"></i>
                 An Discord senden
               </button>
-              <button id="cancelSendBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-medium flex items-center justify-center gap-1">
+              <button id="cancelSendBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-times text-xs"></i>
                 Abbrechen
               </button>
@@ -277,11 +293,11 @@
               <textarea id="editTextContent" rows="4" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
             </div>
             <div class="flex gap-2">
-              <button id="saveEditBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg font-medium flex items-center justify-center gap-1">
+              <button id="saveEditBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-save text-xs"></i>
                 Speichern
               </button>
-              <button id="cancelEditBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg font-medium flex items-center justify-center gap-1">
+              <button id="cancelEditBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-times text-xs"></i>
                 Abbrechen
               </button>
@@ -303,7 +319,7 @@
               </label>
               <input id="adminPass" type="password" placeholder="Passwort eingeben" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500 text-sm"/>
             </div>
-            <button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium flex items-center justify-center gap-1">
+            <button id="adminLoginBtn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
               <i class="fas fa-sign-in-alt text-xs"></i>
               Einloggen
             </button>
@@ -343,7 +359,7 @@
                   <span id="newTextColorValue" class="text-xs text-gray-300">#a855f7</span>
                 </div>
               </div>
-              <button id="addTextBtn" class="w-full py-2 bg-green-600 hover:bg-green-500 rounded-lg font-medium flex items-center justify-center gap-1">
+              <button id="addTextBtn" class="w-full py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-plus text-xs"></i>
                 Text hinzufügen
               </button>
@@ -358,6 +374,7 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -367,16 +384,11 @@
     const DISCORD_CLIENT_ID = '1432942180770644079';
     const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
 
-    // Firebase Referenzen
-    const db = window.firebaseDb;
-    const firebaseRef = window.firebaseRef;
-    const firebaseSet = window.firebaseSet;
-    const firebaseOnValue = window.firebaseOnValue;
-    const firebasePush = window.firebasePush;
-    const firebaseRemove = window.firebaseRemove;
-
-    // Firebase Referenz für Texte
-    const textsRef = firebaseRef(db, 'text_manager/texts');
+    // Autorisierte Discord IDs
+    const AUTHORIZED_USER_IDS = [
+      '917426398120005653', // Rey Ehrlich
+      '1387439512438964304' // Philipp Yane
+    ];
 
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
@@ -415,9 +427,30 @@
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
 
-    // Text-Daten (werden von Firebase geladen)
-    let texts = [];
-    let textKeys = {}; // Mapping von IDs zu Firebase Keys
+    // Text-Daten (lokale Speicherung)
+    let texts = JSON.parse(localStorage.getItem('text_manager_texts')) || [
+      { 
+        id: 1, 
+        title: "Willkommen", 
+        content: "Willkommen auf unserer Plattform!", 
+        webhook: "",
+        color: "#a855f7"
+      },
+      { 
+        id: 2, 
+        title: "Information", 
+        content: "Hier finden Sie wichtige Informationen.", 
+        webhook: "",
+        color: "#3b82f6"
+      },
+      { 
+        id: 3, 
+        title: "Angebot", 
+        content: "Spezielles Angebot nur für Sie!", 
+        webhook: "",
+        color: "#10b981"
+      }
+    ];
 
     // Aktuell ausgewählter Text
     let selectedText = null;
@@ -438,20 +471,36 @@
       }, duration);
     }
 
+    // Texte speichern
+    function saveTexts() {
+      localStorage.setItem('text_manager_texts', JSON.stringify(texts));
+    }
+
     // EINFACHES DISCORD LOGIN SYSTEM
     function startDiscordOAuth() {
-      // Einfache Simulation - direkt einloggen
-      const testUser = {
-        id: '123456789',
-        username: 'DiscordBenutzer',
-        discriminator: '0001',
-        avatar: null
-      };
+      // Simuliere Discord OAuth Flow
+      showNotification('Discord Login wird simuliert...', 'info');
       
-      localStorage.setItem('discord_user', JSON.stringify(testUser));
-      localStorage.setItem('discord_access_token', 'discord_token_' + Date.now());
-      showMainContent();
-      showNotification(`Eingeloggt als ${testUser.username}`, 'success');
+      // Simuliere eine Verzögerung für den Login-Prozess
+      setTimeout(() => {
+        // Simulierte Benutzerdaten
+        const testUsers = [
+          { id: '917426398120005653', username: 'Rey Ehrlich', avatar: null },
+          { id: '1387439512438964304', username: 'Philipp Yane', avatar: null }
+        ];
+        
+        // Wähle einen zufälligen autorisierten Benutzer
+        const randomUser = testUsers[Math.floor(Math.random() * testUsers.length)];
+        
+        if (AUTHORIZED_USER_IDS.includes(randomUser.id)) {
+          localStorage.setItem('discord_user', JSON.stringify(randomUser));
+          localStorage.setItem('discord_access_token', 'simulated_token_' + Date.now());
+          showMainContent();
+          showNotification(`Eingeloggt als ${randomUser.username}`, 'success');
+        } else {
+          showError('Zugriff verweigert. Deine Discord-ID ist nicht autorisiert.');
+        }
+      }, 1500);
     }
 
     function showError(message) {
@@ -468,8 +517,8 @@
         usernameElement.textContent = user.username;
       }
       
-      // Texte von Firebase laden
-      loadTextsFromFirebase();
+      // Text-Liste rendern
+      renderTextList();
       
       // Bereiche zurücksetzen
       showMainArea();
@@ -491,110 +540,17 @@
       const token = localStorage.getItem('discord_access_token');
       
       if (user && token) {
-        showMainContent();
+        const userData = JSON.parse(user);
+        if (AUTHORIZED_USER_IDS.includes(userData.id)) {
+          showMainContent();
+        } else {
+          logout();
+          showError('Deine Discord-ID ist nicht autorisiert.');
+        }
       } else {
         localStorage.removeItem('discord_user');
         localStorage.removeItem('discord_access_token');
       }
-    }
-
-    // Firebase: Texte laden
-    function loadTextsFromFirebase() {
-      firebaseOnValue(textsRef, (snapshot) => {
-        const data = snapshot.val();
-        texts = [];
-        textKeys = {};
-        
-        if (data) {
-          Object.keys(data).forEach(key => {
-            const text = data[key];
-            text.firebaseKey = key; // Firebase Key speichern
-            texts.push(text);
-            textKeys[text.id] = key;
-          });
-          
-          // Nach ID sortieren
-          texts.sort((a, b) => a.id - b.id);
-        } else {
-          // Standard-Texte erstellen, falls keine Daten vorhanden
-          createDefaultTexts();
-        }
-        
-        renderTextList();
-        if (document.getElementById('adminContent').classList.contains('hidden') === false) {
-          renderTextManagementList();
-        }
-      });
-    }
-
-    // Standard-Texte erstellen
-    function createDefaultTexts() {
-      const defaultTexts = [
-        { 
-          id: 1, 
-          title: "Willkommen", 
-          content: "Willkommen auf unserer Plattform!", 
-          webhook: "",
-          color: "#a855f7"
-        },
-        { 
-          id: 2, 
-          title: "Information", 
-          content: "Hier finden Sie wichtige Informationen.", 
-          webhook: "",
-          color: "#3b82f6"
-        },
-        { 
-          id: 3, 
-          title: "Angebot", 
-          content: "Spezielles Angebot nur für Sie!", 
-          webhook: "",
-          color: "#10b981"
-        }
-      ];
-      
-      defaultTexts.forEach(text => {
-        addTextToFirebase(text);
-      });
-    }
-
-    // Text zu Firebase hinzufügen
-    function addTextToFirebase(text) {
-      const newTextRef = firebasePush(textsRef);
-      firebaseSet(newTextRef, text)
-        .then(() => {
-          console.log('Text erfolgreich zu Firebase hinzugefügt');
-        })
-        .catch((error) => {
-          console.error('Fehler beim Hinzufügen zu Firebase:', error);
-          showNotification('Fehler beim Speichern in Firebase', 'error');
-        });
-    }
-
-    // Text in Firebase aktualisieren
-    function updateTextInFirebase(firebaseKey, updatedText) {
-      const textRef = firebaseRef(db, `text_manager/texts/${firebaseKey}`);
-      firebaseSet(textRef, updatedText)
-        .then(() => {
-          console.log('Text erfolgreich in Firebase aktualisiert');
-        })
-        .catch((error) => {
-          console.error('Fehler beim Aktualisieren in Firebase:', error);
-          showNotification('Fehler beim Aktualisieren in Firebase', 'error');
-        });
-    }
-
-    // Text aus Firebase löschen
-    function deleteTextFromFirebase(firebaseKey) {
-      const textRef = firebaseRef(db, `text_manager/texts/${firebaseKey}`);
-      firebaseRemove(textRef)
-        .then(() => {
-          console.log('Text erfolgreich aus Firebase gelöscht');
-        })
-        .catch((error) => {
-          console.error('Fehler beim Löschen aus Firebase:', error);
-          showNotification('Fehler beim Löschen aus Firebase', 'error');
-        });
     }
 
     // Event Listeners
@@ -766,14 +722,14 @@
         return;
       }
       
-      // Text in Firebase aktualisieren
-      const updatedText = {
-        ...textToEdit,
-        title: title,
-        content: content
-      };
+      textToEdit.title = title;
+      textToEdit.content = content;
       
-      updateTextInFirebase(textToEdit.firebaseKey, updatedText);
+      // Texte speichern
+      saveTexts();
+      
+      // Listen aktualisieren
+      renderTextList();
       
       // Bearbeitungsbereich ausblenden
       textEditSection.classList.add('hidden');
@@ -840,8 +796,8 @@
         color
       };
       
-      // Text zu Firebase hinzufügen
-      addTextToFirebase(newText);
+      texts.push(newText);
+      saveTexts();
       
       // Formular zurücksetzen
       newTextTitle.value = '';
@@ -849,6 +805,10 @@
       newTextWebhook.value = '';
       newTextColor.value = '#a855f7';
       newTextColorValue.textContent = '#a855f7';
+      
+      // Listen aktualisieren
+      renderTextList();
+      renderTextManagementList();
       
       showNotification(`Text "${title}" hinzugefügt`, 'success');
     });
@@ -924,16 +884,17 @@
       const newColor = prompt('Neue Farbe eingeben (Hex-Code):', text.color);
       if (newColor === null) return; // Benutzer hat abgebrochen
       
-      // Text in Firebase aktualisieren
-      const updatedText = {
-        id: text.id,
-        title: newTitle.trim(),
-        content: newContent.trim(),
-        webhook: newWebhook.trim(),
-        color: newColor.trim()
-      };
+      text.title = newTitle.trim();
+      text.content = newContent.trim();
+      text.webhook = newWebhook.trim();
+      text.color = newColor.trim();
       
-      updateTextInFirebase(text.firebaseKey, updatedText);
+      // Texte speichern
+      saveTexts();
+      
+      // Listen aktualisieren
+      renderTextList();
+      renderTextManagementList();
       
       showNotification(`Text "${text.title}" bearbeitet`, 'success');
     }
@@ -944,8 +905,14 @@
       if (!text) return;
       
       if (confirm(`Text "${text.title}" wirklich löschen?`)) {
-        // Text aus Firebase löschen
-        deleteTextFromFirebase(text.firebaseKey);
+        texts = texts.filter(t => t.id !== id);
+        
+        // Texte speichern
+        saveTexts();
+        
+        // Listen aktualisieren
+        renderTextList();
+        renderTextManagementList();
         
         showNotification(`Text "${text.title}" gelöscht`, 'success');
       }

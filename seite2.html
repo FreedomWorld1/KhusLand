@@ -240,6 +240,49 @@
     .compact-table td {
       padding: 6px 8px;
     }
+    .discount-badge {
+      font-size: 0.6rem;
+      padding: 1px 4px;
+      border-radius: 4px;
+      margin-left: 4px;
+      font-weight: 600;
+    }
+    .discount-btn {
+      transition: all 0.2s ease;
+      font-size: 0.7rem;
+      padding: 3px 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 6px;
+    }
+    .discount-btn.active {
+      transform: scale(1.02);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
+    }
+    .price-change {
+      font-size: 0.65rem;
+      margin-top: 1px;
+    }
+    .price-increase {
+      color: #10b981;
+    }
+    .price-decrease {
+      color: #ef4444;
+    }
+    .discount-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .settings-section {
+      background: rgba(30, 41, 59, 0.4);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(168, 85, 247, 0.1);
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -346,6 +389,20 @@
             Neuer Ankauf
           </h2>
           <form id="entryForm" class="space-y-3">
+            
+            <!-- RABATT-SYSTEM - KOMPAKT -->
+            <div class="bg-gray-800/20 p-2 rounded-lg border border-gray-700">
+              <label class="block text-xs font-medium text-gray-300 mb-1 text-center">
+                <i class="fas fa-percentage mr-1 text-xs"></i> Rabatt auswählen
+              </label>
+              <div id="discountButtonsContainer" class="discount-grid">
+                <!-- Discount buttons will be generated here -->
+              </div>
+              <div class="mt-1 text-xs text-gray-400 text-center">
+                Aktiver Rabatt: <span id="activeDiscountText" class="font-bold text-white">0%</span>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <label for="buyer" class="block text-xs font-medium text-gray-300 mb-1">
@@ -374,20 +431,44 @@
                 <input id="cash" type="number" min="0" placeholder="Cash Betrag" class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-purple-500 text-sm"/>
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-                <div class="small-muted mb-1">
-                  <i class="fas fa-user-tag mr-1 text-xs"></i> Verkäufer (80%)
-                </div>
-                <div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
+
+            <!-- PREISÜBERSICHT MIT RABATT-EFFEKT -->
+            <div class="bg-gray-800/20 p-3 rounded-lg border border-gray-700">
+              <div class="text-center mb-2">
+                <div class="small-muted mb-1">Gesamtpreis</div>
+                <div id="finalPrice" class="font-bold text-green-400 text-lg">0 $</div>
               </div>
-              <div class="p-2 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-                <div class="small-muted mb-1">
-                  <i class="fas fa-user mr-1 text-xs"></i> Käufer (20%)
+              
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-2 rounded-lg bg-gray-800/40 text-center">
+                  <div class="small-muted mb-1">
+                    <i class="fas fa-user-tag mr-1 text-xs"></i> Verkäufer
+                  </div>
+                  <div id="sellerShare" class="text-base font-bold text-green-400">0 $</div>
+                  <div id="sellerShareChange" class="price-change price-increase hidden">
+                    <i class="fas fa-arrow-up text-xs"></i> +0 $
+                  </div>
                 </div>
-                <div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
+                <div class="p-2 rounded-lg bg-gray-800/40 text-center">
+                  <div class="small-muted mb-1">
+                    <i class="fas fa-user mr-1 text-xs"></i> Käufer
+                  </div>
+                  <div id="yourShare" class="text-base font-bold text-blue-400">0 $</div>
+                  <div id="yourShareChange" class="price-change price-decrease hidden">
+                    <i class="fas fa-arrow-down text-xs"></i> -0 $
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Erklärung der Rabattwirkung -->
+              <div id="discountExplanation" class="mt-2 p-1.5 bg-blue-900/20 rounded-lg border border-blue-700/30">
+                <div class="text-xs text-blue-300 text-center">
+                  <i class="fas fa-info-circle mr-1 text-xs"></i>
+                  <span id="discountExplanationText">Rabatt verteilt Gesamtbetrag</span>
+                </div>
               </div>
             </div>
+
             <div class="flex gap-2 pt-1">
               <button type="submit" class="flex-1 px-3 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-save text-xs"></i>
@@ -428,6 +509,11 @@
             </div>
           </div>
           
+          <!-- Rabatt-Filter -->
+          <div class="flex gap-1 mb-3 flex-wrap" id="discountFilterContainer">
+            <!-- Discount filter buttons will be generated here -->
+          </div>
+          
           <!-- Suchfeld -->
           <div class="search-box">
             <input type="text" id="searchInput" placeholder="Suchen nach Käufer/Verkäufer...">
@@ -458,6 +544,37 @@
             </span>
           </div>
           <div id="adminContent" class="hidden">
+            
+            <!-- RABATT-EINSTELLUNGEN -->
+            <div class="settings-section">
+              <h3 class="text-sm font-semibold mb-2 text-purple-400 flex items-center gap-1">
+                <i class="fas fa-percentage text-xs"></i>
+                Rabatt-Einstellungen
+              </h3>
+              
+              <div class="mb-3">
+                <label class="block text-xs font-medium text-gray-300 mb-1">
+                  Rabatte verwalten
+                </label>
+                <div class="space-y-1">
+                  <div class="flex gap-1">
+                    <input type="number" id="newDiscountValue" min="0" max="100" placeholder="Rabatt %" class="flex-1 p-1.5 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
+                    <input type="text" id="newDiscountLabel" placeholder="Bezeichnung" class="flex-1 p-1.5 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
+                    <button id="addDiscountBtn" class="px-2 py-1.5 bg-green-600 hover:bg-green-500 rounded-lg btn text-xs">
+                      <i class="fas fa-plus text-xs"></i> Hinzu
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-gray-800/30 rounded-lg p-2">
+                <div class="text-xs font-medium text-gray-300 mb-1">Aktive Rabatte:</div>
+                <div id="discountSettingsList" class="space-y-1">
+                  <!-- Discount settings will be listed here -->
+                </div>
+              </div>
+            </div>
+
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 p-2 rounded-lg bg-gray-800/30">
               <div class="small-muted">Gesamt: <span id="totalCount" class="font-bold text-white">0</span></div>
               <div class="small-muted">Umsatz: <span id="totalRevenue" class="font-bold text-green-400">0 $</span></div>
@@ -487,6 +604,7 @@
                     <th class="p-2 font-medium">Käufer</th>
                     <th class="p-2 font-medium">Verkäufer</th>
                     <th class="p-2 font-medium">Menge</th>
+                    <th class="p-2 font-medium">Rabatt</th>
                     <th class="p-2 font-medium">Cash</th>
                     <th class="p-2 font-medium">Verkäufer</th>
                     <th class="p-2 font-medium">Käufer</th>
@@ -512,7 +630,7 @@
     // Firebase Import und Konfiguration
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
@@ -529,6 +647,16 @@
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
     const entriesRef = ref(db,'kokain_entries');
+    const discountsRef = ref(db,'kokain_discount_settings');
+
+    // RABATT-SYSTEM VARIABLEN
+    let currentDiscount = 0;
+    let availableDiscounts = [
+      { value: 0, label: 'Kein Rabatt', color: 'gray' },
+      { value: 10, label: 'Mitarbeiter', color: 'yellow' },
+      { value: 15, label: 'Einkäufer', color: 'blue' },
+      { value: 20, label: 'Normal', color: 'green' }
+    ];
 
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
@@ -974,21 +1102,254 @@
     // Initialize with New Entry active
     updateButtonStates('new');
 
-    // Shares berechnen
+    // RABATT-SYSTEM FUNKTIONEN
+    function loadDiscountSettings() {
+      onValue(discountsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          availableDiscounts = Object.values(data);
+          renderDiscountButtons();
+          renderDiscountFilters();
+          renderDiscountSettings();
+        } else {
+          set(discountsRef, availableDiscounts);
+        }
+      });
+    }
+
+    function renderDiscountButtons() {
+      const container = document.getElementById('discountButtonsContainer');
+      container.innerHTML = '';
+      
+      availableDiscounts.sort((a, b) => a.value - b.value).forEach(discount => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
+        button.innerHTML = `
+          <div class="font-bold text-xs">${discount.value}%</div>
+          <div class="text-xs opacity-90">${discount.label}</div>
+        `;
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.discount-btn').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          
+          button.classList.add('active');
+          currentDiscount = discount.value;
+          
+          updateDiscountDisplay();
+          updateShares();
+          
+          if (discount.value > 0) {
+            showNotification(`${discount.value}% Rabatt - Verkäufer ${100 - discount.value}% / Käufer ${discount.value}%`, 'info', 2000);
+          } else {
+            showNotification('Kein Rabatt - Verkäufer 100% / Käufer 0%', 'info', 2000);
+          }
+        });
+        
+        container.appendChild(button);
+      });
+      
+      updateDiscountDisplay();
+    }
+
+    function renderDiscountFilters() {
+      const container = document.getElementById('discountFilterContainer');
+      container.innerHTML = '';
+      
+      const allButton = document.createElement('button');
+      allButton.className = 'px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs transition-all';
+      allButton.textContent = 'Alle';
+      allButton.setAttribute('data-discount', 'all');
+      allButton.addEventListener('click', () => {
+        filteredEntries = [...entries];
+        renderOverview();
+      });
+      container.appendChild(allButton);
+      
+      availableDiscounts.sort((a, b) => a.value - b.value).forEach(discount => {
+        if (discount.value === 0) return;
+        
+        const button = document.createElement('button');
+        button.className = 'px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg text-xs transition-all';
+        button.textContent = `${discount.value}%`;
+        button.setAttribute('data-discount', discount.value);
+        button.addEventListener('click', () => {
+          filteredEntries = entries.filter(entry => entry.discount === discount.value);
+          renderOverview();
+        });
+        container.appendChild(button);
+      });
+    }
+
+    function renderDiscountSettings() {
+      const container = document.getElementById('discountSettingsList');
+      container.innerHTML = '';
+      
+      availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between p-1.5 bg-gray-700/30 rounded text-xs';
+        item.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="font-medium">${discount.value}%</span>
+            <span class="text-gray-300">${discount.label}</span>
+          </div>
+          <button class="delete-discount-btn px-1.5 py-0.5 bg-red-600 hover:bg-red-500 rounded text-xs" data-index="${index}">
+            <i class="fas fa-trash"></i>
+          </button>
+        `;
+        
+        container.appendChild(item);
+      });
+      
+      document.querySelectorAll('.delete-discount-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = parseInt(e.target.closest('button').getAttribute('data-index'));
+          deleteDiscount(index);
+        });
+      });
+    }
+
+    function updateDiscountDisplay() {
+      const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
+      if (activeDiscount) {
+        document.getElementById('activeDiscountText').textContent = 
+          currentDiscount === 0 ? '0%' : `${activeDiscount.value}%`;
+      }
+    }
+
+    // KORRIGIERTE RABATT-BERECHNUNG FÜR KOKAIN (80/20 Basis)
+    function calculateSharesWithDiscount(totalPrice) {
+      if (currentDiscount === 0) {
+        // Bei 0% Rabatt: Verkäufer 100%, Käufer 0% vom KÄUFERANTEIL
+        return {
+          totalPrice: Math.round(totalPrice),
+          sellerShare: Math.round(totalPrice),
+          yourShare: 0,
+          discountAmount: 0,
+          sellerIncrease: Math.round(totalPrice * 0.2), // Verkäufer bekommt 20% mehr als Basis
+          yourDecrease: Math.round(totalPrice * 0.2) // Käufer verliert kompletten Anteil
+        };
+      }
+      
+      // Bei Rabatt > 0%: Verkäufer bekommt (100 - Rabatt)%, Käufer bekommt Rabatt% vom GESAMTBETRAG
+      const sellerPercentage = (100 - currentDiscount) / 100;
+      const yourPercentage = currentDiscount / 100;
+      
+      const finalSellerShare = totalPrice * sellerPercentage;
+      const finalYourShare = totalPrice * yourPercentage;
+      
+      // Berechnung der Änderungen für die Anzeige (verglichen mit Basis 80/20)
+      const baseSellerShare = totalPrice * 0.8;
+      const baseYourShare = totalPrice * 0.2;
+      const sellerIncrease = finalSellerShare - baseSellerShare;
+      const yourDecrease = baseYourShare - finalYourShare;
+      
+      return {
+        totalPrice: Math.round(totalPrice),
+        sellerShare: Math.round(finalSellerShare),
+        yourShare: Math.round(finalYourShare),
+        discountAmount: Math.round(yourDecrease),
+        sellerIncrease: Math.round(sellerIncrease),
+        yourDecrease: Math.round(yourDecrease)
+      };
+    }
+
+    // Share Calculation MIT RABATT
     const cashInput = document.getElementById('cash');
     const sellerShareEl = document.getElementById('sellerShare');
     const yourShareEl = document.getElementById('yourShare');
+    const finalPriceEl = document.getElementById('finalPrice');
+    const sellerShareChangeEl = document.getElementById('sellerShareChange');
+    const yourShareChangeEl = document.getElementById('yourShareChange');
+    const discountExplanationEl = document.getElementById('discountExplanationText');
     
     function updateShares() { 
       const c = Number(cashInput.value) || 0;
-      sellerShareEl.textContent = formatCurrency(c * 0.8);
-      yourShareEl.textContent = formatCurrency(c * 0.2);
+      
+      const shares = calculateSharesWithDiscount(c);
+      
+      finalPriceEl.textContent = formatCurrency(c);
+      sellerShareEl.textContent = formatCurrency(shares.sellerShare);
+      yourShareEl.textContent = formatCurrency(shares.yourShare);
+      
+      if (shares.sellerIncrease > 0) {
+        sellerShareChangeEl.textContent = `+${formatCurrency(shares.sellerIncrease)}`;
+        sellerShareChangeEl.classList.remove('hidden');
+      } else {
+        sellerShareChangeEl.classList.add('hidden');
+      }
+      
+      if (shares.yourDecrease > 0) {
+        yourShareChangeEl.textContent = `-${formatCurrency(shares.yourDecrease)}`;
+        yourShareChangeEl.classList.remove('hidden');
+      } else {
+        yourShareChangeEl.classList.add('hidden');
+      }
+      
+      if (currentDiscount === 0) {
+        discountExplanationEl.textContent = 'Verkäufer 100% / Käufer 0%';
+      } else {
+        discountExplanationEl.textContent = `Verkäufer ${100 - currentDiscount}% / Käufer ${currentDiscount}%`;
+      }
     }
     
     cashInput.addEventListener('input', updateShares);
+    
+    // Rabatt-System initialisieren
+    loadDiscountSettings();
     updateShares();
 
-    // Formular speichern
+    // RABATT-EINSTELLUNGEN FUNKTIONEN
+    document.getElementById('addDiscountBtn').addEventListener('click', () => {
+      const value = parseInt(document.getElementById('newDiscountValue').value);
+      const label = document.getElementById('newDiscountLabel').value.trim();
+      
+      if (isNaN(value) || value < 0 || value > 100) {
+        showNotification('Bitte gültigen Rabattwert eingeben (0-100).', 'error');
+        return;
+      }
+      
+      if (!label) {
+        showNotification('Bitte Bezeichnung eingeben.', 'error');
+        return;
+      }
+      
+      if (availableDiscounts.some(d => d.value === value)) {
+        showNotification('Rabatt existiert bereits.', 'error');
+        return;
+      }
+      
+      const newDiscount = {
+        value: value,
+        label: label,
+        color: 'gray'
+      };
+      
+      availableDiscounts.push(newDiscount);
+      set(discountsRef, availableDiscounts);
+      
+      document.getElementById('newDiscountValue').value = '';
+      document.getElementById('newDiscountLabel').value = '';
+      
+      showNotification(`Rabatt ${value}% hinzugefügt`, 'success');
+    });
+
+    function deleteDiscount(index) {
+      if (availableDiscounts.length <= 1) {
+        showNotification('Mindestens ein Rabatt muss vorhanden sein.', 'error');
+        return;
+      }
+      
+      const discount = availableDiscounts[index];
+      if (confirm(`Rabatt ${discount.value}% (${discount.label}) löschen?`)) {
+        availableDiscounts.splice(index, 1);
+        set(discountsRef, availableDiscounts);
+        showNotification(`Rabatt ${discount.value}% gelöscht`, 'success');
+      }
+    }
+
+    // Formular speichern MIT RABATT
     document.getElementById('entryForm').addEventListener('submit', async e => {
       e.preventDefault();
       
@@ -1008,16 +1369,21 @@
         return;
       }
       
-      const sellerShare = cash * 0.8;
-      const yourShare = cash * 0.2;
+      const shares = calculateSharesWithDiscount(cash);
+      const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
       
       const entry = {
         buyer,
         seller,
         quantity,
         cash,
-        sellerShare,
-        yourShare,
+        discount: currentDiscount,
+        discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
+        discountAmount: shares.discountAmount,
+        sellerShare: shares.sellerShare,
+        yourShare: shares.yourShare,
+        sellerIncrease: shares.sellerIncrease,
+        yourDecrease: shares.yourDecrease,
         date: new Date().toISOString(),
         timestamp: Date.now()
       };
@@ -1032,7 +1398,11 @@
         e.target.reset();
         updateShares();
         
-        showNotification('Eintrag gespeichert!', 'success');
+        if (currentDiscount === 0) {
+          showNotification('Eintrag gespeichert! Verkäufer 100% / Käufer 0%', 'success');
+        } else {
+          showNotification(`Eintrag gespeichert! Verkäufer ${100 - currentDiscount}% / Käufer ${currentDiscount}%`, 'success');
+        }
         
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
@@ -1084,7 +1454,7 @@
       renderOverview();
     });
 
-    // Übersicht rendern - KOMPAKT
+    // Übersicht rendern - KOMPAKT MIT RABATT-INFO
     const entriesList = document.getElementById('entriesList');
     function renderOverview() {
       entriesList.innerHTML = '';
@@ -1108,14 +1478,19 @@
       document.getElementById('avgPerPurchase').textContent = formatCurrency(avgPerPurchase);
       document.getElementById('yourTotalShare').textContent = formatCurrency(yourTotalShare);
       
-      // KOMPAKTE EINTRAGSANZEIGE
+      // KOMPAKTE EINTRAGSANZEIGE MIT RABATT
       filteredEntries.forEach(en => {
+        const discountText = en.discountLabel || (en.discount === 0 ? 'Kein Rabatt' : `${en.discount}%`);
+        
         const el = document.createElement('div');
         el.className = 'p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-purple-500/30 transition-all duration-200';
         el.innerHTML = `
           <div class="flex justify-between items-start mb-1.5">
             <div class="text-xs text-gray-400">${formatDate(en.date)}</div>
-            <div class="px-1.5 py-0.5 bg-purple-900/30 text-purple-400 text-xs rounded-full">${en.quantity}g</div>
+            <div class="flex gap-1">
+              <div class="px-1.5 py-0.5 bg-purple-900/30 text-purple-400 text-xs rounded-full">${en.quantity}g</div>
+              <div class="discount-badge bg-gray-600">${discountText}</div>
+            </div>
           </div>
           <div class="font-semibold text-sm mb-1.5">${en.buyer} → ${en.seller}</div>
           <div class="grid grid-cols-2 gap-2 text-xs">
@@ -1124,16 +1499,18 @@
               <div class="font-medium text-white">${formatCurrency(en.cash)}</div>
             </div>
             <div class="bg-gray-800/40 p-1.5 rounded-lg">
+              <div class="text-gray-400">Rabatt</div>
+              <div class="font-medium text-red-400">-${formatCurrency(en.discountAmount)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-1.5 rounded-lg">
               <div class="text-gray-400">Verkäufer</div>
               <div class="font-medium text-green-400">${formatCurrency(en.sellerShare)}</div>
+              ${en.sellerIncrease > 0 ? `<div class="price-change price-increase"><i class="fas fa-arrow-up text-xs"></i> +${formatCurrency(en.sellerIncrease)}</div>` : ''}
             </div>
             <div class="bg-gray-800/40 p-1.5 rounded-lg">
               <div class="text-gray-400">Käufer</div>
               <div class="font-medium text-blue-400">${formatCurrency(en.yourShare)}</div>
-            </div>
-            <div class="bg-gray-800/40 p-1.5 rounded-lg">
-              <div class="text-gray-400">Pro Gramm</div>
-              <div class="font-medium text-pink-400">${formatCurrency(en.cash / en.quantity)}</div>
+              ${en.yourDecrease > 0 ? `<div class="price-change price-decrease"><i class="fas fa-arrow-down text-xs"></i> -${formatCurrency(en.yourDecrease)}</div>` : ''}
             </div>
           </div>
         `;
@@ -1141,7 +1518,7 @@
       });
     }
 
-    // Adminbereich
+    // Adminbereich MIT RABATT-SPALTE
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const adminPassInput = document.getElementById('adminPass');
     const adminError = document.getElementById('adminError');
@@ -1154,6 +1531,7 @@
         adminError.classList.add('hidden'); 
         show(document.getElementById('adminContent')); 
         renderAdminTable(); 
+        renderDiscountSettings();
         adminPassInput.value = '';
         showNotification('Admin-Bereich betreten', 'success');
       } else {
@@ -1176,6 +1554,8 @@
       
       entries.forEach(en => {
         revenue += en.yourShare;
+        const discountText = en.discountLabel || (en.discount === 0 ? 'Kein Rabatt' : `${en.discount}%`);
+        
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         tr.innerHTML = `
@@ -1183,9 +1563,18 @@
           <td class="p-2">${en.buyer}</td>
           <td class="p-2">${en.seller}</td>
           <td class="p-2">${en.quantity}g</td>
+          <td class="p-2">
+            <span class="discount-badge bg-gray-600">${discountText}</span>
+          </td>
           <td class="p-2">${formatCurrency(en.cash)}</td>
-          <td class="p-2 text-green-400">${formatCurrency(en.sellerShare)}</td>
-          <td class="p-2 text-blue-400">${formatCurrency(en.yourShare)}</td>
+          <td class="p-2 text-green-400">
+            ${formatCurrency(en.sellerShare)}
+            ${en.sellerIncrease > 0 ? `<div class="text-xs price-increase">+${formatCurrency(en.sellerIncrease)}</div>` : ''}
+          </td>
+          <td class="p-2 text-blue-400">
+            ${formatCurrency(en.yourShare)}
+            ${en.yourDecrease > 0 ? `<div class="text-xs price-decrease">-${formatCurrency(en.yourDecrease)}</div>` : ''}
+          </td>
           <td class="p-2">
             <button class="px-2 py-1 bg-red-600 hover:bg-red-500 text-xs rounded-lg btn flex items-center gap-0.5" onclick="deleteEntry('${en.key}')">
               <i class="fas fa-trash text-xs"></i>
@@ -1207,7 +1596,7 @@
       }
     }
 
-    // CSV Export Funktionen (gekürzt für Kompaktheit)
+    // CSV Export Funktionen MIT RABATT-DATEN
     function generateDetailedCSV() {
       if (entries.length === 0) {
         showNotification('Keine Einträge zum Exportieren.', 'error');
@@ -1216,17 +1605,17 @@
       
       const sortedEntries = [...entries].sort((a, b) => new Date(b.date) - new Date(a.date));
       
-      const header = ['Datum','Uhrzeit','Käufer','Verkäufer','Menge','Preis pro Gramm','Gesamtpreis','Verkäuferanteil','Käuferanteil','Transaktions-ID'];
+      const header = ['Datum','Uhrzeit','Käufer','Verkäufer','Menge','Rabatt','Rabatt-Typ','Gesamtpreis','Rabattbetrag','Verkäuferanteil','Käuferanteil','Transaktions-ID'];
       
       const rows = sortedEntries.map((e, index) => {
         const dateTime = formatDate(e.date).split(' ');
         const date = dateTime[0];
         const time = dateTime[1] || '';
-        const pricePerGram = e.cash / e.quantity;
+        const discountType = e.discountLabel || (e.discount === 0 ? 'Kein Rabatt' : `${e.discount}% Rabatt`);
         
         return [
-          date, time, `"${e.buyer}"`, `"${e.seller}"`, e.quantity,
-          Math.round(pricePerGram), Math.round(e.cash), Math.round(e.sellerShare),
+          date, time, `"${e.buyer}"`, `"${e.seller}"`, e.quantity, e.discount, discountType,
+          Math.round(e.cash), Math.round(e.discountAmount), Math.round(e.sellerShare),
           Math.round(e.yourShare), e.key || `T-${index + 1}`
         ].join(';');
       });
@@ -1246,33 +1635,40 @@
       let totalYourShare = 0;
       
       entries.forEach(entry => {
-        if (!buyerSummary[entry.buyer]) {
-          buyerSummary[entry.buyer] = {
+        const key = `${entry.buyer}_${entry.discount}`;
+        if (!buyerSummary[key]) {
+          buyerSummary[key] = {
+            buyer: entry.buyer,
+            discount: entry.discount,
+            discountType: entry.discountLabel || (entry.discount === 0 ? 'Kein Rabatt' : `${entry.discount}% Rabatt`),
             transactions: 0,
             totalQuantity: 0,
             totalSpent: 0,
-            yourShare: 0
+            yourShare: 0,
+            totalDiscount: 0
           };
         }
         
-        buyerSummary[entry.buyer].transactions++;
-        buyerSummary[entry.buyer].totalQuantity += entry.quantity;
-        buyerSummary[entry.buyer].totalSpent += entry.cash;
-        buyerSummary[entry.buyer].yourShare += entry.yourShare;
+        buyerSummary[key].transactions++;
+        buyerSummary[key].totalQuantity += entry.quantity;
+        buyerSummary[key].totalSpent += entry.cash;
+        buyerSummary[key].yourShare += entry.yourShare;
+        buyerSummary[key].totalDiscount += (entry.yourDecrease || 0);
         
         totalRevenue += entry.cash;
         totalYourShare += entry.yourShare;
       });
       
-      const header = ['Käufer','Transaktionen','Menge','Ausgaben','Ø pro Transaktion','Ihr Anteil'];
+      const header = ['Käufer','Rabatt','Rabatt-Typ','Transaktionen','Menge','Ausgaben','Käuferanteil','Ersparnis','Ø pro Transaktion'];
       
-      const rows = Object.entries(buyerSummary).map(([buyer, data]) => [
-        `"${buyer}"`, data.transactions, data.totalQuantity, Math.round(data.totalSpent),
-        Math.round(data.totalSpent / data.transactions), Math.round(data.yourShare)
+      const rows = Object.values(buyerSummary).map(data => [
+        `"${data.buyer}"`, data.discount, data.discountType, data.transactions, data.totalQuantity,
+        Math.round(data.totalSpent), Math.round(data.yourShare), Math.round(data.totalDiscount),
+        Math.round(data.totalSpent / data.transactions)
       ].join(';'));
       
       rows.push('');
-      rows.push(['GESAMT', entries.length, '', Math.round(totalRevenue), '', Math.round(totalYourShare)].join(';'));
+      rows.push(['GESAMT', '', '', entries.length, '', Math.round(totalRevenue), Math.round(totalYourShare), '', ''].join(';'));
       
       const csv = [header.join(';'), ...rows].join('\n');
       downloadCSV(csv, 'zusammenfassung');
@@ -1297,7 +1693,9 @@
             transactions: 0,
             totalQuantity: 0,
             totalRevenue: 0,
+            totalDiscount: 0,
             yourShare: 0,
+            sellerBonus: 0,
             buyers: new Set(),
             sellers: new Set()
           };
@@ -1306,19 +1704,21 @@
         monthlyData[monthKey].transactions++;
         monthlyData[monthKey].totalQuantity += entry.quantity;
         monthlyData[monthKey].totalRevenue += entry.cash;
+        monthlyData[monthKey].totalDiscount += (entry.discountAmount || 0);
         monthlyData[monthKey].yourShare += entry.yourShare;
+        monthlyData[monthKey].sellerBonus += (entry.sellerIncrease || 0);
         monthlyData[monthKey].buyers.add(entry.buyer);
         monthlyData[monthKey].sellers.add(entry.seller);
       });
       
-      const header = ['Monat','Transaktionen','Menge','Umsatz','Ihr Anteil','Ø pro Transaktion','Käufer','Verkäufer'];
+      const header = ['Monat','Transaktionen','Menge','Umsatz','Rabatt','Verkäufer-Bonus','Ihr Anteil','Ø pro Transaktion','Käufer','Verkäufer'];
       
       const rows = Object.entries(monthlyData)
         .sort((a, b) => b[0].localeCompare(a[0]))
         .map(([key, data]) => [
           `"${data.monthName}"`, data.transactions, data.totalQuantity, Math.round(data.totalRevenue),
-          Math.round(data.yourShare), Math.round(data.totalRevenue / data.transactions),
-          data.buyers.size, data.sellers.size
+          Math.round(data.totalDiscount), Math.round(data.sellerBonus), Math.round(data.yourShare),
+          Math.round(data.totalRevenue / data.transactions), data.buyers.size, data.sellers.size
         ].join(';'));
       
       const csv = [header.join(';'), ...rows].join('\n');

@@ -257,16 +257,14 @@
             </div>
           </div>
           
-          <!-- Text verwenden Bereich -->
+          <!-- Text verwenden und bearbeiten Bereich -->
           <div id="textUseSection" class="hidden p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-            <h3 class="text-base font-medium mb-2 text-blue-400">Text verwenden</h3>
+            <h3 class="text-base font-medium mb-2 text-blue-400">Text verwenden und bearbeiten</h3>
             <div class="mb-3">
-              <label class="block text-xs font-medium text-gray-300 mb-1">
-                <i class="fas fa-align-left mr-1 text-xs"></i> Textvorschau
+              <label for="editTextContent" class="block text-xs font-medium text-gray-300 mb-1">
+                <i class="fas fa-align-left mr-1 text-xs"></i> Text bearbeiten (nur für dich sichtbar)
               </label>
-              <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-sm whitespace-pre-line">
-                <span id="textPreview"></span>
-              </div>
+              <textarea id="editTextContent" rows="6" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
             </div>
             <div class="flex gap-2">
               <button id="sendTextBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
@@ -383,7 +381,7 @@
     const textUseSection = document.getElementById('textUseSection');
     const sendTextBtn = document.getElementById('sendTextBtn');
     const cancelUseBtn = document.getElementById('cancelUseBtn');
-    const textPreview = document.getElementById('textPreview');
+    const editTextContent = document.getElementById('editTextContent');
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const adminPassInput = document.getElementById('adminPass');
     const adminError = document.getElementById('adminError');
@@ -411,6 +409,7 @@
 
     // Aktuell ausgewählter Text
     let selectedText = null;
+    let originalContent = "";
 
     // Notification System
     function showNotification(message, type = 'info', duration = 4000) {
@@ -585,12 +584,13 @@
       selectedText = texts.find(t => t.id === id);
       if (!selectedText) return;
       
-      // Textvorschau anzeigen
-      textPreview.textContent = selectedText.content;
+      // Originalen Textinhalt speichern und in Textarea laden
+      originalContent = selectedText.content;
+      editTextContent.value = selectedText.content;
       
       // Verwenden-Bereich anzeigen
       textUseSection.classList.remove('hidden');
-      showNotification(`Text "${selectedText.title}" ausgewählt`, 'info');
+      showNotification(`Text "${selectedText.title}" ausgewählt - Du kannst ihn jetzt bearbeiten`, 'info');
     }
 
     // Text an Discord senden
@@ -605,19 +605,26 @@
         return;
       }
       
+      const editedContent = editTextContent.value.trim();
+      if (!editedContent) {
+        showNotification('Text darf nicht leer sein', 'error');
+        return;
+      }
+      
       try {
         // Lade-Animation starten
         const originalText = sendTextBtn.innerHTML;
         sendTextBtn.innerHTML = '<div class="loading mr-1"></div> Sende...';
         sendTextBtn.disabled = true;
         
-        // Webhook-Call
-        await sendToDiscordWebhook(selectedText);
+        // Webhook-Call mit bearbeitetem Text
+        await sendToDiscordWebhook(selectedText, editedContent);
         showNotification(`Text "${selectedText.title}" wurde an Discord gesendet`, 'success');
         
         // Zurücksetzen
         textUseSection.classList.add('hidden');
         selectedText = null;
+        originalContent = "";
         
         // Button zurücksetzen
         sendTextBtn.innerHTML = originalText;
@@ -635,9 +642,15 @@
 
     // Abbrechen
     cancelUseBtn.addEventListener('click', () => {
+      // Text auf Original zurücksetzen
+      if (selectedText) {
+        selectedText.content = originalContent;
+      }
+      
       textUseSection.classList.add('hidden');
       selectedText = null;
-      showNotification('Vorgang abgebrochen', 'info');
+      originalContent = "";
+      showNotification('Bearbeitung abgebrochen - Text wurde nicht gesendet', 'info');
     });
 
     // Admin-Login
@@ -816,8 +829,8 @@
     // Initialisierung
     checkExistingLogin();
 
-    // Webhook-Funktion
-    async function sendToDiscordWebhook(text) {
+    // Webhook-Funktion - NUR EMBED
+    async function sendToDiscordWebhook(text, content) {
       if (!text.webhook) {
         throw new Error('Kein Webhook konfiguriert');
       }
@@ -833,15 +846,19 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content: text.content,
+          // KEIN content Feld - nur Embed
           username: 'Text Manager',
-          embeds: text.content.includes('**') ? [
+          embeds: [
             {
-              description: text.content,
+              title: text.title,
+              description: content,
               color: parseInt(text.color.replace('#', ''), 16),
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
+              footer: {
+                text: 'Gesendet via Text Manager'
+              }
             }
-          ] : undefined
+          ]
         })
       });
       

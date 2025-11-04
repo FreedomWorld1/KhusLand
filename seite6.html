@@ -724,8 +724,8 @@
     const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
     const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-    // Zugriffsbeschränkung für seite4.html
-    const ALLOWED_MESSAGES_FOR_SEITE4 = ['11er', '12er', '10er'];
+    // Zugriffsbeschränkung für seite4.html - KORRIGIERT
+    const ALLOWED_MESSAGES_FOR_SEITE4 = ['10er', '11er', '12er'];
 
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
@@ -999,9 +999,14 @@
           bannerMessage.textContent = accessInfo.message;
         }
         
-        // Seitennavigation basierend auf Message anpassen
+        // KORRIGIERT: Seitennavigation basierend auf Message anpassen
+        // Nur 10er, 11er, 12er dürfen seite4 sehen
         if (accessInfo && accessInfo.message && ALLOWED_MESSAGES_FOR_SEITE4.includes(accessInfo.message)) {
           seite4Link.classList.remove('hidden');
+          console.log(`Zugriff auf seite4 erlaubt für: ${accessInfo.message}`);
+        } else {
+          seite4Link.classList.add('hidden');
+          console.log(`Zugriff auf seite4 VERWEIGERT für: ${accessInfo ? accessInfo.message : 'keine Message'}`);
         }
       }
       
@@ -1381,7 +1386,7 @@
           console.error('Fehler beim Kopieren: ', err);
           showNotification('Fehler beim Kopieren des Texts', 'error');
         });
-    });
+    }
 
     // Abbrechen
     cancelUseBtn.addEventListener('click', () => {

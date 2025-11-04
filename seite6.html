@@ -257,20 +257,27 @@
             </div>
           </div>
           
-          <div id="textInputSection" class="hidden p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-            <h3 class="text-base font-medium mb-2 text-blue-400">Text senden</h3>
+          <!-- Text verwenden Bereich -->
+          <div id="textUseSection" class="hidden p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+            <h3 class="text-base font-medium mb-2 text-blue-400">Text verwenden</h3>
             <div class="mb-3">
-              <label for="textId" class="block text-xs font-medium text-gray-300 mb-1">
-                <i class="fas fa-id-card mr-1 text-xs"></i> ID eingeben
+              <label for="textContent" class="block text-xs font-medium text-gray-300 mb-1">
+                <i class="fas fa-align-left mr-1 text-xs"></i> Textinhalt
               </label>
-              <input id="textId" type="text" placeholder="ID für den Text" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
+              <textarea id="textContent" rows="4" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="userId" class="block text-xs font-medium text-gray-300 mb-1">
+                <i class="fas fa-user mr-1 text-xs"></i> User IDs (durch Komma getrennt)
+              </label>
+              <input id="userId" type="text" placeholder="User IDs eingeben" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"/>
             </div>
             <div class="flex gap-2">
               <button id="sendTextBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-paper-plane text-xs"></i>
                 An Discord senden
               </button>
-              <button id="cancelSendBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
+              <button id="cancelUseBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
                 <i class="fas fa-times text-xs"></i>
                 Abbrechen
               </button>
@@ -404,10 +411,11 @@
     const mainArea = document.getElementById('mainArea');
     const settingsArea = document.getElementById('settingsArea');
     const textList = document.getElementById('textList');
-    const textInputSection = document.getElementById('textInputSection');
+    const textUseSection = document.getElementById('textUseSection');
     const sendTextBtn = document.getElementById('sendTextBtn');
-    const cancelSendBtn = document.getElementById('cancelSendBtn');
-    const textIdInput = document.getElementById('textId');
+    const cancelUseBtn = document.getElementById('cancelUseBtn');
+    const userIdInput = document.getElementById('userId');
+    const textContentInput = document.getElementById('textContent');
     const adminLoginBtn = document.getElementById('adminLoginBtn');
     const adminPassInput = document.getElementById('adminPass');
     const adminError = document.getElementById('adminError');
@@ -652,7 +660,14 @@
       selectedText = texts.find(t => t.id === id);
       if (!selectedText) return;
       
-      textInputSection.classList.remove('hidden');
+      // Textinhalt anzeigen
+      textContentInput.value = selectedText.content;
+      
+      // User-ID-Feld leeren
+      userIdInput.value = '';
+      
+      // Verwenden-Bereich anzeigen
+      textUseSection.classList.remove('hidden');
       showNotification(`Text "${selectedText.title}" ausgewählt`, 'info');
     }
 
@@ -663,9 +678,11 @@
         return;
       }
       
-      const textId = textIdInput.value.trim();
-      if (!textId) {
-        showNotification('Bitte eine ID eingeben', 'error');
+      const userIds = userIdInput.value.trim();
+      const textContent = textContentInput.value.trim();
+      
+      if (!textContent) {
+        showNotification('Bitte Textinhalt eingeben', 'error');
         return;
       }
       
@@ -677,15 +694,15 @@
         
         // Hier würde der Webhook-Call stattfinden
         if (selectedText.webhook) {
-          await sendToDiscordWebhook(selectedText, textId);
-          showNotification(`Text "${selectedText.title}" mit ID "${textId}" wurde an Discord gesendet`, 'success');
+          await sendToDiscordWebhook(selectedText, textContent, userIds);
+          showNotification(`Text "${selectedText.title}" wurde an Discord gesendet`, 'success');
         } else {
-          showNotification(`Text "${selectedText.title}" mit ID "${textId}" bereit (kein Webhook konfiguriert)`, 'info');
+          showNotification(`Text "${selectedText.title}" bereit (kein Webhook konfiguriert)`, 'info');
         }
         
         // Zurücksetzen
-        textIdInput.value = '';
-        textInputSection.classList.add('hidden');
+        userIdInput.value = '';
+        textUseSection.classList.add('hidden');
         selectedText = null;
         
         // Button zurücksetzen
@@ -703,9 +720,9 @@
     });
 
     // Abbrechen
-    cancelSendBtn.addEventListener('click', () => {
-      textIdInput.value = '';
-      textInputSection.classList.add('hidden');
+    cancelUseBtn.addEventListener('click', () => {
+      userIdInput.value = '';
+      textUseSection.classList.add('hidden');
       selectedText = null;
       showNotification('Vorgang abgebrochen', 'info');
     });
@@ -922,18 +939,26 @@
     checkExistingLogin();
 
     // Webhook-Funktion (Beispiel)
-    async function sendToDiscordWebhook(text, id) {
+    async function sendToDiscordWebhook(text, content, userIds) {
       // Diese Funktion würde den Text über einen Discord Webhook senden
       // Hier ist ein Beispiel, wie das aussehen könnte:
       
       /*
+      let messageContent = content;
+      
+      // User-IDs hinzufügen, falls angegeben
+      if (userIds) {
+        const idArray = userIds.split(',').map(id => `<@${id.trim()}>`);
+        messageContent = `${idArray.join(' ')}\n\n${content}`;
+      }
+      
       const response = await fetch(text.webhook, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content: `**ID: ${id}**\n\n${text.content}`,
+          content: messageContent,
           username: 'Text Manager',
           embeds: [
             {

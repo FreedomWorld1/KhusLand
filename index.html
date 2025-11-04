@@ -628,7 +628,7 @@
     const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
     const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-    // Firebase Import und Konfiguration
+    // Firebase Import und Konfiguration - KORRIGIERT
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
     import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -644,7 +644,8 @@
       measurementId: "G-JSCWR4207G"
     };
 
-    const app = initializeApp(ffirebaseConfig);
+    // KORREKTUR: Tippfehler behoben
+    const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
     const entriesRef = ref(db,'weed_entries');

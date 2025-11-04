@@ -6,6 +6,35 @@
   <title>Text Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    
+    // Firebase Konfiguration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+      authDomain: "khusland-b7d13.firebaseapp.com",
+      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+      projectId: "khusland-b7d13",
+      storageBucket: "khusland-b7d13.firebasestorage.app",
+      messagingSenderId: "69573193613",
+      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+      measurementId: "G-JSCWR4207G"
+    };
+
+    // Firebase initialisieren
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    // Globale Firebase-Referenzen verfügbar machen
+    window.firebaseDb = db;
+    window.firebaseRef = ref;
+    window.firebaseSet = set;
+    window.firebaseOnValue = onValue;
+    window.firebasePush = push;
+    window.firebaseRemove = remove;
+  </script>
   <style>
     body {
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -97,6 +126,18 @@
       display: inline-block;
       margin-right: 8px;
       border: 1px solid rgba(255,255,255,0.2);
+    }
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -328,6 +369,17 @@
     const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
     const ADMIN_PASSWORD = '1101';
 
+    // Firebase Referenzen
+    const db = window.firebaseDb;
+    const firebaseRef = window.firebaseRef;
+    const firebaseSet = window.firebaseSet;
+    const firebaseOnValue = window.firebaseOnValue;
+    const firebasePush = window.firebasePush;
+    const firebaseRemove = window.firebaseRemove;
+
+    // Firebase Referenz für Texte
+    const textsRef = firebaseRef(db, 'text_manager/texts');
+
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
     const mainContent = document.getElementById('mainContent');
@@ -365,30 +417,9 @@
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
 
-    // Text-Daten (würde normalerweise in einer Datenbank gespeichert)
-    let texts = [
-      { 
-        id: 1, 
-        title: "Willkommen", 
-        content: "Willkommen auf unserer Plattform!", 
-        webhook: "",
-        color: "#a855f7"
-      },
-      { 
-        id: 2, 
-        title: "Information", 
-        content: "Hier finden Sie wichtige Informationen.", 
-        webhook: "",
-        color: "#3b82f6"
-      },
-      { 
-        id: 3, 
-        title: "Angebot", 
-        content: "Spezielles Angebot nur für Sie!", 
-        webhook: "",
-        color: "#10b981"
-      }
-    ];
+    // Text-Daten (werden von Firebase geladen)
+    let texts = [];
+    let textKeys = {}; // Mapping von IDs zu Firebase Keys
 
     // Aktuell ausgewählter Text
     let selectedText = null;
@@ -407,6 +438,105 @@
           notification.classList.add('hidden');
         }, 300);
       }, duration);
+    }
+
+    // Firebase: Texte laden
+    function loadTextsFromFirebase() {
+      firebaseOnValue(textsRef, (snapshot) => {
+        const data = snapshot.val();
+        texts = [];
+        textKeys = {};
+        
+        if (data) {
+          Object.keys(data).forEach(key => {
+            const text = data[key];
+            text.firebaseKey = key; // Firebase Key speichern
+            texts.push(text);
+            textKeys[text.id] = key;
+          });
+          
+          // Nach ID sortieren
+          texts.sort((a, b) => a.id - b.id);
+        } else {
+          // Standard-Texte erstellen, falls keine Daten vorhanden
+          createDefaultTexts();
+        }
+        
+        renderTextList();
+        if (document.getElementById('adminContent').classList.contains('hidden') === false) {
+          renderTextManagementList();
+        }
+      });
+    }
+
+    // Standard-Texte erstellen
+    function createDefaultTexts() {
+      const defaultTexts = [
+        { 
+          id: 1, 
+          title: "Willkommen", 
+          content: "Willkommen auf unserer Plattform!", 
+          webhook: "",
+          color: "#a855f7"
+        },
+        { 
+          id: 2, 
+          title: "Information", 
+          content: "Hier finden Sie wichtige Informationen.", 
+          webhook: "",
+          color: "#3b82f6"
+        },
+        { 
+          id: 3, 
+          title: "Angebot", 
+          content: "Spezielles Angebot nur für Sie!", 
+          webhook: "",
+          color: "#10b981"
+        }
+      ];
+      
+      defaultTexts.forEach(text => {
+        addTextToFirebase(text);
+      });
+    }
+
+    // Text zu Firebase hinzufügen
+    function addTextToFirebase(text) {
+      const newTextRef = firebasePush(textsRef);
+      firebaseSet(newTextRef, text)
+        .then(() => {
+          console.log('Text erfolgreich zu Firebase hinzugefügt');
+        })
+        .catch((error) => {
+          console.error('Fehler beim Hinzufügen zu Firebase:', error);
+          showNotification('Fehler beim Speichern in Firebase', 'error');
+        });
+    }
+
+    // Text in Firebase aktualisieren
+    function updateTextInFirebase(firebaseKey, updatedText) {
+      const textRef = firebaseRef(db, `text_manager/texts/${firebaseKey}`);
+      firebaseSet(textRef, updatedText)
+        .then(() => {
+          console.log('Text erfolgreich in Firebase aktualisiert');
+        })
+        .catch((error) => {
+          console.error('Fehler beim Aktualisieren in Firebase:', error);
+          showNotification('Fehler beim Aktualisieren in Firebase', 'error');
+        });
+    }
+
+    // Text aus Firebase löschen
+    function deleteTextFromFirebase(firebaseKey) {
+      const textRef = firebaseRef(db, `text_manager/texts/${firebaseKey}`);
+      firebaseRemove(textRef)
+        .then(() => {
+          console.log('Text erfolgreich aus Firebase gelöscht');
+        })
+        .catch((error) => {
+          console.error('Fehler beim Löschen aus Firebase:', error);
+          showNotification('Fehler beim Löschen aus Firebase', 'error');
+        });
     }
 
     // Discord OAuth Login
@@ -512,8 +642,8 @@
         usernameElement.textContent = user.username;
       }
       
-      // Text-Liste rendern
-      renderTextList();
+      // Texte von Firebase laden
+      loadTextsFromFirebase();
       
       // Bereiche zurücksetzen
       showMainArea();
@@ -662,6 +792,11 @@
       }
       
       try {
+        // Lade-Animation starten
+        const originalText = sendTextBtn.innerHTML;
+        sendTextBtn.innerHTML = '<div class="loading mr-1"></div> Sende...';
+        sendTextBtn.disabled = true;
+        
         // Hier würde der Webhook-Call stattfinden
         if (selectedText.webhook) {
           await sendToDiscordWebhook(selectedText, textId);
@@ -674,9 +809,18 @@
         textIdInput.value = '';
         textInputSection.classList.add('hidden');
         selectedText = null;
+        
+        // Button zurücksetzen
+        sendTextBtn.innerHTML = originalText;
+        sendTextBtn.disabled = false;
       } catch (error) {
         console.error('Fehler beim Senden an Discord:', error);
         showNotification('Fehler beim Senden an Discord', 'error');
+        
+        // Button zurücksetzen auch bei Fehler
+        const originalText = '<i class="fas fa-paper-plane text-xs"></i> An Discord senden';
+        sendTextBtn.innerHTML = originalText;
+        sendTextBtn.disabled = false;
       }
     });
 
@@ -700,11 +844,14 @@
         return;
       }
       
-      textToEdit.title = title;
-      textToEdit.content = content;
+      // Text in Firebase aktualisieren
+      const updatedText = {
+        ...textToEdit,
+        title: title,
+        content: content
+      };
       
-      // Listen aktualisieren
-      renderTextList();
+      updateTextInFirebase(textToEdit.firebaseKey, updatedText);
       
       // Bearbeitungsbereich ausblenden
       textEditSection.classList.add('hidden');
@@ -759,16 +906,20 @@
         return;
       }
       
+      // Neue ID generieren
+      const newId = texts.length > 0 ? Math.max(...texts.map(t => t.id)) + 1 : 1;
+      
       // Neuen Text erstellen
       const newText = {
-        id: texts.length > 0 ? Math.max(...texts.map(t => t.id)) + 1 : 1,
+        id: newId,
         title,
         content,
         webhook,
         color
       };
       
-      texts.push(newText);
+      // Text zu Firebase hinzufügen
+      addTextToFirebase(newText);
       
       // Formular zurücksetzen
       newTextTitle.value = '';
@@ -776,10 +927,6 @@
       newTextWebhook.value = '';
       newTextColor.value = '#a855f7';
       newTextColorValue.textContent = '#a855f7';
-      
-      // Listen aktualisieren
-      renderTextList();
-      renderTextManagementList();
       
       showNotification(`Text "${title}" hinzugefügt`, 'success');
     });
@@ -855,14 +1002,16 @@
       const newColor = prompt('Neue Farbe eingeben (Hex-Code):', text.color);
       if (newColor === null) return; // Benutzer hat abgebrochen
       
-      text.title = newTitle.trim();
-      text.content = newContent.trim();
-      text.webhook = newWebhook.trim();
-      text.color = newColor.trim();
+      // Text in Firebase aktualisieren
+      const updatedText = {
+        id: text.id,
+        title: newTitle.trim(),
+        content: newContent.trim(),
+        webhook: newWebhook.trim(),
+        color: newColor.trim()
+      };
       
-      // Listen aktualisieren
-      renderTextList();
-      renderTextManagementList();
+      updateTextInFirebase(text.firebaseKey, updatedText);
       
       showNotification(`Text "${text.title}" bearbeitet`, 'success');
     }
@@ -873,11 +1022,8 @@
       if (!text) return;
       
       if (confirm(`Text "${text.title}" wirklich löschen?`)) {
-        texts = texts.filter(t => t.id !== id);
-        
-        // Listen aktualisieren
-        renderTextList();
-        renderTextManagementList();
+        // Text aus Firebase löschen
+        deleteTextFromFirebase(text.firebaseKey);
         
         showNotification(`Text "${text.title}" gelöscht`, 'success');
       }

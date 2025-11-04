@@ -231,6 +231,41 @@
     .force-check-btn:hover {
       opacity: 1;
     }
+    .discount-badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 8px;
+      margin-left: 5px;
+      font-weight: 600;
+    }
+    .discount-15 {
+      background-color: #3b82f6;
+      color: white;
+    }
+    .discount-20 {
+      background-color: #10b981;
+      color: white;
+    }
+    .discount-10 {
+      background-color: #f59e0b;
+      color: black;
+    }
+    .discount-btn {
+      transition: all 0.2s ease;
+    }
+    .discount-btn.active {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    }
+    .discount-btn-15.active {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    }
+    .discount-btn-20.active {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
+    }
+    .discount-btn-10.active {
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.5);
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -351,6 +386,31 @@
                 <input id="seller" type="text" placeholder="Name des Verkäufers" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" required/>
               </div>
             </div>
+
+            <!-- RABATT-SYSTEM -->
+            <div class="bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+              <label class="block text-sm font-medium text-gray-300 mb-3">
+                <i class="fas fa-percentage mr-1"></i> Rabatt auswählen
+              </label>
+              <div class="grid grid-cols-3 gap-3">
+                <button type="button" id="discount15" class="discount-btn discount-btn-15 p-3 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium transition-all duration-200">
+                  <div class="font-bold text-lg">15%</div>
+                  <div class="text-xs opacity-90">Einkäufer</div>
+                </button>
+                <button type="button" id="discount20" class="discount-btn discount-btn-20 p-3 bg-green-600 hover:bg-green-500 rounded-lg font-medium transition-all duration-200">
+                  <div class="font-bold text-lg">20%</div>
+                  <div class="text-xs opacity-90">Normal</div>
+                </button>
+                <button type="button" id="discount10" class="discount-btn discount-btn-10 p-3 bg-yellow-600 hover:bg-yellow-500 rounded-lg font-medium transition-all duration-200">
+                  <div class="font-bold text-lg">10%</div>
+                  <div class="text-xs opacity-90">Mitarbeiter</div>
+                </button>
+              </div>
+              <div class="mt-3 text-xs text-gray-400 text-center">
+                Aktiver Rabatt: <span id="activeDiscountText" class="font-bold text-white">20% (Normal)</span>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">
@@ -367,20 +427,40 @@
                 </div>
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-                <div class="small-muted mb-1">
-                  <i class="fas fa-user-tag mr-1"></i> Verkäufer (70%)
+
+            <!-- PREISÜBERSICHT MIT RABATT -->
+            <div class="bg-gray-800/20 p-4 rounded-lg border border-gray-700">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                <div class="text-center">
+                  <div class="small-muted mb-1">Standardpreis</div>
+                  <div id="standardPrice" class="font-bold text-gray-300">0 $</div>
                 </div>
-                <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
+                <div class="text-center">
+                  <div class="small-muted mb-1">Rabatt</div>
+                  <div id="discountAmount" class="font-bold text-red-400">-0 $</div>
+                </div>
+                <div class="text-center">
+                  <div class="small-muted mb-1">Endpreis</div>
+                  <div id="finalPrice" class="font-bold text-green-400">0 $</div>
+                </div>
               </div>
-              <div class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 text-center">
-                <div class="small-muted mb-1">
-                  <i class="fas fa-user mr-1"></i> Käufer (30%)
+              
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-3 rounded-lg bg-gray-800/40 text-center">
+                  <div class="small-muted mb-1">
+                    <i class="fas fa-user-tag mr-1"></i> Verkäufer (70%)
+                  </div>
+                  <div id="sellerShare" class="text-lg font-bold text-green-400">0 $</div>
                 </div>
-                <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
+                <div class="p-3 rounded-lg bg-gray-800/40 text-center">
+                  <div class="small-muted mb-1">
+                    <i class="fas fa-user mr-1"></i> Käufer (30%)
+                  </div>
+                  <div id="yourShare" class="text-lg font-bold text-blue-400">0 $</div>
+                </div>
               </div>
             </div>
+
             <div class="flex gap-3 pt-2">
               <button type="submit" class="flex-1 px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
                 <i class="fas fa-save"></i>
@@ -419,6 +499,22 @@
               <div class="stat-label">Dein Gesamtanteil</div>
               <div id="yourTotalShare" class="stat-value text-yellow-400">0 $</div>
             </div>
+          </div>
+          
+          <!-- Rabatt-Filter -->
+          <div class="flex gap-2 mb-4 flex-wrap">
+            <button class="discount-filter-btn px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm transition-all" data-discount="all">
+              Alle Rabatte
+            </button>
+            <button class="discount-filter-btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm transition-all" data-discount="15">
+              15% Einkäufer
+            </button>
+            <button class="discount-filter-btn px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg text-sm transition-all" data-discount="20">
+              20% Normal
+            </button>
+            <button class="discount-filter-btn px-3 py-2 bg-yellow-600 hover:bg-yellow-500 rounded-lg text-sm transition-all" data-discount="10">
+              10% Mitarbeiter
+            </button>
           </div>
           
           <!-- Suchfeld -->
@@ -480,6 +576,7 @@
                     <th class="p-3 font-medium">Käufer</th>
                     <th class="p-3 font-medium">Verkäufer</th>
                     <th class="p-3 font-medium">Menge</th>
+                    <th class="p-3 font-medium">Rabatt</th>
                     <th class="p-3 font-medium">Preis</th>
                     <th class="p-3 font-medium">Verkäufer (70%)</th>
                     <th class="p-3 font-medium">Käufer (30%)</th>
@@ -537,6 +634,9 @@
     function validateBuyerName(buyerName) {
       return CLOUDFLARE_USERNAMES.includes(buyerName);
     }
+
+    // RABATT-SYSTEM VARIABLEN
+    let currentDiscount = 20; // Standardrabatt 20%
 
     // Event-Listener für Käufer-Feld-Änderungen
     document.getElementById('buyer').addEventListener('blur', function() {
@@ -1014,24 +1114,93 @@
     // Initialize with New Entry active
     updateButtonStates('new');
 
-    // Share Calculation
+    // RABATT-SYSTEM FUNKTIONEN
+    function setupDiscountSystem() {
+      const discountButtons = {
+        15: document.getElementById('discount15'),
+        20: document.getElementById('discount20'),
+        10: document.getElementById('discount10')
+      };
+
+      // Event Listener für Rabatt-Buttons
+      Object.entries(discountButtons).forEach(([discount, button]) => {
+        button.addEventListener('click', () => {
+          // Entferne aktive Klasse von allen Buttons
+          Object.values(discountButtons).forEach(btn => {
+            btn.classList.remove('active');
+          });
+          
+          // Setze aktiven Button
+          button.classList.add('active');
+          currentDiscount = parseInt(discount);
+          
+          // Aktualisiere Anzeige
+          updateDiscountDisplay();
+          updateShares();
+          
+          showNotification(`Rabatt auf ${discount}% gesetzt`, 'info', 2000);
+        });
+      });
+
+      // Setze Standard-Rabatt (20%)
+      discountButtons[20].classList.add('active');
+      updateDiscountDisplay();
+    }
+
+    function updateDiscountDisplay() {
+      const discountTexts = {
+        15: '15% (Einkäufer)',
+        20: '20% (Normal)',
+        10: '10% (Mitarbeiter)'
+      };
+      
+      document.getElementById('activeDiscountText').textContent = discountTexts[currentDiscount] || '20% (Normal)';
+    }
+
+    function calculateDiscountedPrice(standardPrice) {
+      const discountAmount = standardPrice * (currentDiscount / 100);
+      const finalPrice = standardPrice - discountAmount;
+      return {
+        standardPrice: Math.round(standardPrice),
+        discountAmount: Math.round(discountAmount),
+        finalPrice: Math.round(finalPrice)
+      };
+    }
+
+    // Share Calculation MIT RABATT
     const quantityInput = document.getElementById('quantity');
     const sellerShareEl = document.getElementById('sellerShare');
     const yourShareEl = document.getElementById('yourShare');
     const totalPriceEl = document.getElementById('totalPrice');
+    const standardPriceEl = document.getElementById('standardPrice');
+    const discountAmountEl = document.getElementById('discountAmount');
+    const finalPriceEl = document.getElementById('finalPrice');
     
     function updateShares() { 
       const q = Number(quantityInput.value) || 0;
-      const price = q * 2500;
-      totalPriceEl.textContent = formatCurrency(price);
-      sellerShareEl.textContent = formatCurrency(price * 0.7);
-      yourShareEl.textContent = formatCurrency(price * 0.3);
+      const standardPrice = q * 2500;
+      
+      // Berechne rabattierten Preis
+      const discounted = calculateDiscountedPrice(standardPrice);
+      
+      // Aktualisiere alle Preisanzeigen
+      standardPriceEl.textContent = formatCurrency(discounted.standardPrice);
+      discountAmountEl.textContent = `-${formatCurrency(discounted.discountAmount)}`;
+      finalPriceEl.textContent = formatCurrency(discounted.finalPrice);
+      totalPriceEl.textContent = formatCurrency(discounted.finalPrice);
+      
+      // Berechne Anteile basierend auf rabattiertem Preis
+      sellerShareEl.textContent = formatCurrency(discounted.finalPrice * 0.7);
+      yourShareEl.textContent = formatCurrency(discounted.finalPrice * 0.3);
     }
     
     quantityInput.addEventListener('input', updateShares);
+    
+    // Rabatt-System initialisieren
+    setupDiscountSystem();
     updateShares();
 
-    // Form submit MIT CLOUDFLARE USERNAME VALIDIERUNG
+    // Form submit MIT CLOUDFLARE USERNAME VALIDIERUNG UND RABATT
     document.getElementById('entryForm').addEventListener('submit', async e => {
       e.preventDefault();
       
@@ -1056,15 +1225,19 @@
         return;
       }
       
-      const price = quantity * 2500;
-      const sellerShare = price * 0.7;
-      const yourShare = price * 0.3;
+      const standardPrice = quantity * 2500;
+      const discounted = calculateDiscountedPrice(standardPrice);
+      const sellerShare = discounted.finalPrice * 0.7;
+      const yourShare = discounted.finalPrice * 0.3;
       
       const entry = {
         buyer,
         seller,
         quantity,
-        price,
+        standardPrice: discounted.standardPrice,
+        discount: currentDiscount,
+        discountAmount: discounted.discountAmount,
+        price: discounted.finalPrice,
         sellerShare,
         yourShare,
         date: formatDate(new Date()),
@@ -1081,7 +1254,7 @@
         e.target.reset();
         updateShares();
         
-        showNotification('Eintrag erfolgreich gespeichert!', 'success');
+        showNotification(`Eintrag mit ${currentDiscount}% Rabatt erfolgreich gespeichert!`, 'success');
         
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
@@ -1132,7 +1305,39 @@
       renderOverview();
     });
 
-    // Übersicht rendern
+    // Rabatt-Filter Funktion
+    function setupDiscountFilter() {
+      const filterButtons = document.querySelectorAll('.discount-filter-btn');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const discount = button.getAttribute('data-discount');
+          
+          // Aktiven Filter-Button markieren
+          filterButtons.forEach(btn => {
+            btn.classList.remove('bg-blue-600', 'bg-green-600', 'bg-yellow-600');
+            btn.classList.add('bg-gray-700');
+          });
+          
+          if (discount === 'all') {
+            filteredEntries = [...entries];
+            button.classList.remove('bg-gray-700');
+            button.classList.add('bg-blue-600');
+          } else {
+            const discountValue = parseInt(discount);
+            filteredEntries = entries.filter(entry => entry.discount === discountValue);
+            button.classList.remove('bg-gray-700');
+            if (discountValue === 15) button.classList.add('bg-blue-600');
+            else if (discountValue === 20) button.classList.add('bg-green-600');
+            else if (discountValue === 10) button.classList.add('bg-yellow-600');
+          }
+          
+          renderOverview();
+        });
+      });
+    }
+
+    // Übersicht rendern MIT RABATT-ANZEIGE
     const entriesList = document.getElementById('entriesList');
     function renderOverview() {
       entriesList.innerHTML = '';
@@ -1160,18 +1365,36 @@
       
       // Einträge anzeigen
       filteredEntries.forEach(en => {
+        const discountBadgeClass = `discount-${en.discount}`;
+        const discountText = en.discount === 15 ? 'Einkäufer' : en.discount === 20 ? 'Normal' : 'Mitarbeiter';
+        
         const el = document.createElement('div');
         el.className = 'p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-green-500/30 transition-all duration-200';
         el.innerHTML = `
           <div class="flex justify-between items-start mb-2">
             <div class="text-sm text-gray-400">${en.date}</div>
-            <div class="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">${en.quantity} Bricks</div>
+            <div class="flex gap-2">
+              <div class="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">${en.quantity} Bricks</div>
+              <div class="discount-badge ${discountBadgeClass}">${en.discount}% ${discountText}</div>
+            </div>
           </div>
           <div class="font-semibold text-lg mb-2">${en.buyer} → ${en.seller}</div>
           <div class="grid grid-cols-2 gap-3 text-sm">
             <div class="bg-gray-800/40 p-2 rounded-lg">
-              <div class="text-gray-400">Gesamtpreis</div>
+              <div class="text-gray-400">Standardpreis</div>
+              <div class="font-medium text-gray-300">${formatCurrency(en.standardPrice)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Rabatt</div>
+              <div class="font-medium text-red-400">-${formatCurrency(en.discountAmount)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Endpreis</div>
               <div class="font-medium text-white">${formatCurrency(en.price)}</div>
+            </div>
+            <div class="bg-gray-800/40 p-2 rounded-lg">
+              <div class="text-gray-400">Pro Stück</div>
+              <div class="font-medium text-purple-400">${formatCurrency(en.price / en.quantity)}</div>
             </div>
             <div class="bg-gray-800/40 p-2 rounded-lg">
               <div class="text-gray-400">Verkäuferanteil</div>
@@ -1180,10 +1403,6 @@
             <div class="bg-gray-800/40 p-2 rounded-lg">
               <div class="text-gray-400">Käuferanteil</div>
               <div class="font-medium text-blue-400">${formatCurrency(en.yourShare)}</div>
-            </div>
-            <div class="bg-gray-800/40 p-2 rounded-lg">
-              <div class="text-gray-400">Pro Stück</div>
-              <div class="font-medium text-purple-400">${formatCurrency(en.price / en.quantity)}</div>
             </div>
           </div>
         `;
@@ -1228,14 +1447,23 @@
       // Die neuesten Einträge werden oben angezeigt (bereits sortiert)
       entries.forEach(en => {
         revenue += en.yourShare;
+        const discountText = en.discount === 15 ? 'Einkäufer' : en.discount === 20 ? 'Normal' : 'Mitarbeiter';
+        const discountBadgeClass = `discount-${en.discount}`;
+        
         const tr = document.createElement('tr');
         tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
         tr.innerHTML = `
           <td class="p-3 small-muted">${en.date}</td>
           <td class="p-3">${en.buyer}</td>
           <td class="p-3">${en.seller}</td>
-          <td class="p-3">${en.quantity} </td>
-          <td class="p-3">${formatCurrency(en.price)}</td>
+          <td class="p-3">${en.quantity}</td>
+          <td class="p-3">
+            <span class="discount-badge ${discountBadgeClass}">${en.discount}% ${discountText}</span>
+          </td>
+          <td class="p-3">
+            <div class="text-sm text-gray-400 line-through">${formatCurrency(en.standardPrice)}</div>
+            <div class="font-bold">${formatCurrency(en.price)}</div>
+          </td>
           <td class="p-3 text-green-400">${formatCurrency(en.sellerShare)}</td>
           <td class="p-3 text-blue-400">${formatCurrency(en.yourShare)}</td>
           <td class="p-3">
@@ -1258,7 +1486,7 @@
       }
     }
 
-    // CSV Export Funktionen
+    // CSV Export Funktionen MIT RABATT
     function generateDetailedCSV() {
       if (entries.length === 0) {
         showNotification('Keine Einträge zum Exportieren vorhanden.', 'error');
@@ -1275,8 +1503,11 @@
         'Käufer',
         'Verkäufer',
         'Menge (Bricks)',
-        'Stückpreis ($)',
-        'Gesamtpreis ($)',
+        'Rabatt (%)',
+        'Rabatt-Typ',
+        'Standardpreis ($)',
+        'Rabattbetrag ($)',
+        'Endpreis ($)',
         'Verkäuferanteil 70% ($)',
         'Käuferanteil 30% ($)',
         'Transaktions-ID'
@@ -1287,7 +1518,7 @@
         const dateTime = e.date.split(' ');
         const date = dateTime[0];
         const time = dateTime[1] || '';
-        const pricePerUnit = e.price / e.quantity;
+        const discountType = e.discount === 15 ? 'Einkäufer' : e.discount === 20 ? 'Normal' : 'Mitarbeiter';
         
         return [
           date,
@@ -1295,7 +1526,10 @@
           `"${e.buyer}"`,
           `"${e.seller}"`,
           e.quantity,
-          Math.round(pricePerUnit),
+          e.discount,
+          discountType,
+          Math.round(e.standardPrice),
+          Math.round(e.discountAmount),
           Math.round(e.price),
           Math.round(e.sellerShare),
           Math.round(e.yourShare),
@@ -1313,14 +1547,18 @@
         return;
       }
       
-      // Zusammenfassung nach Käufer
+      // Zusammenfassung nach Käufer und Rabatt
       const buyerSummary = {};
       let totalRevenue = 0;
       let totalYourShare = 0;
       
       entries.forEach(entry => {
-        if (!buyerSummary[entry.buyer]) {
-          buyerSummary[entry.buyer] = {
+        const key = `${entry.buyer}_${entry.discount}`;
+        if (!buyerSummary[key]) {
+          buyerSummary[key] = {
+            buyer: entry.buyer,
+            discount: entry.discount,
+            discountType: entry.discount === 15 ? 'Einkäufer' : entry.discount === 20 ? 'Normal' : 'Mitarbeiter',
             transactions: 0,
             totalQuantity: 0,
             totalSpent: 0,
@@ -1328,10 +1566,10 @@
           };
         }
         
-        buyerSummary[entry.buyer].transactions++;
-        buyerSummary[entry.buyer].totalQuantity += entry.quantity;
-        buyerSummary[entry.buyer].totalSpent += entry.price;
-        buyerSummary[entry.buyer].yourShare += entry.yourShare;
+        buyerSummary[key].transactions++;
+        buyerSummary[key].totalQuantity += entry.quantity;
+        buyerSummary[key].totalSpent += entry.price;
+        buyerSummary[key].yourShare += entry.yourShare;
         
         totalRevenue += entry.price;
         totalYourShare += entry.yourShare;
@@ -1340,6 +1578,8 @@
       // Header für Zusammenfassung
       const header = [
         'Käufer',
+        'Rabatt (%)',
+        'Rabatt-Typ',
         'Anzahl Transaktionen',
         'Gesamtmenge (Bricks)',
         'Gesamtausgaben ($)',
@@ -1348,8 +1588,10 @@
       ];
       
       // Datenzeilen
-      const rows = Object.entries(buyerSummary).map(([buyer, data]) => [
-        `"${buyer}"`,
+      const rows = Object.values(buyerSummary).map(data => [
+        `"${data.buyer}"`,
+        data.discount,
+        data.discountType,
         data.transactions,
         data.totalQuantity,
         Math.round(data.totalSpent),
@@ -1359,7 +1601,7 @@
       
       // Gesamtsummen hinzufügen
       rows.push('');
-      rows.push(['GESAMT', entries.length, '', Math.round(totalRevenue), '', Math.round(totalYourShare)].join(';'));
+      rows.push(['GESAMT', '', '', entries.length, '', Math.round(totalRevenue), '', Math.round(totalYourShare)].join(';'));
       
       const csv = [header.join(';'), ...rows].join('\n');
       downloadCSV(csv, 'zusammenfassung');
@@ -1385,6 +1627,7 @@
             transactions: 0,
             totalQuantity: 0,
             totalRevenue: 0,
+            totalDiscount: 0,
             yourShare: 0,
             buyers: new Set(),
             sellers: new Set()
@@ -1394,6 +1637,7 @@
         monthlyData[monthKey].transactions++;
         monthlyData[monthKey].totalQuantity += entry.quantity;
         monthlyData[monthKey].totalRevenue += entry.price;
+        monthlyData[monthKey].totalDiscount += entry.discountAmount;
         monthlyData[monthKey].yourShare += entry.yourShare;
         monthlyData[monthKey].buyers.add(entry.buyer);
         monthlyData[monthKey].sellers.add(entry.seller);
@@ -1405,6 +1649,7 @@
         'Anzahl Transaktionen',
         'Gesamtmenge (Bricks)',
         'Gesamtumsatz ($)',
+        'Gesamtersparnis durch Rabatt ($)',
         'Ihr Anteil ($)',
         'Durchschnitt pro Transaktion ($)',
         'Eindeutige Käufer',
@@ -1419,6 +1664,7 @@
           data.transactions,
           data.totalQuantity,
           Math.round(data.totalRevenue),
+          Math.round(data.totalDiscount),
           Math.round(data.yourShare),
           Math.round(data.totalRevenue / data.transactions),
           data.buyers.size,
@@ -1452,6 +1698,9 @@
     document.getElementById('exportCsvDetailed').addEventListener('click', generateDetailedCSV);
     document.getElementById('exportCsvSummary').addEventListener('click', generateSummaryCSV);
     document.getElementById('exportCsvMonthly').addEventListener('click', generateMonthlyReport);
+
+    // Rabatt-Filter initialisieren
+    setupDiscountFilter();
 
   </script>
 </body>

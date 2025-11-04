@@ -457,7 +457,7 @@
               <div id="discountExplanation" class="mt-3 p-2 bg-blue-900/20 rounded-lg border border-blue-700/30">
                 <div class="text-xs text-blue-300 text-center">
                   <i class="fas fa-info-circle mr-1"></i>
-                  Der Rabatt verändert nur die Anteilsverteilung zwischen Käufer und Verkäufer
+                  <span id="discountExplanationText">Der Rabatt verändert die Verteilung zwischen Käufer und Verkäufer</span>
                 </div>
               </div>
             </div>
@@ -1185,9 +1185,9 @@
           updateShares();
           
           if (discount.value > 0) {
-            showNotification(`${discount.value}% Rabatt aktiv - Verteilung: Verkäufer ${100 - discount.value}% / Käufer ${discount.value}% vom Käuferanteil`, 'info', 2000);
+            showNotification(`${discount.value}% Rabatt aktiv - Verteilung: Verkäufer ${100 - discount.value}% / Käufer ${discount.value}%`, 'info', 2000);
           } else {
-            showNotification('Kein Rabatt aktiv', 'info', 2000);
+            showNotification('Kein Rabatt aktiv - Verteilung: Verkäufer 100% / Käufer 0%', 'info', 2000);
           }
         });
         
@@ -1265,37 +1265,30 @@
       }
     }
 
-    // KORRIGIERTE FUNKTION: Rabatt wirkt sich NUR auf die Verteilung aus
+    // VOLLSTÄNDIG KORRIGIERTE FUNKTION: Rabatt wirkt sich auf die GESAMTVERTEILUNG aus
     function calculateSharesWithDiscount(totalPrice) {
-      // Basisanteile ohne Rabatt (70/30)
-      const baseSellerShare = totalPrice * 0.7;
-      const baseYourShare = totalPrice * 0.3;
-      
       if (currentDiscount === 0) {
+        // Bei 0% Rabatt: Verkäufer 100%, Käufer 0%
         return {
           totalPrice: Math.round(totalPrice),
-          sellerShare: Math.round(baseSellerShare),
-          yourShare: Math.round(baseYourShare),
+          sellerShare: Math.round(totalPrice),
+          yourShare: 0,
           discountAmount: 0,
-          sellerIncrease: 0,
-          yourDecrease: 0
+          sellerIncrease: Math.round(totalPrice * 0.3), // Verkäufer bekommt 30% mehr als Basis
+          yourDecrease: Math.round(totalPrice * 0.3) // Käufer verliert kompletten Anteil
         };
       }
       
-      // RABATT KORREKTUR: Bei 0% Rabatt -> Verkäufer 100%, Käufer 0% vom KÄUFERANTEIL
-      // Bei 10% Rabatt -> Verkäufer 90%, Käufer 10% vom KÄUFERANTEIL
+      // Bei Rabatt > 0%: Verkäufer bekommt (100 - Rabatt)%, Käufer bekommt Rabatt% vom GESAMTBETRAG
+      const sellerPercentage = (100 - currentDiscount) / 100;
+      const yourPercentage = currentDiscount / 100;
       
-      // Der Rabatt bezieht sich nur auf die 30% Käuferanteil
-      const yourSharePercentage = (100 - currentDiscount) / 100; // Bei 10% Rabatt: 90% für Verkäufer vom Käuferanteil
-      const sellerSharePercentage = currentDiscount / 100; // Bei 10% Rabatt: 10% für Käufer vom Käuferanteil
+      const finalSellerShare = totalPrice * sellerPercentage;
+      const finalYourShare = totalPrice * yourPercentage;
       
-      // Berechnung der Anteile:
-      // Verkäufer bekommt seinen normalen 70% + Rabatt-Anteil vom Käuferanteil
-      const finalSellerShare = baseSellerShare + (baseYourShare * yourSharePercentage);
-      // Käufer bekommt nur den reduzierten Anteil vom Käuferanteil
-      const finalYourShare = baseYourShare * sellerSharePercentage;
-      
-      // Berechnung der Änderungen für die Anzeige
+      // Berechnung der Änderungen für die Anzeige (verglichen mit Basis 70/30)
+      const baseSellerShare = totalPrice * 0.7;
+      const baseYourShare = totalPrice * 0.3;
       const sellerIncrease = finalSellerShare - baseSellerShare;
       const yourDecrease = baseYourShare - finalYourShare;
       
@@ -1317,7 +1310,7 @@
     const finalPriceEl = document.getElementById('finalPrice');
     const sellerShareChangeEl = document.getElementById('sellerShareChange');
     const yourShareChangeEl = document.getElementById('yourShareChange');
-    const discountExplanationEl = document.getElementById('discountExplanation');
+    const discountExplanationEl = document.getElementById('discountExplanationText');
     
     function updateShares() { 
       const q = Number(quantityInput.value) || 0;
@@ -1350,20 +1343,10 @@
       }
       
       // Aktualisiere Rabatt-Erklärung
-      if (currentDiscount > 0) {
-        discountExplanationEl.innerHTML = `
-          <div class="text-xs text-blue-300 text-center">
-            <i class="fas fa-info-circle mr-1"></i>
-            Rabatt-Regel: Bei ${currentDiscount}% Rabatt erhält Verkäufer ${100 - currentDiscount}% und Käufer ${currentDiscount}% vom Käuferanteil
-          </div>
-        `;
+      if (currentDiscount === 0) {
+        discountExplanationEl.textContent = 'Bei 0% Rabatt: Verkäufer erhält 100%, Käufer erhält 0% vom Gesamtbetrag';
       } else {
-        discountExplanationEl.innerHTML = `
-          <div class="text-xs text-blue-300 text-center">
-            <i class="fas fa-info-circle mr-1"></i>
-            Der Rabatt verändert nur die Anteilsverteilung zwischen Käufer und Verkäufer
-          </div>
-        `;
+        discountExplanationEl.textContent = `Bei ${currentDiscount}% Rabatt: Verkäufer erhält ${100 - currentDiscount}%, Käufer erhält ${currentDiscount}% vom Gesamtbetrag`;
       }
     }
     
@@ -1479,10 +1462,10 @@
         e.target.reset();
         updateShares();
         
-        if (currentDiscount > 0) {
-          showNotification(`Eintrag mit ${currentDiscount}% Rabatt gespeichert! Verteilung: Verkäufer ${100 - currentDiscount}% / Käufer ${currentDiscount}% vom Käuferanteil`, 'success');
+        if (currentDiscount === 0) {
+          showNotification('Eintrag ohne Rabatt gespeichert! Verteilung: Verkäufer 100% / Käufer 0%', 'success');
         } else {
-          showNotification('Eintrag ohne Rabatt gespeichert!', 'success');
+          showNotification(`Eintrag mit ${currentDiscount}% Rabatt gespeichert! Verteilung: Verkäufer ${100 - currentDiscount}% / Käufer ${currentDiscount}%`, 'success');
         }
         
         submitBtn.innerHTML = originalText;
@@ -1600,7 +1583,7 @@
             </div>
             <div class="bg-gray-800/40 p-2 rounded-lg">
               <div class="text-gray-400">Rabatt</div>
-              <div class="font-medium text-yellow-400">${en.discount > 0 ? `Verkäufer ${100 - en.discount}% / Käufer ${en.discount}% vom Käuferanteil` : 'Kein Rabatt'}</div>
+              <div class="font-medium text-yellow-400">${en.discount === 0 ? 'Verkäufer 100% / Käufer 0%' : `Verkäufer ${100 - en.discount}% / Käufer ${en.discount}%`}</div>
             </div>
           </div>
         `;

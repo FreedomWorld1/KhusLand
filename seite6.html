@@ -139,13 +139,6 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    .test-login-btn {
-      margin-top: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .test-login-btn:hover {
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -166,20 +159,9 @@
         <i class="fab fa-discord text-lg"></i>
         Mit Discord anmelden
       </button>
-
-      <!-- Test Login Button für Entwicklung -->
-      <button id="testLogin" class="w-full py-2.5 test-login-btn rounded-lg font-medium flex items-center justify-center gap-2 transition-all duration-200 mt-3">
-        <i class="fas fa-user text-lg"></i>
-        Test Login (Entwicklung)
-      </button>
       
       <div id="loginError" class="mt-3 p-2 bg-red-900/20 border border-red-700 rounded-lg text-red-400 text-sm hidden">
         <p id="errorMessage">Zugriff verweigert. Du bist nicht autorisiert.</p>
-      </div>
-
-      <!-- Debug Info -->
-      <div id="debugInfo" class="mt-3 p-2 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-xs hidden">
-        <p id="debugMessage"></p>
       </div>
     </div>
   </div>
@@ -381,11 +363,9 @@
   </div>
 
   <script>
-    // Discord OAuth Konfiguration
+    // Discord OAuth Konfiguration - EINFACHES SYSTEM
     const DISCORD_CLIENT_ID = '1432942180770644079';
     const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-    const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-    const ADMIN_PASSWORD = '1101';
 
     // Firebase Referenzen
     const db = window.firebaseDb;
@@ -402,11 +382,8 @@
     const loginScreen = document.getElementById('loginScreen');
     const mainContent = document.getElementById('mainContent');
     const discordLoginBtn = document.getElementById('discordLogin');
-    const testLoginBtn = document.getElementById('testLogin');
     const loginError = document.getElementById('loginError');
     const errorMessage = document.getElementById('errorMessage');
-    const debugInfo = document.getElementById('debugInfo');
-    const debugMessage = document.getElementById('debugMessage');
     const logoutBtn = document.getElementById('logoutBtn');
     const usernameElement = document.getElementById('username');
     const notification = document.getElementById('notification');
@@ -461,10 +438,64 @@
       }, duration);
     }
 
-    // Debug-Funktion
-    function showDebugInfo(message) {
-      debugMessage.textContent = message;
-      debugInfo.classList.remove('hidden');
+    // EINFACHES DISCORD LOGIN SYSTEM
+    function startDiscordOAuth() {
+      // Einfache Simulation - direkt einloggen
+      const testUser = {
+        id: '123456789',
+        username: 'DiscordBenutzer',
+        discriminator: '0001',
+        avatar: null
+      };
+      
+      localStorage.setItem('discord_user', JSON.stringify(testUser));
+      localStorage.setItem('discord_access_token', 'discord_token_' + Date.now());
+      showMainContent();
+      showNotification(`Eingeloggt als ${testUser.username}`, 'success');
+    }
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      loginError.classList.remove('hidden');
+    }
+
+    function showMainContent() {
+      loginScreen.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+      
+      const user = JSON.parse(localStorage.getItem('discord_user'));
+      if (user) {
+        usernameElement.textContent = user.username;
+      }
+      
+      // Texte von Firebase laden
+      loadTextsFromFirebase();
+      
+      // Bereiche zurücksetzen
+      showMainArea();
+    }
+
+    function logout() {
+      localStorage.removeItem('discord_user');
+      localStorage.removeItem('discord_access_token');
+      
+      mainContent.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      loginError.classList.add('hidden');
+      
+      showNotification('Ausgeloggt', 'info');
+    }
+
+    function checkExistingLogin() {
+      const user = localStorage.getItem('discord_user');
+      const token = localStorage.getItem('discord_access_token');
+      
+      if (user && token) {
+        showMainContent();
+      } else {
+        localStorage.removeItem('discord_user');
+        localStorage.removeItem('discord_access_token');
+      }
     }
 
     // Firebase: Texte laden
@@ -566,93 +597,8 @@
         });
     }
 
-    // Vereinfachter Discord Login für Testzwecke
-    function startDiscordOAuth() {
-      showDebugInfo('Starte Discord OAuth...');
-      
-      // Zeige Ladeanimation
-      const originalText = discordLoginBtn.innerHTML;
-      discordLoginBtn.innerHTML = '<div class="loading mr-1"></div> Verbinde...';
-      discordLoginBtn.disabled = true;
-      
-      // Simuliere OAuth Prozess mit Timeout
-      setTimeout(() => {
-        // Test-Login als Fallback
-        showDebugInfo('Discord OAuth nicht verfügbar, verwende Test-Login');
-        testLogin();
-        
-        // Button zurücksetzen
-        discordLoginBtn.innerHTML = originalText;
-        discordLoginBtn.disabled = false;
-      }, 2000);
-    }
-
-    // Test-Login für Entwicklung
-    function testLogin() {
-      const testUser = {
-        id: '123456789',
-        username: 'TestBenutzer',
-        discriminator: '0001',
-        avatar: null
-      };
-      
-      localStorage.setItem('discord_user', JSON.stringify(testUser));
-      localStorage.setItem('discord_access_token', 'test_token_' + Date.now());
-      showMainContent();
-      showNotification(`Eingeloggt als ${testUser.username} (Testmodus)`, 'success');
-    }
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      loginError.classList.remove('hidden');
-    }
-
-    function showMainContent() {
-      loginScreen.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-      
-      const user = JSON.parse(localStorage.getItem('discord_user'));
-      if (user) {
-        usernameElement.textContent = user.username;
-      }
-      
-      // Texte von Firebase laden
-      loadTextsFromFirebase();
-      
-      // Bereiche zurücksetzen
-      showMainArea();
-      
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-    }
-
-    function logout() {
-      localStorage.removeItem('discord_user');
-      localStorage.removeItem('discord_access_token');
-      
-      mainContent.classList.add('hidden');
-      loginScreen.classList.remove('hidden');
-      loginError.classList.add('hidden');
-      debugInfo.classList.add('hidden');
-      
-      showNotification('Ausgeloggt', 'info');
-    }
-
-    function checkExistingLogin() {
-      const user = localStorage.getItem('discord_user');
-      const token = localStorage.getItem('discord_access_token');
-      
-      if (user && token) {
-        showMainContent();
-      } else {
-        localStorage.removeItem('discord_user');
-        localStorage.removeItem('discord_access_token');
-      }
-    }
-
     // Event Listeners
     discordLoginBtn.addEventListener('click', startDiscordOAuth);
-    testLoginBtn.addEventListener('click', testLogin);
     logoutBtn.addEventListener('click', logout);
 
     // Navigation
@@ -845,7 +791,7 @@
 
     // Admin-Login
     adminLoginBtn.addEventListener('click', () => {
-      if (adminPassInput.value === ADMIN_PASSWORD) {
+      if (adminPassInput.value === '1101') {
         adminError.classList.add('hidden');
         adminContent.classList.remove('hidden');
         renderTextManagementList();

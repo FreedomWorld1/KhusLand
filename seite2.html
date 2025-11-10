@@ -631,6 +631,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
     import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
@@ -646,6 +647,21 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
+    
+    // NEU: Firebase Authentication hinzufügen
+    const auth = getAuth();
+
+    // ANONYM ANMELDEN - das ist der wichtige Teil!
+    signInAnonymously(auth)
+      .then((userCredential) => {
+        console.log("✅ Erfolgreich angemeldet als anonymer Benutzer");
+        // Jetzt kann deine App normal funktionieren
+      })
+      .catch((error) => {
+        console.error("❌ Anmeldung fehlgeschlagen:", error);
+        showNotification('Verbindungsfehler - bitte Seite neu laden', 'error');
+      });
+
     const entriesRef = ref(db,'kokain_entries');
     const discountsRef = ref(db,'kokain_discount_settings');
 

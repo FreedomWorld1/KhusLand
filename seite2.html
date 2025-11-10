@@ -644,41 +644,26 @@
       measurementId: "G-JSCWR4207G"
     };
 
-    // Firebase initialisieren
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
+    
+    // NEU: Firebase Authentication hinzufügen
     const auth = getAuth();
 
-    // Warte auf erfolgreiche anonyme Anmeldung bevor du Firebase Operationen durchführst
-    let isFirebaseReady = false;
+    // ANONYM ANMELDEN - das ist der wichtige Teil!
+    signInAnonymously(auth)
+      .then((userCredential) => {
+        console.log("✅ Erfolgreich angemeldet als anonymer Benutzer");
+        // Jetzt kann deine App normal funktionieren
+      })
+      .catch((error) => {
+        console.error("❌ Anmeldung fehlgeschlagen:", error);
+        showNotification('Verbindungsfehler - bitte Seite neu laden', 'error');
+      });
 
-    // Firebase Referenzen
-    const entriesRef = ref(db, 'kokain_entries');
-    const discountsRef = ref(db, 'kokain_discount_settings');
-
-    // Firebase Authentication initialisieren
-    async function initializeFirebase() {
-      try {
-        console.log("🔄 Initialisiere Firebase Authentication...");
-        const userCredential = await signInAnonymously(auth);
-        console.log("✅ Erfolgreich angemeldet als anonymer Benutzer:", userCredential.user.uid);
-        isFirebaseReady = true;
-        showNotification('Firebase Verbindung hergestellt', 'success');
-        
-        // Jetzt Firebase Daten laden
-        loadDiscountSettings();
-        loadEntries();
-        
-      } catch (error) {
-        console.error("❌ Firebase Anmeldung fehlgeschlagen:", error);
-        showNotification('Firebase Verbindungsfehler - Daten können nicht gespeichert werden', 'error');
-        isFirebaseReady = false;
-      }
-    }
-
-    // Initialisiere Firebase sofort
-    initializeFirebase();
+    const entriesRef = ref(db,'kokain_entries');
+    const discountsRef = ref(db,'kokain_discount_settings');
 
     // RABATT-SYSTEM VARIABLEN
     let currentDiscount = 0;
@@ -1135,11 +1120,6 @@
 
     // RABATT-SYSTEM FUNKTIONEN
     function loadDiscountSettings() {
-      if (!isFirebaseReady) {
-        console.log('Firebase nicht bereit für loadDiscountSettings');
-        return;
-      }
-      
       onValue(discountsRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -1148,37 +1128,8 @@
           renderDiscountFilters();
           renderDiscountSettings();
         } else {
-          // Initialisiere mit Standard-Rabatten
           set(discountsRef, availableDiscounts);
         }
-      }, (error) => {
-        console.error('Fehler beim Laden der Discount Settings:', error);
-        showNotification('Fehler beim Laden der Rabatte', 'error');
-      });
-    }
-
-    function loadEntries() {
-      if (!isFirebaseReady) {
-        console.log('Firebase nicht bereit für loadEntries');
-        return;
-      }
-      
-      onValue(entriesRef, (snapshot) => {
-        entries = [];
-        snapshot.forEach(childSnap => {
-          const data = childSnap.val();
-          data.key = childSnap.key;
-          entries.push(data);
-        });
-        
-        // Sortierung: Neueste oben
-        entries.sort((a, b) => new Date(b.date) - new Date(a.date));
-        filteredEntries = [...entries];
-        renderOverview();
-        renderAdminTable();
-      }, (error) => {
-        console.error('Fehler beim Laden der Einträge:', error);
-        showNotification('Fehler beim Laden der Einträge', 'error');
       });
     }
 
@@ -1362,15 +1313,11 @@
     cashInput.addEventListener('input', updateShares);
     
     // Rabatt-System initialisieren
+    loadDiscountSettings();
     updateShares();
 
     // RABATT-EINSTELLUNGEN FUNKTIONEN
     document.getElementById('addDiscountBtn').addEventListener('click', () => {
-      if (!isFirebaseReady) {
-        showNotification('Firebase nicht bereit - bitte warten', 'error');
-        return;
-      }
-      
       const value = parseInt(document.getElementById('newDiscountValue').value);
       const label = document.getElementById('newDiscountLabel').value.trim();
       
@@ -1396,24 +1343,15 @@
       };
       
       availableDiscounts.push(newDiscount);
-      set(discountsRef, availableDiscounts)
-        .then(() => {
-          document.getElementById('newDiscountValue').value = '';
-          document.getElementById('newDiscountLabel').value = '';
-          showNotification(`Rabatt ${value}% hinzugefügt`, 'success');
-        })
-        .catch((error) => {
-          console.error('Fehler beim Hinzufügen des Rabatts:', error);
-          showNotification('Fehler beim Hinzufügen des Rabatts', 'error');
-        });
+      set(discountsRef, availableDiscounts);
+      
+      document.getElementById('newDiscountValue').value = '';
+      document.getElementById('newDiscountLabel').value = '';
+      
+      showNotification(`Rabatt ${value}% hinzugefügt`, 'success');
     });
 
     function deleteDiscount(index) {
-      if (!isFirebaseReady) {
-        showNotification('Firebase nicht bereit - bitte warten', 'error');
-        return;
-      }
-      
       if (availableDiscounts.length <= 1) {
         showNotification('Mindestens ein Rabatt muss vorhanden sein.', 'error');
         return;
@@ -1422,26 +1360,14 @@
       const discount = availableDiscounts[index];
       if (confirm(`Rabatt ${discount.value}% (${discount.label}) löschen?`)) {
         availableDiscounts.splice(index, 1);
-        set(discountsRef, availableDiscounts)
-          .then(() => {
-            showNotification(`Rabatt ${discount.value}% gelöscht`, 'success');
-          })
-          .catch((error) => {
-            console.error('Fehler beim Löschen des Rabatts:', error);
-            showNotification('Fehler beim Löschen des Rabatts', 'error');
-          });
+        set(discountsRef, availableDiscounts);
+        showNotification(`Rabatt ${discount.value}% gelöscht`, 'success');
       }
     }
 
     // Formular speichern MIT RABATT
     document.getElementById('entryForm').addEventListener('submit', async e => {
       e.preventDefault();
-      
-      // Prüfe Firebase Status
-      if (!isFirebaseReady) {
-        showNotification('Firebase nicht bereit - bitte warte einen Moment', 'error');
-        return;
-      }
       
       const hasAccess = await validateAccess();
       if (!hasAccess) {
@@ -1499,11 +1425,7 @@
         
       } catch (error) {
         console.error('Fehler beim Speichern:', error);
-        showNotification('Fehler beim Speichern! Firebase nicht erreichbar', 'error');
-        
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
+        showNotification('Fehler beim Speichern!', 'error');
       }
     });
 
@@ -1514,6 +1436,22 @@
         updateShares();
         showNotification('Formular zurückgesetzt', 'info');
       }
+    });
+
+    // Echtzeit Listener
+    onValue(entriesRef, snapshot => {
+      entries = [];
+      snapshot.forEach(childSnap => {
+        const data = childSnap.val();
+        data.key = childSnap.key;
+        entries.push(data);
+      });
+      
+      // Sortierung: Neueste oben
+      entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+      filteredEntries = [...entries];
+      renderOverview();
+      renderAdminTable();
     });
 
     // Suchfunktion
@@ -1668,20 +1606,9 @@
 
     // Löschen
     window.deleteEntry = function(key) { 
-      if (!isFirebaseReady) {
-        showNotification('Firebase nicht bereit - bitte warten', 'error');
-        return;
-      }
-      
       if (confirm('Eintrag wirklich löschen?')) { 
-        remove(ref(db, 'kokain_entries/' + key))
-          .then(() => {
-            showNotification('Eintrag gelöscht', 'success');
-          })
-          .catch((error) => {
-            console.error('Fehler beim Löschen:', error);
-            showNotification('Fehler beim Löschen', 'error');
-          });
+        remove(ref(db, 'kokain_entries/' + key));
+        showNotification('Eintrag gelöscht', 'success');
       }
     }
 

@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* ALLE BISHERIGEN CSS-STYLES BLEIBEN GLEICH */
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -122,6 +123,8 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
     }
     .category-input {
       display: flex;
@@ -246,6 +249,424 @@
     .force-check-btn:hover {
       opacity: 1;
     }
+    .resource-tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(147, 51, 234, 0.2);
+      color: #a855f7;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin: 2px;
+    }
+    .resource-input-container {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .resource-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 8px;
+      background: rgba(220, 38, 38, 0.1);
+      border-radius: 8px;
+    }
+    .resource-range {
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .quantity-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .quantity-btn:hover {
+      background: rgba(220, 38, 38, 0.3);
+      transform: scale(1.05);
+    }
+    .quantity-input {
+      width: 80px;
+      text-align: center;
+      padding: 6px 8px;
+      border-radius: 6px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(220, 38, 38, 0.1);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+    .result-range {
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .calculator-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(220, 38, 38, 0.2);
+    }
+    .calculator-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #dc2626;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .total-time-display {
+      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+    .workbench-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .workbench-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .workbench-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .workbench-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .conversion-rates {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+    .conversion-title {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 5px;
+    }
+    .conversion-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+    .time-input-container {
+      display: flex;
+      gap: 8px;
+    }
+    .time-input {
+      flex: 1;
+    }
+    .time-input label {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+    .image-upload-container {
+      margin-top: 12px;
+    }
+    .image-preview {
+      max-width: 100px;
+      max-height: 100px;
+      border-radius: 8px;
+      margin-top: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+    .image-preview-small {
+      max-width: 50px;
+      max-height: 50px;
+      border-radius: 6px;
+      margin-right: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+    .global-quantity-input {
+      width: 120px;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .global-quantity-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+    .global-quantity-label {
+      font-weight: 600;
+      color: #dc2626;
+      font-size: 1.1rem;
+    }
+    .resource-conversion {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .resource-conversion-title {
+      font-size: 0.8rem;
+      color: #22c55e;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .resource-conversion-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+    .total-resources-display {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 15px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    .output-resources {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .output-resources-title {
+      font-size: 0.8rem;
+      color: #3b82f6;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .output-resources-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+    .resource-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .resource-input-column {
+      flex: 1;
+    }
+    .resource-input-column label {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    /* VERBESSERTE STYLES FÜR GRÖSSERE PRODUKT-KARTEN */
+    .product-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);
+      border-color: rgba(220, 38, 38, 0.5);
+    }
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .product-name {
+      font-size: 1.1rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #f8fafc;
+      line-height: 1.2;
+    }
+    .product-time {
+      font-size: 0.85rem; /* Größer gemacht */
+      color: #dc2626;
+      background: rgba(220, 38, 38, 0.1);
+      padding: 4px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .product-category {
+      font-size: 0.85rem; /* Größer gemacht */
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+    .product-resource-box {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .product-resource-title {
+      font-size: 0.85rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #dc2626;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .product-resource-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem; /* Größer gemacht */
+      margin-bottom: 4px;
+    }
+    .product-output-box {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .product-output-title {
+      font-size: 0.85rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #22c55e;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .product-output-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem; /* Größer gemacht */
+      margin-bottom: 4px;
+    }
+    
+    /* STYLES FÜR MENGEN-STEUERUNG IN PRODUKT-KARTEN */
+    .product-quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .product-quantity-btn {
+      width: 32px; /* Größer gemacht */
+      height: 32px; /* Größer gemacht */
+      border-radius: 6px;
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem; /* Größer gemacht */
+      font-weight: bold;
+    }
+    .product-quantity-btn:hover {
+      background: rgba(220, 38, 38, 0.3);
+      transform: scale(1.05);
+    }
+    .product-quantity-display {
+      font-size: 1rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #dc2626;
+      min-width: 50px; /* Größer gemacht */
+      text-align: center;
+    }
+    
+    /* STYLES FÜR ZEIT-ANZEIGE */
+    .product-time-display {
+      font-size: 0.9rem; /* Größer gemacht */
+      color: #dc2626;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 6px;
+      background: rgba(220, 38, 38, 0.1);
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+
+    /* NEUE STYLES FÜR SCROLLBARE MODALS */
+    .scrollable-modal {
+      max-height: 90vh;
+      overflow-y: auto;
+      width: 100%;
+      max-width: 600px;
+    }
+    
+    .scrollable-modal-content {
+      padding: 0;
+    }
+
+    /* Custom Scrollbar für Modals */
+    .modal-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .modal-scrollbar::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 10px;
+      margin: 5px;
+    }
+    
+    .modal-scrollbar::-webkit-scrollbar-thumb {
+      background: #dc2626;
+      border-radius: 10px;
+    }
+    
+    .modal-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #b91c1c;
+    }
   </style>
 </head>
 <body class="text-gray-100 antialiased min-h-screen">
@@ -293,7 +714,7 @@
             <span class="text-white font-bold">⚒️</span>
           </div>
           <div>
-            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Kokain Werkbank Manager</h1>
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Werkbank Manager</h1>
             <p id="userInfo" class="text-sm text-gray-400">
               Eingeloggt als: <span id="username">Unbekannt</span>
               <span id="accessBadge" class="access-badge access-permanent hidden">Permanent</span>
@@ -302,7 +723,7 @@
         </div>
         <div class="flex items-center gap-2">
           <button id="btnWorkbenches" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">
-            <i class="fas fa-tools mr-1"></i> Werkbänke
+            <i class="fas fa-tools mr-1"></i> Produkte
           </button>
           <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
             <i class="fas fa-cog mr-1"></i> Admin
@@ -314,23 +735,11 @@
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
             <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
-                <i class="fas fa-cannabis mr-2"></i> Weed
-              </a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
-                <i class="fas fa-pills mr-2"></i> Kokain
-              </a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
-                <i class="fas fa-calculator mr-2"></i> 30% Rechner
-              </a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
+              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
                 <i class="fas fa-industry mr-2"></i> Herstellung
               </a>
-              <a href="seite3.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
+              <a href="seite1.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
                 <i class="fas fa-recycle mr-2"></i> Materialrecycler
-              </a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
-                <i class="fas fa-route mr-2"></i> Routen
               </a>
             </div>
           </div>
@@ -342,32 +751,16 @@
 
       <div id="mainContainer" class="space-y-6 relative z-0">
 
-        <!-- WERKBÄNKE -->
+        <!-- PRODUKTE -->
         <div id="workbenchesSection" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-            <i class="fas fa-tools"></i>
-            Meine Werkbänke
+            <i class="fas fa-boxes"></i>
+            Meine Produkte
           </h2>
-          
-          <!-- Statistik-Karten -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Gesamt Werkbänke</div>
-              <div id="totalWorkbenchesOverview" class="stat-value text-red-400">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Kategorien</div>
-              <div id="totalCategories" class="stat-value text-blue-400">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Letzte hinzugefügt</div>
-              <div id="lastAdded" class="stat-value text-green-400">-</div>
-            </div>
-          </div>
           
           <!-- Suchfeld -->
           <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Nach Werkbank oder Kategorie suchen...">
+            <input type="text" id="searchInput" placeholder="Nach Produkt oder Kategorie suchen...">
           </div>
           
           <!-- Kategorien Filter -->
@@ -378,9 +771,9 @@
             <!-- Kategorien werden hier dynamisch geladen -->
           </div>
           
-          <!-- Workbenches Grid -->
-          <div id="workbenchesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Werkbänke werden hier dynamisch geladen -->
+          <!-- Products Grid -->
+          <div id="workbenchesGrid" class="workbench-grid">
+            <!-- Produkte werden hier dynamisch geladen -->
           </div>
         </div>
 
@@ -407,11 +800,11 @@
           </div>
           <div id="adminContent" class="hidden">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-              <div class="small-muted">Werkbänke: <span id="totalWorkbenches" class="font-bold text-white">0</span></div>
+              <div class="small-muted">Produkte: <span id="totalWorkbenches" class="font-bold text-white">0</span></div>
               <div class="flex gap-2">
                 <button id="addWorkbenchBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
                   <i class="fas fa-plus mr-1"></i>
-                  Werkbank
+                  Produkt
                 </button>
                 <button id="manageCategoriesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
                   <i class="fas fa-tags mr-1"></i>
@@ -444,90 +837,193 @@
     </div>
   </div>
 
-  <!-- Modal für Werkbank hinzufügen -->
+  <!-- Modal für Produkt hinzufügen - JETZT SCROLLBAR -->
   <div id="workbenchModal" class="modal-overlay hidden">
-    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-      <h3 class="text-lg font-semibold mb-4 text-red-400" id="workbenchModalTitle">
-        <i class="fas fa-plus mr-2"></i> Werkbank hinzufügen
-      </h3>
-      <form id="workbenchForm" class="space-y-4">
-        <input type="hidden" id="workbenchKey">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">
-            <i class="fas fa-tag mr-1"></i> Name
-          </label>
-          <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">
-            <i class="fas fa-folder mr-1"></i> Kategorie
-          </label>
-          <select id="workbenchCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
-            <!-- Kategorien werden dynamisch geladen -->
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">
-            <i class="fas fa-clock mr-1"></i> Herstellungszeit
-          </label>
-          <input type="text" id="workbenchTime" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="z.B.: 2 Stunden, 30 Minuten" required/>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">
-            <i class="fas fa-file-alt mr-1"></i> Beschreibung
-          </label>
-          <textarea id="workbenchDescription" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" rows="3" placeholder="z.B.:&#10;1x Schrauben&#10;21x Waffen"></textarea>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-            <i class="fas fa-save"></i>
-            Speichern
-          </button>
-          <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-            <i class="fas fa-times"></i>
-            Abbrechen
-          </button>
-        </div>
-      </form>
+    <div class="scrollable-modal modal-scrollbar">
+      <div class="card p-6 shadow-soft">
+        <h3 class="text-lg font-semibold mb-4 text-red-400" id="workbenchModalTitle">
+          <i class="fas fa-plus mr-2"></i> Produkt hinzufügen
+        </h3>
+        <form id="workbenchForm" class="space-y-4">
+          <input type="hidden" id="workbenchKey">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-tag mr-1"></i> Name
+            </label>
+            <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-folder mr-1"></i> Kategorie
+            </label>
+            <select id="workbenchCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+              <!-- Kategorien werden dynamisch geladen -->
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-clock mr-1"></i> Herstellungszeit
+            </label>
+            <div class="time-input-container">
+              <div class="time-input">
+                <label>Minuten</label>
+                <input type="number" id="workbenchTimeMinutes" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0"/>
+              </div>
+              <div class="time-input">
+                <label>Sekunden</label>
+                <input type="number" id="workbenchTimeSeconds" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0" max="59"/>
+              </div>
+              <div class="time-input">
+                <label>Millisekunden</label>
+                <input type="number" id="workbenchTimeMilliseconds" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0" max="999"/>
+              </div>
+            </div>
+            <div class="text-xs text-gray-400 mt-1">
+              Format: Minuten Sekunden Millisekunden (z.B. 2 30 500 für 2 Minuten, 30 Sekunden, 500ms)
+            </div>
+          </div>
+          
+          <!-- Kiste für Input-Ressourcen -->
+          <div class="border border-gray-600 rounded-lg p-4">
+            <div class="text-center mb-3">
+              <div class="text-lg font-bold text-red-400">Benötigte Ressourcen</div>
+              <div class="text-sm text-gray-400" id="timeDisplay">Zeit: 0s</div>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-300">Ressourcen hinzufügen</span>
+              </div>
+              <div class="resource-input-group">
+                <div class="resource-input-column">
+                  <label>Ressourcenname</label>
+                  <input type="text" id="newResourceName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="Ressourcenname"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>Anzahl</label>
+                  <input type="number" id="newResourceAmount" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="Anzahl" min="1"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>&nbsp;</label>
+                  <button type="button" id="addResourceBtn" class="w-full px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">
+                    <i class="fas fa-plus"></i> Hinzufügen
+                  </button>
+                </div>
+              </div>
+              <div id="resourcesList" class="resource-list">
+                <!-- Benötigte Ressourcen werden hier dynamisch hinzugefügt -->
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-3">
+              <div class="text-sm font-medium text-gray-300 mb-2">Benötigte Ressourcen:</div>
+              <div id="requiredResourcesDisplay" class="space-y-1">
+                <!-- Hier werden die benötigten Ressourcen angezeigt -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Kiste für Output-Ressourcen -->
+          <div class="border border-gray-600 rounded-lg p-4">
+            <div class="text-center mb-3">
+              <div class="text-lg font-bold text-green-400">Erhaltene Ressourcen</div>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-300">Ressourcen hinzufügen</span>
+              </div>
+              <div class="resource-input-group">
+                <div class="resource-input-column">
+                  <label>Ressourcenname</label>
+                  <input type="text" id="newOutputResourceName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="Ressourcenname"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>Anzahl</label>
+                  <input type="number" id="newOutputResourceAmount" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="Anzahl" min="1"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>&nbsp;</label>
+                  <button type="button" id="addOutputResourceBtn" class="w-full px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">
+                    <i class="fas fa-plus"></i> Hinzufügen
+                  </button>
+                </div>
+              </div>
+              <div id="outputResourcesList" class="resource-list">
+                <!-- Erhaltene Ressourcen werden hier dynamisch hinzugefügt -->
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-3">
+              <div class="text-sm font-medium text-gray-300 mb-2">Erhaltene Ressourcen:</div>
+              <div id="outputResourcesDisplay" class="space-y-1">
+                <!-- Hier werden die erhaltenen Ressourcen angezeigt -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="image-upload-container">
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-image mr-1"></i> Bild hochladen (optional)
+            </label>
+            <input type="file" id="workbenchImage" accept="image/*" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500"/>
+            <div id="imagePreview" class="hidden">
+              <img id="previewImage" class="image-preview" src="" alt="Vorschau">
+            </div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i>
+              Speichern
+            </button>
+            <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
+              Abbrechen
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
-  <!-- Modal für Kategorien verwalten -->
+  <!-- Modal für Kategorien verwalten - JETZT SCROLLBAR -->
   <div id="categoriesModal" class="modal-overlay hidden">
-    <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-      <h3 class="text-lg font-semibold mb-4 text-purple-400">
-        <i class="fas fa-tags mr-2"></i> Kategorien verwalten
-      </h3>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">
-            <i class="fas fa-plus mr-1"></i> Neue Kategorie
-          </label>
-          <div class="flex gap-2">
-            <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
-            <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-plus"></i>
-              Hinzufügen
+    <div class="scrollable-modal modal-scrollbar">
+      <div class="card p-6 shadow-soft">
+        <h3 class="text-lg font-semibold mb-4 text-purple-400">
+          <i class="fas fa-tags mr-2"></i> Kategorien verwalten
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-plus mr-1"></i> Neue Kategorie
+            </label>
+            <div class="flex gap-2">
+              <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
+              <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                <i class="fas fa-plus"></i>
+                Hinzufügen
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-list mr-1"></i> Vorhandene Kategorien
+            </label>
+            <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
+              <!-- Kategorien werden hier dynamisch geladen -->
+            </div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i>
+              Speichern
+            </button>
+            <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
+              Abbrechen
             </button>
           </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-1">
-            <i class="fas fa-list mr-1"></i> Vorhandene Kategorien
-          </label>
-          <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
-            <!-- Kategorien werden hier dynamisch geladen -->
-          </div>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-            <i class="fas fa-save"></i>
-            Speichern
-          </button>
-          <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-            <i class="fas fa-times"></i>
-            Abbrechen
-          </button>
         </div>
       </div>
     </div>
@@ -941,6 +1437,8 @@
     let workbenches = [];
     let filteredWorkbenches = [];
     let tempCategories = [];
+    let currentResources = [];
+    let currentOutputResources = [];
     const ADMIN_PASSWORD = '1101';
 
     // Utility
@@ -951,6 +1449,39 @@
     function hide(el) { 
       el.classList.add('hidden'); 
       el.classList.remove('fade-in');
+    }
+
+    // KORRIGIERTE Zeit in Sekunden umrechnen (inklusive Millisekunden)
+    function convertTimeToSeconds(minutes, seconds, milliseconds) {
+      const mins = parseInt(minutes) || 0;
+      const secs = parseInt(seconds) || 0;
+      const ms = parseInt(milliseconds) || 0;
+      
+      // Korrekte Berechnung mit Millisekunden
+      return (mins * 60) + secs + (ms / 1000);
+    }
+
+    // KORRIGIERTE Zeit formatieren für Anzeige (inklusive Millisekunden)
+    function formatTime(totalSeconds) {
+      if (totalSeconds === 0) return "0s";
+      
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      const milliseconds = Math.round((totalSeconds % 1) * 1000);
+      
+      let parts = [];
+      
+      if (hours > 0) parts.push(`${hours}h`);
+      if (minutes > 0) parts.push(`${minutes}m`);
+      if (seconds > 0 || (minutes === 0 && hours === 0)) {
+        parts.push(`${seconds}s`);
+      }
+      if (milliseconds > 0 && totalSeconds < 10) {
+        parts.push(`${milliseconds}ms`);
+      }
+      
+      return parts.join(' ') || '0s';
     }
 
     // Firebase Funktionen
@@ -1000,12 +1531,17 @@
       snapshot.forEach((childSnap) => {
         const data = childSnap.val();
         data.key = childSnap.key;
+        
+        // Stelle sicher, dass time als Zahl gespeichert ist
+        if (typeof data.time === 'string') {
+          data.time = parseFloat(data.time);
+        }
+        
         workbenches.push(data);
       });
       filteredWorkbenches = [...workbenches];
       renderWorkbenches();
       renderAdminTable();
-      updateStatistics();
     });
 
     onValue(categoriesRef, (snapshot) => {
@@ -1014,7 +1550,6 @@
         categories = data;
         renderCategories();
         loadCategoriesToDropdown();
-        updateStatistics();
       }
     });
 
@@ -1080,7 +1615,7 @@
         filteredWorkbenches = workbenches.filter(workbench => 
           workbench.name.toLowerCase().includes(searchTerm) || 
           workbench.category.toLowerCase().includes(searchTerm) ||
-          workbench.description.toLowerCase().includes(searchTerm)
+          workbench.description?.toLowerCase().includes(searchTerm)
         );
       }
       
@@ -1133,7 +1668,7 @@
       });
     }
 
-    // Werkbänke rendern
+    // VERBESSERTE Produkte rendern mit größerem Text
     function renderWorkbenches() {
       const workbenchesGrid = document.getElementById('workbenchesGrid');
       workbenchesGrid.innerHTML = '';
@@ -1141,9 +1676,9 @@
       if (filteredWorkbenches.length === 0) {
         workbenchesGrid.innerHTML = `
           <div class="col-span-full text-center py-8 text-gray-400">
-            <i class="fas fa-tools text-4xl mb-4 text-gray-600"></i>
-            <p>Keine Werkbänke gefunden.</p>
-            <p class="text-sm mt-2">Fügen Sie Werkbänke im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+            <i class="fas fa-boxes text-4xl mb-4 text-gray-600"></i>
+            <p class="text-lg">Keine Produkte gefunden.</p>
+            <p class="text-sm mt-2">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
           </div>
         `;
         return;
@@ -1151,21 +1686,167 @@
       
       filteredWorkbenches.forEach(workbench => {
         const el = document.createElement('div');
-        el.className = 'resource-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-red-500/30 transition-all duration-200';
-        el.innerHTML = `
-          <div class="flex justify-between items-start mb-2">
-            <div class="font-semibold text-lg">${workbench.name}</div>
-            <div class="px-2 py-1 bg-gray-700 text-xs rounded-full text-blue-400">
-              <i class="fas fa-clock mr-1"></i>${workbench.time}
-            </div>
+        el.className = 'product-card';
+        
+        // Bild anzeigen falls vorhanden
+        const imageHtml = workbench.imageUrl ? 
+          `<div class="flex justify-center mb-3">
+             <img src="${workbench.imageUrl}" class="image-preview-small" alt="${workbench.name}">
+           </div>` : '';
+        
+        // Mengen-Steuerung für jede Karte mit Zeit-Berechnung
+        const quantityControls = `
+          <div class="product-quantity-controls">
+            <button class="product-quantity-btn decrease-btn" data-key="${workbench.key}">
+              <i class="fas fa-minus"></i>
+            </button>
+            <div class="product-quantity-display" id="quantity-${workbench.key}">1x</div>
+            <button class="product-quantity-btn increase-btn" data-key="${workbench.key}">
+              <i class="fas fa-plus"></i>
+            </button>
           </div>
-          <div class="text-xs text-gray-400 mb-2">
+          <div class="product-time-display" id="time-${workbench.key}">
+            Gesamtzeit: ${formatTime(workbench.time || 0)}
+          </div>
+        `;
+        
+        // Input-Ressourcen (mit Multiplikator)
+        let inputResourcesHtml = '';
+        if (workbench.resources && workbench.resources.length > 0) {
+          inputResourcesHtml = `
+            <div class="product-resource-box">
+              <div class="product-resource-title">Benötigt</div>
+              ${workbench.resources.map(resource => 
+                `<div class="product-resource-item">
+                   <span>${resource.name}</span>
+                   <span id="input-${workbench.key}-${resource.name.replace(/\s+/g, '-')}">${resource.amount}</span>
+                 </div>`
+              ).join('')}
+            </div>
+          `;
+        }
+        
+        // Output-Ressourcen (mit Multiplikator)
+        let outputResourcesHtml = '';
+        if (workbench.outputResources && workbench.outputResources.length > 0) {
+          outputResourcesHtml = `
+            <div class="product-output-box">
+              <div class="product-output-title">Erhalt</div>
+              ${workbench.outputResources.map(resource => 
+                `<div class="product-output-item">
+                   <span>${resource.name}</span>
+                   <span id="output-${workbench.key}-${resource.name.replace(/\s+/g, '-')}">${resource.amount}</span>
+                 </div>`
+              ).join('')}
+            </div>
+          `;
+        }
+        
+        el.innerHTML = `
+          ${imageHtml}
+          <div class="product-header">
+            <div class="product-name">${workbench.name}</div>
+            <div class="product-time">${formatTime(workbench.time || 0)}</div>
+          </div>
+          <div class="product-category">
             <i class="fas fa-folder mr-1"></i>${workbench.category}
           </div>
-          <div class="text-sm text-gray-300 whitespace-pre-line">${workbench.description}</div>
+          ${quantityControls}
+          ${inputResourcesHtml}
+          ${outputResourcesHtml}
         `;
         workbenchesGrid.appendChild(el);
       });
+      
+      // Event Listener für Mengen-Buttons hinzufügen
+      setupQuantityControls();
+    }
+
+    // Mengen-Steuerung für Produkte einrichten
+    function setupQuantityControls() {
+      // Plus-Buttons
+      document.querySelectorAll('.increase-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key = this.getAttribute('data-key');
+          increaseQuantity(key);
+        });
+      });
+      
+      // Minus-Buttons
+      document.querySelectorAll('.decrease-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key = this.getAttribute('data-key');
+          decreaseQuantity(key);
+        });
+      });
+    }
+
+    // Menge erhöhen und Zeit berechnen
+    function increaseQuantity(key) {
+      const quantityDisplay = document.getElementById(`quantity-${key}`);
+      let currentQuantity = parseInt(quantityDisplay.textContent.replace('x', '')) || 1;
+      currentQuantity++;
+      quantityDisplay.textContent = `${currentQuantity}x`;
+      
+      // Zeit entsprechend der Menge berechnen
+      updateTimeForQuantity(key, currentQuantity);
+      updateResourceQuantities(key, currentQuantity);
+    }
+
+    // Menge verringern und Zeit berechnen
+    function decreaseQuantity(key) {
+      const quantityDisplay = document.getElementById(`quantity-${key}`);
+      let currentQuantity = parseInt(quantityDisplay.textContent.replace('x', '')) || 1;
+      if (currentQuantity > 1) {
+        currentQuantity--;
+        quantityDisplay.textContent = `${currentQuantity}x`;
+        
+        // Zeit entsprechend der Menge berechnen
+        updateTimeForQuantity(key, currentQuantity);
+        updateResourceQuantities(key, currentQuantity);
+      }
+    }
+
+    // Zeit basierend auf Menge aktualisieren
+    function updateTimeForQuantity(key, multiplier) {
+      const workbench = workbenches.find(w => w.key === key);
+      if (!workbench) return;
+      
+      const timeDisplay = document.getElementById(`time-${key}`);
+      const baseTime = workbench.time || 0;
+      const totalTime = baseTime * multiplier;
+      
+      timeDisplay.textContent = `Gesamtzeit: ${formatTime(totalTime)}`;
+    }
+
+    // Ressourcen-Mengen aktualisieren
+    function updateResourceQuantities(key, multiplier) {
+      const workbench = workbenches.find(w => w.key === key);
+      if (!workbench) return;
+      
+      // Input-Ressourcen aktualisieren
+      if (workbench.resources) {
+        workbench.resources.forEach(resource => {
+          const elementId = `input-${key}-${resource.name.replace(/\s+/g, '-')}`;
+          const element = document.getElementById(elementId);
+          if (element) {
+            const baseAmount = resource.amount;
+            element.textContent = baseAmount * multiplier;
+          }
+        });
+      }
+      
+      // Output-Ressourcen aktualisieren
+      if (workbench.outputResources) {
+        workbench.outputResources.forEach(resource => {
+          const elementId = `output-${key}-${resource.name.replace(/\s+/g, '-')}`;
+          const element = document.getElementById(elementId);
+          if (element) {
+            const baseAmount = resource.amount;
+            element.textContent = baseAmount * multiplier;
+          }
+        });
+      }
     }
 
     function filterWorkbenches(category) {
@@ -1175,22 +1856,6 @@
         filteredWorkbenches = workbenches.filter(w => w.category === category);
       }
       renderWorkbenches();
-    }
-
-    // Statistiken aktualisieren
-    function updateStatistics() {
-      document.getElementById('totalWorkbenchesOverview').textContent = workbenches.length;
-      document.getElementById('totalCategories').textContent = categories.length;
-      
-      // Letzte hinzugefügte Werkbank
-      if (workbenches.length > 0) {
-        const lastWorkbench = workbenches.reduce((latest, current) => {
-          return new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest;
-        });
-        document.getElementById('lastAdded').textContent = lastWorkbench.name;
-      } else {
-        document.getElementById('lastAdded').textContent = '-';
-      }
     }
 
     // Adminbereich
@@ -1209,6 +1874,7 @@
     const workbenchModalTitle = document.getElementById('workbenchModalTitle');
     const workbenchKeyInput = document.getElementById('workbenchKey');
     const cancelWorkbench = document.getElementById('cancelWorkbench');
+    const timeDisplay = document.getElementById('timeDisplay');
     
     const categoriesModal = document.getElementById('categoriesModal');
     const newCategoryName = document.getElementById('newCategoryName');
@@ -1216,6 +1882,183 @@
     const categoriesList = document.getElementById('categoriesList');
     const saveCategories = document.getElementById('saveCategories');
     const cancelCategories = document.getElementById('cancelCategories');
+
+    // Ressourcen Elemente
+    const newResourceName = document.getElementById('newResourceName');
+    const newResourceAmount = document.getElementById('newResourceAmount');
+    const addResourceBtn = document.getElementById('addResourceBtn');
+    const resourcesList = document.getElementById('resourcesList');
+    const requiredResourcesDisplay = document.getElementById('requiredResourcesDisplay');
+
+    // Output Ressourcen Elemente
+    const newOutputResourceName = document.getElementById('newOutputResourceName');
+    const newOutputResourceAmount = document.getElementById('newOutputResourceAmount');
+    const addOutputResourceBtn = document.getElementById('addOutputResourceBtn');
+    const outputResourcesList = document.getElementById('outputResourcesList');
+    const outputResourcesDisplay = document.getElementById('outputResourcesDisplay');
+
+    // Bild Upload
+    const workbenchImage = document.getElementById('workbenchImage');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+
+    // Zeit-Inputs überwachen für Live-Anzeige
+    const timeInputs = ['workbenchTimeMinutes', 'workbenchTimeSeconds', 'workbenchTimeMilliseconds'];
+    timeInputs.forEach(inputId => {
+      document.getElementById(inputId).addEventListener('input', updateTimeDisplay);
+    });
+
+    function updateTimeDisplay() {
+      const minutes = document.getElementById('workbenchTimeMinutes').value || 0;
+      const seconds = document.getElementById('workbenchTimeSeconds').value || 0;
+      const milliseconds = document.getElementById('workbenchTimeMilliseconds').value || 0;
+      
+      const totalSeconds = convertTimeToSeconds(minutes, seconds, milliseconds);
+      timeDisplay.textContent = `Zeit: ${formatTime(totalSeconds)}`;
+    }
+
+    // Bild Vorschau
+    workbenchImage.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImage.src = e.target.result;
+          imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.classList.add('hidden');
+      }
+    });
+
+    // Input-Ressource hinzufügen
+    addResourceBtn.addEventListener('click', () => {
+      const resourceName = newResourceName.value.trim();
+      const resourceAmount = parseInt(newResourceAmount.value);
+      
+      if (resourceName && resourceAmount && resourceAmount > 0) {
+        currentResources.push({
+          name: resourceName,
+          amount: resourceAmount
+        });
+        renderResourcesList();
+        renderRequiredResourcesDisplay();
+        newResourceName.value = '';
+        newResourceAmount.value = '';
+        newResourceName.focus();
+        showNotification('Benötigte Ressource hinzugefügt', 'success');
+      } else {
+        showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
+      }
+    });
+
+    // Output-Ressource hinzufügen
+    addOutputResourceBtn.addEventListener('click', () => {
+      const resourceName = newOutputResourceName.value.trim();
+      const resourceAmount = parseInt(newOutputResourceAmount.value);
+      
+      if (resourceName && resourceAmount && resourceAmount > 0) {
+        currentOutputResources.push({
+          name: resourceName,
+          amount: resourceAmount
+        });
+        renderOutputResourcesList();
+        renderOutputResourcesDisplay();
+        newOutputResourceName.value = '';
+        newOutputResourceAmount.value = '';
+        newOutputResourceName.focus();
+        showNotification('Erhaltene Ressource hinzugefügt', 'success');
+      } else {
+        showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
+      }
+    });
+
+    // Input-Ressourcen Liste rendern
+    function renderResourcesList() {
+      resourcesList.innerHTML = '';
+      currentResources.forEach((resource, index) => {
+        const span = document.createElement('span');
+        span.className = 'resource-tag flex items-center';
+        span.style.background = 'rgba(220, 38, 38, 0.2)';
+        span.style.color = '#dc2626';
+        span.innerHTML = `
+          ${resource.name}: ${resource.amount}
+          <button type="button" class="ml-1 text-red-400 hover:text-red-300 remove-resource" data-index="${index}">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        resourcesList.appendChild(span);
+      });
+      
+      // Event Listener für Löschen-Buttons
+      document.querySelectorAll('.remove-resource').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          currentResources.splice(index, 1);
+          renderResourcesList();
+          renderRequiredResourcesDisplay();
+          showNotification('Benötigte Ressource entfernt', 'info');
+        });
+      });
+    }
+
+    // Output-Ressourcen Liste rendern
+    function renderOutputResourcesList() {
+      outputResourcesList.innerHTML = '';
+      currentOutputResources.forEach((resource, index) => {
+        const span = document.createElement('span');
+        span.className = 'resource-tag flex items-center';
+        span.style.background = 'rgba(34, 197, 94, 0.2)';
+        span.style.color = '#16a34a';
+        span.innerHTML = `
+          ${resource.name}: ${resource.amount}
+          <button type="button" class="ml-1 text-green-400 hover:text-green-300 remove-output-resource" data-index="${index}">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        outputResourcesList.appendChild(span);
+      });
+      
+      // Event Listener für Löschen-Buttons
+      document.querySelectorAll('.remove-output-resource').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          currentOutputResources.splice(index, 1);
+          renderOutputResourcesList();
+          renderOutputResourcesDisplay();
+          showNotification('Erhaltene Ressource entfernt', 'info');
+        });
+      });
+    }
+
+    // Benötigte Ressourcen anzeigen
+    function renderRequiredResourcesDisplay() {
+      requiredResourcesDisplay.innerHTML = '';
+      currentResources.forEach(resource => {
+        const div = document.createElement('div');
+        div.className = 'flex justify-between text-sm';
+        div.innerHTML = `
+          <span>${resource.name}:</span>
+          <span>${resource.amount}</span>
+        `;
+        requiredResourcesDisplay.appendChild(div);
+      });
+    }
+
+    // Erhaltene Ressourcen anzeigen
+    function renderOutputResourcesDisplay() {
+      outputResourcesDisplay.innerHTML = '';
+      currentOutputResources.forEach(resource => {
+        const div = document.createElement('div');
+        div.className = 'flex justify-between text-sm';
+        div.innerHTML = `
+          <span>${resource.name}:</span>
+          <span>${resource.amount}</span>
+        `;
+        outputResourcesDisplay.appendChild(div);
+      });
+    }
 
     adminLoginBtn.addEventListener('click', () => {
       if (adminPassInput.value === ADMIN_PASSWORD) { 
@@ -1249,7 +2092,7 @@
         tr.innerHTML = `
           <td class="p-3">${workbench.name}</td>
           <td class="p-3">${workbench.category}</td>
-          <td class="p-3">${workbench.time}</td>
+          <td class="p-3">${formatTime(workbench.time || 0)}</td>
           <td class="p-3">
             <div class="flex gap-2">
               <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-workbench" data-key="${workbench.key}">
@@ -1292,18 +2135,48 @@
       // Formular mit Werkbank-Daten füllen
       document.getElementById('workbenchName').value = workbench.name;
       document.getElementById('workbenchCategory').value = workbench.category;
-      document.getElementById('workbenchTime').value = workbench.time;
-      document.getElementById('workbenchDescription').value = workbench.description;
+      
+      // Zeit zerlegen (KORRIGIERT für Millisekunden)
+      const totalSeconds = workbench.time || 0;
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      const milliseconds = Math.round((totalSeconds % 1) * 1000);
+      
+      document.getElementById('workbenchTimeMinutes').value = minutes;
+      document.getElementById('workbenchTimeSeconds').value = seconds;
+      document.getElementById('workbenchTimeMilliseconds').value = milliseconds;
+      
       workbenchKeyInput.value = key;
       
+      // Ressourcen setzen
+      currentResources = workbench.resources ? [...workbench.resources] : [];
+      renderResourcesList();
+      renderRequiredResourcesDisplay();
+      
+      // Output-Ressourcen setzen
+      currentOutputResources = workbench.outputResources ? [...workbench.outputResources] : [];
+      renderOutputResourcesList();
+      renderOutputResourcesDisplay();
+      
+      // Bild setzen falls vorhanden
+      if (workbench.imageUrl) {
+        previewImage.src = workbench.imageUrl;
+        imagePreview.classList.remove('hidden');
+      } else {
+        imagePreview.classList.add('hidden');
+      }
+      
+      // Zeit-Anzeige aktualisieren
+      updateTimeDisplay();
+      
       // Modal-Titel ändern
-      workbenchModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Werkbank bearbeiten';
+      workbenchModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Produkt bearbeiten';
       
       // Modal anzeigen
       show(workbenchModal);
     }
 
-    // Modal für Werkbank hinzufügen
+    // Modal für Produkt hinzufügen
     addWorkbenchBtn.addEventListener('click', async () => {
       const hasAccess = await validateAccess();
       if (!hasAccess) return;
@@ -1311,9 +2184,17 @@
       // Formular zurücksetzen
       workbenchForm.reset();
       workbenchKeyInput.value = '';
+      currentResources = [];
+      currentOutputResources = [];
+      renderResourcesList();
+      renderOutputResourcesList();
+      renderRequiredResourcesDisplay();
+      renderOutputResourcesDisplay();
+      imagePreview.classList.add('hidden');
+      updateTimeDisplay();
       
       // Modal-Titel ändern
-      workbenchModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Werkbank hinzufügen';
+      workbenchModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Produkt hinzufügen';
       
       loadCategoriesToDropdown();
       show(workbenchModal);
@@ -1322,6 +2203,13 @@
     cancelWorkbench.addEventListener('click', () => {
       hide(workbenchModal);
       workbenchForm.reset();
+      currentResources = [];
+      currentOutputResources = [];
+      renderResourcesList();
+      renderOutputResourcesList();
+      renderRequiredResourcesDisplay();
+      renderOutputResourcesDisplay();
+      imagePreview.classList.add('hidden');
     });
 
     // Modal für Kategorien verwalten
@@ -1376,7 +2264,7 @@
         // Überprüfen ob Kategorie in Verwendung ist
         const categoryInUse = workbenches.some(wb => wb.category === tempCategories[index]);
         if (categoryInUse) {
-          showNotification('Diese Kategorie wird noch von Werkbänken verwendet und kann nicht gelöscht werden!', 'error');
+          showNotification('Diese Kategorie wird noch von Produkten verwendet und kann nicht gelöscht werden!', 'error');
           return;
         }
         tempCategories.splice(index, 1);
@@ -1411,7 +2299,6 @@
         renderCategories();
         renderWorkbenches();
         renderAdminTable();
-        updateStatistics();
         hide(categoriesModal);
         showNotification('Kategorien erfolgreich gespeichert', 'success');
       } else {
@@ -1424,7 +2311,16 @@
       modal.addEventListener('click', (e) => {
         if (e.target === modal) {
           hide(modal);
-          if (modal === workbenchModal) workbenchForm.reset();
+          if (modal === workbenchModal) {
+            workbenchForm.reset();
+            currentResources = [];
+            currentOutputResources = [];
+            renderResourcesList();
+            renderOutputResourcesList();
+            renderRequiredResourcesDisplay();
+            renderOutputResourcesDisplay();
+            imagePreview.classList.add('hidden');
+          }
           if (modal === categoriesModal) newCategoryName.value = '';
         }
       });
@@ -1446,16 +2342,30 @@
       
       const name = document.getElementById('workbenchName').value;
       const category = document.getElementById('workbenchCategory').value;
-      const time = document.getElementById('workbenchTime').value;
-      const description = document.getElementById('workbenchDescription').value;
+      const minutes = document.getElementById('workbenchTimeMinutes').value || 0;
+      const seconds = document.getElementById('workbenchTimeSeconds').value || 0;
+      const milliseconds = document.getElementById('workbenchTimeMilliseconds').value || 0;
+      
+      // KORRIGIERTE Zeitberechnung mit Millisekunden
+      const totalTime = convertTimeToSeconds(minutes, seconds, milliseconds);
+      
       const key = workbenchKeyInput.value;
+      
+      // Bild als Base64 speichern (für Demo-Zwecke)
+      let imageUrl = '';
+      if (previewImage.src) {
+        imageUrl = previewImage.src; // In einer echten App würden Sie das Bild hochladen
+      }
       
       // Werkbank-Objekt erstellen
       const workbenchData = {
         name,
         category,
-        time,
-        description,
+        time: totalTime,
+        timeDisplay: `${minutes} ${seconds} ${milliseconds}`, // Für spätere Anzeige
+        resources: [...currentResources],
+        outputResources: [...currentOutputResources],
+        imageUrl: imageUrl,
         date: new Date().toISOString(),
         timestamp: Date.now()
       };
@@ -1472,9 +2382,16 @@
       if (success) {
         hide(workbenchModal);
         workbenchForm.reset();
-        showNotification(`Werkbank erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
+        currentResources = [];
+        currentOutputResources = [];
+        renderResourcesList();
+        renderOutputResourcesList();
+        renderRequiredResourcesDisplay();
+        renderOutputResourcesDisplay();
+        imagePreview.classList.add('hidden');
+        showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
       } else {
-        showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} der Werkbank!`, 'error');
+        showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
       }
       
       submitBtn.innerHTML = originalText;
@@ -1483,12 +2400,12 @@
 
     // Löschfunktion
     window.deleteWorkbench = async function(key) { 
-      if (confirm('Werkbank wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
+      if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
         const success = await deleteWorkbenchFromFirebase(key);
         if (success) {
-          showNotification('Werkbank erfolgreich gelöscht', 'success');
+          showNotification('Produkt erfolgreich gelöscht', 'success');
         } else {
-          showNotification('Fehler beim Löschen der Werkbank!', 'error');
+          showNotification('Fehler beim Löschen des Produkts!', 'error');
         }
       }
     }
@@ -1496,17 +2413,28 @@
     // CSV Export
     exportCsv.addEventListener('click', () => {
       if (workbenches.length === 0) {
-        showNotification('Keine Werkbänke zum Exportieren vorhanden.', 'error');
+        showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
         return;
       }
       
-      const header = ['Name', 'Kategorie', 'Herstellungszeit', 'Beschreibung'];
-      const rows = workbenches.map(wb => [
-        `"${wb.name}"`,
-        `"${wb.category}"`,
-        `"${wb.time}"`,
-        `"${wb.description.replace(/"/g, '""')}"`
-      ].join(';'));
+      const header = ['Name', 'Kategorie', 'Herstellungszeit (Sekunden)', 'Benötigte Ressourcen', 'Erhaltene Ressourcen'];
+      const rows = workbenches.map(wb => {
+        const inputResourcesText = wb.resources && wb.resources.length > 0 
+          ? wb.resources.map(r => `${r.name}: ${r.amount}`).join('; ')
+          : 'Keine benötigten Ressourcen';
+        
+        const outputResourcesText = wb.outputResources && wb.outputResources.length > 0 
+          ? wb.outputResources.map(r => `${r.name}: ${r.amount}`).join('; ')
+          : 'Keine erhaltenen Ressourcen';
+        
+        return [
+          `"${wb.name}"`,
+          `"${wb.category}"`,
+          `"${wb.time || 0}"`,
+          `"${inputResourcesText.replace(/"/g, '""')}"`,
+          `"${outputResourcesText.replace(/"/g, '""')}"`
+        ].join(';');
+      });
       
       const csv = [header.join(';'), ...rows].join('\n');
       const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -1517,7 +2445,7 @@
       // Generate filename with current date
       const now = new Date();
       const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
-      a.download = `werkbank_manager_${dateStr}.csv`;
+      a.download = `produkte_manager_${dateStr}.csv`;
       
       document.body.appendChild(a);
       a.click();

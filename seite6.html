@@ -530,44 +530,6 @@
         </div>
       </header>
 
-      <!-- NEUER TEXTBEREICH OBEN -->
-      <div class="card p-4 shadow-soft mb-4">
-        <div class="section-title">
-          <i class="fas fa-edit text-green-400"></i>
-          <h2 class="text-lg font-semibold text-green-400">Schneller Textbereich</h2>
-        </div>
-        
-        <div class="mb-3">
-          <label for="quickTextContent" class="block text-xs font-medium text-gray-300 mb-1">
-            <i class="fas fa-align-left mr-1 text-xs"></i> Text eingeben
-          </label>
-          <textarea id="quickTextContent" rows="4" placeholder="Gib hier deinen Text ein..." class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500 text-sm"></textarea>
-          <div id="quickCharCount" class="character-count">0 Zeichen</div>
-        </div>
-        
-        <div class="flex gap-2">
-          <button id="quickSendBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
-            <i class="fas fa-paper-plane text-xs"></i>
-            An Discord senden
-          </button>
-          <button id="quickCopyBtn" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
-            <i class="fas fa-copy text-xs"></i>
-            Kopieren
-          </button>
-          <button id="quickClearBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
-            <i class="fas fa-eraser text-xs"></i>
-            Löschen
-          </button>
-        </div>
-        
-        <div class="mt-3 p-3 bg-gray-800/30 rounded-lg border border-gray-700">
-          <label for="quickWebhook" class="block text-xs font-medium text-gray-300 mb-1">
-            <i class="fas fa-link mr-1 text-xs"></i> Webhook URL (optional)
-          </label>
-          <input id="quickWebhook" type="text" placeholder="Discord Webhook URL für diesen Text" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500 text-sm"/>
-        </div>
-      </div>
-
       <div id="mainContainer" class="space-y-4 relative z-0">
 
         <!-- HAUPTBEREICH -->
@@ -608,9 +570,27 @@
               <i class="fas fa-edit text-sm"></i>
               Text verwenden und bearbeiten
             </h3>
+            
+            <!-- NEU: Zusätzlicher Textbereich oben für Benachrichtigungen -->
+            <div class="mb-4 p-3 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
+              <h4 class="text-sm font-medium mb-2 text-yellow-400 flex items-center gap-1">
+                <i class="fas fa-bell text-xs"></i>
+                Benachrichtigungstext (für @-Erwähnungen)
+              </h4>
+              <div class="mb-2">
+                <label for="notificationText" class="block text-xs font-medium text-gray-300 mb-1">
+                  <i class="fas fa-at mr-1 text-xs"></i> Hier User-Pings eingeben (wird als normale Nachricht gesendet)
+                </label>
+                <textarea id="notificationText" rows="2" placeholder="z.B. @User für Benachrichtigung..." class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-yellow-500 text-sm"></textarea>
+                <div class="text-xs text-yellow-400 mt-1">
+                  <i class="fas fa-info-circle mr-1"></i> @-Erwähnungen in Embeds lösen keine Benachrichtigungen aus!
+                </div>
+              </div>
+            </div>
+            
             <div class="mb-3">
               <label for="editTextContent" class="block text-xs font-medium text-gray-300 mb-1">
-                <i class="fas fa-align-left mr-1 text-xs"></i> Text bearbeiten (nur für dich sichtbar)
+                <i class="fas fa-align-left mr-1 text-xs"></i> Embed-Text bearbeiten (wird als Embed gesendet)
               </label>
               <textarea id="editTextContent" rows="6" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 text-sm"></textarea>
               <div id="editCharCount" class="character-count">0 Zeichen</div>
@@ -763,13 +743,8 @@
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     const searchTexts = document.getElementById('searchTexts');
     
-    // Neue Elemente für den Textbereich oben
-    const quickTextContent = document.getElementById('quickTextContent');
-    const quickCharCount = document.getElementById('quickCharCount');
-    const quickSendBtn = document.getElementById('quickSendBtn');
-    const quickCopyBtn = document.getElementById('quickCopyBtn');
-    const quickClearBtn = document.getElementById('quickClearBtn');
-    const quickWebhook = document.getElementById('quickWebhook');
+    // NEU: Element für den Benachrichtigungstext
+    const notificationText = document.getElementById('notificationText');
 
     // Text-Daten (lokale Speicherung)
     let texts = JSON.parse(localStorage.getItem('khusland_texts')) || [
@@ -1266,9 +1241,12 @@
       editTextContent.value = selectedText.content;
       updateCharCount(editTextContent, editCharCount);
       
+      // Benachrichtigungstext zurücksetzen
+      notificationText.value = '';
+      
       // Verwenden-Bereich anzeigen
       textUseSection.classList.remove('hidden');
-      showNotification(`Text "${selectedText.title}" ausgewählt - Du kannst ihn jetzt bearbeiten`, 'info');
+      showNotification(`Text "${selectedText.title}" ausgewählt - Du kannst jetzt @-Erwähnungen oben hinzufügen`, 'info');
     }
 
     // Text kopieren
@@ -1291,7 +1269,7 @@
         });
     }
 
-    // Text an Discord senden
+    // Text an Discord senden (AKTUALISIERT: Mit Benachrichtigungstext)
     sendTextBtn.addEventListener('click', async () => {
       if (!selectedText) {
         showNotification('Bitte wähle zuerst einen Text aus', 'error');
@@ -1305,7 +1283,7 @@
       
       const editedContent = editTextContent.value.trim();
       if (!editedContent) {
-        showNotification('Text darf nicht leer sein', 'error');
+        showNotification('Embed-Text darf nicht leer sein', 'error');
         return;
       }
       
@@ -1315,9 +1293,16 @@
         sendTextBtn.innerHTML = '<div class="loading mr-1"></div> Sende...';
         sendTextBtn.disabled = true;
         
-        // Webhook-Call mit bearbeitetem Text
-        await sendToDiscordWebhook(selectedText, editedContent);
-        showNotification(`Text "${selectedText.title}" wurde an Discord gesendet`, 'success');
+        // ZUERST: Benachrichtigungstext senden (wenn vorhanden)
+        const notificationContent = notificationText.value.trim();
+        if (notificationContent) {
+          await sendNotificationToDiscord(selectedText, notificationContent);
+        }
+        
+        // DANACH: Embed mit dem Haupttext senden
+        await sendEmbedToDiscord(selectedText, editedContent);
+        
+        showNotification(`Text "${selectedText.title}" wurde an Discord gesendet${notificationContent ? ' (mit Benachrichtigung)' : ''}`, 'success');
         
         // Aktualisiere lastUsed Zeitstempel
         selectedText.lastUsed = new Date().toISOString();
@@ -1328,6 +1313,7 @@
         textUseSection.classList.add('hidden');
         selectedText = null;
         originalContent = "";
+        notificationText.value = '';
         
         // Button zurücksetzen
         sendTextBtn.innerHTML = originalText;
@@ -1378,6 +1364,7 @@
       textUseSection.classList.add('hidden');
       selectedText = null;
       originalContent = "";
+      notificationText.value = '';
       showNotification('Bearbeitung abgebrochen - Text wurde nicht gesendet', 'info');
     });
 
@@ -1626,8 +1613,38 @@
       renderTextList();
     });
 
-    // Webhook-Funktion - NUR EMBED
-    async function sendToDiscordWebhook(text, content) {
+    // NEUE FUNKTION: Benachrichtigungstext senden (normale Nachricht)
+    async function sendNotificationToDiscord(text, notificationContent) {
+      if (!text.webhook) {
+        throw new Error('Kein Webhook konfiguriert');
+      }
+      
+      // Prüfe ob die Webhook-URL gültig ist
+      if (!text.webhook.startsWith('https://discord.com/api/webhooks/')) {
+        throw new Error('Ungültige Webhook URL');
+      }
+      
+      const response = await fetch(text.webhook, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: notificationContent,
+          username: 'KhusLand Management'
+        })
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Webhook Fehler: ${response.status} - ${errorText}`);
+      }
+      
+      return response;
+    }
+
+    // NEUE FUNKTION: Embed senden (ohne Benachrichtigung)
+    async function sendEmbedToDiscord(text, content) {
       if (!text.webhook) {
         throw new Error('Kein Webhook konfiguriert');
       }
@@ -1666,85 +1683,6 @@
       
       return response;
     }
-
-    // NEUE FUNKTIONEN FÜR DEN TEXTBEREICH OBEN
-    
-    // Zeichenzähler für den schnellen Textbereich
-    quickTextContent.addEventListener('input', () => {
-      updateCharCount(quickTextContent, quickCharCount);
-    });
-
-    // Text an Discord senden (schneller Bereich)
-    quickSendBtn.addEventListener('click', async () => {
-      const content = quickTextContent.value.trim();
-      if (!content) {
-        showNotification('Text darf nicht leer sein', 'error');
-        return;
-      }
-      
-      const webhook = quickWebhook.value.trim();
-      if (!webhook) {
-        showNotification('Bitte eine Webhook URL angeben', 'error');
-        return;
-      }
-      
-      try {
-        // Lade-Animation starten
-        const originalText = quickSendBtn.innerHTML;
-        quickSendBtn.innerHTML = '<div class="loading mr-1"></div> Sende...';
-        quickSendBtn.disabled = true;
-        
-        // Temporäres Textobjekt für den Webhook-Call
-        const tempText = {
-          title: 'Schneller Text',
-          webhook: webhook,
-          color: '#10b981'
-        };
-        
-        // Webhook-Call
-        await sendToDiscordWebhook(tempText, content);
-        showNotification('Text wurde an Discord gesendet', 'success');
-        
-        // Button zurücksetzen
-        quickSendBtn.innerHTML = originalText;
-        quickSendBtn.disabled = false;
-      } catch (error) {
-        console.error('Fehler beim Senden an Discord:', error);
-        showNotification('Fehler beim Senden an Discord: ' + error.message, 'error');
-        
-        // Button zurücksetzen auch bei Fehler
-        const originalText = '<i class="fas fa-paper-plane text-xs"></i> An Discord senden';
-        quickSendBtn.innerHTML = originalText;
-        quickSendBtn.disabled = false;
-      }
-    });
-
-    // Text in Zwischenablage kopieren (schneller Bereich)
-    quickCopyBtn.addEventListener('click', () => {
-      const content = quickTextContent.value.trim();
-      if (!content) {
-        showNotification('Text darf nicht leer sein', 'error');
-        return;
-      }
-      
-      navigator.clipboard.writeText(content)
-        .then(() => {
-          showNotification('Text in die Zwischenablage kopiert', 'success');
-        })
-        .catch(err => {
-          console.error('Fehler beim Kopieren: ', err);
-          showNotification('Fehler beim Kopieren des Texts', 'error');
-        });
-    });
-
-    // Textbereich löschen (schneller Bereich)
-    quickClearBtn.addEventListener('click', () => {
-      quickTextContent.value = '';
-      quickWebhook.value = '';
-      quickCharCount.textContent = '0 Zeichen';
-      quickCharCount.classList.remove('warning', 'error');
-      showNotification('Textbereich wurde geleert', 'info');
-    });
   </script>
 </body>
 </html>

@@ -530,6 +530,44 @@
         </div>
       </header>
 
+      <!-- NEUER TEXTBEREICH OBEN -->
+      <div class="card p-4 shadow-soft mb-4">
+        <div class="section-title">
+          <i class="fas fa-edit text-green-400"></i>
+          <h2 class="text-lg font-semibold text-green-400">Schneller Textbereich</h2>
+        </div>
+        
+        <div class="mb-3">
+          <label for="quickTextContent" class="block text-xs font-medium text-gray-300 mb-1">
+            <i class="fas fa-align-left mr-1 text-xs"></i> Text eingeben
+          </label>
+          <textarea id="quickTextContent" rows="4" placeholder="Gib hier deinen Text ein..." class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500 text-sm"></textarea>
+          <div id="quickCharCount" class="character-count">0 Zeichen</div>
+        </div>
+        
+        <div class="flex gap-2">
+          <button id="quickSendBtn" class="flex-1 px-3 py-2 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
+            <i class="fas fa-paper-plane text-xs"></i>
+            An Discord senden
+          </button>
+          <button id="quickCopyBtn" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
+            <i class="fas fa-copy text-xs"></i>
+            Kopieren
+          </button>
+          <button id="quickClearBtn" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg btn font-medium flex items-center justify-center gap-1">
+            <i class="fas fa-eraser text-xs"></i>
+            Löschen
+          </button>
+        </div>
+        
+        <div class="mt-3 p-3 bg-gray-800/30 rounded-lg border border-gray-700">
+          <label for="quickWebhook" class="block text-xs font-medium text-gray-300 mb-1">
+            <i class="fas fa-link mr-1 text-xs"></i> Webhook URL (optional)
+          </label>
+          <input id="quickWebhook" type="text" placeholder="Discord Webhook URL für diesen Text" class="w-full p-2 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-green-500 text-sm"/>
+        </div>
+      </div>
+
       <div id="mainContainer" class="space-y-4 relative z-0">
 
         <!-- HAUPTBEREICH -->
@@ -724,6 +762,14 @@
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const hamburgerMenu = document.getElementById('hamburgerMenu');
     const searchTexts = document.getElementById('searchTexts');
+    
+    // Neue Elemente für den Textbereich oben
+    const quickTextContent = document.getElementById('quickTextContent');
+    const quickCharCount = document.getElementById('quickCharCount');
+    const quickSendBtn = document.getElementById('quickSendBtn');
+    const quickCopyBtn = document.getElementById('quickCopyBtn');
+    const quickClearBtn = document.getElementById('quickClearBtn');
+    const quickWebhook = document.getElementById('quickWebhook');
 
     // Text-Daten (lokale Speicherung)
     let texts = JSON.parse(localStorage.getItem('khusland_texts')) || [
@@ -1620,6 +1666,85 @@
       
       return response;
     }
+
+    // NEUE FUNKTIONEN FÜR DEN TEXTBEREICH OBEN
+    
+    // Zeichenzähler für den schnellen Textbereich
+    quickTextContent.addEventListener('input', () => {
+      updateCharCount(quickTextContent, quickCharCount);
+    });
+
+    // Text an Discord senden (schneller Bereich)
+    quickSendBtn.addEventListener('click', async () => {
+      const content = quickTextContent.value.trim();
+      if (!content) {
+        showNotification('Text darf nicht leer sein', 'error');
+        return;
+      }
+      
+      const webhook = quickWebhook.value.trim();
+      if (!webhook) {
+        showNotification('Bitte eine Webhook URL angeben', 'error');
+        return;
+      }
+      
+      try {
+        // Lade-Animation starten
+        const originalText = quickSendBtn.innerHTML;
+        quickSendBtn.innerHTML = '<div class="loading mr-1"></div> Sende...';
+        quickSendBtn.disabled = true;
+        
+        // Temporäres Textobjekt für den Webhook-Call
+        const tempText = {
+          title: 'Schneller Text',
+          webhook: webhook,
+          color: '#10b981'
+        };
+        
+        // Webhook-Call
+        await sendToDiscordWebhook(tempText, content);
+        showNotification('Text wurde an Discord gesendet', 'success');
+        
+        // Button zurücksetzen
+        quickSendBtn.innerHTML = originalText;
+        quickSendBtn.disabled = false;
+      } catch (error) {
+        console.error('Fehler beim Senden an Discord:', error);
+        showNotification('Fehler beim Senden an Discord: ' + error.message, 'error');
+        
+        // Button zurücksetzen auch bei Fehler
+        const originalText = '<i class="fas fa-paper-plane text-xs"></i> An Discord senden';
+        quickSendBtn.innerHTML = originalText;
+        quickSendBtn.disabled = false;
+      }
+    });
+
+    // Text in Zwischenablage kopieren (schneller Bereich)
+    quickCopyBtn.addEventListener('click', () => {
+      const content = quickTextContent.value.trim();
+      if (!content) {
+        showNotification('Text darf nicht leer sein', 'error');
+        return;
+      }
+      
+      navigator.clipboard.writeText(content)
+        .then(() => {
+          showNotification('Text in die Zwischenablage kopiert', 'success');
+        })
+        .catch(err => {
+          console.error('Fehler beim Kopieren: ', err);
+          showNotification('Fehler beim Kopieren des Texts', 'error');
+        });
+    });
+
+    // Textbereich löschen (schneller Bereich)
+    quickClearBtn.addEventListener('click', () => {
+      quickTextContent.value = '';
+      quickWebhook.value = '';
+      quickCharCount.textContent = '0 Zeichen';
+      quickCharCount.classList.remove('warning', 'error');
+      showNotification('Textbereich wurde geleert', 'info');
+    });
   </script>
 </body>
 </html>

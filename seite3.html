@@ -1013,7 +1013,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Section -->
+                <!-- Admin Section - EXAKT WIE IM ALTEN SCRIPT -->
                 <div class="system-card">
                     <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-cog"></i> Admin Bereich
@@ -1112,7 +1112,7 @@
         </div>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Product Modal - EXAKT WIE IM ALTEN SCRIPT -->
     <div id="productModal" class="modal-overlay">
         <div class="modal-content">
             <div class="settings-header">
@@ -1173,7 +1173,7 @@
     </div>
 
     <script type="module">
-        // Firebase Import und Konfiguration
+        // Firebase Import und Konfiguration - EXAKT WIE IM ALTEN SCRIPT
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
         import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -1194,7 +1194,7 @@
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
         
-        // ALTE FIREBASE REFERENZEN
+        // ALTE FIREBASE REFERENZEN - EXAKT WIE IM ALTEN SCRIPT
         const productsRef = ref(db,'materialrecycler_products');
         const logoSettingsRef = ref(db,'materialrecycler_logo_settings');
 
@@ -1241,7 +1241,7 @@
         const logoPreview = document.getElementById('logoPreview');
         const searchInput = document.getElementById('searchInput');
 
-        // Admin Elements
+        // Admin Elements - EXAKT WIE IM ALTEN SCRIPT
         const adminLoginBtn = document.getElementById('adminLoginBtn');
         const adminPassInput = document.getElementById('adminPass');
         const adminError = document.getElementById('adminError');
@@ -1251,7 +1251,7 @@
         const adminSearchInput = document.getElementById('adminSearchInput');
         const adminTableBody = document.getElementById('adminTableBody');
 
-        // Product Modal Elements
+        // Product Modal Elements - EXAKT WIE IM ALTEN SCRIPT
         const productModal = document.getElementById('productModal');
         const productForm = document.getElementById('productForm');
         const productModalTitle = document.getElementById('productModalTitle');
@@ -1262,14 +1262,14 @@
         const imagePreview = document.getElementById('imagePreview');
         const productImageData = document.getElementById('productImageData');
 
-        // Resource Elements
+        // Resource Elements - EXAKT WIE IM ALTEN SCRIPT
         const newResourceName = document.getElementById('newResourceName');
         const newResourceMin = document.getElementById('newResourceMin');
         const newResourceMax = document.getElementById('newResourceMax');
         const addResourceBtn = document.getElementById('addResourceBtn');
         const resourcesList = document.getElementById('resourcesList');
 
-        // Discord Login Funktion
+        // Discord Login Funktion - EXAKT WIE IM ALTEN SCRIPT
         function loginWithDiscord() {
             const btn = discordLoginBtn;
             
@@ -1284,7 +1284,7 @@
             }, 1500);
         }
 
-        // Erfolgreiche Anmeldung simulieren
+        // Erfolgreiche Anmeldung simulieren - EXAKT WIE IM ALTEN SCRIPT
         function simulateSuccessfulLogin() {
             const mockUser = {
                 username: "Recycler_User",
@@ -1297,7 +1297,7 @@
             showNotification('Erfolgreich eingeloggt!', 'success');
         }
 
-        // Notification System
+        // Notification System - EXAKT WIE IM ALTEN SCRIPT
         function showNotification(message, type = 'info', duration = 4000) {
             notification.textContent = message;
             notification.className = `notification ${type}`;
@@ -1312,7 +1312,7 @@
             }, duration);
         }
 
-        // Fehler anzeigen
+        // Fehler anzeigen - EXAKT WIE IM ALTEN SCRIPT
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
@@ -1322,7 +1322,7 @@
             loading.style.display = 'none';
         }
 
-        // Hauptinhalt anzeigen
+        // Hauptinhalt anzeigen - EXAKT WIE IM ALTEN SCRIPT
         function showMainContent(user) {
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
@@ -1343,7 +1343,7 @@
             loadLogoSettings();
         }
 
-        // Logout
+        // Logout - EXAKT WIE IM ALTEN SCRIPT
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 localStorage.removeItem('discord_user');
@@ -1361,7 +1361,7 @@
             }
         }
 
-        // Bereits eingeloggten Benutzer prüfen
+        // Bereits eingeloggten Benutzer prüfen - EXAKT WIE IM ALTEN SCRIPT
         function checkExistingLogin() {
             const user = localStorage.getItem('discord_user');
             
@@ -1373,7 +1373,7 @@
             }
         }
 
-        // Tab Navigation
+        // Tab Navigation - EXAKT WIE IM ALTEN SCRIPT
         function switchTab(tabName) {
             // Alle Tabs ausblenden
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -1414,7 +1414,7 @@
             return names[tabName] || tabName;
         }
 
-        // Navigation zu anderen Seiten
+        // Navigation zu anderen Seiten - EXAKT WIE IM ALTEN SCRIPT
         function navigateTo(page) {
             showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
             setTimeout(() => {
@@ -1422,7 +1422,7 @@
             }, 1500);
         }
 
-        // Settings Modal Funktionen
+        // Settings Modal Funktionen - EXAKT WIE IM ALTEN SCRIPT
         function openDashboardSettings() {
             resetPasswordForms();
             logoTextInput.value = logoText;
@@ -1442,7 +1442,7 @@
             dashboardSettingsContent.classList.add('hidden');
         }
 
-        // Passwort-Verifikation
+        // Passwort-Verifikation - EXAKT WIE IM ALTEN SCRIPT
         function verifyPassword(password, type) {
             if (password === ADMIN_PASSWORD) {
                 if (type === 'dashboard') {
@@ -1458,7 +1458,7 @@
             }
         }
 
-        // Logo Einstellungen
+        // Logo Einstellungen - EXAKT WIE IM ALTEN SCRIPT
         function loadLogoSettings() {
             onValue(logoSettingsRef, (snapshot) => {
                 const data = snapshot.val();
@@ -1496,7 +1496,7 @@
             closeDashboardSettingsModal();
         }
 
-        // Product Management - ALTE FIREBASE
+        // Product Management - EXAKT WIE IM ALTEN SCRIPT
         function loadProducts() {
             onValue(productsRef, (snapshot) => {
                 products = [];
@@ -1515,7 +1515,7 @@
             });
         }
 
-        // KORRIGIERTE PRODUKT-ANZEIGE - WIE IM ALTEN SYSTEM
+        // KORRIGIERTE PRODUKT-ANZEIGE - EXAKT WIE IM ALTEN SCRIPT
         function renderProducts() {
             const productsList = document.getElementById('productsList');
             const searchTerm = searchInput.value.toLowerCase();
@@ -1657,7 +1657,7 @@
             });
         }
 
-        // Resource Management
+        // Resource Management - EXAKT WIE IM ALTEN SCRIPT
         addResourceBtn.addEventListener('click', () => {
             const resourceName = newResourceName.value.trim();
             const resourceMin = parseInt(newResourceMin.value);
@@ -1708,7 +1708,7 @@
             });
         }
 
-        // Image Upload
+        // Image Upload - EXAKT WIE IM ALTEN SCRIPT
         productImageFile.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -1730,7 +1730,7 @@
             }
         });
 
-        // Admin Functions
+        // Admin Functions - EXAKT WIE IM ALTEN SCRIPT
         adminLoginBtn.addEventListener('click', () => {
             if (adminPassInput.value === ADMIN_PASSWORD) { 
                 adminError.style.display = 'none';
@@ -1795,7 +1795,7 @@
             });
         }
 
-        // Admin Search
+        // Admin Search - EXAKT WIE IM ALTEN SCRIPT
         adminSearchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
             const rows = adminTableBody.querySelectorAll('tr');
@@ -1810,7 +1810,7 @@
             });
         });
 
-        // Product Modal Functions
+        // Product Modal Functions - EXAKT WIE IM ALTEN SCRIPT
         function openProductModal() {
             productModal.classList.add('active');
         }
@@ -1853,7 +1853,7 @@
             openProductModal();
         }
 
-        // Product Form Submission
+        // Product Form Submission - EXAKT WIE IM ALTEN SCRIPT
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -1898,7 +1898,7 @@
             }
         });
 
-        // Delete Product
+        // Delete Product - EXAKT WIE IM ALTEN SCRIPT
         window.deleteProduct = async function(key) { 
             if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
                 try {
@@ -1911,7 +1911,7 @@
             }
         }
 
-        // CSV Export
+        // CSV Export - EXAKT WIE IM ALTEN SCRIPT
         exportCsv.addEventListener('click', () => {
             if (products.length === 0) {
                 showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
@@ -1949,7 +1949,7 @@
             showNotification('CSV erfolgreich exportiert', 'success');
         });
 
-        // Event Listeners initialisieren
+        // Event Listeners initialisieren - EXAKT WIE IM ALTEN SCRIPT
         function initializeEventListeners() {
             // Login Button
             discordLoginBtn.addEventListener('click', loginWithDiscord);
@@ -2047,7 +2047,7 @@
             dashboardSettingsModal.classList.remove('active');
         });
 
-        console.log('Materialrecycler Panel mit ALTER FIREBASE und KORRIGIERTER Produkt-Anzeige vollständig geladen!');
+        console.log('Materialrecycler Panel mit EXAKTER Produkt-Einstellung vom alten Script vollständig geladen!');
     </script>
 </body>
 </html>

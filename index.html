@@ -136,21 +136,17 @@
             gap: 1.2rem;
         }
         
-        .logo-icon {
+        .logo-image {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+            object-fit: cover;
+            border: 2px solid #4299e1;
             cursor: pointer;
             transition: all 0.3s;
         }
         
-        .logo-icon:hover {
+        .logo-image:hover {
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
         }
@@ -660,12 +656,12 @@
         
         .settings-form {
             display: flex;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
         
         .settings-form input {
-            flex: 1;
             padding: 0.8rem;
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(101, 119, 149, 0.3);
@@ -755,6 +751,66 @@
             background: rgba(66, 153, 225, 0.3);
             transform: rotate(90deg);
         }
+
+        /* Password Protection */
+        .password-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .password-error {
+            color: #fc8181;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #4299e1;
+            margin: 1rem auto;
+            display: block;
+        }
+
+        .file-input-container {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-container input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 0.8rem;
+            background: rgba(66, 153, 225, 0.2);
+            border: 1px dashed #4299e1;
+            border-radius: 6px;
+            text-align: center;
+            color: #90cdf4;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: rgba(66, 153, 225, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -781,7 +837,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon" id="logoIcon">KL</div>
+                <img id="headerLogo" class="logo-image" src="" alt="KhusLand Logo">
                 <h2>KhusLand Management Panel</h2>
             </div>
             <div class="user-info">
@@ -1006,7 +1062,7 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <!-- Dashboard Settings Modal (Logo-Änderung) -->
+    <!-- Dashboard Settings Modal (Logo-Bild Upload) -->
     <div id="dashboardSettingsModal" class="settings-modal">
         <div class="settings-content">
             <div class="settings-header">
@@ -1016,21 +1072,33 @@
                 </button>
             </div>
             
-            <div class="settings-section">
-                <h4>Logo Text anpassen</h4>
+            <div class="password-section">
+                <h4>Passwort erforderlich</h4>
+                <div class="settings-form">
+                    <input type="password" id="dashboardPassword" placeholder="Passwort eingeben (1101)">
+                    <button id="verifyDashboardPassword">Passwort prüfen</button>
+                    <div class="password-error" id="dashboardPasswordError">Falsches Passwort!</div>
+                </div>
+            </div>
+            
+            <div class="settings-section hidden" id="dashboardSettingsContent">
+                <h4>Logo Bild hochladen</h4>
                 <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
-                    Ändern Sie den Text des Logos im Header.
+                    Laden Sie ein neues Logo-Bild für den Header hoch.
                 </p>
                 
-                <div class="settings-form">
-                    <input type="text" id="logoTextInput" placeholder="Logo Text (max. 2 Zeichen)" maxlength="2">
-                    <button id="saveLogoBtn">Speichern</button>
+                <div class="file-input-container">
+                    <input type="file" id="logoImageInput" accept="image/*">
+                    <label for="logoImageInput" class="file-input-label">
+                        <i class="fas fa-upload"></i> Bild auswählen
+                    </label>
                 </div>
                 
-                <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
-                    <div style="color: #a0aec0; margin-bottom: 0.5rem;">Vorschau:</div>
-                    <div class="logo-icon" id="logoPreview" style="margin: 0 auto;">KL</div>
-                </div>
+                <img id="logoImagePreview" class="image-preview hidden" src="" alt="Logo Vorschau">
+                
+                <button id="saveLogoBtn" class="btn-primary" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-save"></i> Logo speichern
+                </button>
             </div>
         </div>
     </div>
@@ -1045,7 +1113,16 @@
                 </button>
             </div>
             
-            <div class="settings-section">
+            <div class="password-section">
+                <h4>Passwort erforderlich</h4>
+                <div class="settings-form">
+                    <input type="password" id="weedPassword" placeholder="Passwort eingeben (1101)">
+                    <button id="verifyWeedPassword">Passwort prüfen</button>
+                    <div class="password-error" id="weedPasswordError">Falsches Passwort!</div>
+                </div>
+            </div>
+            
+            <div class="settings-section hidden" id="weedSettingsContent">
                 <h4>Rabatt-Einstellungen</h4>
                 <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
                     Verwalten Sie die verfügbaren Rabattstufen für das Weed-System. Gleiche Prozentwerte sind mehrfach möglich.
@@ -1095,6 +1172,7 @@
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
         // System Variablen
+        const ADMIN_PASSWORD = '1101';
         let currentDiscount = 0;
         let entries = [];
         let availableDiscounts = [
@@ -1103,7 +1181,7 @@
             { value: 15, label: 'Einkäufer' },
             { value: 20, label: 'Normal' }
         ];
-        let logoText = 'KL';
+        let logoImageUrl = '';
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -1113,6 +1191,7 @@
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
+        const headerLogo = document.getElementById('headerLogo');
         
         // Buttons
         const discordLoginBtn = document.getElementById('discordLoginBtn');
@@ -1121,7 +1200,6 @@
         const weedTab = document.getElementById('weedTab');
         const saveWeedBtn = document.getElementById('saveWeedBtn');
         const weedQuantity = document.getElementById('weedQuantity');
-        const logoIcon = document.getElementById('logoIcon');
         const weedSettingsIcon = document.getElementById('weedSettingsIcon');
         const dashboardSettingsModal = document.getElementById('dashboardSettingsModal');
         const weedSettingsModal = document.getElementById('weedSettingsModal');
@@ -1129,8 +1207,16 @@
         const closeWeedSettings = document.getElementById('closeWeedSettings');
         const addDiscountBtn = document.getElementById('addDiscountBtn');
         const saveLogoBtn = document.getElementById('saveLogoBtn');
-        const logoTextInput = document.getElementById('logoTextInput');
-        const logoPreview = document.getElementById('logoPreview');
+        const logoImageInput = document.getElementById('logoImageInput');
+        const logoImagePreview = document.getElementById('logoImagePreview');
+        const verifyDashboardPassword = document.getElementById('verifyDashboardPassword');
+        const verifyWeedPassword = document.getElementById('verifyWeedPassword');
+        const dashboardPassword = document.getElementById('dashboardPassword');
+        const weedPassword = document.getElementById('weedPassword');
+        const dashboardPasswordError = document.getElementById('dashboardPasswordError');
+        const weedPasswordError = document.getElementById('weedPasswordError');
+        const dashboardSettingsContent = document.getElementById('dashboardSettingsContent');
+        const weedSettingsContent = document.getElementById('weedSettingsContent');
 
         // Discord Login Funktion
         function loginWithDiscord() {
@@ -1278,59 +1364,107 @@
 
         // Settings Modal Funktionen
         function openDashboardSettings() {
-            logoTextInput.value = logoText;
-            logoPreview.textContent = logoText;
+            resetPasswordForms();
             dashboardSettingsModal.classList.add('active');
         }
 
         function openWeedSettings() {
+            resetPasswordForms();
             weedSettingsModal.classList.add('active');
         }
 
         function closeDashboardSettingsModal() {
             dashboardSettingsModal.classList.remove('active');
+            resetPasswordForms();
         }
 
         function closeWeedSettingsModal() {
             weedSettingsModal.classList.remove('active');
+            resetPasswordForms();
+        }
+
+        function resetPasswordForms() {
+            // Passwort-Felder zurücksetzen
+            dashboardPassword.value = '';
+            weedPassword.value = '';
+            dashboardPasswordError.style.display = 'none';
+            weedPasswordError.style.display = 'none';
+            dashboardSettingsContent.classList.add('hidden');
+            weedSettingsContent.classList.add('hidden');
+        }
+
+        // Passwort-Verifikation
+        function verifyPassword(password, type) {
+            if (password === ADMIN_PASSWORD) {
+                if (type === 'dashboard') {
+                    dashboardSettingsContent.classList.remove('hidden');
+                    dashboardPasswordError.style.display = 'none';
+                } else if (type === 'weed') {
+                    weedSettingsContent.classList.remove('hidden');
+                    weedPasswordError.style.display = 'none';
+                }
+                showNotification('Passwort korrekt', 'success');
+            } else {
+                if (type === 'dashboard') {
+                    dashboardPasswordError.style.display = 'block';
+                } else if (type === 'weed') {
+                    weedPasswordError.style.display = 'block';
+                }
+                showNotification('Falsches Passwort', 'error');
+            }
         }
 
         // Logo Einstellungen
         function loadLogoSettings() {
             onValue(logoSettingsRef, (snapshot) => {
                 const data = snapshot.val();
-                if (data && data.logoText) {
-                    logoText = data.logoText;
+                if (data && data.logoImageUrl) {
+                    logoImageUrl = data.logoImageUrl;
                     updateLogoDisplay();
                 }
             });
         }
 
         function updateLogoDisplay() {
-            logoIcon.textContent = logoText;
+            if (logoImageUrl) {
+                headerLogo.src = logoImageUrl;
+                headerLogo.style.display = 'block';
+            } else {
+                headerLogo.style.display = 'none';
+            }
         }
 
-        function saveLogoText() {
-            const newLogoText = logoTextInput.value.trim().toUpperCase();
-            
-            if (!newLogoText) {
-                showNotification('Bitte Logo Text eingeben', 'error');
+        function handleLogoImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoImagePreview.src = e.target.result;
+                    logoImagePreview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveLogoImage() {
+            const file = logoImageInput.files[0];
+            if (!file) {
+                showNotification('Bitte wählen Sie ein Bild aus', 'error');
                 return;
             }
-            
-            if (newLogoText.length > 2) {
-                showNotification('Logo Text darf maximal 2 Zeichen lang sein', 'error');
-                return;
-            }
-            
-            logoText = newLogoText;
-            set(logoSettingsRef, { logoText: logoText });
-            
-            updateLogoDisplay();
-            logoPreview.textContent = logoText;
-            
-            showNotification('Logo Text gespeichert', 'success');
-            closeDashboardSettingsModal();
+
+            // In einer echten Anwendung würde hier der Upload zu einem Server/Cloud Storage erfolgen
+            // Für dieses Beispiel verwenden wir Data URL
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                logoImageUrl = e.target.result;
+                set(logoSettingsRef, { logoImageUrl: logoImageUrl });
+                
+                updateLogoDisplay();
+                showNotification('Logo Bild gespeichert', 'success');
+                closeDashboardSettingsModal();
+            };
+            reader.readAsDataURL(file);
         }
 
         // Discount System
@@ -1635,12 +1769,30 @@
             saveWeedBtn.addEventListener('click', handleWeedSubmit);
             
             // Settings System
-            logoIcon.addEventListener('click', openDashboardSettings);
+            headerLogo.addEventListener('click', openDashboardSettings);
             weedSettingsIcon.addEventListener('click', openWeedSettings);
             closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
             closeWeedSettings.addEventListener('click', closeWeedSettingsModal);
             addDiscountBtn.addEventListener('click', addNewDiscount);
-            saveLogoBtn.addEventListener('click', saveLogoText);
+            saveLogoBtn.addEventListener('click', saveLogoImage);
+            logoImageInput.addEventListener('change', handleLogoImageUpload);
+            
+            // Passwort-Verifikation
+            verifyDashboardPassword.addEventListener('click', () => verifyPassword(dashboardPassword.value, 'dashboard'));
+            verifyWeedPassword.addEventListener('click', () => verifyPassword(weedPassword.value, 'weed'));
+            
+            // Enter-Taste für Passwort-Felder
+            dashboardPassword.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyPassword(dashboardPassword.value, 'dashboard');
+                }
+            });
+            
+            weedPassword.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyPassword(weedPassword.value, 'weed');
+                }
+            });
             
             // Modal schließen bei Klick außerhalb
             dashboardSettingsModal.addEventListener('click', (e) => {
@@ -1655,13 +1807,7 @@
                 }
             });
             
-            // Enter-Taste für Forms
-            logoTextInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    saveLogoText();
-                }
-            });
-            
+            // Enter-Taste für Discount-Form
             document.getElementById('newDiscountValue').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     addNewDiscount();
@@ -1684,7 +1830,7 @@
             weedSettingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit getrennten Einstellungssystemen vollständig geladen!');
+        console.log('KhusLand Panel mit passwortgeschützten Einstellungen vollständig geladen!');
     </script>
 </body>
 </html>

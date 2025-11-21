@@ -768,7 +768,7 @@
                         </div>
                     </div>
                     
-                    <button type="submit" form="weedForm" class="btn-primary">
+                    <button type="button" id="saveWeedBtn" class="btn-primary">
                         <i class="fas fa-save"></i> Ankauf speichern
                     </button>
                 </div>
@@ -845,6 +845,7 @@
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
+        const saveWeedBtn = document.getElementById('saveWeedBtn');
 
         // System Variablen
         let currentDiscount = 0;
@@ -1125,10 +1126,8 @@
             document.getElementById('buyerShare').textContent = `${buyerShare} €`;
         }
 
-        // Handle Weed Form Submission
-        function handleWeedSubmit(event) {
-            event.preventDefault();
-            
+        // Handle Weed Form Submission - KORRIGIERTE VERSION
+        function handleWeedSubmit() {
             const buyer = document.getElementById('weedBuyer').value.trim();
             const seller = document.getElementById('weedSeller').value.trim();
             const quantity = parseInt(document.getElementById('weedQuantity').value);
@@ -1158,31 +1157,32 @@
             };
 
             try {
-                const submitBtn = event.target.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
-                submitBtn.disabled = true;
+                const originalText = saveWeedBtn.innerHTML;
+                saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
+                saveWeedBtn.disabled = true;
                 
                 push(entriesRef, entry).then(() => {
                     // Formular zurücksetzen
-                    document.getElementById('weedForm').reset();
+                    document.getElementById('weedBuyer').value = '';
+                    document.getElementById('weedSeller').value = '';
                     document.getElementById('weedQuantity').value = '1';
                     updateWeedPrices();
                     
                     showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
                     
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+                    saveWeedBtn.innerHTML = originalText;
+                    saveWeedBtn.disabled = false;
                 }).catch(error => {
                     console.error('Fehler beim Speichern:', error);
                     showNotification('Fehler beim Speichern!', 'error');
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+                    saveWeedBtn.innerHTML = originalText;
+                    saveWeedBtn.disabled = false;
                 });
                 
             } catch (error) {
                 console.error('Fehler beim Speichern:', error);
                 showNotification('Fehler beim Speichern!', 'error');
+                saveWeedBtn.disabled = false;
             }
         }
 
@@ -1259,7 +1259,9 @@
             
             // Weed System Event Listener
             document.getElementById('weedQuantity').addEventListener('input', updateWeedPrices);
-            document.getElementById('weedForm').addEventListener('submit', handleWeedSubmit);
+            
+            // KORRIGIERT: Direkter Event Listener für den Save Button
+            saveWeedBtn.addEventListener('click', handleWeedSubmit);
             
             // Discount System initialisieren
             setupDiscountButtons();
@@ -1273,7 +1275,7 @@
             if (event.key === 'Enter') {
                 const activeTab = document.querySelector('.tab-content.active').id;
                 if (activeTab === 'weed') {
-                    document.getElementById('weedForm').dispatchEvent(new Event('submit'));
+                    handleWeedSubmit();
                 }
             }
         });

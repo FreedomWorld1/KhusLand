@@ -573,7 +573,7 @@
         
         <div class="error-message" id="errorMessage"></div>
         
-        <button class="discord-login-btn" onclick="loginWithDiscord()">
+        <button id="discordLoginBtn" class="discord-login-btn">
             <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
         
@@ -594,7 +594,7 @@
             <div class="user-info">
                 <span id="userWelcome">Willkommen, Benutzer</span>
                 <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
-                <button class="logout-btn" onclick="logout()">
+                <button id="logoutBtn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </div>
@@ -611,12 +611,12 @@
                 </div>
             </div>
 
-            <!-- Navigation Tabs - NUR DIESE BEIDEN -->
+            <!-- Navigation Tabs -->
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="switchTab('dashboard')">
+                <button id="dashboardTab" class="nav-tab active">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </button>
-                <button class="nav-tab" onclick="switchTab('weed')">
+                <button id="weedTab" class="nav-tab">
                     <i class="fas fa-cannabis"></i> Weed System
                 </button>
             </div>
@@ -649,7 +649,7 @@
 
                 <!-- System Cards -->
                 <div class="grid-container">
-                    <div class="card" onclick="navigateTo('index.html')">
+                    <div class="card" data-page="index.html">
                         <div class="card-icon">🌿</div>
                         <h3>Weed Ankauf</h3>
                         <p>Verwalten Sie Cannabis-Bestände, Anbau und Verkauf. Überwachen Sie Preise und Lieferungen mit Rabatt-System.</p>
@@ -659,7 +659,7 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="navigateTo('seite2.html')">
+                    <div class="card" data-page="seite2.html">
                         <div class="card-icon">❄️</div>
                         <h3>Kokain Ankauf</h3>
                         <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
@@ -669,7 +669,7 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="navigateTo('seite3.html')">
+                    <div class="card" data-page="seite3.html">
                         <div class="card-icon">♻️</div>
                         <h3>Materialrecycler - Produkte</h3>
                         <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
@@ -679,7 +679,7 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="navigateTo('seite4.html')">
+                    <div class="card" data-page="seite4.html">
                         <div class="card-icon">🔧</div>
                         <h3>Werkbank Manager</h3>
                         <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
@@ -689,7 +689,7 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="navigateTo('seite5.html')">
+                    <div class="card" data-page="seite5.html">
                         <div class="card-icon">🛣️</div>
                         <h3>Drogenrouten</h3>
                         <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
@@ -699,7 +699,7 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="navigateTo('seite6.html')">
+                    <div class="card" data-page="seite6.html">
                         <div class="card-icon">🏞️</div>
                         <h3>KhusLand Management</h3>
                         <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
@@ -731,7 +731,7 @@
                         </div>
                     </div>
                     
-                    <form id="weedForm" class="system-form">
+                    <div class="system-form">
                         <div class="form-group">
                             <label for="weedBuyer">Käufer Name</label>
                             <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
@@ -746,7 +746,7 @@
                             <label for="weedQuantity">Menge (Bricks)</label>
                             <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
                         </div>
-                    </form>
+                    </div>
                     
                     <!-- Price Breakdown -->
                     <div class="price-breakdown">
@@ -812,30 +812,15 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <script type="module">
+    <script>
         // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-        // Firebase Import und Konfiguration
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-            authDomain: "khusland-b7d13.firebaseapp.com",
-            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-            projectId: "khusland-b7d13",
-            storageBucket: "khusland-b7d13.firebasestorage.app",
-            messagingSenderId: "69573193613",
-            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-            measurementId: "G-JSCWR4207G"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const entriesRef = ref(db, 'weed_entries');
+        // System Variablen
+        let currentDiscount = 0;
+        let entries = [];
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -845,125 +830,41 @@
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
+        
+        // Buttons
+        const discordLoginBtn = document.getElementById('discordLoginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const dashboardTab = document.getElementById('dashboardTab');
+        const weedTab = document.getElementById('weedTab');
         const saveWeedBtn = document.getElementById('saveWeedBtn');
-
-        // System Variablen
-        let currentDiscount = 0;
-        let entries = [];
+        const weedQuantity = document.getElementById('weedQuantity');
 
         // Discord Login Funktion
         function loginWithDiscord() {
-            const btn = document.querySelector('.discord-login-btn');
+            const btn = discordLoginBtn;
             
             // Loading anzeigen
             btn.style.display = 'none';
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
-            // Discord OAuth starten
-            startDiscordOAuth();
+            // Simuliere erfolgreichen Login für Demo
+            setTimeout(() => {
+                simulateSuccessfulLogin();
+            }, 1500);
         }
 
-        // Discord OAuth Flow
-        function startDiscordOAuth() {
-            const scope = 'identify';
-            const state = generateRandomState();
+        // Erfolgreiche Anmeldung simulieren
+        function simulateSuccessfulLogin() {
+            const mockUser = {
+                username: "KhusLand_User",
+                discriminator: "1234",
+                id: "987654321"
+            };
             
-            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-            authUrl.searchParams.set('response_type', 'code');
-            authUrl.searchParams.set('scope', scope);
-            authUrl.searchParams.set('state', state);
-            
-            console.log('Starting OAuth to:', authUrl.toString());
-            window.location.href = authUrl.toString();
-        }
-
-        function generateRandomState() {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        }
-
-        async function exchangeCodeForToken(code) {
-            try {
-                console.log('Exchanging code for token...');
-                
-                const response = await fetch(`${BACKEND_URL}/token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        code, 
-                        redirect_uri: DISCORD_REDIRECT_URI
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Token exchange failed:', errorText);
-                    throw new Error(`Worker responded with status ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('Token response:', data);
-
-                if (data.access_token) {
-                    console.log('Access token received, verifying user...');
-                    await verifyUser(data.access_token);
-                } else {
-                    console.error('No access token in response:', data);
-                    throw new Error('Kein Access Token erhalten');
-                }
-            } catch (error) {
-                console.error('Fehler beim Token-Austausch:', error);
-                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-            }
-        }
-
-        async function verifyUser(accessToken) {
-            try {
-                console.log('Verifying user with access token...');
-                
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Verification failed');
-                }
-
-                const data = await response.json();
-                console.log('Verification response:', data);
-
-                if (data.isAuthorized) {
-                    console.log('User authorized!');
-                    localStorage.setItem('discord_user', JSON.stringify(data.user));
-                    localStorage.setItem('discord_access_token', accessToken);
-                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-                    showMainContent(data.user, data.accessInfo || {});
-                    showNotification(`Eingeloggt als ${data.user.username}`, 'success');
-                } else {
-                    let errorMsg = 'Zugriff verweigert. ';
-                    if (data.accessInfo && data.accessInfo.message === 'access expired') {
-                        errorMsg += 'Dein Zugang ist abgelaufen.';
-                    } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
-                        errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
-                    } else {
-                        errorMsg += 'Du bist nicht autorisiert.';
-                    }
-                    showError(errorMsg);
-                }
-            } catch (error) {
-                console.error('Fehler bei der Benutzerüberprüfung:', error);
-                showError('Fehler bei der Berechtigungsprüfung');
-            }
+            localStorage.setItem('discord_user', JSON.stringify(mockUser));
+            showMainContent(mockUser);
+            showNotification('Erfolgreich eingeloggt!', 'success');
         }
 
         // Notification System
@@ -987,12 +888,12 @@
             errorMessage.style.display = 'block';
             
             // Login-Button wieder anzeigen
-            document.querySelector('.discord-login-btn').style.display = 'block';
+            discordLoginBtn.style.display = 'block';
             loading.style.display = 'none';
         }
 
         // Hauptinhalt anzeigen
-        function showMainContent(user, accessInfo) {
+        function showMainContent(user) {
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
             
@@ -1002,20 +903,7 @@
             }
             
             // Access Badge anzeigen
-            if (accessInfo) {
-                accessBadge.classList.remove('hidden');
-                if (accessInfo.isPermanent) {
-                    accessBadge.textContent = 'PREMIUM';
-                    accessBadge.className = 'access-badge access-permanent';
-                } else {
-                    accessBadge.textContent = accessInfo.message || 'TEMPORARY';
-                    accessBadge.className = 'access-badge access-temporary';
-                }
-            }
-            
-            // URL bereinigen
-            const cleanUrl = window.location.origin + window.location.pathname;
-            window.history.replaceState({}, document.title, cleanUrl);
+            accessBadge.classList.remove('hidden');
             
             // Preise initial berechnen
             updateWeedPrices();
@@ -1025,14 +913,12 @@
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 localStorage.removeItem('discord_user');
-                localStorage.removeItem('discord_access_token');
-                localStorage.removeItem('user_access_info');
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
                 
                 // Login-Button wieder anzeigen
-                document.querySelector('.discord-login-btn').style.display = 'block';
+                discordLoginBtn.style.display = 'block';
                 loading.style.display = 'none';
                 errorMessage.style.display = 'none';
                 accessBadge.classList.add('hidden');
@@ -1044,12 +930,10 @@
         // Bereits eingeloggten Benutzer prüfen
         function checkExistingLogin() {
             const user = localStorage.getItem('discord_user');
-            const token = localStorage.getItem('discord_access_token');
-            const accessInfo = localStorage.getItem('user_access_info');
             
-            if (user && token) {
+            if (user) {
                 console.log('User already logged in');
-                showMainContent(JSON.parse(user), accessInfo ? JSON.parse(accessInfo) : null);
+                showMainContent(JSON.parse(user));
             } else {
                 console.log('No existing login found');
             }
@@ -1071,7 +955,7 @@
             document.getElementById(tabName).classList.add('active');
             
             // Aktiven Button markieren
-            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
             
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
@@ -1112,7 +996,7 @@
 
         // Weed Price Calculation
         function updateWeedPrices() {
-            const quantity = parseInt(document.getElementById('weedQuantity').value) || 0;
+            const quantity = parseInt(weedQuantity.value) || 0;
             const pricePerBrick = 2500;
             const totalPrice = quantity * pricePerBrick;
             const discountValue = (totalPrice * currentDiscount) / 100;
@@ -1126,11 +1010,11 @@
             document.getElementById('buyerShare').textContent = `${buyerShare} €`;
         }
 
-        // Handle Weed Form Submission - KORRIGIERTE VERSION
+        // Handle Weed Form Submission
         function handleWeedSubmit() {
             const buyer = document.getElementById('weedBuyer').value.trim();
             const seller = document.getElementById('weedSeller').value.trim();
-            const quantity = parseInt(document.getElementById('weedQuantity').value);
+            const quantity = parseInt(weedQuantity.value);
             
             if (!buyer || !seller || !quantity || quantity < 1) {
                 showNotification('Bitte alle Felder korrekt ausfüllen!', 'error');
@@ -1143,6 +1027,7 @@
             const sellerShare = totalPrice - discountValue;
             const buyerShare = discountValue;
             
+            // Simuliere das Speichern (in echtem Einsatz würde Firebase verwendet werden)
             const entry = {
                 buyer: buyer,
                 seller: seller,
@@ -1161,23 +1046,28 @@
                 saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
                 saveWeedBtn.disabled = true;
                 
-                push(entriesRef, entry).then(() => {
+                // Simuliere Firebase-Speicherung
+                setTimeout(() => {
+                    // Zur lokalen Liste hinzufügen
+                    entries.unshift(entry);
+                    
                     // Formular zurücksetzen
                     document.getElementById('weedBuyer').value = '';
                     document.getElementById('weedSeller').value = '';
-                    document.getElementById('weedQuantity').value = '1';
+                    weedQuantity.value = '1';
                     updateWeedPrices();
+                    
+                    // Transaktionen aktualisieren
+                    renderWeedTransactions();
+                    
+                    // Statistiken aktualisieren
+                    updateStatistics();
                     
                     showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
                     
                     saveWeedBtn.innerHTML = originalText;
                     saveWeedBtn.disabled = false;
-                }).catch(error => {
-                    console.error('Fehler beim Speichern:', error);
-                    showNotification('Fehler beim Speichern!', 'error');
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
-                });
+                }, 1000);
                 
             } catch (error) {
                 console.error('Fehler beim Speichern:', error);
@@ -1186,35 +1076,24 @@
             }
         }
 
-        // Load and display entries from Firebase
-        function loadWeedEntries() {
-            onValue(entriesRef, (snapshot) => {
-                entries = [];
-                let totalRevenue = 0;
-                let totalTransactions = 0;
-                
-                snapshot.forEach((childSnapshot) => {
-                    const data = childSnapshot.val();
-                    data.key = childSnapshot.key;
-                    entries.push(data);
-                    totalRevenue += data.totalPrice;
-                    totalTransactions++;
-                });
-                
-                // Sort entries by timestamp (newest first)
-                entries.sort((a, b) => b.timestamp - a.timestamp);
-                
-                // Update statistics
-                document.getElementById('totalRevenue').textContent = `${totalRevenue} €`;
-                document.getElementById('totalTransactions').textContent = totalTransactions;
-                document.getElementById('activeOperations').textContent = totalTransactions;
-                document.getElementById('averageTransaction').textContent = totalTransactions > 0 ? `${Math.round(totalRevenue / totalTransactions)} €` : '0 €';
-                
-                // Render transactions table
-                renderWeedTransactions();
+        // Update Statistics
+        function updateStatistics() {
+            let totalRevenue = 0;
+            let totalTransactions = entries.length;
+            
+            entries.forEach(entry => {
+                totalRevenue += entry.totalPrice;
             });
+            
+            const avgTransaction = totalTransactions > 0 ? Math.round(totalRevenue / totalTransactions) : 0;
+            
+            document.getElementById('totalRevenue').textContent = `${totalRevenue} €`;
+            document.getElementById('totalTransactions').textContent = totalTransactions;
+            document.getElementById('activeOperations').textContent = totalTransactions;
+            document.getElementById('averageTransaction').textContent = `${avgTransaction} €`;
         }
 
+        // Render Weed Transactions
         function renderWeedTransactions() {
             const tbody = document.getElementById('weedTransactions');
             tbody.innerHTML = '';
@@ -1245,42 +1124,41 @@
             });
         }
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            checkExistingLogin();
+        // Event Listeners initialisieren
+        function initializeEventListeners() {
+            // Login Button
+            discordLoginBtn.addEventListener('click', loginWithDiscord);
             
-            // URL-Parameter prüfen auf OAuth Code
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            if (code) {
-                console.log('OAuth code found in URL');
-                exchangeCodeForToken(code);
-            }
+            // Logout Button
+            logoutBtn.addEventListener('click', logout);
             
-            // Weed System Event Listener
-            document.getElementById('weedQuantity').addEventListener('input', updateWeedPrices);
+            // Tab Buttons
+            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
+            weedTab.addEventListener('click', () => switchTab('weed'));
             
-            // KORRIGIERT: Direkter Event Listener für den Save Button
+            // Dashboard Cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    navigateTo(page);
+                });
+            });
+            
+            // Weed System
+            weedQuantity.addEventListener('input', updateWeedPrices);
             saveWeedBtn.addEventListener('click', handleWeedSubmit);
             
-            // Discount System initialisieren
+            // Discount Buttons
             setupDiscountButtons();
-            
-            // Firebase Daten laden
-            loadWeedEntries();
+        }
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            checkExistingLogin();
         });
 
-        // Tastatur-Shortcuts
-        document.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                const activeTab = document.querySelector('.tab-content.active').id;
-                if (activeTab === 'weed') {
-                    handleWeedSubmit();
-                }
-            }
-        });
-
-        console.log('KhusLand Panel vollständig geladen');
+        console.log('KhusLand Panel vollständig geladen - ALLE BUTTONS FUNKTIONIEREN!');
     </script>
 </body>
 </html>

@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KhusLand Management System</title>
+    <title>KhusLand Login</title>
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * {
@@ -23,9 +22,11 @@
                 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M30,20 C35,15 45,15 50,20 C55,15 65,15 70,20 C75,25 75,35 70,40 C65,45 55,45 50,40 C45,45 35,45 30,40 C25,35 25,25 30,20 Z" fill="%232d3748" opacity="0.1"/><path d="M50,40 L50,60" stroke="%234A5568" stroke-width="3" opacity="0.1"/></svg>');
             min-height: 100vh;
             color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* Login Styles */
         .login-container {
             background: rgba(26, 32, 44, 0.95);
             padding: 2.5rem;
@@ -34,10 +35,6 @@
             width: 100%;
             max-width: 420px;
             text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
@@ -114,346 +111,9 @@
             border-left: 4px solid #f56565;
         }
         
-        /* Dashboard Styles */
-        .header {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 1.2rem 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border-bottom: 2px solid #4299e1;
-        }
-        
-        .logo-small {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-        }
-        
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(66, 153, 225, 0.4);
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-            color: #cbd5e0;
-        }
-        
-        .logout-btn {
-            background: rgba(66, 153, 225, 0.15);
-            color: #90cdf4;
-            border: 1px solid #4299e1;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(66, 153, 225, 0.25);
-        }
-        
-        /* Navigation Buttons */
-        .nav-container {
-            background: rgba(26, 32, 44, 0.9);
-            padding: 1rem 2.5rem;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .nav-buttons {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .nav-btn {
-            background: rgba(66, 153, 225, 0.1);
-            color: #90cdf4;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .nav-btn:hover {
-            background: rgba(66, 153, 225, 0.2);
-            border-color: #4299e1;
-            transform: translateY(-2px);
-        }
-        
-        .nav-btn.active {
-            background: rgba(66, 153, 225, 0.25);
-            border-color: #4299e1;
-            color: #bee3f8;
-            box-shadow: 0 0 15px rgba(66, 153, 225, 0.3);
-        }
-        
-        .nav-btn i {
-            font-size: 0.9rem;
-        }
-        
-        .main-container {
-            max-width: 1300px;
-            margin: 2.5rem auto;
-            padding: 0 2.5rem;
-        }
-        
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-        
-        .welcome-section h1 {
-            font-size: 2.8rem;
-            margin-bottom: 1.2rem;
-            color: #90cdf4;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .welcome-section p {
-            color: #a0aec0;
-            font-size: 1.2rem;
-        }
-        
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 2.5rem;
-            margin-top: 2.5rem;
-        }
-        
-        .card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 16px;
-            padding: 2.2rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            transition: all 0.3s;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-        
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border-color: #4299e1;
-            background: rgba(30, 38, 54, 0.9);
-        }
-        
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-        
-        .card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1.2rem;
-            color: #90cdf4;
-        }
-        
-        .card p {
-            color: #cbd5e0;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-        
-        .status {
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        
-        .status-online {
-            background: #48bb78;
-            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
-        }
-        
-        .status-offline {
-            background: #f56565;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2.5rem;
-            margin-top: 4rem;
-            border-top: 1px solid rgba(101, 119, 149, 0.3);
-            color: #a0aec0;
-            background: rgba(26, 32, 44, 0.8);
-        }
-        
-        /* Content Pages */
-        .content-page {
-            display: none;
-            padding: 2.5rem;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-        
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            background: rgba(26, 32, 44, 0.9);
-            padding: 1.8rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-        
-        .back-btn {
-            background: rgba(66, 153, 225, 0.15);
-            color: #90cdf4;
-            border: 1px solid #4299e1;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .back-btn:hover {
-            background: rgba(66, 153, 225, 0.25);
-        }
-        
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-        
-        .content-card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            padding: 1.8rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
-        }
-        
-        .content-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .content-card h3 {
-            margin-bottom: 1.2rem;
-            color: #90cdf4;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.3);
-            padding-bottom: 0.8rem;
-            font-size: 1.3rem;
-        }
-        
-        .content-card p {
-            color: #cbd5e0;
-            margin-bottom: 0.8rem;
-        }
-        
-        .content-card strong {
-            color: #90cdf4;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1.5rem;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #90cdf4;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            color: #a0aec0;
-        }
-        
-        .action-btn {
-            background: rgba(66, 153, 225, 0.15);
-            color: #90cdf4;
-            border: 1px solid #4299e1;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 1.5rem;
-            font-weight: 500;
-        }
-        
-        .action-btn:hover {
-            background: rgba(66, 153, 225, 0.25);
-        }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        
-        /* Utility Classes */
-        .hidden {
-            display: none;
-        }
-        
-        .visible {
-            display: block;
-        }
-        
-        /* KhusLand spezifische Stile */
-        .weed-theme {
-            position: relative;
-        }
-        
-        .weed-theme::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 15% 25%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 85% 75%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 35% 85%, rgba(34, 197, 94, 0.03) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
         }
         
         .khusland-logo {
@@ -462,29 +122,10 @@
             color: #90cdf4;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(26, 32, 44, 0.8);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #4299e1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #3182ce;
-        }
     </style>
 </head>
-<body class="weed-theme">
-    <!-- Login Page -->
-    <div id="loginPage" class="login-container">
+<body>
+    <div class="login-container">
         <div class="logo">KL</div>
         <h1 class="khusland-logo">KhusLand Login</h1>
         <p>Willkommen im KhusLand Management System</p>
@@ -501,236 +142,7 @@
         </div>
     </div>
 
-    <!-- Dashboard Page -->
-    <div id="dashboardPage" class="hidden">
-        <div class="header">
-            <div class="logo-small">
-                <div class="logo-icon">KL</div>
-                <h2 class="khusland-logo">KhusLand Management</h2>
-            </div>
-            <div class="user-info">
-                <span>Willkommen, Partner</span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-        </div>
-
-        <!-- Navigation Buttons -->
-        <div class="nav-container">
-            <div class="nav-buttons">
-                <button class="nav-btn active" onclick="navigateTo('dashboardPage')">
-                    <i class="fas fa-home"></i> Dashboard
-                </button>
-                <button class="nav-btn" onclick="navigateTo('weedPage')">
-                    <i class="fas fa-cannabis"></i> Weed Ankauf
-                </button>
-                <button class="nav-btn" onclick="navigateTo('cocainePage')">
-                    <i class="fas fa-snowflake"></i> Kokain Ankauf
-                </button>
-                <button class="nav-btn" onclick="navigateTo('recyclerPage')">
-                    <i class="fas fa-recycle"></i> Materialrecycler
-                </button>
-                <button class="nav-btn" onclick="navigateTo('workbenchPage')">
-                    <i class="fas fa-tools"></i> Werkbank Manager
-                </button>
-                <button class="nav-btn" onclick="navigateTo('routesPage')">
-                    <i class="fas fa-route"></i> Lieferrouten
-                </button>
-                <button class="nav-btn" onclick="navigateTo('khuslandPage')">
-                    <i class="fas fa-map-marked-alt"></i> KhusLand
-                </button>
-            </div>
-        </div>
-
-        <div class="main-container">
-            <div class="welcome-section">
-                <h1 class="khusland-logo">KhusLand Operationszentrale</h1>
-                <p>Verwalten Sie alle Geschäftsbereiche und Ressourcen</p>
-            </div>
-
-            <div class="grid-container">
-                <div class="card" onclick="navigateTo('weedPage')">
-                    <div class="card-icon">🌿</div>
-                    <h3>Weed Ankauf</h3>
-                    <p>Verwalten Sie Cannabis-Bestände und Einkäufe. Überwachen Sie Preise und Lieferungen.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" onclick="navigateTo('cocainePage')">
-                    <div class="card-icon">❄️</div>
-                    <h3>Kokain Ankauf</h3>
-                    <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" onclick="navigateTo('recyclerPage')">
-                    <div class="card-icon">♻️</div>
-                    <h3>Materialrecycler - Produkte</h3>
-                    <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" onclick="navigateTo('workbenchPage')">
-                    <div class="card-icon">🔧</div>
-                    <h3>Werkbank Manager</h3>
-                    <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" onclick="navigateTo('routesPage')">
-                    <div class="card-icon">🛣️</div>
-                    <h3>Lieferrouten</h3>
-                    <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" onclick="navigateTo('khuslandPage')">
-                    <div class="card-icon">🏞️</div>
-                    <h3>KhusLand Management</h3>
-                    <p>Verwalten Sie Gebiete und Operationen in KhusLand.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>KhusLand Management System © 2024 | Vertraulich</p>
-        </div>
-    </div>
-
-    <!-- Content Pages -->
-    <div id="weedPage" class="content-page hidden">
-        <div class="page-header">
-            <h1 class="khusland-logo"><i class="fas fa-cannabis"></i> Weed Ankauf</h1>
-            <button class="back-btn" onclick="navigateTo('dashboardPage')">
-                <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
-            </button>
-        </div>
-        
-        <div class="content-grid">
-            <div class="content-card">
-                <h3>Bestandsübersicht</h3>
-                <p>Aktueller Weed-Bestand: <strong>1.250 kg</strong></p>
-                <p>Verfügbare Sorten: <strong>5</strong></p>
-                <p>Durchschnittspreis: <strong>€45/g</strong></p>
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value">87%</div>
-                        <div class="stat-label">Qualität</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">24h</div>
-                        <div class="stat-label">Lieferzeit</div>
-                    </div>
-                </div>
-                <button class="action-btn">Bestand aktualisieren</button>
-            </div>
-            
-            <div class="content-card">
-                <h3>Einkäufe</h3>
-                <p>Letzter Einkauf: <strong>250 kg</strong></p>
-                <p>Nächster Einkauf: <strong>in 3 Tagen</strong></p>
-                <p>Einkaufsbudget: <strong>€50.000</strong></p>
-                <button class="action-btn">Neuen Einkauf planen</button>
-            </div>
-            
-            <div class="content-card">
-                <h3>Lieferanten</h3>
-                <p>Aktive Lieferanten: <strong>3</strong></p>
-                <p>Bewertung: <strong>4.2/5</strong></p>
-                <p>Zuverlässigkeit: <strong>92%</strong></p>
-                <button class="action-btn">Lieferanten verwalten</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Weitere Seiten hier (gekürzt) -->
-    <div id="cocainePage" class="content-page hidden">
-        <div class="page-header">
-            <h1 class="khusland-logo"><i class="fas fa-snowflake"></i> Kokain Ankauf</h1>
-            <button class="back-btn" onclick="navigateTo('dashboardPage')">
-                <i class="fas fa-arrow-left"></i> Zurück zum Dashboard
-            </button>
-        </div>
-        
-        <div class="content-grid">
-            <div class="content-card">
-                <h3>Bestandsübersicht</h3>
-                <p>Aktueller Kokain-Bestand: <strong>850 kg</strong></p>
-                <p>Reinheit: <strong>92%</strong></p>
-                <p>Durchschnittspreis: <strong>€85/g</strong></p>
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value">92%</div>
-                        <div class="stat-label">Reinheit</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">48h</div>
-                        <div class="stat-label">Lieferzeit</div>
-                    </div>
-                </div>
-                <button class="action-btn">Qualität prüfen</button>
-            </div>
-            
-            <!-- Weitere Karten... -->
-        </div>
-    </div>
-
     <script>
-        // Navigation und Funktionen
-        function navigateTo(pageId) {
-            // Alle Seiten ausblenden
-            document.querySelectorAll('.login-container, #dashboardPage, .content-page').forEach(el => {
-                el.classList.add('hidden');
-            });
-            
-            // Navigation-Buttons aktualisieren
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Zielseite anzeigen
-            if (pageId === 'loginPage') {
-                document.querySelector('.login-container').classList.remove('hidden');
-            } else if (pageId === 'dashboardPage') {
-                document.getElementById('dashboardPage').classList.remove('hidden');
-                document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
-            } else {
-                document.getElementById(pageId).classList.remove('hidden');
-                
-                // Aktiven Navigationsbutton markieren
-                const buttonIndex = {
-                    'weedPage': 1,
-                    'cocainePage': 2,
-                    'recyclerPage': 3,
-                    'workbenchPage': 4,
-                    'routesPage': 5,
-                    'khuslandPage': 6
-                }[pageId];
-                
-                if (buttonIndex) {
-                    document.querySelector(`.nav-btn:nth-child(${buttonIndex + 1})`).classList.add('active');
-                }
-            }
-        }
-
         function loginWithDiscord() {
             const btn = document.querySelector('.discord-login-btn');
             const loading = document.getElementById('loading');
@@ -740,54 +152,23 @@
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
+            // Weiterleitung zum Control Panel nach Login
             setTimeout(() => {
-                navigateTo('dashboardPage');
+                window.location.href = 'seite7.html';
             }, 1500);
         }
 
-        function logout() {
-            if (confirm('Möchten Sie sich wirklich abmelden?')) {
-                navigateTo('loginPage');
-                document.querySelector('.discord-login-btn').style.display = 'block';
-                document.getElementById('loading').style.display = 'none';
-            }
-        }
-
-        // Tastatur-Shortcuts
-        document.addEventListener('keydown', function(event) {
-            // Strg + L für Logout
-            if (event.ctrlKey && event.key === 'l') {
-                event.preventDefault();
-                logout();
-            }
-            
-            // Escape für Zurück-Navigation
-            if (event.key === 'Escape' && !document.getElementById('dashboardPage').classList.contains('hidden')) {
-                navigateTo('dashboardPage');
-            }
-            
-            // Nummern 1-6 für direkte Navigation
-            if (event.key >= '1' && event.key <= '7' && document.getElementById('dashboardPage').classList.contains('hidden') === false) {
-                const pageIndex = parseInt(event.key) - 1;
-                const pages = [
-                    'dashboardPage',
-                    'weedPage',
-                    'cocainePage', 
-                    'recyclerPage',
-                    'workbenchPage',
-                    'routesPage',
-                    'khuslandPage'
-                ];
-                navigateTo(pages[pageIndex]);
-            }
-        });
-
-        // Initialisierung
+        // URL-Parameter für Fehler prüfen
         document.addEventListener('DOMContentLoaded', function() {
-            navigateTo('loginPage');
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            
+            if (error) {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = 'Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.';
+                errorMessage.style.display = 'block';
+            }
         });
-
-        console.log('KhusLand Management System geladen');
     </script>
 </body>
 </html>

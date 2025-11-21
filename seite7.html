@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KhusLand Panel</title>
+    <title>KhusLand Management</title>
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
@@ -18,114 +18,123 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
             min-height: 100vh;
-            color: #333;
+            color: #e2e8f0;
         }
         
         /* Login Styles */
         .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
         .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1rem;
-            background: #2a5298;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.4);
         }
         
         h1 {
-            color: #1e3c72;
+            color: #90cdf4;
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .login-container p {
+            color: #a0aec0;
+            margin-bottom: 1rem;
         }
         
         .discord-login-btn {
             background: #5865F2;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             width: 100%;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .discord-login-btn:hover {
             background: #4752c4;
+            transform: translateY(-2px);
         }
         
         .loading {
             display: none;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
         
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1e3c72;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #4299e1;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
         .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 1rem 0;
+            background: rgba(254, 178, 178, 0.1);
+            color: #fc8181;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 1.5rem 0;
             display: none;
+            border-left: 4px solid #f56565;
         }
         
         /* Main Content Styles */
         .header {
-            background: white;
-            padding: 1rem 2rem;
+            background: rgba(26, 32, 44, 0.95);
+            padding: 1.2rem 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-bottom: 2px solid #1e3c72;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #4299e1;
         }
         
         .logo-small {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: #2a5298;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -137,107 +146,142 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: #1e3c72;
+            gap: 1.2rem;
+            color: #cbd5e0;
         }
         
         .logout-btn {
-            background: #1e3c72;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            background: rgba(66, 153, 225, 0.15);
+            color: #90cdf4;
+            border: 1px solid #4299e1;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             font-weight: 500;
         }
         
         .logout-btn:hover {
-            background: #2a5298;
+            background: rgba(66, 153, 225, 0.25);
         }
         
         .main-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            max-width: 1300px;
+            margin: 2.5rem auto;
+            padding: 0 2.5rem;
         }
         
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2.5rem;
+            background: rgba(26, 32, 44, 0.9);
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .khusland-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: #90cdf4;
         }
         
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
         }
         
         .card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 16px;
+            padding: 2.2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             transition: all 0.3s;
             cursor: pointer;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: #4299e1;
+            background: rgba(30, 38, 54, 0.9);
         }
         
         .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #1e3c72;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
         }
         
         .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #1e3c72;
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: #90cdf4;
         }
         
         .card p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
         }
         
         .status {
-            color: #888;
+            color: #a0aec0;
             font-size: 0.9rem;
         }
         
         .status-indicator {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
         }
         
         .status-online {
-            background: #28a745;
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
         }
         
         .footer {
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            color: white;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(101, 119, 149, 0.3);
+            color: #a0aec0;
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .hidden {
             display: none;
+        }
+        
+        .access-badge {
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+        
+        .access-permanent {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .access-temporary {
+            background-color: #f59e0b;
+            color: black;
         }
     </style>
 </head>
@@ -245,13 +289,13 @@
     <!-- Login Page -->
     <div id="loginPage" class="login-container">
         <div class="logo">KL</div>
-        <h1>KhusLand Panel Login</h1>
-        <p>Bitte melde dich mit Discord an, um auf das Panel zuzugreifen.</p>
+        <h1 class="khusland-logo">KhusLand Login</h1>
+        <p>Willkommen im KhusLand Management System</p>
         
         <div class="error-message" id="errorMessage"></div>
         
         <button class="discord-login-btn" onclick="loginWithDiscord()">
-            Mit Discord anmelden
+            <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
         
         <div class="loading" id="loading">
@@ -266,10 +310,11 @@
         <div class="header">
             <div class="logo-small">
                 <div class="logo-icon">KL</div>
-                <h2>KhusLand Panel</h2>
+                <h2 class="khusland-logo">KhusLand Management</h2>
             </div>
             <div class="user-info">
-                <span id="userWelcome">Willkommen, Benutzer</span>
+                <span id="userWelcome">Willkommen, Partner</span>
+                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -277,69 +322,69 @@
         <!-- Main Content -->
         <div class="main-container">
             <div class="page-header">
-                <h1>KhusLand Dashboard</h1>
+                <h1 class="khusland-logo">KhusLand Operationszentrale</h1>
                 <div class="status-indicators">
-                    <span style="color: white;">
-                        <i class="fas fa-circle" style="color: #28a745;"></i> System Online
+                    <span style="color: #48bb78;">
+                        <i class="fas fa-circle"></i> System Online
                     </span>
                 </div>
             </div>
 
             <div class="grid-container">
-                <div class="card" onclick="navigateTo('weedsystem.html')">
+                <div class="card" onclick="navigateTo('index.html')">
                     <div class="card-icon">🌿</div>
-                    <h3>Weed System</h3>
-                    <p>Verwalten Sie Cannabis-Bestände, Anbau und Verkauf.</p>
+                    <h3>Weed Ankauf</h3>
+                    <p>Verwalten Sie Cannabis-Bestände und Einkäufe. Überwachen Sie Preise und Lieferungen.</p>
                     <div class="status">
                         <span class="status-indicator status-online"></span>
                         System online
                     </div>
                 </div>
 
-                <div class="card" onclick="navigateTo('cocainesystem.html')">
+                <div class="card" onclick="navigateTo('seite2.html')">
                     <div class="card-icon">❄️</div>
-                    <h3>Kokain System</h3>
-                    <p>Kontrollieren Sie Kokain-Operationen und Lieferketten.</p>
+                    <h3>Kokain Ankauf</h3>
+                    <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität.</p>
                     <div class="status">
                         <span class="status-indicator status-online"></span>
                         System online
                     </div>
                 </div>
 
-                <div class="card" onclick="navigateTo('recycler.html')">
+                <div class="card" onclick="navigateTo('seite3.html')">
                     <div class="card-icon">♻️</div>
-                    <h3>Material Recycler</h3>
-                    <p>Verwalten Sie Recycling-Prozesse und Materialproduktion.</p>
+                    <h3>Materialrecycler - Produkte</h3>
+                    <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien.</p>
                     <div class="status">
                         <span class="status-indicator status-online"></span>
                         System online
                     </div>
                 </div>
 
-                <div class="card" onclick="navigateTo('workbench.html')">
+                <div class="card" onclick="navigateTo('seite4.html')">
                     <div class="card-icon">🔧</div>
                     <h3>Werkbank Manager</h3>
-                    <p>Überwachen Sie Werkstattaktivitäten und Produktion.</p>
+                    <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge.</p>
                     <div class="status">
                         <span class="status-indicator status-online"></span>
                         System online
                     </div>
                 </div>
 
-                <div class="card" onclick="navigateTo('routes.html')">
+                <div class="card" onclick="navigateTo('seite5.html')">
                     <div class="card-icon">🛣️</div>
-                    <h3>Transport Routen</h3>
-                    <p>Planen und überwachen Sie sichere Transportwege.</p>
+                    <h3>Drogenrouten</h3>
+                    <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen.</p>
                     <div class="status">
                         <span class="status-indicator status-online"></span>
                         System online
                     </div>
                 </div>
 
-                <div class="card" onclick="navigateTo('management.html')">
+                <div class="card" onclick="navigateTo('seite6.html')">
                     <div class="card-icon">🏞️</div>
-                    <h3>Gebiets Management</h3>
-                    <p>Verwalten Sie KhusLand Gebiete und Operationen.</p>
+                    <h3>KhusLand Management</h3>
+                    <p>Verwalten Sie Gebiete und Operationen in KhusLand.</p>
                     <div class="status">
                         <span class="status-indicator status-online"></span>
                         System online
@@ -349,52 +394,15 @@
         </div>
 
         <div class="footer">
-            <p>KhusLand Management System © 2024 | Alle Rechte vorbehalten</p>
+            <p>KhusLand Management System © 2024 | Vertraulich</p>
         </div>
     </div>
 
     <script>
-        // Einfache Router-Funktionalität
-        const Ziggy = {
-            url: "https://panel.khusland.de",
-            port: null,
-            defaults: {},
-            routes: {
-                "login": {
-                    uri: "/",
-                    methods: ["GET", "HEAD"]
-                },
-                "auth.discord": {
-                    uri: "auth/discord",
-                    methods: ["GET", "HEAD"]
-                },
-                "dashboard": {
-                    uri: "dashboard",
-                    methods: ["GET", "HEAD"]
-                }
-            }
-        };
-
-        function route(name, params = {}) {
-            const routeConfig = Ziggy.routes[name];
-            if (!routeConfig) {
-                console.error(`Route ${name} nicht gefunden`);
-                return '#';
-            }
-            
-            let uri = routeConfig.uri;
-            
-            // Parameter ersetzen
-            Object.keys(params).forEach(key => {
-                uri = uri.replace(`{${key}}`, encodeURIComponent(params[key]));
-            });
-            
-            return Ziggy.url + '/' + uri;
-        }
-
-        // Discord OAuth Simulation (für Demo-Zwecke)
-        const DISCORD_CLIENT_ID = '123456789'; // Beispiel-ID
+        // Discord OAuth Konfiguration (aus Ihrem Worker)
+        const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -402,6 +410,7 @@
         const errorMessage = document.getElementById('errorMessage');
         const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
+        const accessBadge = document.getElementById('accessBadge');
 
         // Discord Login Funktion
         function loginWithDiscord() {
@@ -412,23 +421,109 @@
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
-            // Simuliere Discord OAuth (in echtem Einsatz: window.location.href = authUrl)
-            setTimeout(() => {
-                // Erfolgreiche Anmeldung simulieren
-                simulateSuccessfulLogin();
-            }, 1500);
+            // Discord OAuth starten
+            startDiscordOAuth();
         }
 
-        // Erfolgreiche Anmeldung simulieren
-        function simulateSuccessfulLogin() {
-            const mockUser = {
-                username: "KhusLand_User",
-                discriminator: "1234",
-                id: "987654321"
-            };
+        // Discord OAuth Flow (komplett aus Ihrem Script)
+        function startDiscordOAuth() {
+            const scope = 'identify';
+            const state = generateRandomState();
             
-            localStorage.setItem('discord_user', JSON.stringify(mockUser));
-            showMainContent(mockUser);
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
+            
+            console.log('Starting OAuth to:', authUrl.toString());
+            window.location.href = authUrl.toString();
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        async function exchangeCodeForToken(code) {
+            try {
+                console.log('Exchanging code for token...');
+                
+                const response = await fetch(`${BACKEND_URL}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        code, 
+                        redirect_uri: DISCORD_REDIRECT_URI
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Token exchange failed:', errorText);
+                    throw new Error(`Worker responded with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Token response:', data);
+
+                if (data.access_token) {
+                    console.log('Access token received, verifying user...');
+                    await verifyUser(data.access_token);
+                } else {
+                    console.error('No access token in response:', data);
+                    throw new Error('Kein Access Token erhalten');
+                }
+            } catch (error) {
+                console.error('Fehler beim Token-Austausch:', error);
+                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
+            }
+        }
+
+        async function verifyUser(accessToken) {
+            try {
+                console.log('Verifying user with access token...');
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed');
+                }
+
+                const data = await response.json();
+                console.log('Verification response:', data);
+
+                if (data.isAuthorized) {
+                    console.log('User authorized!');
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    showMainContent(data.user, data.accessInfo || {});
+                } else {
+                    let errorMsg = 'Zugriff verweigert. ';
+                    if (data.accessInfo && data.accessInfo.message === 'access expired') {
+                        errorMsg += 'Dein Zugang ist abgelaufen.';
+                    } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
+                        errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
+                    } else {
+                        errorMsg += 'Du bist nicht autorisiert.';
+                    }
+                    showError(errorMsg);
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            }
         }
 
         // Fehler anzeigen
@@ -442,7 +537,7 @@
         }
 
         // Hauptinhalt anzeigen
-        function showMainContent(user) {
+        function showMainContent(user, accessInfo) {
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
             
@@ -450,18 +545,35 @@
             if (user) {
                 userWelcome.textContent = `Willkommen, ${user.username}`;
             }
+            
+            // Access Badge anzeigen
+            if (accessInfo) {
+                accessBadge.classList.remove('hidden');
+                if (accessInfo.isPermanent) {
+                    accessBadge.textContent = accessInfo.message || 'PREMIUM';
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.textContent = accessInfo.message || 'TEMPORARY';
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
+            // URL bereinigen
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
         }
 
         // Navigation zu anderen Seiten
         function navigateTo(page) {
-            alert(`Navigation zu: ${page}\n(In einer echten Anwendung würde hier zur entsprechenden Seite navigiert werden)`);
-            // In echter Anwendung: window.location.href = page;
+            window.location.href = page;
         }
 
         // Logout
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 localStorage.removeItem('discord_user');
+                localStorage.removeItem('discord_access_token');
+                localStorage.removeItem('user_access_info');
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
@@ -470,63 +582,47 @@
                 document.querySelector('.discord-login-btn').style.display = 'block';
                 loading.style.display = 'none';
                 errorMessage.style.display = 'none';
+                accessBadge.classList.add('hidden');
             }
         }
 
         // Bereits eingeloggten Benutzer prüfen
         function checkExistingLogin() {
             const user = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const accessInfo = localStorage.getItem('user_access_info');
             
-            if (user) {
+            if (user && token) {
                 console.log('User already logged in');
-                showMainContent(JSON.parse(user));
+                showMainContent(JSON.parse(user), accessInfo ? JSON.parse(accessInfo) : null);
             } else {
                 console.log('No existing login found');
-            }
-        }
-
-        // URL-Parameter prüfen auf Fehler
-        function checkUrlForErrors() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const error = urlParams.get('error');
-            
-            if (error) {
-                switch(error) {
-                    case 'access_denied':
-                        showError('Anmeldung wurde abgebrochen.');
-                        break;
-                    case 'invalid_request':
-                        showError('Ungültige Anfrage. Bitte versuche es erneut.');
-                        break;
-                    default:
-                        showError('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
-                }
             }
         }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             checkExistingLogin();
-            checkUrlForErrors();
-        });
-
-        // Tastatur-Shortcuts
-        document.addEventListener('keypress', function(event) {
-            // Enter für Login
-            if (event.key === 'Enter' && !mainContent.classList.contains('hidden')) {
-                loginWithDiscord();
+            
+            // URL-Parameter prüfen auf OAuth Code
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                console.log('OAuth code found in URL');
+                exchangeCodeForToken(code);
             }
         });
 
+        // Tastatur-Shortcuts
         document.addEventListener('keydown', function(event) {
             // Strg + L für Logout
-            if (event.ctrlKey && event.key === 'l' && !loginPage.classList.contains('hidden')) {
+            if (event.ctrlKey && event.key === 'l') {
                 event.preventDefault();
                 logout();
             }
         });
 
-        console.log('KhusLand Panel geladen');
+        console.log('KhusLand Management System geladen');
     </script>
 </body>
 </html>

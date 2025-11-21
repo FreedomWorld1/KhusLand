@@ -611,25 +611,13 @@
                 </div>
             </div>
 
-            <!-- Navigation Tabs -->
+            <!-- Navigation Tabs - NUR DIESE BEIDEN -->
             <div class="nav-tabs">
                 <button class="nav-tab active" onclick="switchTab('dashboard')">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </button>
                 <button class="nav-tab" onclick="switchTab('weed')">
                     <i class="fas fa-cannabis"></i> Weed System
-                </button>
-                <button class="nav-tab" onclick="switchTab('cocaine')">
-                    <i class="fas fa-pills"></i> Kokain System
-                </button>
-                <button class="nav-tab" onclick="switchTab('recycler')">
-                    <i class="fas fa-recycle"></i> Material Recycler
-                </button>
-                <button class="nav-tab" onclick="switchTab('workbench')">
-                    <i class="fas fa-tools"></i> Werkbank Manager
-                </button>
-                <button class="nav-tab" onclick="switchTab('routes')">
-                    <i class="fas fa-route"></i> Transport Routen
                 </button>
             </div>
 
@@ -812,51 +800,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </div>
-
-            <!-- Andere Tabs (Platzhalter) -->
-            <div id="cocaine" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-pills"></i> Kokain System
-                    </h3>
-                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
-                        Kokain System - In Entwicklung
-                    </p>
-                </div>
-            </div>
-
-            <div id="recycler" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-recycle"></i> Material Recycler
-                    </h3>
-                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
-                        Material Recycler System - In Entwicklung
-                    </p>
-                </div>
-            </div>
-
-            <div id="workbench" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-tools"></i> Werkbank Manager
-                    </h3>
-                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
-                        Werkbank Manager System - In Entwicklung
-                    </p>
-                </div>
-            </div>
-
-            <div id="routes" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-route"></i> Transport Routen
-                    </h3>
-                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
-                        Transport Routen System - In Entwicklung
-                    </p>
                 </div>
             </div>
         </div>
@@ -1135,11 +1078,7 @@
         function getTabDisplayName(tabName) {
             const names = {
                 'dashboard': 'Dashboard',
-                'weed': 'Weed System',
-                'cocaine': 'Kokain System',
-                'recycler': 'Material Recycler',
-                'workbench': 'Werkbank Manager',
-                'routes': 'Transport Routen'
+                'weed': 'Weed System'
             };
             return names[tabName] || tabName;
         }

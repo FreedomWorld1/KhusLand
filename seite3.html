@@ -637,15 +637,20 @@
             box-shadow: none;
         }
 
-        /* Product Grid Styles */
-        .product-grid {
+        /* Product Grid Styles - WIE IM ALTEN SYSTEM */
+        .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1.5rem;
-            margin-top: 1.5rem;
         }
 
-        .product-card {
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .product-item {
             background: rgba(30, 41, 59, 0.6);
             border-radius: 12px;
             padding: 1.5rem;
@@ -653,18 +658,24 @@
             transition: all 0.3s;
         }
 
-        .product-card:hover {
+        .product-item:hover {
             transform: translateY(-5px);
             border-color: #f59e0b;
             box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
         }
 
+        .product-card {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+
         .product-image {
-            width: 100%;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             border-radius: 8px;
-            margin-bottom: 1rem;
             background: rgba(30, 41, 59, 0.8);
             display: flex;
             align-items: center;
@@ -673,11 +684,12 @@
         }
 
         .resource-tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background: rgba(245, 158, 11, 0.2);
             color: #fbbf24;
             padding: 4px 8px;
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 0.75rem;
             margin: 2px;
             border: 1px solid rgba(245, 158, 11, 0.3);
@@ -1010,14 +1022,14 @@
                     </div>
                 </div>
 
-                <!-- Products Grid -->
+                <!-- Products Grid - WIE IM ALTEN SYSTEM -->
                 <div class="system-card">
                     <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-box"></i> Produkte
                     </h3>
                     
-                    <div id="productsGrid" class="product-grid">
-                        <!-- Products will be dynamically loaded here -->
+                    <div id="productsList" class="products-grid">
+                        <!-- Products will be dynamically loaded here IN OLD FORMAT -->
                     </div>
                 </div>
 
@@ -1512,8 +1524,9 @@
             });
         }
 
+        // KORRIGIERTE PRODUKT-ANZEIGE - WIE IM ALTEN SYSTEM
         function renderProducts() {
-            const productsGrid = document.getElementById('productsGrid');
+            const productsList = document.getElementById('productsList');
             const searchTerm = searchInput.value.toLowerCase();
             
             // Filter products based on search term
@@ -1524,10 +1537,10 @@
                 ))
             );
             
-            productsGrid.innerHTML = '';
+            productsList.innerHTML = '';
             
             if (filteredProducts.length === 0) {
-                productsGrid.innerHTML = `
+                productsList.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #a0aec0;">
                         <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
                         <p>Keine Produkte gefunden.</p>
@@ -1538,8 +1551,8 @@
             }
             
             filteredProducts.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
                 
                 let imageHtml = '';
                 if (product.imageData) {
@@ -1560,41 +1573,47 @@
                     ).join('');
                 }
                 
-                productCard.innerHTML = `
-                    ${imageHtml}
-                    <h4 style="color: #fbbf24; margin-bottom: 1rem; font-size: 1.2rem;">${product.name}</h4>
-                    ${resourcesHtml ? `<div style="margin-bottom: 1rem;">${resourcesHtml}</div>` : ''}
-                    
-                    <!-- Resource Calculator -->
-                    <div class="calculator-section">
-                        <div style="color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                            <i class="fas fa-calculator"></i>
-                            Ressourcen Rechner
+                productItem.innerHTML = `
+                    <div class="product-card">
+                        <div class="flex-shrink-0">
+                            ${imageHtml}
                         </div>
-                        
-                        <div class="quantity-controls">
-                            <button class="quantity-btn decrease-quantity">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" value="1" min="1" class="quantity-input product-quantity">
-                            <button class="quantity-btn increase-quantity">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <span style="color: #cbd5e0; font-size: 0.9rem;">Produkt(e)</span>
-                        </div>
-                        
-                        <div class="calculation-results">
-                            <!-- Results will be dynamically inserted here -->
+                        <div class="flex-grow">
+                            <div class="font-semibold text-lg mb-2" style="color: #fbbf24;">${product.name}</div>
+                            ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
+                            
+                            <!-- Resource Calculator -->
+                            <div class="calculator-section">
+                                <div style="color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-calculator"></i>
+                                    Ressourcen Rechner
+                                </div>
+                                
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease-quantity">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" value="1" min="1" class="quantity-input product-quantity">
+                                    <button class="quantity-btn increase-quantity">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <span style="color: #cbd5e0; font-size: 0.9rem;">Produkt(e)</span>
+                                </div>
+                                
+                                <div class="calculation-results">
+                                    <!-- Results will be dynamically inserted here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
-                productsGrid.appendChild(productCard);
+                productsList.appendChild(productItem);
                 
                 // Event Listeners for Quantity Controls
-                const quantityInput = productCard.querySelector('.product-quantity');
-                const decreaseBtn = productCard.querySelector('.decrease-quantity');
-                const increaseBtn = productCard.querySelector('.increase-quantity');
-                const resultsContainer = productCard.querySelector('.calculation-results');
+                const quantityInput = productItem.querySelector('.product-quantity');
+                const decreaseBtn = productItem.querySelector('.decrease-quantity');
+                const increaseBtn = productItem.querySelector('.increase-quantity');
+                const resultsContainer = productItem.querySelector('.calculation-results');
                 
                 // Calculation for this product
                 const updateCalculation = () => {
@@ -2055,7 +2074,7 @@
             dashboardSettingsModal.classList.remove('active');
         });
 
-        console.log('Materialrecycler Panel mit verbessertem Design vollständig geladen!');
+        console.log('Materialrecycler Panel mit KORRIGIERTER Produkt-Anzeige vollständig geladen!');
     </script>
 </body>
 </html>

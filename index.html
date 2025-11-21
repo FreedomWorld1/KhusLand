@@ -619,6 +619,18 @@
                 <button class="nav-tab" onclick="switchTab('weed')">
                     <i class="fas fa-cannabis"></i> Weed System
                 </button>
+                <button class="nav-tab" onclick="switchTab('cocaine')">
+                    <i class="fas fa-pills"></i> Kokain System
+                </button>
+                <button class="nav-tab" onclick="switchTab('recycler')">
+                    <i class="fas fa-recycle"></i> Material Recycler
+                </button>
+                <button class="nav-tab" onclick="switchTab('workbench')">
+                    <i class="fas fa-tools"></i> Werkbank Manager
+                </button>
+                <button class="nav-tab" onclick="switchTab('routes')">
+                    <i class="fas fa-route"></i> Transport Routen
+                </button>
             </div>
 
             <!-- Dashboard Tab -->
@@ -649,7 +661,7 @@
 
                 <!-- System Cards -->
                 <div class="grid-container">
-                    <div class="card" onclick="switchTab('weed')">
+                    <div class="card" onclick="navigateTo('index.html')">
                         <div class="card-icon">🌿</div>
                         <h3>Weed Ankauf</h3>
                         <p>Verwalten Sie Cannabis-Bestände, Anbau und Verkauf. Überwachen Sie Preise und Lieferungen mit Rabatt-System.</p>
@@ -659,30 +671,50 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="showManagement()">
-                        <div class="card-icon">📊</div>
-                        <h3>Statistiken</h3>
-                        <p>Detaillierte Auswertungen und Analysen aller Transaktionen und Verkaufszahlen.</p>
+                    <div class="card" onclick="navigateTo('seite2.html')">
+                        <div class="card-icon">❄️</div>
+                        <h3>Kokain Ankauf</h3>
+                        <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
                         </div>
                     </div>
 
-                    <div class="card" onclick="showReports()">
-                        <div class="card-icon">📋</div>
-                        <h3>Berichte</h3>
-                        <p>Erstellen Sie umfassende Berichte und Exporte für Ihre Geschäftsanalysen.</p>
+                    <div class="card" onclick="navigateTo('seite3.html')">
+                        <div class="card-icon">♻️</div>
+                        <h3>Materialrecycler - Produkte</h3>
+                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
                         </div>
                     </div>
 
-                    <div class="card" onclick="showSettings()">
-                        <div class="card-icon">⚙️</div>
-                        <h3>Einstellungen</h3>
-                        <p>Passen Sie das System an Ihre Bedürfnisse an und verwalten Sie Benutzerrechte.</p>
+                    <div class="card" onclick="navigateTo('seite4.html')">
+                        <div class="card-icon">🔧</div>
+                        <h3>Werkbank Manager</h3>
+                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="navigateTo('seite5.html')">
+                        <div class="card-icon">🛣️</div>
+                        <h3>Drogenrouten</h3>
+                        <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="navigateTo('seite6.html')">
+                        <div class="card-icon">🏞️</div>
+                        <h3>KhusLand Management</h3>
+                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
@@ -702,12 +734,12 @@
                     <div style="margin-bottom: 1.5rem;">
                         <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
                         <div class="discount-grid" id="discountButtons">
-                            <button class="discount-btn active" data-discount="0">0%</button>
-                            <button class="discount-btn" data-discount="10">10%</button>
-                            <button class="discount-btn" data-discount="15">15%</button>
-                            <button class="discount-btn" data-discount="20">20%</button>
-                            <button class="discount-btn" data-discount="25">25%</button>
-                            <button class="discount-btn" data-discount="30">30%</button>
+                            <button type="button" class="discount-btn active" data-discount="0">0%</button>
+                            <button type="button" class="discount-btn" data-discount="10">10%</button>
+                            <button type="button" class="discount-btn" data-discount="15">15%</button>
+                            <button type="button" class="discount-btn" data-discount="20">20%</button>
+                            <button type="button" class="discount-btn" data-discount="25">25%</button>
+                            <button type="button" class="discount-btn" data-discount="30">30%</button>
                         </div>
                     </div>
                     
@@ -780,6 +812,51 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Andere Tabs (Platzhalter) -->
+            <div id="cocaine" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-pills"></i> Kokain System
+                    </h3>
+                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
+                        Kokain System - In Entwicklung
+                    </p>
+                </div>
+            </div>
+
+            <div id="recycler" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-recycle"></i> Material Recycler
+                    </h3>
+                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
+                        Material Recycler System - In Entwicklung
+                    </p>
+                </div>
+            </div>
+
+            <div id="workbench" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-tools"></i> Werkbank Manager
+                    </h3>
+                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
+                        Werkbank Manager System - In Entwicklung
+                    </p>
+                </div>
+            </div>
+
+            <div id="routes" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-route"></i> Transport Routen
+                    </h3>
+                    <p style="color: #a0aec0; text-align: center; padding: 2rem;">
+                        Transport Routen System - In Entwicklung
+                    </p>
                 </div>
             </div>
         </div>
@@ -1058,21 +1135,20 @@
         function getTabDisplayName(tabName) {
             const names = {
                 'dashboard': 'Dashboard',
-                'weed': 'Weed System'
+                'weed': 'Weed System',
+                'cocaine': 'Kokain System',
+                'recycler': 'Material Recycler',
+                'workbench': 'Werkbank Manager',
+                'routes': 'Transport Routen'
             };
             return names[tabName] || tabName;
         }
 
-        function showManagement() {
-            showNotification('Management System wird geladen...', 'info');
-        }
-
-        function showReports() {
-            showNotification('Berichte werden geladen...', 'info');
-        }
-
-        function showSettings() {
-            showNotification('Einstellungen werden geladen...', 'info');
+        // Navigation zu anderen Seiten
+        function navigateTo(page) {
+            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
+            // In einer echten Anwendung würde hier die Navigation stattfinden
+            // window.location.href = page;
         }
 
         // Discount System

@@ -11,3 +11,5 @@ seite4.html - Werkbank Manager
 seite5.html - Drogenrouten
 
 seite6.html - KhusLand Management
+
+seite7.html - Control Panel

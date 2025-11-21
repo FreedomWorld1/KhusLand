@@ -1000,7 +1000,7 @@
             <div class="settings-section">
                 <h4>Rabatt-Einstellungen</h4>
                 <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
-                    Verwalten Sie die verfügbaren Rabattstufen für das Weed-System.
+                    Verwalten Sie die verfügbaren Rabattstufen für das Weed-System. Gleiche Prozentwerte sind mehrfach möglich.
                 </p>
                 
                 <div class="settings-form">
@@ -1244,11 +1244,12 @@
             const container = document.getElementById('discountButtons');
             container.innerHTML = '';
             
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach(discount => {
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
                 button.setAttribute('data-discount', discount.value);
+                button.setAttribute('data-index', index);
                 button.innerHTML = `
                     <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
                     <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
@@ -1264,7 +1265,7 @@
                     updateWeedPrices();
                     
                     if (discount.value > 0) {
-                        showNotification(`${discount.value}% Rabatt aktiviert`, 'info', 2000);
+                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
                     } else {
                         showNotification('Kein Rabatt aktiviert', 'info', 2000);
                     }
@@ -1325,11 +1326,7 @@
                 return;
             }
             
-            if (availableDiscounts.some(d => d.value === value)) {
-                showNotification('Rabatt mit diesem Wert existiert bereits', 'error');
-                return;
-            }
-            
+            // KEINE Überprüfung auf doppelte Werte mehr - gleiche Prozentwerte sind erlaubt
             const newDiscount = {
                 value: value,
                 label: label
@@ -1341,7 +1338,7 @@
             valueInput.value = '';
             labelInput.value = '';
             
-            showNotification(`Rabatt ${value}% hinzugefügt`, 'success');
+            showNotification(`Rabatt ${value}% (${label}) hinzugefügt`, 'success');
         }
 
         function deleteDiscount(index) {
@@ -1399,6 +1396,7 @@
             const sellerShare = totalPrice - discountValue;
             const buyerShare = discountValue;
             
+            // Finde den aktiven Discount mit Label
             const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
             
             const entry = {
@@ -1500,7 +1498,7 @@
                     <td>${entry.buyer}</td>
                     <td>${entry.seller}</td>
                     <td>${entry.quantity} Bricks</td>
-                    <td>${entry.discount}%</td>
+                    <td>${entry.discount}% (${entry.discountLabel})</td>
                     <td>${entry.totalPrice} €</td>
                     <td style="color: #48bb78;">${entry.sellerShare} €</td>
                     <td style="color: #4299e1;">${entry.buyerShare} €</td>

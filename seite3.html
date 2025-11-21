@@ -586,57 +586,6 @@
             display: none;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            border: 1px solid rgba(245, 158, 11, 0.1);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .search-box {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .search-box input {
-            background: transparent;
-            border: none;
-            width: 100%;
-            color: white;
-            font-size: 0.9rem;
-        }
-
-        .search-box input::placeholder {
-            color: #94a3b8;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            box-shadow: none;
-        }
-
         /* Product Grid Styles - WIE IM ALTEN SYSTEM */
         .products-grid {
             display: grid;
@@ -835,7 +784,7 @@
             cursor: pointer;
         }
 
-        /* Settings Icon */
+        /* Settings Icon - NUR IM RECYCLER TAB */
         .recycler-settings-icon {
             position: absolute;
             top: 20px;
@@ -848,11 +797,59 @@
             transition: all 0.3s;
             color: #fbbf24;
             z-index: 10;
+            display: none; /* Standardmäßig versteckt */
         }
         
         .recycler-settings-icon:hover {
             background: rgba(245, 158, 11, 0.3);
             transform: rotate(90deg);
+        }
+
+        /* Dashboard Settings Icon */
+        .dashboard-settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fbbf24;
+            z-index: 10;
+            display: none; /* Standardmäßig versteckt */
+        }
+        
+        .dashboard-settings-icon:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Search Box */
+        .search-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .search-box input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: none;
         }
     </style>
 </head>
@@ -921,6 +918,11 @@
 
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
+                <!-- Dashboard Settings Icon -->
+                <div class="dashboard-settings-icon" id="dashboardSettingsIcon">
+                    <i class="fas fa-cog"></i>
+                </div>
+
                 <!-- System Cards -->
                 <div class="grid-container">
                     <div class="card" data-page="index.html">
@@ -997,28 +999,6 @@
                     <div class="search-box">
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchInput" placeholder="Ressourcen suchen...">
-                    </div>
-                </div>
-
-                <!-- Statistics Section -->
-                <div class="system-card">
-                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-chart-bar"></i> Statistiken
-                    </h3>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Gesamt Produkte</div>
-                            <div id="totalProducts" class="stat-value" style="color: #f59e0b;">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Ressourcen</div>
-                            <div id="totalResources" class="stat-value" style="color: #f59e0b;">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Letzte hinzugefügt</div>
-                            <div id="lastAdded" class="stat-value" style="color: #f59e0b;">-</div>
-                        </div>
                     </div>
                 </div>
 
@@ -1198,7 +1178,7 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
         import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-        // Firebase Konfiguration
+        // Firebase Konfiguration - ALTE FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
             authDomain: "khusland-b7d13.firebaseapp.com",
@@ -1213,6 +1193,8 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
+        
+        // ALTE FIREBASE REFERENZEN
         const productsRef = ref(db,'materialrecycler_products');
         const logoSettingsRef = ref(db,'materialrecycler_logo_settings');
 
@@ -1242,7 +1224,12 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
         const recyclerTab = document.getElementById('recyclerTab');
+        
+        // Settings Icons
         const recyclerSettingsIcon = document.getElementById('recyclerSettingsIcon');
+        const dashboardSettingsIcon = document.getElementById('dashboardSettingsIcon');
+        
+        // Modal Elements
         const dashboardSettingsModal = document.getElementById('dashboardSettingsModal');
         const closeDashboardSettings = document.getElementById('closeDashboardSettings');
         const saveLogoBtn = document.getElementById('saveLogoBtn');
@@ -1404,11 +1391,16 @@
             // Aktiven Button markieren
             document.getElementById(tabName + 'Tab').classList.add('active');
             
-            // Settings Icon nur im Recycler-Tab anzeigen
+            // Settings Icons entsprechend anzeigen/verstecken
             if (tabName === 'recycler') {
                 recyclerSettingsIcon.style.display = 'block';
+                dashboardSettingsIcon.style.display = 'none';
+            } else if (tabName === 'dashboard') {
+                recyclerSettingsIcon.style.display = 'none';
+                dashboardSettingsIcon.style.display = 'block';
             } else {
                 recyclerSettingsIcon.style.display = 'none';
+                dashboardSettingsIcon.style.display = 'none';
             }
             
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
@@ -1504,7 +1496,7 @@
             closeDashboardSettingsModal();
         }
 
-        // Product Management
+        // Product Management - ALTE FIREBASE
         function loadProducts() {
             onValue(productsRef, (snapshot) => {
                 products = [];
@@ -1519,7 +1511,6 @@
                 
                 // Render products and statistics
                 renderProducts();
-                updateStatistics();
                 renderAdminTable();
             });
         }
@@ -1664,26 +1655,6 @@
                     updateCalculation();
                 });
             });
-        }
-
-        function updateStatistics() {
-            document.getElementById('totalProducts').textContent = products.length;
-            
-            // Total number of resources
-            const totalResources = products.reduce((total, product) => {
-                return total + (product.resources ? product.resources.length : 0);
-            }, 0);
-            document.getElementById('totalResources').textContent = totalResources;
-            
-            // Last added product
-            if (products.length > 0) {
-                const lastProduct = products.reduce((latest, current) => {
-                    return new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest;
-                });
-                document.getElementById('lastAdded').textContent = lastProduct.name;
-            } else {
-                document.getElementById('lastAdded').textContent = '-';
-            }
         }
 
         // Resource Management
@@ -2004,6 +1975,7 @@
             // Settings System
             headerLogo.addEventListener('click', openDashboardSettings);
             recyclerSettingsIcon.addEventListener('click', openDashboardSettings);
+            dashboardSettingsIcon.addEventListener('click', openDashboardSettings);
             closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
             saveLogoBtn.addEventListener('click', saveLogoText);
             
@@ -2066,15 +2038,16 @@
             initializeEventListeners();
             checkExistingLogin();
             
-            // Settings Icon initial ausblenden
+            // Settings Icons initial ausblenden
             recyclerSettingsIcon.style.display = 'none';
+            dashboardSettingsIcon.style.display = 'block'; // Dashboard ist aktiv
             
             // Ensure modals are hidden
             productModal.classList.remove('active');
             dashboardSettingsModal.classList.remove('active');
         });
 
-        console.log('Materialrecycler Panel mit KORRIGIERTER Produkt-Anzeige vollständig geladen!');
+        console.log('Materialrecycler Panel mit ALTER FIREBASE und KORRIGIERTER Produkt-Anzeige vollständig geladen!');
     </script>
 </body>
 </html>

@@ -151,8 +151,52 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1.2rem;
+            gap: 1rem;
             color: #cbd5e0;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
+        }
+        
+        .settings-icon {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            background: rgba(66, 153, 225, 0.9);
+            border: 2px solid rgba(26, 32, 44, 0.95);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .settings-icon:hover {
+            background: rgba(66, 153, 225, 1);
+            transform: scale(1.1) rotate(90deg);
         }
         
         .logout-btn {
@@ -563,26 +607,6 @@
             color: #4299e1;
         }
         
-        /* Settings Icon */
-        .settings-icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(66, 153, 225, 0.2);
-            border: 1px solid rgba(66, 153, 225, 0.3);
-            border-radius: 8px;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #90cdf4;
-            z-index: 10;
-        }
-        
-        .settings-icon:hover {
-            background: rgba(66, 153, 225, 0.3);
-            transform: rotate(90deg);
-        }
-        
         /* Settings Modal */
         .settings-modal {
             position: fixed;
@@ -769,6 +793,15 @@
             <div class="user-info">
                 <span id="userWelcome">Willkommen, Benutzer</span>
                 <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+                
+                <!-- User Avatar mit Einstellungs-Icon -->
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                    <div class="settings-icon" id="settingsIcon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+                
                 <button id="logoutBtn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
@@ -804,11 +837,6 @@
                         <div class="stat-label">Gesamtumsatz</div>
                         <div class="stat-value" id="totalRevenue">0 €</div>
                         <div class="stat-label">Letzte 30 Tage</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Aktive Operationen</div>
-                        <div class="stat-value" id="activeOperations">0</div>
-                        <div class="stat-label">Online</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Transaktionen</div>
@@ -888,11 +916,6 @@
 
             <!-- Weed System Tab -->
             <div id="weed" class="tab-content">
-                <!-- Settings Icon (only visible in weed tab) -->
-                <div class="settings-icon" id="settingsIcon">
-                    <i class="fas fa-cog"></i>
-                </div>
-
                 <div class="system-card">
                     <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-cannabis"></i> Weed Ankauf Management
@@ -1071,6 +1094,7 @@
         const weedTab = document.getElementById('weedTab');
         const saveWeedBtn = document.getElementById('saveWeedBtn');
         const weedQuantity = document.getElementById('weedQuantity');
+        const userAvatar = document.getElementById('userAvatar');
         const settingsIcon = document.getElementById('settingsIcon');
         const settingsModal = document.getElementById('settingsModal');
         const closeSettings = document.getElementById('closeSettings');
@@ -1137,6 +1161,9 @@
             // Benutzerinfo anzeigen
             if (user) {
                 userWelcome.textContent = `Willkommen, ${user.username}`;
+                // Ersten Buchstaben des Usernamens im Avatar anzeigen
+                const firstLetter = user.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span><div class="settings-icon" id="settingsIcon"><i class="fas fa-cog"></i></div>`;
             }
             
             // Access Badge anzeigen
@@ -1197,13 +1224,6 @@
             
             // Aktiven Button markieren
             document.getElementById(tabName + 'Tab').classList.add('active');
-            
-            // Settings Icon nur im Weed-Tab anzeigen
-            if (tabName === 'weed') {
-                settingsIcon.style.display = 'block';
-            } else {
-                settingsIcon.style.display = 'none';
-            }
             
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
@@ -1465,7 +1485,6 @@
                 // Update statistics
                 document.getElementById('totalRevenue').textContent = `${totalRevenue} €`;
                 document.getElementById('totalTransactions').textContent = totalTransactions;
-                document.getElementById('activeOperations').textContent = totalTransactions;
                 document.getElementById('averageTransaction').textContent = totalTransactions > 0 ? `${Math.round(totalRevenue / totalTransactions)} €` : '0 €';
                 
                 // Render transactions table
@@ -1533,7 +1552,7 @@
             saveWeedBtn.addEventListener('click', handleWeedSubmit);
             
             // Settings System
-            settingsIcon.addEventListener('click', openSettings);
+            userAvatar.addEventListener('click', openSettings);
             closeSettings.addEventListener('click', closeSettingsModal);
             addDiscountBtn.addEventListener('click', addNewDiscount);
             
@@ -1562,9 +1581,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
             checkExistingLogin();
-            
-            // Settings Icon initial ausblenden
-            settingsIcon.style.display = 'none';
         });
 
         console.log('KhusLand Panel mit Einstellungssystem vollständig geladen!');

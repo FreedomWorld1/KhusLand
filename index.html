@@ -217,6 +217,7 @@
             border: 1px solid rgba(101, 119, 149, 0.3);
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             transition: all 0.3s;
+            cursor: pointer;
         }
         
         .card:hover {
@@ -899,7 +900,7 @@
 
                 <!-- System Cards -->
                 <div class="grid-container">
-                    <div class="card">
+                    <div class="card" data-page="index.html">
                         <div class="card-icon">🌿</div>
                         <h3>Weed Ankauf</h3>
                         <p>Verwalten Sie Cannabis-Bestände, Anbau und Verkauf. Überwachen Sie Preise und Lieferungen mit Rabatt-System.</p>
@@ -909,7 +910,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card" data-page="seite2.html">
                         <div class="card-icon">❄️</div>
                         <h3>Kokain Ankauf</h3>
                         <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
@@ -919,7 +920,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card" data-page="seite3.html">
                         <div class="card-icon">♻️</div>
                         <h3>Materialrecycler - Produkte</h3>
                         <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
@@ -929,7 +930,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card" data-page="seite4.html">
                         <div class="card-icon">🔧</div>
                         <h3>Werkbank Manager</h3>
                         <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
@@ -939,7 +940,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card" data-page="seite5.html">
                         <div class="card-icon">🛣️</div>
                         <h3>Drogenrouten</h3>
                         <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
@@ -949,7 +950,7 @@
                         </div>
                     </div>
 
-                    <div class="card">
+                    <div class="card" data-page="seite6.html">
                         <div class="card-icon">🏞️</div>
                         <h3>KhusLand Management</h3>
                         <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
@@ -1362,6 +1363,14 @@
             return names[tabName] || tabName;
         }
 
+        // Navigation zu anderen Seiten
+        function navigateTo(page) {
+            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
+        }
+
         // Settings Modal Funktionen
         function openDashboardSettings() {
             resetPasswordForms();
@@ -1759,9 +1768,12 @@
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             weedTab.addEventListener('click', () => switchTab('weed'));
             
-            // Dashboard Cards - KEINE Weiterleitung mehr
+            // Dashboard Cards - MIT Weiterleitung zu GitHub Pages
             document.querySelectorAll('.card').forEach(card => {
-                card.style.cursor = 'default';
+                card.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    navigateTo(page);
+                });
             });
             
             // Weed System
@@ -1830,7 +1842,7 @@
             weedSettingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit passwortgeschützten Einstellungen vollständig geladen!');
+        console.log('KhusLand Panel mit Weiterleitungen zu GitHub Pages vollständig geladen!');
     </script>
 </body>
 </html>

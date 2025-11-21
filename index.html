@@ -18,75 +18,88 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
-            color: #333;
+            color: #e2e8f0;
         }
         
         /* Login Styles */
         .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: rgba(30, 41, 59, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
         .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1rem;
-            background: #2a5298;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.4);
         }
         
         h1 {
-            color: #1e3c72;
+            color: #90cdf4;
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .login-container p {
+            color: #a0aec0;
+            margin-bottom: 1rem;
         }
         
         .discord-login-btn {
             background: #5865F2;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             width: 100%;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .discord-login-btn:hover {
             background: #4752c4;
+            transform: translateY(-2px);
         }
         
         .loading {
             display: none;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
         
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1e3c72;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #4299e1;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
@@ -97,35 +110,36 @@
         }
         
         .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 1rem 0;
+            background: rgba(254, 178, 178, 0.1);
+            color: #fc8181;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 1.5rem 0;
             display: none;
+            border-left: 4px solid #f56565;
         }
         
         /* Main Content Styles */
         .header {
-            background: white;
-            padding: 1rem 2rem;
+            background: rgba(26, 32, 44, 0.95);
+            padding: 1.2rem 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-bottom: 2px solid #1e3c72;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #4299e1;
         }
         
         .logo-small {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: #2a5298;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -137,103 +151,110 @@
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: #1e3c72;
+            gap: 1.2rem;
+            color: #cbd5e0;
         }
         
         .logout-btn {
-            background: #1e3c72;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            background: rgba(66, 153, 225, 0.15);
+            color: #90cdf4;
+            border: 1px solid #4299e1;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
             font-weight: 500;
         }
         
         .logout-btn:hover {
-            background: #2a5298;
+            background: rgba(66, 153, 225, 0.25);
         }
         
         .main-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            max-width: 1300px;
+            margin: 2.5rem auto;
+            padding: 0 2.5rem;
         }
         
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2.5rem;
+            background: rgba(26, 32, 44, 0.9);
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
         }
         
         .card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 16px;
+            padding: 2.2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             transition: all 0.3s;
             cursor: pointer;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: #4299e1;
+            background: rgba(30, 38, 54, 0.9);
         }
         
         .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #1e3c72;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
         }
         
         .card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #1e3c72;
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: #90cdf4;
         }
         
         .card p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
         }
         
         .status {
-            color: #888;
+            color: #a0aec0;
             font-size: 0.9rem;
         }
         
         .status-indicator {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
         }
         
         .status-online {
-            background: #28a745;
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
         }
         
         .footer {
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-            color: white;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(101, 119, 149, 0.3);
+            color: #a0aec0;
+            background: rgba(26, 32, 44, 0.8);
         }
         
         .hidden {
@@ -242,18 +263,19 @@
         
         /* System-spezifische Styles */
         .system-card {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         
         .system-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .form-group {
@@ -263,92 +285,117 @@
         
         .form-group label {
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1e3c72;
+            margin-bottom: 0.8rem;
+            color: #90cdf4;
+            font-size: 0.9rem;
         }
         
         .form-group input,
         .form-group select {
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 0.9rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
             font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
         }
         
         .price-display {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 5px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
             text-align: center;
-            margin: 1rem 0;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(101, 119, 149, 0.2);
         }
         
         .price-amount {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: bold;
-            color: #1e3c72;
+            color: #48bb78;
         }
         
         .btn-primary {
-            background: #1e3c72;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 5px;
+            padding: 1rem 2rem;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
         }
         
         .btn-primary:hover {
-            background: #2a5298;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
         }
         
         .table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         .table th,
         .table td {
-            padding: 0.75rem;
+            padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
         }
         
         .table th {
-            background: #f8f9fa;
+            background: rgba(26, 32, 44, 0.8);
             font-weight: 600;
-            color: #1e3c72;
+            color: #90cdf4;
+        }
+        
+        .table td {
+            color: #cbd5e0;
         }
         
         /* Navigation Tabs */
         .nav-tabs {
             display: flex;
-            background: white;
-            border-radius: 8px;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
             padding: 0.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
         .nav-tab {
             flex: 1;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.5rem;
             text-align: center;
             background: none;
             border: none;
             cursor: pointer;
             font-weight: 500;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: all 0.3s;
+            color: #a0aec0;
+            font-size: 0.9rem;
         }
         
         .nav-tab.active {
-            background: #1e3c72;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
         }
         
         .tab-content {
@@ -365,10 +412,10 @@
             top: 20px;
             right: 20px;
             padding: 1rem 1.5rem;
-            border-radius: 5px;
+            border-radius: 8px;
             color: white;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             z-index: 1000;
             transform: translateX(150%);
             transition: transform 0.3s ease;
@@ -379,43 +426,69 @@
         }
         
         .notification.success {
-            background: #28a745;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
         }
         
         .notification.error {
-            background: #dc3545;
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
         }
         
         .notification.info {
-            background: #17a2b8;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
         }
         
         /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
         
         .stat-card {
-            background: white;
+            background: rgba(26, 32, 44, 0.8);
             padding: 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
         
         .stat-value {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #1e3c72;
+            color: #90cdf4;
             margin: 0.5rem 0;
         }
         
         .stat-label {
-            color: #666;
+            color: #a0aec0;
             font-size: 0.9rem;
+        }
+        
+        /* Access Badge */
+        .access-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+        
+        .access-permanent {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        .access-temporary {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
         }
     </style>
 </head>
@@ -429,7 +502,7 @@
         <div class="error-message" id="errorMessage"></div>
         
         <button class="discord-login-btn" onclick="loginWithDiscord()">
-            Mit Discord anmelden
+            <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
         
         <div class="loading" id="loading">
@@ -448,16 +521,19 @@
             </div>
             <div class="user-info">
                 <span id="userWelcome">Willkommen, Benutzer</span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="main-container">
             <div class="page-header">
-                <h1>KhusLand Operationszentrale</h1>
+                <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand Operationszentrale</h1>
                 <div class="status-indicators">
-                    <span style="color: #28a745;">
+                    <span style="color: #48bb78;">
                         <i class="fas fa-circle"></i> Alle Systeme Online
                     </span>
                 </div>
@@ -465,11 +541,18 @@
 
             <!-- Navigation Tabs -->
             <div class="nav-tabs">
-                <button class="nav-tab active" onclick="switchTab('dashboard')">Dashboard</button>
-                <button class="nav-tab" onclick="switchTab('weed')">Weed System</button>
-                <button class="nav-tab" onclick="switchTab('cocaine')">Kokain System</button>
-                <button class="nav-tab" onclick="switchTab('recycler')">Material Recycler</button>
-                <button class="nav-tab" onclick="switchTab('routes')">Transport Routen</button>
+                <button class="nav-tab active" onclick="switchTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button class="nav-tab" onclick="switchTab('weed')">
+                    <i class="fas fa-cannabis"></i> Weed System
+                </button>
+                <button class="nav-tab" onclick="switchTab('recycler')">
+                    <i class="fas fa-recycle"></i> Material Recycler
+                </button>
+                <button class="nav-tab" onclick="switchTab('workbench')">
+                    <i class="fas fa-tools"></i> Werkbank Manager
+                </button>
             </div>
 
             <!-- Dashboard Tab -->
@@ -478,22 +561,22 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Gesamtumsatz</div>
-                        <div class="stat-value" id="totalRevenue">0 €</div>
+                        <div class="stat-value" id="totalRevenue">2.458 €</div>
                         <div class="stat-label">Letzte 30 Tage</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Aktive Operationen</div>
-                        <div class="stat-value" id="activeOperations">12</div>
+                        <div class="stat-value" id="activeOperations">8</div>
                         <div class="stat-label">Online</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Mitarbeiter</div>
-                        <div class="stat-value" id="totalEmployees">8</div>
+                        <div class="stat-value" id="totalEmployees">6</div>
                         <div class="stat-label">Aktiv</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Lagerbestand</div>
-                        <div class="stat-value" id="inventoryValue">85%</div>
+                        <div class="stat-value" id="inventoryValue">78%</div>
                         <div class="stat-label">Ausgelastet</div>
                     </div>
                 </div>
@@ -510,20 +593,10 @@
                         </div>
                     </div>
 
-                    <div class="card" onclick="switchTab('cocaine')">
-                        <div class="card-icon">❄️</div>
-                        <h3>Kokain System</h3>
-                        <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
                     <div class="card" onclick="switchTab('recycler')">
                         <div class="card-icon">♻️</div>
                         <h3>Material Recycler</h3>
-                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien.</p>
+                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
@@ -533,27 +606,17 @@
                     <div class="card" onclick="switchTab('workbench')">
                         <div class="card-icon">🔧</div>
                         <h3>Werkbank Manager</h3>
-                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge.</p>
+                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
                         </div>
                     </div>
 
-                    <div class="card" onclick="switchTab('routes')">
-                        <div class="card-icon">🛣️</div>
-                        <h3>Drogenrouten</h3>
-                        <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="switchTab('management')">
+                    <div class="card" onclick="showManagement()">
                         <div class="card-icon">🏞️</div>
                         <h3>Gebiets Management</h3>
-                        <p>Verwalten Sie KhusLand Gebiete und Operationen.</p>
+                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Aktivitäten.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
@@ -565,7 +628,7 @@
             <!-- Weed System Tab -->
             <div id="weed" class="tab-content">
                 <div class="system-card">
-                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-cannabis"></i> Weed Ankauf Management
                     </h3>
                     
@@ -598,7 +661,7 @@
                     </form>
                     
                     <div class="price-display">
-                        <div style="color: #666; margin-bottom: 0.5rem;">Gesamtpreis</div>
+                        <div style="color: #a0aec0; margin-bottom: 0.5rem; font-size: 0.9rem;">Gesamtpreis</div>
                         <div id="weedTotalPrice" class="price-amount">0 €</div>
                     </div>
                     
@@ -609,7 +672,7 @@
 
                 <!-- Weed Transactions Table -->
                 <div class="system-card">
-                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-history"></i> Letzte Weed Ankäufe
                     </h3>
                     
@@ -626,65 +689,30 @@
                         </thead>
                         <tbody id="weedTransactions">
                             <tr>
-                                <td colspan="6" style="text-align: center; color: #666;">
-                                    Noch keine Ankäufe erfasst
-                                </td>
+                                <td>24.12.2024 14:30</td>
+                                <td>Max Mustermann</td>
+                                <td>Weed Supplier</td>
+                                <td>50g</td>
+                                <td>Hoch</td>
+                                <td>600 €</td>
+                            </tr>
+                            <tr>
+                                <td>23.12.2024 16:15</td>
+                                <td>Anna Schmidt</td>
+                                <td>Green Gardens</td>
+                                <td>25g</td>
+                                <td>Premium</td>
+                                <td>375 €</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Kokain System Tab -->
-            <div id="cocaine" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">
-                        <i class="fas fa-pills"></i> Kokain Operations Management
-                    </h3>
-                    
-                    <form id="cocaineForm" class="system-form">
-                        <div class="form-group">
-                            <label for="cocaineOperator">Operator</label>
-                            <input type="text" id="cocaineOperator" required placeholder="Operator Name">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cocaineQuantity">Menge (Gramm)</label>
-                            <input type="number" id="cocaineQuantity" required placeholder="Menge in Gramm" min="1">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cocainePurity">Reinheit (%)</label>
-                            <input type="number" id="cocainePurity" required placeholder="Reinheit in %" min="1" max="100">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cocaineDestination">Zielort</label>
-                            <select id="cocaineDestination" required>
-                                <option value="">Zielort wählen</option>
-                                <option value="north">Nord-Distrikt</option>
-                                <option value="south">Süd-Distrikt</option>
-                                <option value="east">Ost-Distrikt</option>
-                                <option value="west">West-Distrikt</option>
-                            </select>
-                        </div>
-                    </form>
-                    
-                    <div class="price-display">
-                        <div style="color: #666; margin-bottom: 0.5rem;">Geschätzter Wert</div>
-                        <div id="cocaineValue" class="price-amount">0 €</div>
-                    </div>
-                    
-                    <button type="submit" form="cocaineForm" class="btn-primary">
-                        <i class="fas fa-save"></i> Operation speichern
-                    </button>
-                </div>
-            </div>
-
             <!-- Material Recycler Tab -->
             <div id="recycler" class="tab-content">
                 <div class="system-card">
-                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-recycle"></i> Material Recycler System
                     </h3>
                     
@@ -717,7 +745,7 @@
                     </form>
                     
                     <div class="price-display">
-                        <div style="color: #666; margin-bottom: 0.5rem;">Wiederverkaufswert</div>
+                        <div style="color: #a0aec0; margin-bottom: 0.5rem; font-size: 0.9rem;">Wiederverkaufswert</div>
                         <div id="recyclerValue" class="price-amount">0 €</div>
                     </div>
                     
@@ -727,82 +755,77 @@
                 </div>
             </div>
 
-            <!-- Transport Routen Tab -->
-            <div id="routes" class="tab-content">
+            <!-- Werkbank Manager Tab -->
+            <div id="workbench" class="tab-content">
                 <div class="system-card">
-                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">
-                        <i class="fas fa-route"></i> Transport Routen Management
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-tools"></i> Werkbank Manager
                     </h3>
                     
-                    <form id="routeForm" class="system-form">
+                    <form id="workbenchForm" class="system-form">
                         <div class="form-group">
-                            <label for="routeStart">Startpunkt</label>
-                            <input type="text" id="routeStart" required placeholder="Start Location">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="routeEnd">Zielpunkt</label>
-                            <input type="text" id="routeEnd" required placeholder="Ziel Location">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="routeProduct">Produkt</label>
-                            <select id="routeProduct" required>
+                            <label for="workbenchProduct">Produkt</label>
+                            <select id="workbenchProduct" required>
                                 <option value="">Produkt wählen</option>
-                                <option value="weed">Weed</option>
-                                <option value="cocaine">Kokain</option>
-                                <option value="materials">Materialien</option>
-                                <option value="equipment">Ausrüstung</option>
+                                <option value="grow_kit">Grow Kit</option>
+                                <option value="processing">Verarbeitung</option>
+                                <option value="packaging">Verpackung</option>
+                                <option value="tools">Werkzeuge</option>
                             </select>
                         </div>
                         
                         <div class="form-group">
-                            <label for="routeSecurity">Sicherheitslevel</label>
-                            <select id="routeSecurity" required>
-                                <option value="">Level wählen</option>
+                            <label for="workbenchQuantity">Menge</label>
+                            <input type="number" id="workbenchQuantity" required placeholder="Anzahl" min="1">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="workbenchPriority">Priorität</label>
+                            <select id="workbenchPriority" required>
+                                <option value="">Priorität wählen</option>
                                 <option value="low">Niedrig</option>
                                 <option value="medium">Mittel</option>
                                 <option value="high">Hoch</option>
-                                <option value="maximum">Maximum</option>
+                                <option value="urgent">Dringend</option>
                             </select>
                         </div>
                     </form>
                     
-                    <button type="submit" form="routeForm" class="btn-primary">
-                        <i class="fas fa-map-marked-alt"></i> Route planen
+                    <button type="submit" form="workbenchForm" class="btn-primary">
+                        <i class="fas fa-plus-circle"></i> Auftrag erstellen
                     </button>
                 </div>
 
-                <!-- Active Routes -->
+                <!-- Aktive Aufträge -->
                 <div class="system-card">
-                    <h3 style="color: #1e3c72; margin-bottom: 1rem;">
-                        <i class="fas fa-truck-moving"></i> Aktive Transporte
+                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-list"></i> Aktive Werkbank Aufträge
                     </h3>
                     
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Route</th>
+                                <th>Auftrag</th>
                                 <th>Produkt</th>
+                                <th>Menge</th>
+                                <th>Priorität</th>
                                 <th>Status</th>
-                                <th>ETA</th>
-                                <th>Sicherheit</th>
                             </tr>
                         </thead>
-                        <tbody id="activeRoutes">
+                        <tbody id="activeWorkbench">
                             <tr>
-                                <td>Nord → Zentrum</td>
-                                <td>Weed</td>
-                                <td><span style="color: #28a745;">Aktiv</span></td>
-                                <td>15:30</td>
-                                <td>Hoch</td>
+                                <td>#WB-001</td>
+                                <td>Grow Kit</td>
+                                <td>5</td>
+                                <td><span style="color: #ed8936;">Hoch</span></td>
+                                <td><span style="color: #48bb78;">In Bearbeitung</span></td>
                             </tr>
                             <tr>
-                                <td>Hafen → Ost</td>
-                                <td>Materialien</td>
-                                <td><span style="color: #ffc107;">In Vorbereitung</span></td>
-                                <td>16:45</td>
-                                <td>Mittel</td>
+                                <td>#WB-002</td>
+                                <td>Verpackung</td>
+                                <td>20</td>
+                                <td><span style="color: #a0aec0;">Mittel</span></td>
+                                <td><span style="color: #4299e1;">Geplant</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -831,10 +854,10 @@
         const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
+        const accessBadge = document.getElementById('accessBadge');
 
         // Preis-Tabellen
         const weedPrices = { low: 5, medium: 8, high: 12, premium: 15 };
-        const cocainePrices = { low: 40, medium: 60, high: 80, premium: 100 };
         const recyclerMultipliers = { low: 0.3, medium: 0.6, high: 0.85 };
 
         // Discord Login Funktion
@@ -987,6 +1010,18 @@
                 userWelcome.textContent = `Willkommen, ${user.username}`;
             }
             
+            // Access Badge anzeigen
+            if (accessInfo) {
+                accessBadge.classList.remove('hidden');
+                if (accessInfo.isPermanent) {
+                    accessBadge.textContent = 'PREMIUM';
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.textContent = accessInfo.message || 'TEMPORARY';
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
             // URL bereinigen
             const cleanUrl = window.location.origin + window.location.pathname;
             window.history.replaceState({}, document.title, cleanUrl);
@@ -1006,6 +1041,7 @@
                 document.querySelector('.discord-login-btn').style.display = 'block';
                 loading.style.display = 'none';
                 errorMessage.style.display = 'none';
+                accessBadge.classList.add('hidden');
                 
                 showNotification('Erfolgreich ausgeloggt', 'info');
             }
@@ -1050,11 +1086,15 @@
             const names = {
                 'dashboard': 'Dashboard',
                 'weed': 'Weed System',
-                'cocaine': 'Kokain System', 
                 'recycler': 'Material Recycler',
-                'routes': 'Transport Routen'
+                'workbench': 'Werkbank Manager'
             };
             return names[tabName] || tabName;
+        }
+
+        function showManagement() {
+            showNotification('Gebiets Management wird geladen...', 'info');
+            // Hier könnte das Management System geladen werden
         }
 
         // Weed System Funktionen
@@ -1101,12 +1141,6 @@
 
         function addWeedTransaction(transaction) {
             const tbody = document.getElementById('weedTransactions');
-            
-            // Entferne "Keine Einträge" Zeile falls vorhanden
-            if (tbody.rows.length === 1 && tbody.rows[0].cells[0].colSpan === 6) {
-                tbody.innerHTML = '';
-            }
-            
             const row = tbody.insertRow(0);
             row.innerHTML = `
                 <td>${transaction.date}</td>
@@ -1116,41 +1150,6 @@
                 <td>${transaction.quality}</td>
                 <td>${transaction.price}</td>
             `;
-        }
-
-        // Kokain System Funktionen
-        function calculateCocaineValue() {
-            const quantity = document.getElementById('cocaineQuantity').value;
-            const purity = document.getElementById('cocainePurity').value;
-            
-            if (quantity && purity) {
-                let basePrice = 60; // Mittelwert
-                if (purity >= 90) basePrice = 100;
-                else if (purity >= 80) basePrice = 80;
-                else if (purity >= 70) basePrice = 60;
-                else if (purity >= 60) basePrice = 40;
-                
-                const total = quantity * basePrice;
-                document.getElementById('cocaineValue').textContent = `${total} €`;
-            } else {
-                document.getElementById('cocaineValue').textContent = '0 €';
-            }
-        }
-
-        function handleCocaineSubmit(event) {
-            event.preventDefault();
-            
-            const operator = document.getElementById('cocaineOperator').value;
-            const quantity = document.getElementById('cocaineQuantity').value;
-            const purity = document.getElementById('cocainePurity').value;
-            const destination = document.getElementById('cocaineDestination').value;
-            const value = document.getElementById('cocaineValue').textContent;
-            
-            showNotification(`Kokain Operation für ${operator} gespeichert: ${quantity}g mit ${purity}% Reinheit`, 'success');
-            
-            // Formular zurücksetzen
-            document.getElementById('cocaineForm').reset();
-            document.getElementById('cocaineValue').textContent = '0 €';
         }
 
         // Recycler System Funktionen
@@ -1182,19 +1181,18 @@
             document.getElementById('recyclerValue').textContent = '0 €';
         }
 
-        // Routen System Funktionen
-        function handleRouteSubmit(event) {
+        // Werkbank System Funktionen
+        function handleWorkbenchSubmit(event) {
             event.preventDefault();
             
-            const start = document.getElementById('routeStart').value;
-            const end = document.getElementById('routeEnd').value;
-            const product = document.getElementById('routeProduct').value;
-            const security = document.getElementById('routeSecurity').value;
+            const product = document.getElementById('workbenchProduct').value;
+            const quantity = document.getElementById('workbenchQuantity').value;
+            const priority = document.getElementById('workbenchPriority').value;
             
-            showNotification(`Neue Route geplant: ${start} → ${end} mit ${product} (Sicherheit: ${security})`, 'success');
+            showNotification(`Neuer Werkbank-Auftrag: ${quantity}x ${product} (Priorität: ${priority})`, 'success');
             
             // Formular zurücksetzen
-            document.getElementById('routeForm').reset();
+            document.getElementById('workbenchForm').reset();
         }
 
         // Event Listeners
@@ -1214,18 +1212,13 @@
             document.getElementById('weedQuality').addEventListener('change', calculateWeedPrice);
             document.getElementById('weedForm').addEventListener('submit', handleWeedSubmit);
             
-            // Kokain System Event Listener
-            document.getElementById('cocaineQuantity').addEventListener('input', calculateCocaineValue);
-            document.getElementById('cocainePurity').addEventListener('input', calculateCocaineValue);
-            document.getElementById('cocaineForm').addEventListener('submit', handleCocaineSubmit);
-            
             // Recycler System Event Listener
             document.getElementById('recyclerWeight').addEventListener('input', calculateRecyclerValue);
             document.getElementById('recyclerQuality').addEventListener('change', calculateRecyclerValue);
             document.getElementById('recyclerForm').addEventListener('submit', handleRecyclerSubmit);
             
-            // Routen System Event Listener
-            document.getElementById('routeForm').addEventListener('submit', handleRouteSubmit);
+            // Werkbank System Event Listener
+            document.getElementById('workbenchForm').addEventListener('submit', handleWorkbenchSubmit);
         });
 
         // Tastatur-Shortcuts
@@ -1237,14 +1230,11 @@
                     case 'weed':
                         document.getElementById('weedForm').dispatchEvent(new Event('submit'));
                         break;
-                    case 'cocaine':
-                        document.getElementById('cocaineForm').dispatchEvent(new Event('submit'));
-                        break;
                     case 'recycler':
                         document.getElementById('recyclerForm').dispatchEvent(new Event('submit'));
                         break;
-                    case 'routes':
-                        document.getElementById('routeForm').dispatchEvent(new Event('submit'));
+                    case 'workbench':
+                        document.getElementById('workbenchForm').dispatchEvent(new Event('submit'));
                         break;
                 }
             }

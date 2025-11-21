@@ -136,17 +136,22 @@
             gap: 1.2rem;
         }
         
-        .logo-image {
+        .logo-icon {
             width: 45px;
             height: 45px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #4299e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
         }
         
-        .logo-image:hover {
+        .logo-icon:hover {
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
         }
@@ -450,41 +455,6 @@
         
         .notification.info {
             background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-        }
-        
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: rgba(26, 32, 44, 0.8);
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            transition: all 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #90cdf4;
-            margin: 0.5rem 0;
-        }
-        
-        .stat-label {
-            color: #a0aec0;
-            font-size: 0.9rem;
         }
         
         /* Access Badge */
@@ -838,7 +808,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <img id="headerLogo" class="logo-image" src="" alt="KhusLand Logo">
+                <div class="logo-icon" id="headerLogo">A</div>
                 <h2>KhusLand Management Panel</h2>
             </div>
             <div class="user-info">
@@ -859,7 +829,7 @@
         <!-- Main Content -->
         <div class="main-container">
             <div class="page-header">
-                <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand</h1>
+                <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand Operationszentrale</h1>
                 <div class="status-indicators">
                     <span style="color: #48bb78;">
                         <i class="fas fa-circle"></i> Alle Systeme Online
@@ -876,6 +846,9 @@
                     <i class="fas fa-cannabis"></i> Weed System
                 </button>
             </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
                 <!-- System Cards -->
                 <div class="grid-container">
                     <div class="card" data-page="index.html">
@@ -1041,7 +1014,7 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <!-- Dashboard Settings Modal (Logo-Bild Upload) -->
+    <!-- Dashboard Settings Modal (Logo-Text Änderung) -->
     <div id="dashboardSettingsModal" class="settings-modal">
         <div class="settings-content">
             <div class="settings-header">
@@ -1061,23 +1034,20 @@
             </div>
             
             <div class="settings-section hidden" id="dashboardSettingsContent">
-                <h4>Logo Bild hochladen</h4>
+                <h4>Logo Text anpassen</h4>
                 <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
-                    Laden Sie ein neues Logo-Bild für den Header hoch.
+                    Ändern Sie den Text des Logos im Header (max. 2 Zeichen).
                 </p>
                 
-                <div class="file-input-container">
-                    <input type="file" id="logoImageInput" accept="image/*">
-                    <label for="logoImageInput" class="file-input-label">
-                        <i class="fas fa-upload"></i> Bild auswählen
-                    </label>
+                <div class="settings-form">
+                    <input type="text" id="logoTextInput" placeholder="Logo Text (max. 2 Zeichen)" maxlength="2" value="A">
+                    <button id="saveLogoBtn">Logo speichern</button>
                 </div>
                 
-                <img id="logoImagePreview" class="image-preview hidden" src="" alt="Logo Vorschau">
-                
-                <button id="saveLogoBtn" class="btn-primary" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-save"></i> Logo speichern
-                </button>
+                <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
+                    <div style="color: #a0aec0; margin-bottom: 0.5rem;">Vorschau:</div>
+                    <div class="logo-icon" id="logoPreview" style="margin: 0 auto;">A</div>
+                </div>
             </div>
         </div>
     </div>
@@ -1160,7 +1130,7 @@
             { value: 15, label: 'Einkäufer' },
             { value: 20, label: 'Normal' }
         ];
-        let logoImageUrl = '';
+        let logoText = 'A';
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -1186,8 +1156,6 @@
         const closeWeedSettings = document.getElementById('closeWeedSettings');
         const addDiscountBtn = document.getElementById('addDiscountBtn');
         const saveLogoBtn = document.getElementById('saveLogoBtn');
-        const logoImageInput = document.getElementById('logoImageInput');
-        const logoImagePreview = document.getElementById('logoImagePreview');
         const verifyDashboardPassword = document.getElementById('verifyDashboardPassword');
         const verifyWeedPassword = document.getElementById('verifyWeedPassword');
         const dashboardPassword = document.getElementById('dashboardPassword');
@@ -1196,6 +1164,8 @@
         const weedPasswordError = document.getElementById('weedPasswordError');
         const dashboardSettingsContent = document.getElementById('dashboardSettingsContent');
         const weedSettingsContent = document.getElementById('weedSettingsContent');
+        const logoTextInput = document.getElementById('logoTextInput');
+        const logoPreview = document.getElementById('logoPreview');
 
         // Discord Login Funktion
         function loginWithDiscord() {
@@ -1352,6 +1322,8 @@
         // Settings Modal Funktionen
         function openDashboardSettings() {
             resetPasswordForms();
+            logoTextInput.value = logoText;
+            logoPreview.textContent = logoText;
             dashboardSettingsModal.classList.add('active');
         }
 
@@ -1405,53 +1377,38 @@
         function loadLogoSettings() {
             onValue(logoSettingsRef, (snapshot) => {
                 const data = snapshot.val();
-                if (data && data.logoImageUrl) {
-                    logoImageUrl = data.logoImageUrl;
+                if (data && data.logoText) {
+                    logoText = data.logoText;
                     updateLogoDisplay();
                 }
             });
         }
 
         function updateLogoDisplay() {
-            if (logoImageUrl) {
-                headerLogo.src = logoImageUrl;
-                headerLogo.style.display = 'block';
-            } else {
-                headerLogo.style.display = 'none';
-            }
+            headerLogo.textContent = logoText;
         }
 
-        function handleLogoImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    logoImagePreview.src = e.target.result;
-                    logoImagePreview.classList.remove('hidden');
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function saveLogoImage() {
-            const file = logoImageInput.files[0];
-            if (!file) {
-                showNotification('Bitte wählen Sie ein Bild aus', 'error');
+        function saveLogoText() {
+            const newLogoText = logoTextInput.value.trim().toUpperCase();
+            
+            if (!newLogoText) {
+                showNotification('Bitte Logo Text eingeben', 'error');
                 return;
             }
-
-            // In einer echten Anwendung würde hier der Upload zu einem Server/Cloud Storage erfolgen
-            // Für dieses Beispiel verwenden wir Data URL
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                logoImageUrl = e.target.result;
-                set(logoSettingsRef, { logoImageUrl: logoImageUrl });
-                
-                updateLogoDisplay();
-                showNotification('Logo Bild gespeichert', 'success');
-                closeDashboardSettingsModal();
-            };
-            reader.readAsDataURL(file);
+            
+            if (newLogoText.length > 2) {
+                showNotification('Logo Text darf maximal 2 Zeichen lang sein', 'error');
+                return;
+            }
+            
+            logoText = newLogoText;
+            set(logoSettingsRef, { logoText: logoText });
+            
+            updateLogoDisplay();
+            logoPreview.textContent = logoText;
+            
+            showNotification('Logo Text gespeichert', 'success');
+            closeDashboardSettingsModal();
         }
 
         // Discount System
@@ -1677,24 +1634,14 @@
         function loadWeedEntries() {
             onValue(entriesRef, (snapshot) => {
                 entries = [];
-                let totalRevenue = 0;
-                let totalTransactions = 0;
-                
                 snapshot.forEach((childSnapshot) => {
                     const data = childSnapshot.val();
                     data.key = childSnapshot.key;
                     entries.push(data);
-                    totalRevenue += data.totalPrice;
-                    totalTransactions++;
                 });
                 
                 // Sort entries by timestamp (newest first)
                 entries.sort((a, b) => b.timestamp - a.timestamp);
-                
-                // Update statistics
-                document.getElementById('totalRevenue').textContent = `${totalRevenue} €`;
-                document.getElementById('totalTransactions').textContent = totalTransactions;
-                document.getElementById('averageTransaction').textContent = totalTransactions > 0 ? `${Math.round(totalRevenue / totalTransactions)} €` : '0 €';
                 
                 // Render transactions table
                 renderWeedTransactions();
@@ -1764,8 +1711,7 @@
             closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
             closeWeedSettings.addEventListener('click', closeWeedSettingsModal);
             addDiscountBtn.addEventListener('click', addNewDiscount);
-            saveLogoBtn.addEventListener('click', saveLogoImage);
-            logoImageInput.addEventListener('change', handleLogoImageUpload);
+            saveLogoBtn.addEventListener('click', saveLogoText);
             
             // Passwort-Verifikation
             verifyDashboardPassword.addEventListener('click', () => verifyPassword(dashboardPassword.value, 'dashboard'));
@@ -1781,6 +1727,13 @@
             weedPassword.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     verifyPassword(weedPassword.value, 'weed');
+                }
+            });
+            
+            // Enter-Taste für Logo-Text
+            logoTextInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveLogoText();
                 }
             });
             
@@ -1820,7 +1773,7 @@
             weedSettingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit Weiterleitungen zu GitHub Pages vollständig geladen!');
+        console.log('KhusLand Panel mit vereinfachtem Dashboard vollständig geladen!');
     </script>
 </body>
 </html>

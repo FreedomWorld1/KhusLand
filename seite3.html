@@ -702,7 +702,7 @@
             font-weight: 600;
         }
 
-        /* Modal Styles */
+        /* Modal Styles - VERBESSERT UND GRÖSSER */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -728,9 +728,9 @@
             background: rgba(26, 32, 44, 0.95);
             border-radius: 16px;
             padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
+            width: 95%;
+            max-width: 700px; /* GRÖSSER gemacht */
+            max-height: 90vh; /* GRÖSSER gemacht */
             overflow-y: auto;
             border: 1px solid rgba(101, 119, 149, 0.3);
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
@@ -742,21 +742,91 @@
             transform: translateY(0);
         }
 
+        /* VERBESSERTE Resource Input Container */
         .resource-input-container {
-            display: flex;
-            gap: 0.5rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 0.8rem;
             margin-bottom: 1rem;
+            align-items: end;
         }
 
         .resource-input-container input {
-            flex: 1;
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .resource-input-container input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+
+        .add-resource-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .add-resource-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
         }
 
         .resource-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.8rem;
             margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            min-height: 60px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .remove-resource {
+            background: none;
+            border: none;
+            color: #fc8181;
+            cursor: pointer;
+            padding: 0.2rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-resource:hover {
+            background: rgba(252, 129, 129, 0.2);
+            transform: scale(1.1);
         }
 
         .image-preview {
@@ -765,6 +835,7 @@
             border-radius: 8px;
             margin-top: 1rem;
             display: none;
+            border: 2px solid rgba(245, 158, 11, 0.3);
         }
 
         .file-input-wrapper {
@@ -850,6 +921,35 @@
         .search-box input:focus {
             outline: none;
             box-shadow: none;
+        }
+
+        /* VERBESSERTE Form Layout */
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            flex: 1;
         }
     </style>
 </head>
@@ -1013,7 +1113,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Section - EXAKT WIE IM ALTEN SCRIPT -->
+                <!-- Admin Section -->
                 <div class="system-card">
                     <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-cog"></i> Admin Bereich
@@ -1112,7 +1212,7 @@
         </div>
     </div>
 
-    <!-- Product Modal - EXAKT WIE IM ALTEN SCRIPT -->
+    <!-- Product Modal - VERBESSERT UND GRÖSSER -->
     <div id="productModal" class="modal-overlay">
         <div class="modal-content">
             <div class="settings-header">
@@ -1122,31 +1222,36 @@
                 </button>
             </div>
             
-            <form id="productForm" class="settings-form">
+            <form id="productForm" class="modal-form">
                 <input type="hidden" id="productKey">
                 
-                <div class="form-group">
-                    <label for="productName">Name</label>
-                    <input type="text" id="productName" placeholder="z.B.: Aluminium-Dose" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Produkt Name</label>
+                        <input type="text" id="productName" placeholder="z.B.: Aluminium-Dose" required>
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label>Ressourcen</label>
+                    <label>Ressourcen hinzufügen</label>
                     <div class="resource-input-container">
-                        <input type="text" id="newResourceName" placeholder="Ressourcenname">
-                        <input type="number" id="newResourceMin" placeholder="Min" min="1">
-                        <input type="number" id="newResourceMax" placeholder="Max" min="1">
-                        <button type="button" id="addResourceBtn" class="quantity-btn">
-                            <i class="fas fa-plus"></i>
+                        <input type="text" id="newResourceName" placeholder="Ressourcenname (z.B.: Aluminium)">
+                        <input type="number" id="newResourceMin" placeholder="Min" min="1" value="1">
+                        <input type="number" id="newResourceMax" placeholder="Max" min="1" value="1">
+                        <button type="button" id="addResourceBtn" class="add-resource-btn">
+                            <i class="fas fa-plus"></i> Hinzufügen
                         </button>
                     </div>
                     <div id="resourcesList" class="resource-list">
                         <!-- Resources will be added here -->
+                        <div style="color: #94a3b8; text-align: center; width: 100%; padding: 1rem;">
+                            Noch keine Ressourcen hinzugefügt
+                        </div>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label>Bild hochladen</label>
+                    <label>Produkt Bild</label>
                     <div class="file-input-wrapper">
                         <button type="button" class="btn-primary w-full">
                             <i class="fas fa-upload"></i> Bild auswählen
@@ -1160,9 +1265,9 @@
                     <input type="hidden" id="productImageData">
                 </div>
                 
-                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                    <button type="submit" class="btn-primary flex-1">
-                        <i class="fas fa-save"></i> Speichern
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Produkt speichern
                     </button>
                     <button type="button" id="cancelProduct" class="btn-primary" style="background: rgba(101, 119, 149, 0.6);">
                         <i class="fas fa-times"></i> Abbrechen
@@ -1173,7 +1278,7 @@
     </div>
 
     <script type="module">
-        // Firebase Import und Konfiguration - EXAKT WIE IM ALTEN SCRIPT
+        // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
         import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -1194,14 +1299,9 @@
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
         
-        // ALTE FIREBASE REFERENZEN - EXAKT WIE IM ALTEN SCRIPT
+        // ALTE FIREBASE REFERENZEN
         const productsRef = ref(db,'materialrecycler_products');
         const logoSettingsRef = ref(db,'materialrecycler_logo_settings');
-
-        // Discord OAuth Konfiguration
-        const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
         // System Variablen
         const ADMIN_PASSWORD = '1101';
@@ -1241,7 +1341,7 @@
         const logoPreview = document.getElementById('logoPreview');
         const searchInput = document.getElementById('searchInput');
 
-        // Admin Elements - EXAKT WIE IM ALTEN SCRIPT
+        // Admin Elements
         const adminLoginBtn = document.getElementById('adminLoginBtn');
         const adminPassInput = document.getElementById('adminPass');
         const adminError = document.getElementById('adminError');
@@ -1251,7 +1351,7 @@
         const adminSearchInput = document.getElementById('adminSearchInput');
         const adminTableBody = document.getElementById('adminTableBody');
 
-        // Product Modal Elements - EXAKT WIE IM ALTEN SCRIPT
+        // Product Modal Elements
         const productModal = document.getElementById('productModal');
         const productForm = document.getElementById('productForm');
         const productModalTitle = document.getElementById('productModalTitle');
@@ -1262,14 +1362,14 @@
         const imagePreview = document.getElementById('imagePreview');
         const productImageData = document.getElementById('productImageData');
 
-        // Resource Elements - EXAKT WIE IM ALTEN SCRIPT
+        // Resource Elements
         const newResourceName = document.getElementById('newResourceName');
         const newResourceMin = document.getElementById('newResourceMin');
         const newResourceMax = document.getElementById('newResourceMax');
         const addResourceBtn = document.getElementById('addResourceBtn');
         const resourcesList = document.getElementById('resourcesList');
 
-        // Discord Login Funktion - EXAKT WIE IM ALTEN SCRIPT
+        // Discord Login Funktion
         function loginWithDiscord() {
             const btn = discordLoginBtn;
             
@@ -1284,7 +1384,7 @@
             }, 1500);
         }
 
-        // Erfolgreiche Anmeldung simulieren - EXAKT WIE IM ALTEN SCRIPT
+        // Erfolgreiche Anmeldung simulieren
         function simulateSuccessfulLogin() {
             const mockUser = {
                 username: "Recycler_User",
@@ -1297,7 +1397,7 @@
             showNotification('Erfolgreich eingeloggt!', 'success');
         }
 
-        // Notification System - EXAKT WIE IM ALTEN SCRIPT
+        // Notification System
         function showNotification(message, type = 'info', duration = 4000) {
             notification.textContent = message;
             notification.className = `notification ${type}`;
@@ -1312,7 +1412,7 @@
             }, duration);
         }
 
-        // Fehler anzeigen - EXAKT WIE IM ALTEN SCRIPT
+        // Fehler anzeigen
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
@@ -1322,7 +1422,7 @@
             loading.style.display = 'none';
         }
 
-        // Hauptinhalt anzeigen - EXAKT WIE IM ALTEN SCRIPT
+        // Hauptinhalt anzeigen
         function showMainContent(user) {
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
@@ -1343,7 +1443,7 @@
             loadLogoSettings();
         }
 
-        // Logout - EXAKT WIE IM ALTEN SCRIPT
+        // Logout
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 localStorage.removeItem('discord_user');
@@ -1361,7 +1461,7 @@
             }
         }
 
-        // Bereits eingeloggten Benutzer prüfen - EXAKT WIE IM ALTEN SCRIPT
+        // Bereits eingeloggten Benutzer prüfen
         function checkExistingLogin() {
             const user = localStorage.getItem('discord_user');
             
@@ -1373,7 +1473,7 @@
             }
         }
 
-        // Tab Navigation - EXAKT WIE IM ALTEN SCRIPT
+        // Tab Navigation
         function switchTab(tabName) {
             // Alle Tabs ausblenden
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -1414,7 +1514,7 @@
             return names[tabName] || tabName;
         }
 
-        // Navigation zu anderen Seiten - EXAKT WIE IM ALTEN SCRIPT
+        // Navigation zu anderen Seiten
         function navigateTo(page) {
             showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
             setTimeout(() => {
@@ -1422,7 +1522,7 @@
             }, 1500);
         }
 
-        // Settings Modal Funktionen - EXAKT WIE IM ALTEN SCRIPT
+        // Settings Modal Funktionen
         function openDashboardSettings() {
             resetPasswordForms();
             logoTextInput.value = logoText;
@@ -1442,7 +1542,7 @@
             dashboardSettingsContent.classList.add('hidden');
         }
 
-        // Passwort-Verifikation - EXAKT WIE IM ALTEN SCRIPT
+        // Passwort-Verifikation
         function verifyPassword(password, type) {
             if (password === ADMIN_PASSWORD) {
                 if (type === 'dashboard') {
@@ -1458,7 +1558,7 @@
             }
         }
 
-        // Logo Einstellungen - EXAKT WIE IM ALTEN SCRIPT
+        // Logo Einstellungen
         function loadLogoSettings() {
             onValue(logoSettingsRef, (snapshot) => {
                 const data = snapshot.val();
@@ -1496,7 +1596,7 @@
             closeDashboardSettingsModal();
         }
 
-        // Product Management - EXAKT WIE IM ALTEN SCRIPT
+        // Product Management
         function loadProducts() {
             onValue(productsRef, (snapshot) => {
                 products = [];
@@ -1515,7 +1615,7 @@
             });
         }
 
-        // KORRIGIERTE PRODUKT-ANZEIGE - EXAKT WIE IM ALTEN SCRIPT
+        // KORRIGIERTE PRODUKT-ANZEIGE - WIE IM ALTEN SCRIPT
         function renderProducts() {
             const productsList = document.getElementById('productsList');
             const searchTerm = searchInput.value.toLowerCase();
@@ -1657,7 +1757,7 @@
             });
         }
 
-        // Resource Management - EXAKT WIE IM ALTEN SCRIPT
+        // VERBESSERTE Resource Management - MEHRERE RESSOURCEN MÖGLICH
         addResourceBtn.addEventListener('click', () => {
             const resourceName = newResourceName.value.trim();
             const resourceMin = parseInt(newResourceMin.value);
@@ -1671,8 +1771,8 @@
                 });
                 renderResourcesList();
                 newResourceName.value = '';
-                newResourceMin.value = '';
-                newResourceMax.value = '';
+                newResourceMin.value = '1';
+                newResourceMax.value = '1';
                 newResourceName.focus();
                 showNotification('Ressource hinzugefügt', 'success');
             } else {
@@ -1682,19 +1782,23 @@
 
         function renderResourcesList() {
             resourcesList.innerHTML = '';
+            
+            if (currentResources.length === 0) {
+                resourcesList.innerHTML = '<div style="color: #94a3b8; text-align: center; width: 100%; padding: 1rem;">Noch keine Ressourcen hinzugefügt</div>';
+                return;
+            }
+            
             currentResources.forEach((resource, index) => {
-                const span = document.createElement('span');
-                span.className = 'resource-tag';
-                span.style.display = 'flex';
-                span.style.alignItems = 'center';
-                span.style.gap = '0.5rem';
-                span.innerHTML = `
-                    ${resource.name} (${resource.min}-${resource.max})
-                    <button type="button" style="color: #fc8181; background: none; border: none; cursor: pointer; padding: 2px;" class="remove-resource" data-index="${index}">
+                const resourceEl = document.createElement('div');
+                resourceEl.className = 'resource-item';
+                resourceEl.innerHTML = `
+                    <span>${resource.name}</span>
+                    <span style="color: #cbd5e0;">(${resource.min}-${resource.max})</span>
+                    <button type="button" class="remove-resource" data-index="${index}">
                         <i class="fas fa-times"></i>
                     </button>
                 `;
-                resourcesList.appendChild(span);
+                resourcesList.appendChild(resourceEl);
             });
             
             // Event Listener für Löschen-Buttons
@@ -1708,7 +1812,7 @@
             });
         }
 
-        // Image Upload - EXAKT WIE IM ALTEN SCRIPT
+        // Image Upload
         productImageFile.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -1730,7 +1834,7 @@
             }
         });
 
-        // Admin Functions - EXAKT WIE IM ALTEN SCRIPT
+        // Admin Functions
         adminLoginBtn.addEventListener('click', () => {
             if (adminPassInput.value === ADMIN_PASSWORD) { 
                 adminError.style.display = 'none';
@@ -1795,7 +1899,7 @@
             });
         }
 
-        // Admin Search - EXAKT WIE IM ALTEN SCRIPT
+        // Admin Search
         adminSearchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
             const rows = adminTableBody.querySelectorAll('tr');
@@ -1810,7 +1914,7 @@
             });
         });
 
-        // Product Modal Functions - EXAKT WIE IM ALTEN SCRIPT
+        // Product Modal Functions
         function openProductModal() {
             productModal.classList.add('active');
         }
@@ -1853,7 +1957,7 @@
             openProductModal();
         }
 
-        // Product Form Submission - EXAKT WIE IM ALTEN SCRIPT
+        // Product Form Submission
         productForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -1898,7 +2002,7 @@
             }
         });
 
-        // Delete Product - EXAKT WIE IM ALTEN SCRIPT
+        // Delete Product
         window.deleteProduct = async function(key) { 
             if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
                 try {
@@ -1911,7 +2015,7 @@
             }
         }
 
-        // CSV Export - EXAKT WIE IM ALTEN SCRIPT
+        // CSV Export
         exportCsv.addEventListener('click', () => {
             if (products.length === 0) {
                 showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
@@ -1949,7 +2053,7 @@
             showNotification('CSV erfolgreich exportiert', 'success');
         });
 
-        // Event Listeners initialisieren - EXAKT WIE IM ALTEN SCRIPT
+        // Event Listeners initialisieren
         function initializeEventListeners() {
             // Login Button
             discordLoginBtn.addEventListener('click', loginWithDiscord);
@@ -2047,7 +2151,7 @@
             dashboardSettingsModal.classList.remove('active');
         });
 
-        console.log('Materialrecycler Panel mit EXAKTER Produkt-Einstellung vom alten Script vollständig geladen!');
+        console.log('Materialrecycler Panel mit VERBESSERTEM Product Modal vollständig geladen!');
     </script>
 </body>
 </html>

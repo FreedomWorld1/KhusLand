@@ -490,6 +490,78 @@
             background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
             color: white;
         }
+        
+        /* Discount System */
+        .discount-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .discount-btn {
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #cbd5e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .discount-btn.active {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            border-color: #4299e1;
+            box-shadow: 0 2px 10px rgba(66, 153, 225, 0.3);
+        }
+        
+        .discount-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .price-breakdown {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.1);
+        }
+        
+        .price-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .price-label {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .price-value {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        
+        .seller-share {
+            color: #48bb78;
+        }
+        
+        .buyer-share {
+            color: #4299e1;
+        }
     </style>
 </head>
 <body>
@@ -547,12 +619,6 @@
                 <button class="nav-tab" onclick="switchTab('weed')">
                     <i class="fas fa-cannabis"></i> Weed System
                 </button>
-                <button class="nav-tab" onclick="switchTab('recycler')">
-                    <i class="fas fa-recycle"></i> Material Recycler
-                </button>
-                <button class="nav-tab" onclick="switchTab('workbench')">
-                    <i class="fas fa-tools"></i> Werkbank Manager
-                </button>
             </div>
 
             <!-- Dashboard Tab -->
@@ -561,23 +627,23 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Gesamtumsatz</div>
-                        <div class="stat-value" id="totalRevenue">2.458 €</div>
+                        <div class="stat-value" id="totalRevenue">0 €</div>
                         <div class="stat-label">Letzte 30 Tage</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Aktive Operationen</div>
-                        <div class="stat-value" id="activeOperations">8</div>
+                        <div class="stat-value" id="activeOperations">0</div>
                         <div class="stat-label">Online</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Mitarbeiter</div>
-                        <div class="stat-value" id="totalEmployees">6</div>
-                        <div class="stat-label">Aktiv</div>
+                        <div class="stat-label">Transaktionen</div>
+                        <div class="stat-value" id="totalTransactions">0</div>
+                        <div class="stat-label">Gesamt</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Lagerbestand</div>
-                        <div class="stat-value" id="inventoryValue">78%</div>
-                        <div class="stat-label">Ausgelastet</div>
+                        <div class="stat-label">Durchschnitt</div>
+                        <div class="stat-value" id="averageTransaction">0 €</div>
+                        <div class="stat-label">Pro Ankauf</div>
                     </div>
                 </div>
 
@@ -586,27 +652,7 @@
                     <div class="card" onclick="switchTab('weed')">
                         <div class="card-icon">🌿</div>
                         <h3>Weed Ankauf</h3>
-                        <p>Verwalten Sie Cannabis-Bestände, Anbau und Verkauf. Überwachen Sie Preise und Lieferungen.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="switchTab('recycler')">
-                        <div class="card-icon">♻️</div>
-                        <h3>Material Recycler</h3>
-                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" onclick="switchTab('workbench')">
-                        <div class="card-icon">🔧</div>
-                        <h3>Werkbank Manager</h3>
-                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände.</p>
+                        <p>Verwalten Sie Cannabis-Bestände, Anbau und Verkauf. Überwachen Sie Preise und Lieferungen mit Rabatt-System.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
@@ -614,9 +660,29 @@
                     </div>
 
                     <div class="card" onclick="showManagement()">
-                        <div class="card-icon">🏞️</div>
-                        <h3>Gebiets Management</h3>
-                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Aktivitäten.</p>
+                        <div class="card-icon">📊</div>
+                        <h3>Statistiken</h3>
+                        <p>Detaillierte Auswertungen und Analysen aller Transaktionen und Verkaufszahlen.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="showReports()">
+                        <div class="card-icon">📋</div>
+                        <h3>Berichte</h3>
+                        <p>Erstellen Sie umfassende Berichte und Exporte für Ihre Geschäftsanalysen.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" onclick="showSettings()">
+                        <div class="card-icon">⚙️</div>
+                        <h3>Einstellungen</h3>
+                        <p>Passen Sie das System an Ihre Bedürfnisse an und verwalten Sie Benutzerrechte.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online
@@ -632,6 +698,19 @@
                         <i class="fas fa-cannabis"></i> Weed Ankauf Management
                     </h3>
                     
+                    <!-- Discount Selection -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
+                        <div class="discount-grid" id="discountButtons">
+                            <button class="discount-btn active" data-discount="0">0%</button>
+                            <button class="discount-btn" data-discount="10">10%</button>
+                            <button class="discount-btn" data-discount="15">15%</button>
+                            <button class="discount-btn" data-discount="20">20%</button>
+                            <button class="discount-btn" data-discount="25">25%</button>
+                            <button class="discount-btn" data-discount="30">30%</button>
+                        </div>
+                    </div>
+                    
                     <form id="weedForm" class="system-form">
                         <div class="form-group">
                             <label for="weedBuyer">Käufer Name</label>
@@ -644,25 +723,29 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="weedQuantity">Menge (Gramm)</label>
-                            <input type="number" id="weedQuantity" required placeholder="Menge in Gramm" min="1">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="weedQuality">Qualität</label>
-                            <select id="weedQuality" required>
-                                <option value="">Qualität wählen</option>
-                                <option value="low">Niedrig (5€/g)</option>
-                                <option value="medium">Mittel (8€/g)</option>
-                                <option value="high">Hoch (12€/g)</option>
-                                <option value="premium">Premium (15€/g)</option>
-                            </select>
+                            <label for="weedQuantity">Menge (Bricks)</label>
+                            <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
                         </div>
                     </form>
                     
-                    <div class="price-display">
-                        <div style="color: #a0aec0; margin-bottom: 0.5rem; font-size: 0.9rem;">Gesamtpreis</div>
-                        <div id="weedTotalPrice" class="price-amount">0 €</div>
+                    <!-- Price Breakdown -->
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
+                            <span class="price-value" id="totalPrice">0 €</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Rabatt:</span>
+                            <span class="price-value" id="discountAmount">0% (0 €)</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Verkäufer Anteil:</span>
+                            <span class="price-value seller-share" id="sellerShare">0 €</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Käufer Anteil:</span>
+                            <span class="price-value buyer-share" id="buyerShare">0 €</span>
+                        </div>
                     </div>
                     
                     <button type="submit" form="weedForm" class="btn-primary">
@@ -683,149 +766,17 @@
                                 <th>Käufer</th>
                                 <th>Verkäufer</th>
                                 <th>Menge</th>
-                                <th>Qualität</th>
-                                <th>Preis</th>
+                                <th>Rabatt</th>
+                                <th>Gesamt</th>
+                                <th>Verkäufer</th>
+                                <th>Käufer</th>
                             </tr>
                         </thead>
                         <tbody id="weedTransactions">
                             <tr>
-                                <td>24.12.2024 14:30</td>
-                                <td>Max Mustermann</td>
-                                <td>Weed Supplier</td>
-                                <td>50g</td>
-                                <td>Hoch</td>
-                                <td>600 €</td>
-                            </tr>
-                            <tr>
-                                <td>23.12.2024 16:15</td>
-                                <td>Anna Schmidt</td>
-                                <td>Green Gardens</td>
-                                <td>25g</td>
-                                <td>Premium</td>
-                                <td>375 €</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Material Recycler Tab -->
-            <div id="recycler" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-recycle"></i> Material Recycler System
-                    </h3>
-                    
-                    <form id="recyclerForm" class="system-form">
-                        <div class="form-group">
-                            <label for="recyclerMaterial">Material Typ</label>
-                            <select id="recyclerMaterial" required>
-                                <option value="">Material wählen</option>
-                                <option value="plastic">Kunststoff</option>
-                                <option value="metal">Metall</option>
-                                <option value="electronic">Elektronik</option>
-                                <option value="chemical">Chemikalien</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="recyclerWeight">Gewicht (kg)</label>
-                            <input type="number" id="recyclerWeight" required placeholder="Gewicht in kg" min="1">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="recyclerQuality">Qualitätsstufe</label>
-                            <select id="recyclerQuality" required>
-                                <option value="">Qualität wählen</option>
-                                <option value="low">Gering (30% Wert)</option>
-                                <option value="medium">Mittel (60% Wert)</option>
-                                <option value="high">Hoch (85% Wert)</option>
-                            </select>
-                        </div>
-                    </form>
-                    
-                    <div class="price-display">
-                        <div style="color: #a0aec0; margin-bottom: 0.5rem; font-size: 0.9rem;">Wiederverkaufswert</div>
-                        <div id="recyclerValue" class="price-amount">0 €</div>
-                    </div>
-                    
-                    <button type="submit" form="recyclerForm" class="btn-primary">
-                        <i class="fas fa-save"></i> Recycling erfassen
-                    </button>
-                </div>
-            </div>
-
-            <!-- Werkbank Manager Tab -->
-            <div id="workbench" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-tools"></i> Werkbank Manager
-                    </h3>
-                    
-                    <form id="workbenchForm" class="system-form">
-                        <div class="form-group">
-                            <label for="workbenchProduct">Produkt</label>
-                            <select id="workbenchProduct" required>
-                                <option value="">Produkt wählen</option>
-                                <option value="grow_kit">Grow Kit</option>
-                                <option value="processing">Verarbeitung</option>
-                                <option value="packaging">Verpackung</option>
-                                <option value="tools">Werkzeuge</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="workbenchQuantity">Menge</label>
-                            <input type="number" id="workbenchQuantity" required placeholder="Anzahl" min="1">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="workbenchPriority">Priorität</label>
-                            <select id="workbenchPriority" required>
-                                <option value="">Priorität wählen</option>
-                                <option value="low">Niedrig</option>
-                                <option value="medium">Mittel</option>
-                                <option value="high">Hoch</option>
-                                <option value="urgent">Dringend</option>
-                            </select>
-                        </div>
-                    </form>
-                    
-                    <button type="submit" form="workbenchForm" class="btn-primary">
-                        <i class="fas fa-plus-circle"></i> Auftrag erstellen
-                    </button>
-                </div>
-
-                <!-- Aktive Aufträge -->
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-list"></i> Aktive Werkbank Aufträge
-                    </h3>
-                    
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Auftrag</th>
-                                <th>Produkt</th>
-                                <th>Menge</th>
-                                <th>Priorität</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="activeWorkbench">
-                            <tr>
-                                <td>#WB-001</td>
-                                <td>Grow Kit</td>
-                                <td>5</td>
-                                <td><span style="color: #ed8936;">Hoch</span></td>
-                                <td><span style="color: #48bb78;">In Bearbeitung</span></td>
-                            </tr>
-                            <tr>
-                                <td>#WB-002</td>
-                                <td>Verpackung</td>
-                                <td>20</td>
-                                <td><span style="color: #a0aec0;">Mittel</span></td>
-                                <td><span style="color: #4299e1;">Geplant</span></td>
+                                <td colspan="8" style="text-align: center; color: #a0aec0;">
+                                    Keine Transaktionen vorhanden
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -841,11 +792,30 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <script>
+    <script type="module">
         // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Firebase Import und Konfiguration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+            authDomain: "khusland-b7d13.firebaseapp.com",
+            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+            projectId: "khusland-b7d13",
+            storageBucket: "khusland-b7d13.firebasestorage.app",
+            messagingSenderId: "69573193613",
+            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+            measurementId: "G-JSCWR4207G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const entriesRef = ref(db, 'weed_entries');
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -856,9 +826,9 @@
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
 
-        // Preis-Tabellen
-        const weedPrices = { low: 5, medium: 8, high: 12, premium: 15 };
-        const recyclerMultipliers = { low: 0.3, medium: 0.6, high: 0.85 };
+        // System Variablen
+        let currentDiscount = 0;
+        let entries = [];
 
         // Discord Login Funktion
         function loginWithDiscord() {
@@ -1025,6 +995,9 @@
             // URL bereinigen
             const cleanUrl = window.location.origin + window.location.pathname;
             window.history.replaceState({}, document.title, cleanUrl);
+            
+            // Preise initial berechnen
+            updateWeedPrices();
         }
 
         // Logout
@@ -1085,114 +1058,176 @@
         function getTabDisplayName(tabName) {
             const names = {
                 'dashboard': 'Dashboard',
-                'weed': 'Weed System',
-                'recycler': 'Material Recycler',
-                'workbench': 'Werkbank Manager'
+                'weed': 'Weed System'
             };
             return names[tabName] || tabName;
         }
 
         function showManagement() {
-            showNotification('Gebiets Management wird geladen...', 'info');
-            // Hier könnte das Management System geladen werden
+            showNotification('Management System wird geladen...', 'info');
         }
 
-        // Weed System Funktionen
-        function calculateWeedPrice() {
-            const quantity = document.getElementById('weedQuantity').value;
-            const quality = document.getElementById('weedQuality').value;
-            
-            if (quantity && quality && weedPrices[quality]) {
-                const total = quantity * weedPrices[quality];
-                document.getElementById('weedTotalPrice').textContent = `${total} €`;
-            } else {
-                document.getElementById('weedTotalPrice').textContent = '0 €';
-            }
+        function showReports() {
+            showNotification('Berichte werden geladen...', 'info');
         }
 
+        function showSettings() {
+            showNotification('Einstellungen werden geladen...', 'info');
+        }
+
+        // Discount System
+        function setupDiscountButtons() {
+            const discountButtons = document.querySelectorAll('.discount-btn');
+            discountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    discountButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Update current discount
+                    currentDiscount = parseInt(this.getAttribute('data-discount'));
+                    // Update prices
+                    updateWeedPrices();
+                    
+                    showNotification(`Rabatt auf ${currentDiscount}% gesetzt`, 'info', 2000);
+                });
+            });
+        }
+
+        // Weed Price Calculation
+        function updateWeedPrices() {
+            const quantity = parseInt(document.getElementById('weedQuantity').value) || 0;
+            const pricePerBrick = 2500;
+            const totalPrice = quantity * pricePerBrick;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
+
+            // Update display
+            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
+            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
+            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
+            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
+        }
+
+        // Handle Weed Form Submission
         function handleWeedSubmit(event) {
             event.preventDefault();
             
-            const buyer = document.getElementById('weedBuyer').value;
-            const seller = document.getElementById('weedSeller').value;
-            const quantity = document.getElementById('weedQuantity').value;
-            const quality = document.getElementById('weedQuality').value;
-            const totalPrice = document.getElementById('weedTotalPrice').textContent;
+            const buyer = document.getElementById('weedBuyer').value.trim();
+            const seller = document.getElementById('weedSeller').value.trim();
+            const quantity = parseInt(document.getElementById('weedQuantity').value);
             
-            // Hier würde normalerweise die Datenbank-Integration stehen
-            const transaction = {
-                date: new Date().toLocaleString('de-DE'),
+            if (!buyer || !seller || !quantity || quantity < 1) {
+                showNotification('Bitte alle Felder korrekt ausfüllen!', 'error');
+                return;
+            }
+            
+            const pricePerBrick = 2500;
+            const totalPrice = quantity * pricePerBrick;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
+            
+            const entry = {
                 buyer: buyer,
                 seller: seller,
-                quantity: quantity + 'g',
-                quality: quality,
-                price: totalPrice
+                quantity: quantity,
+                totalPrice: totalPrice,
+                discount: currentDiscount,
+                discountAmount: discountValue,
+                sellerShare: sellerShare,
+                buyerShare: buyerShare,
+                date: new Date().toLocaleString('de-DE'),
+                timestamp: Date.now()
             };
-            
-            // Zur Transaktionsliste hinzufügen
-            addWeedTransaction(transaction);
-            
-            // Formular zurücksetzen
-            document.getElementById('weedForm').reset();
-            document.getElementById('weedTotalPrice').textContent = '0 €';
-            
-            showNotification('Weed Ankauf erfolgreich gespeichert', 'success');
-        }
 
-        function addWeedTransaction(transaction) {
-            const tbody = document.getElementById('weedTransactions');
-            const row = tbody.insertRow(0);
-            row.innerHTML = `
-                <td>${transaction.date}</td>
-                <td>${transaction.buyer}</td>
-                <td>${transaction.seller}</td>
-                <td>${transaction.quantity}</td>
-                <td>${transaction.quality}</td>
-                <td>${transaction.price}</td>
-            `;
-        }
-
-        // Recycler System Funktionen
-        function calculateRecyclerValue() {
-            const weight = document.getElementById('recyclerWeight').value;
-            const quality = document.getElementById('recyclerQuality').value;
-            
-            if (weight && quality && recyclerMultipliers[quality]) {
-                const baseValue = weight * 25; // Basiswert pro kg
-                const total = baseValue * recyclerMultipliers[quality];
-                document.getElementById('recyclerValue').textContent = `${Math.round(total)} €`;
-            } else {
-                document.getElementById('recyclerValue').textContent = '0 €';
+            try {
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
+                submitBtn.disabled = true;
+                
+                push(entriesRef, entry).then(() => {
+                    // Formular zurücksetzen
+                    document.getElementById('weedForm').reset();
+                    document.getElementById('weedQuantity').value = '1';
+                    updateWeedPrices();
+                    
+                    showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
+                    
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }).catch(error => {
+                    console.error('Fehler beim Speichern:', error);
+                    showNotification('Fehler beim Speichern!', 'error');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+                
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+                showNotification('Fehler beim Speichern!', 'error');
             }
         }
 
-        function handleRecyclerSubmit(event) {
-            event.preventDefault();
-            
-            const material = document.getElementById('recyclerMaterial').value;
-            const weight = document.getElementById('recyclerWeight').value;
-            const quality = document.getElementById('recyclerQuality').value;
-            const value = document.getElementById('recyclerValue').textContent;
-            
-            showNotification(`Recycling von ${weight}kg ${material} erfasst. Wert: ${value}`, 'success');
-            
-            // Formular zurücksetzen
-            document.getElementById('recyclerForm').reset();
-            document.getElementById('recyclerValue').textContent = '0 €';
+        // Load and display entries from Firebase
+        function loadWeedEntries() {
+            onValue(entriesRef, (snapshot) => {
+                entries = [];
+                let totalRevenue = 0;
+                let totalTransactions = 0;
+                
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    data.key = childSnapshot.key;
+                    entries.push(data);
+                    totalRevenue += data.totalPrice;
+                    totalTransactions++;
+                });
+                
+                // Sort entries by timestamp (newest first)
+                entries.sort((a, b) => b.timestamp - a.timestamp);
+                
+                // Update statistics
+                document.getElementById('totalRevenue').textContent = `${totalRevenue} €`;
+                document.getElementById('totalTransactions').textContent = totalTransactions;
+                document.getElementById('activeOperations').textContent = totalTransactions;
+                document.getElementById('averageTransaction').textContent = totalTransactions > 0 ? `${Math.round(totalRevenue / totalTransactions)} €` : '0 €';
+                
+                // Render transactions table
+                renderWeedTransactions();
+            });
         }
 
-        // Werkbank System Funktionen
-        function handleWorkbenchSubmit(event) {
-            event.preventDefault();
+        function renderWeedTransactions() {
+            const tbody = document.getElementById('weedTransactions');
+            tbody.innerHTML = '';
             
-            const product = document.getElementById('workbenchProduct').value;
-            const quantity = document.getElementById('workbenchQuantity').value;
-            const priority = document.getElementById('workbenchPriority').value;
+            if (entries.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #a0aec0;">
+                            Keine Transaktionen vorhanden
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
             
-            showNotification(`Neuer Werkbank-Auftrag: ${quantity}x ${product} (Priorität: ${priority})`, 'success');
-            
-            // Formular zurücksetzen
-            document.getElementById('workbenchForm').reset();
+            entries.forEach(entry => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${entry.date}</td>
+                    <td>${entry.buyer}</td>
+                    <td>${entry.seller}</td>
+                    <td>${entry.quantity} Bricks</td>
+                    <td>${entry.discount}%</td>
+                    <td>${entry.totalPrice} €</td>
+                    <td style="color: #48bb78;">${entry.sellerShare} €</td>
+                    <td style="color: #4299e1;">${entry.buyerShare} €</td>
+                `;
+            });
         }
 
         // Event Listeners
@@ -1208,34 +1243,22 @@
             }
             
             // Weed System Event Listener
-            document.getElementById('weedQuantity').addEventListener('input', calculateWeedPrice);
-            document.getElementById('weedQuality').addEventListener('change', calculateWeedPrice);
+            document.getElementById('weedQuantity').addEventListener('input', updateWeedPrices);
             document.getElementById('weedForm').addEventListener('submit', handleWeedSubmit);
             
-            // Recycler System Event Listener
-            document.getElementById('recyclerWeight').addEventListener('input', calculateRecyclerValue);
-            document.getElementById('recyclerQuality').addEventListener('change', calculateRecyclerValue);
-            document.getElementById('recyclerForm').addEventListener('submit', handleRecyclerSubmit);
+            // Discount System initialisieren
+            setupDiscountButtons();
             
-            // Werkbank System Event Listener
-            document.getElementById('workbenchForm').addEventListener('submit', handleWorkbenchSubmit);
+            // Firebase Daten laden
+            loadWeedEntries();
         });
 
         // Tastatur-Shortcuts
         document.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
-                // Handle form submissions based on active tab
                 const activeTab = document.querySelector('.tab-content.active').id;
-                switch(activeTab) {
-                    case 'weed':
-                        document.getElementById('weedForm').dispatchEvent(new Event('submit'));
-                        break;
-                    case 'recycler':
-                        document.getElementById('recyclerForm').dispatchEvent(new Event('submit'));
-                        break;
-                    case 'workbench':
-                        document.getElementById('workbenchForm').dispatchEvent(new Event('submit'));
-                        break;
+                if (activeTab === 'weed') {
+                    document.getElementById('weedForm').dispatchEvent(new Event('submit'));
                 }
             }
         });

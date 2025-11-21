@@ -562,6 +562,181 @@
         .buyer-share {
             color: #4299e1;
         }
+        
+        /* Settings Icon */
+        .settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(66, 153, 225, 0.2);
+            border: 1px solid rgba(66, 153, 225, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #90cdf4;
+            z-index: 10;
+        }
+        
+        .settings-icon:hover {
+            background: rgba(66, 153, 225, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .settings-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .settings-content {
+            background: rgba(26, 32, 44, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .settings-modal.active .settings-content {
+            transform: translateY(0);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .settings-header h3 {
+            color: #90cdf4;
+            font-size: 1.4rem;
+        }
+        
+        .close-settings {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-settings:hover {
+            color: #fc8181;
+        }
+        
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section h4 {
+            color: #90cdf4;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .settings-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-form input {
+            flex: 1;
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 6px;
+            color: #e2e8f0;
+        }
+        
+        .settings-form button {
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .settings-form button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .discount-list {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .discount-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .discount-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .discount-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .discount-value {
+            background: rgba(66, 153, 225, 0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #90cdf4;
+        }
+        
+        .delete-discount {
+            background: rgba(245, 101, 101, 0.2);
+            border: 1px solid rgba(245, 101, 101, 0.3);
+            color: #fc8181;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delete-discount:hover {
+            background: rgba(245, 101, 101, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -713,6 +888,11 @@
 
             <!-- Weed System Tab -->
             <div id="weed" class="tab-content">
+                <!-- Settings Icon (only visible in weed tab) -->
+                <div class="settings-icon" id="settingsIcon">
+                    <i class="fas fa-cog"></i>
+                </div>
+
                 <div class="system-card">
                     <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
                         <i class="fas fa-cannabis"></i> Weed Ankauf Management
@@ -722,12 +902,7 @@
                     <div style="margin-bottom: 1.5rem;">
                         <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
                         <div class="discount-grid" id="discountButtons">
-                            <button type="button" class="discount-btn active" data-discount="0">0%</button>
-                            <button type="button" class="discount-btn" data-discount="10">10%</button>
-                            <button type="button" class="discount-btn" data-discount="15">15%</button>
-                            <button type="button" class="discount-btn" data-discount="20">20%</button>
-                            <button type="button" class="discount-btn" data-discount="25">25%</button>
-                            <button type="button" class="discount-btn" data-discount="30">30%</button>
+                            <!-- Discount buttons will be generated here -->
                         </div>
                     </div>
                     
@@ -812,13 +987,42 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3><i class="fas fa-cog"></i> Weed System Einstellungen</h3>
+                <button class="close-settings" id="closeSettings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="settings-section">
+                <h4>Rabatt-Einstellungen</h4>
+                <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
+                    Verwalten Sie die verfügbaren Rabattstufen für das Weed-System.
+                </p>
+                
+                <div class="settings-form">
+                    <input type="number" id="newDiscountValue" placeholder="Rabatt % (0-100)" min="0" max="100">
+                    <input type="text" id="newDiscountLabel" placeholder="Bezeichnung">
+                    <button id="addDiscountBtn">Hinzufügen</button>
+                </div>
+                
+                <div class="discount-list" id="discountSettingsList">
+                    <!-- Discount settings will be listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
         import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-        // Firebase Konfiguration (GENAU WIE VORHER)
+        // Firebase Konfiguration
         const firebaseConfig = {
             apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
             authDomain: "khusland-b7d13.firebaseapp.com",
@@ -844,6 +1048,12 @@
         // System Variablen
         let currentDiscount = 0;
         let entries = [];
+        let availableDiscounts = [
+            { value: 0, label: 'Kein Rabatt' },
+            { value: 10, label: 'Mitarbeiter' },
+            { value: 15, label: 'Einkäufer' },
+            { value: 20, label: 'Normal' }
+        ];
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -861,6 +1071,10 @@
         const weedTab = document.getElementById('weedTab');
         const saveWeedBtn = document.getElementById('saveWeedBtn');
         const weedQuantity = document.getElementById('weedQuantity');
+        const settingsIcon = document.getElementById('settingsIcon');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettings = document.getElementById('closeSettings');
+        const addDiscountBtn = document.getElementById('addDiscountBtn');
 
         // Discord Login Funktion
         function loginWithDiscord() {
@@ -933,6 +1147,7 @@
             
             // Firebase Daten laden
             loadWeedEntries();
+            loadDiscountSettings();
         }
 
         // Logout
@@ -983,6 +1198,13 @@
             // Aktiven Button markieren
             document.getElementById(tabName + 'Tab').classList.add('active');
             
+            // Settings Icon nur im Weed-Tab anzeigen
+            if (tabName === 'weed') {
+                settingsIcon.style.display = 'block';
+            } else {
+                settingsIcon.style.display = 'none';
+            }
+            
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
 
@@ -994,30 +1216,154 @@
             return names[tabName] || tabName;
         }
 
-        // Navigation zu anderen Seiten
-        function navigateTo(page) {
-            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
-            // In einer echten Anwendung würde hier die Navigation stattfinden
-            // window.location.href = page;
+        // Settings Modal Funktionen
+        function openSettings() {
+            settingsModal.classList.add('active');
+        }
+
+        function closeSettingsModal() {
+            settingsModal.classList.remove('active');
         }
 
         // Discount System
-        function setupDiscountButtons() {
-            const discountButtons = document.querySelectorAll('.discount-btn');
-            discountButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    discountButtons.forEach(btn => btn.classList.remove('active'));
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    // Update current discount
-                    currentDiscount = parseInt(this.getAttribute('data-discount'));
-                    // Update prices
+        function loadDiscountSettings() {
+            onValue(discountsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    availableDiscounts = Object.values(data);
+                    renderDiscountButtons();
+                    renderDiscountSettings();
+                } else {
+                    // Initiale Discounts setzen
+                    set(discountsRef, availableDiscounts);
+                }
+            });
+        }
+
+        function renderDiscountButtons() {
+            const container = document.getElementById('discountButtons');
+            container.innerHTML = '';
+            
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach(discount => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
+                button.setAttribute('data-discount', discount.value);
+                button.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
+                `;
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.discount-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    button.classList.add('active');
+                    currentDiscount = discount.value;
+                    
                     updateWeedPrices();
                     
-                    showNotification(`Rabatt auf ${currentDiscount}% gesetzt`, 'info', 2000);
+                    if (discount.value > 0) {
+                        showNotification(`${discount.value}% Rabatt aktiviert`, 'info', 2000);
+                    } else {
+                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
+                    }
+                });
+                
+                container.appendChild(button);
+            });
+        }
+
+        function renderDiscountSettings() {
+            const container = document.getElementById('discountSettingsList');
+            container.innerHTML = '';
+            
+            if (availableDiscounts.length === 0) {
+                container.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte konfiguriert</p>';
+                return;
+            }
+            
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+                const item = document.createElement('div');
+                item.className = 'discount-item';
+                item.innerHTML = `
+                    <div class="discount-info">
+                        <span class="discount-value">${discount.value}%</span>
+                        <span>${discount.label}</span>
+                    </div>
+                    <button class="delete-discount" data-index="${index}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                container.appendChild(item);
+            });
+            
+            // Event Listener für Delete-Buttons
+            document.querySelectorAll('.delete-discount').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.closest('button').getAttribute('data-index'));
+                    deleteDiscount(index);
                 });
             });
+        }
+
+        function addNewDiscount() {
+            const valueInput = document.getElementById('newDiscountValue');
+            const labelInput = document.getElementById('newDiscountLabel');
+            
+            const value = parseInt(valueInput.value);
+            const label = labelInput.value.trim();
+            
+            if (isNaN(value) || value < 0 || value > 100) {
+                showNotification('Bitte gültigen Rabattwert eingeben (0-100)', 'error');
+                return;
+            }
+            
+            if (!label) {
+                showNotification('Bitte Bezeichnung eingeben', 'error');
+                return;
+            }
+            
+            if (availableDiscounts.some(d => d.value === value)) {
+                showNotification('Rabatt mit diesem Wert existiert bereits', 'error');
+                return;
+            }
+            
+            const newDiscount = {
+                value: value,
+                label: label
+            };
+            
+            availableDiscounts.push(newDiscount);
+            set(discountsRef, availableDiscounts);
+            
+            valueInput.value = '';
+            labelInput.value = '';
+            
+            showNotification(`Rabatt ${value}% hinzugefügt`, 'success');
+        }
+
+        function deleteDiscount(index) {
+            if (availableDiscounts.length <= 1) {
+                showNotification('Mindestens ein Rabatt muss vorhanden sein', 'error');
+                return;
+            }
+            
+            const discount = availableDiscounts[index];
+            if (confirm(`Rabatt ${discount.value}% (${discount.label}) löschen?`)) {
+                availableDiscounts.splice(index, 1);
+                set(discountsRef, availableDiscounts);
+                
+                // Falls der gelöschte Discount aktiv war, auf 0% wechseln
+                if (currentDiscount === discount.value) {
+                    currentDiscount = 0;
+                    updateWeedPrices();
+                    renderDiscountButtons();
+                }
+                
+                showNotification(`Rabatt ${discount.value}% gelöscht`, 'success');
+            }
         }
 
         // Weed Price Calculation
@@ -1053,12 +1399,15 @@
             const sellerShare = totalPrice - discountValue;
             const buyerShare = discountValue;
             
+            const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
+            
             const entry = {
                 buyer: buyer,
                 seller: seller,
                 quantity: quantity,
                 totalPrice: totalPrice,
                 discount: currentDiscount,
+                discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
                 discountAmount: discountValue,
                 sellerShare: sellerShare,
                 buyerShare: buyerShare,
@@ -1141,7 +1490,10 @@
                 return;
             }
             
-            entries.forEach(entry => {
+            // Nur die letzten 10 Einträge anzeigen
+            const recentEntries = entries.slice(0, 10);
+            
+            recentEntries.forEach(entry => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
                     <td>${entry.date}</td>
@@ -1172,7 +1524,9 @@
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
-                    navigateTo(page);
+                    // In einer echten Anwendung würde hier die Navigation stattfinden
+                    // window.location.href = page;
+                    showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
                 });
             });
             
@@ -1180,17 +1534,42 @@
             weedQuantity.addEventListener('input', updateWeedPrices);
             saveWeedBtn.addEventListener('click', handleWeedSubmit);
             
-            // Discount Buttons
-            setupDiscountButtons();
+            // Settings System
+            settingsIcon.addEventListener('click', openSettings);
+            closeSettings.addEventListener('click', closeSettingsModal);
+            addDiscountBtn.addEventListener('click', addNewDiscount);
+            
+            // Modal schließen bei Klick außerhalb
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    closeSettingsModal();
+                }
+            });
+            
+            // Enter-Taste für Discount-Form
+            document.getElementById('newDiscountValue').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addNewDiscount();
+                }
+            });
+            
+            document.getElementById('newDiscountLabel').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addNewDiscount();
+                }
+            });
         }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
             checkExistingLogin();
+            
+            // Settings Icon initial ausblenden
+            settingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit Firebase vollständig geladen!');
+        console.log('KhusLand Panel mit Einstellungssystem vollständig geladen!');
     </script>
 </body>
 </html>

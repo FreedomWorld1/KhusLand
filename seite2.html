@@ -1595,43 +1595,29 @@
             }
         }
 
-        // Kokain Price Calculation (80/20 Basis mit Rabatt)
+        // KORRIGIERTE KOKAIN PRICE CALCULATION - GLEICHE LOGIK WIE WEED
         function updateKokainPrices() {
             const quantity = parseInt(kokainQuantity.value) || 0;
             const cash = parseInt(kokainCash.value) || 0;
             
-            // Bei Kokain: 80% Verkäufer, 20% Käufer als Basis
-            const baseSellerPercentage = 80;
-            const baseBuyerPercentage = 20;
+            // GLEICHE LOGIK WIE BEIM WEED SYSTEM:
+            // Basispreis = Cash Betrag
+            // Rabatt wird vom Gesamtbetrag abgezogen
+            // Verkäufer bekommt (100 - Rabatt)%, Käufer bekommt Rabatt%
             
             const totalPrice = cash;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
             
-            if (currentDiscount === 0) {
-                // Kein Rabatt: Verkäufer 80%, Käufer 20%
-                const sellerShare = totalPrice * (baseSellerPercentage / 100);
-                const buyerShare = totalPrice * (baseBuyerPercentage / 100);
-                
-                document.getElementById('totalPrice').textContent = `${totalPrice} $`;
-                document.getElementById('discountAmount').textContent = `0% (0 $)`;
-                document.getElementById('sellerShare').textContent = `${Math.round(sellerShare)} $`;
-                document.getElementById('buyerShare').textContent = `${Math.round(buyerShare)} $`;
-            } else {
-                // Mit Rabatt: Anpassung der prozentualen Verteilung
-                const sellerPercentage = baseSellerPercentage - currentDiscount;
-                const buyerPercentage = baseBuyerPercentage + currentDiscount;
-                
-                const sellerShare = totalPrice * (sellerPercentage / 100);
-                const buyerShare = totalPrice * (buyerPercentage / 100);
-                const discountAmount = totalPrice * (currentDiscount / 100);
-                
-                document.getElementById('totalPrice').textContent = `${totalPrice} $`;
-                document.getElementById('discountAmount').textContent = `${currentDiscount}% (${Math.round(discountAmount)} $)`;
-                document.getElementById('sellerShare').textContent = `${Math.round(sellerShare)} $`;
-                document.getElementById('buyerShare').textContent = `${Math.round(buyerShare)} $`;
-            }
+            // Update display
+            document.getElementById('totalPrice').textContent = `${totalPrice} $`;
+            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${Math.round(discountValue)} $)`;
+            document.getElementById('sellerShare').textContent = `${Math.round(sellerShare)} $`;
+            document.getElementById('buyerShare').textContent = `${Math.round(buyerShare)} $`;
         }
 
-        // Handle Kokain Form Submission mit Firebase
+        // Handle Kokain Form Submission mit Firebase - KORRIGIERTE LOGIK
         function handleKokainSubmit() {
             const buyer = document.getElementById('kokainBuyer').value.trim();
             const seller = document.getElementById('kokainSeller').value.trim();
@@ -1643,25 +1629,11 @@
                 return;
             }
             
-            // Berechnung basierend auf 80/20 mit Rabatt
-            const baseSellerPercentage = 80;
-            const baseBuyerPercentage = 20;
+            // KORRIGIERTE BERECHNUNG - GLEICHE LOGIK WIE WEED
             const totalPrice = cash;
-            
-            let sellerShare, buyerShare, discountAmount;
-            
-            if (currentDiscount === 0) {
-                sellerShare = totalPrice * (baseSellerPercentage / 100);
-                buyerShare = totalPrice * (baseBuyerPercentage / 100);
-                discountAmount = 0;
-            } else {
-                const sellerPercentage = baseSellerPercentage - currentDiscount;
-                const buyerPercentage = baseBuyerPercentage + currentDiscount;
-                
-                sellerShare = totalPrice * (sellerPercentage / 100);
-                buyerShare = totalPrice * (buyerPercentage / 100);
-                discountAmount = totalPrice * (currentDiscount / 100);
-            }
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
             
             // Finde den aktiven Discount mit Label
             const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
@@ -1674,7 +1646,7 @@
                 totalPrice: totalPrice,
                 discount: currentDiscount,
                 discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
-                discountAmount: Math.round(discountAmount),
+                discountAmount: Math.round(discountValue),
                 sellerShare: Math.round(sellerShare),
                 buyerShare: Math.round(buyerShare),
                 date: new Date().toLocaleString('de-DE'),
@@ -1695,7 +1667,11 @@
                     kokainCash.value = '100';
                     updateKokainPrices();
                     
-                    showNotification(`Kokain Ankauf gespeichert! Verkäufer: ${Math.round(sellerShare)}$, Käufer: ${Math.round(buyerShare)}$`, 'success');
+                    if (currentDiscount === 0) {
+                        showNotification('Kokain Ankauf gespeichert! Verkäufer 100% / Käufer 0%', 'success');
+                    } else {
+                        showNotification(`Kokain Ankauf gespeichert! Verkäufer ${100 - currentDiscount}% / Käufer ${currentDiscount}%`, 'success');
+                    }
                     
                     saveKokainBtn.innerHTML = originalText;
                     saveKokainBtn.disabled = false;
@@ -1892,7 +1868,7 @@
             kokainSettingsIcon.style.display = 'none';
         });
 
-        console.log('Kokain Ankauf Panel mit verbessertem Design vollständig geladen!');
+        console.log('Kokain Ankauf Panel mit KORRIGIERTER Rabatt-Berechnung vollständig geladen!');
     </script>
 </body>
 </html>

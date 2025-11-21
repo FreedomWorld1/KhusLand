@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>US Army Management System</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        /* Login Styles */
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: #2a5298;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        h1 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .discord-login-btn {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .discord-login-btn:hover {
+            background: #4752c4;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 1rem;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e3c72;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        /* Dashboard Styles */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo-small {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .welcome-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .card p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background: #4CAF50;
+        }
+        
+        .status-offline {
+            background: #f44336;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+        
+        /* Content Pages */
+        .content-page {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .content-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content-card h3 {
+            margin-bottom: 1rem;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 0.5rem;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+        
+        .visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="logo">USA</div>
+        <h1>US Army Panel Login</h1>
+        <p>Bitte melde dich mit Discord an, um auf das Panel zuzugreifen.</p>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <button class="discord-login-btn" onclick="loginWithDiscord()">
+            Mit Discord anmelden
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Anmeldung wird vorbereitet...</p>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="hidden">
+        <div class="header">
+            <div class="logo-small">
+                <div class="logo-icon">USA</div>
+                <h2>US Army Management</h2>
+            </div>
+            <div class="user-info">
+                <span>Willkommen, Soldat</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="welcome-section">
+                <h1>Operationszentrale</h1>
+                <p>Verwalten Sie alle militärischen Operationen und Ressourcen</p>
+            </div>
+
+            <div class="grid-container">
+                <div class="card" onclick="navigateTo('weedPage')">
+                    <div class="card-icon">🌿</div>
+                    <h3>Weed Ankauf</h3>
+                    <p>Verwalten Sie Cannabis-Bestände und Einkäufe. Überwachen Sie Preise und Lieferungen.</p>
+                    <div class="status">
+                        <span class="status-indicator status-online"></span>
+                        System online
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateTo('cocainePage')">
+                    <div class="card-icon">❄️</div>
+                    <h3>Kokain Ankauf</h3>
+                    <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität.</p>
+                    <div class="status">
+                        <span class="status-indicator status-online"></span>
+                        System online
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateTo('recyclerPage')">
+                    <div class="card-icon">♻️</div>
+                    <h3>Materialrecycler - Produkte</h3>
+                    <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien.</p>
+                    <div class="status">
+                        <span class="status-indicator status-online"></span>
+                        System online
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateTo('workbenchPage')">
+                    <div class="card-icon">🔧</div>
+                    <h3>Werkbank Manager</h3>
+                    <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge.</p>
+                    <div class="status">
+                        <span class="status-indicator status-online"></span>
+                        System online
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateTo('routesPage')">
+                    <div class="card-icon">🛣️</div>
+                    <h3>Drogenrouten</h3>
+                    <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen.</p>
+                    <div class="status">
+                        <span class="status-indicator status-online"></span>
+                        System online
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateTo('khuslandPage')">
+                    <div class="card-icon">🏞️</div>
+                    <h3>KhusLand Management</h3>
+                    <p>Verwalten Sie Gebiete und Operationen in KhusLand.</p>
+                    <div class="status">
+                        <span class="status-indicator status-online"></span>
+                        System online
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>US Army Management System © 2024 | Streng vertraulich</p>
+        </div>
+    </div>
+
+    <!-- Content Pages -->
+    <div id="weedPage" class="content-page hidden">
+        <div class="page-header">
+            <h1>Weed Ankauf</h1>
+            <button class="back-btn" onclick="navigateTo('dashboardPage')">Zurück zum Dashboard</button>
+        </div>
+        
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Bestandsübersicht</h3>
+                <p>Aktueller Weed-Bestand: <strong>1.250 kg</strong></p>
+                <p>Verfügbare Sorten: <strong>5</strong></p>
+                <p>Durchschnittspreis: <strong>€45/g</strong></p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">87%</div>
+                        <div class="stat-label">Qualität</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">24h</div>
+                        <div class="stat-label">Lieferzeit</div>
+                    </div>
+                </div>
+                <button class="action-btn">Bestand aktualisieren</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Einkäufe</h3>
+                <p>Letzter Einkauf: <strong>250 kg</strong></p>
+                <p>Nächster Einkauf: <strong>in 3 Tagen</strong></p>
+                <p>Einkaufsbudget: <strong>€50.000</strong></p>
+                <button class="action-btn">Neuen Einkauf planen</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Lieferanten</h3>
+                <p>Aktive Lieferanten: <strong>3</strong></p>
+                <p>Bewertung: <strong>4.2/5</strong></p>
+                <p>Zuverlässigkeit: <strong>92%</strong></p>
+                <button class="action-btn">Lieferanten verwalten</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cocainePage" class="content-page hidden">
+        <div class="page-header">
+            <h1>Kokain Ankauf</h1>
+            <button class="back-btn" onclick="navigateTo('dashboardPage')">Zurück zum Dashboard</button>
+        </div>
+        
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Bestandsübersicht</h3>
+                <p>Aktueller Kokain-Bestand: <strong>850 kg</strong></p>
+                <p>Reinheit: <strong>92%</strong></p>
+                <p>Durchschnittspreis: <strong>€85/g</strong></p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Reinheit</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">48h</div>
+                        <div class="stat-label">Lieferzeit</div>
+                    </div>
+                </div>
+                <button class="action-btn">Qualität prüfen</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Einkäufe</h3>
+                <p>Letzter Einkauf: <strong>150 kg</strong></p>
+                <p>Nächster Einkauf: <strong>in 5 Tagen</strong></p>
+                <p>Einkaufsbudget: <strong>€120.000</strong></p>
+                <button class="action-btn">Einkauf anfordern</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Sicherheit</h3>
+                <p>Sicherheitsstufe: <strong>Hoch</strong></p>
+                <p>Letzte Überprüfung: <strong>vor 2 Tagen</strong></p>
+                <p>Risiko: <strong>Mittel</strong></p>
+                <button class="action-btn">Sicherheit erhöhen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="recyclerPage" class="content-page hidden">
+        <div class="page-header">
+            <h1>Materialrecycler - Produkte</h1>
+            <button class="back-btn" onclick="navigateTo('dashboardPage')">Zurück zum Dashboard</button>
+        </div>
+        
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Recycling-Status</h3>
+                <p>Aktive Recycler: <strong>8/12</strong></p>
+                <p>Tagesproduktion: <strong>450 Einheiten</strong></p>
+                <p>Effizienz: <strong>78%</strong></p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Effizienz</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Auslastung</div>
+                    </div>
+                </div>
+                <button class="action-btn">Recycler starten</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Produkte</h3>
+                <p>Produzierte Einheiten: <strong>12.450</strong></p>
+                <p>Qualitätsdurchschnitt: <strong>4.1/5</strong></p>
+                <p>Verkaufspreis: <strong>€25/Einheit</strong></p>
+                <button class="action-btn">Produktion optimieren</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Rohmaterial</h3>
+                <p>Verfügbares Material: <strong>2.800 kg</strong></p>
+                <p>Nachschub in: <strong>2 Tagen</strong></p>
+                <p>Kosten: <strong>€8/kg</strong></p>
+                <button class="action-btn">Material bestellen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="workbenchPage" class="content-page hidden">
+        <div class="page-header">
+            <h1>Werkbank Manager</h1>
+            <button class="back-btn" onclick="navigateTo('dashboardPage')">Zurück zum Dashboard</button>
+        </div>
+        
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Werkstatt-Status</h3>
+                <p>Aktive Werkbänke: <strong>6/8</strong></p>
+                <p>Auslastung: <strong>85%</strong></p>
+                <p>Produktionszeit: <strong>2.4h/Durchlauf</strong></p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">85%</div>
+                        <div class="stat-label">Auslastung</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Effizienz</div>
+                    </div>
+                </div>
+                <button class="action-btn">Werkbank hinzufügen</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Aufträge</h3>
+                <p>Laufende Aufträge: <strong>14</strong></p>
+                <p>Abgeschlossen heute: <strong>28</strong></p>
+                <p>Durchschn. Fertigstellungszeit: <strong>3.2h</strong></p>
+                <button class="action-btn">Neuen Auftrag erstellen</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Materialverbrauch</h3>
+                <p>Tagesverbrauch: <strong>320 kg</strong></p>
+                <p>Bestand: <strong>1.250 kg</strong></p>
+                <p>Nachbestellung in: <strong>4 Tagen</strong></p>
+                <button class="action-btn">Material bestellen</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="routesPage" class="content-page hidden">
+        <div class="page-header">
+            <h1>Drogenrouten</h1>
+            <button class="back-btn" onclick="navigateTo('dashboardPage')">Zurück zum Dashboard</button>
+        </div>
+        
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Aktive Routen</h3>
+                <p>Aktive Transporte: <strong>5</strong></p>
+                <p>Sichere Routen: <strong>8</strong></p>
+                <p>Risiko-Routen: <strong>2</strong></p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">94%</div>
+                        <div class="stat-label">Erfolgsrate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Probleme</div>
+                    </div>
+                </div>
+                <button class="action-btn">Route planen</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Sicherheit</h3>
+                <p>Sicherheitsstufe: <strong>Hoch</strong></p>
+                <p>Letzte Überprüfung: <strong>vor 6 Stunden</strong></p>
+                <p>Bedrohungslevel: <strong>Niedrig</strong></p>
+                <button class="action-btn">Sicherheit erhöhen</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Transporte</h3>
+                <p>Heutige Transporte: <strong>12</strong></p>
+                <p>Durchschn. Lieferzeit: <strong>4.2h</strong></p>
+                <p>Verluste: <strong>0.8%</strong></p>
+                <button class="action-btn">Transport starten</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="khuslandPage" class="content-page hidden">
+        <div class="page-header">
+            <h1>KhusLand Management</h1>
+            <button class="back-btn" onclick="navigateTo('dashboardPage')">Zurück zum Dashboard</button>
+        </div>
+        
+        <div class="content-grid">
+            <div class="content-card">
+                <h3>Gebietskontrolle</h3>
+                <p>Kontrollierte Gebiete: <strong>14/20</strong></p>
+                <p>Stabilität: <strong>87%</strong></p>
+                <p>Einwohner: <strong>2.450</strong></p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">70%</div>
+                        <div class="stat-label">Kontrolle</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">87%</div>
+                        <div class="stat-label">Stabilität</div>
+                    </div>
+                </div>
+                <button class="action-btn">Gebiet sichern</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Ressourcen</h3>
+                <p>Verfügbare Ressourcen: <strong>8</strong></p>
+                <p>Tagesproduktion: <strong>1.200 Einheiten</strong></p>
+                <p>Lagerkapazität: <strong>85%</strong></p>
+                <button class="action-btn">Ressourcen verwalten</button>
+            </div>
+            
+            <div class="content-card">
+                <h3>Sicherheit</h3>
+                <p>Sicherheitspersonal: <strong>45</strong></p>
+                <p>Bedrohungslevel: <strong>Mittel</strong></p>
+                <p>Letzter Vorfall: <strong>vor 5 Tagen</strong></p>
+                <button class="action-btn">Sicherheit verstärken</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Einfache Router-Funktionalität
+        const Ziggy = {
+            url: "https://panel.corleone-usarmy.de",
+            port: null,
+            defaults: {},
+            routes: {
+                "login": {
+                    uri: "/",
+                    methods: ["GET", "HEAD"]
+                },
+                "auth.discord": {
+                    uri: "auth/discord",
+                    methods: ["GET", "HEAD"]
+                },
+                "dashboard": {
+                    uri: "dashboard",
+                    methods: ["GET", "HEAD"]
+                }
+            }
+        };
+
+        function route(name, params = {}) {
+            const routeConfig = Ziggy.routes[name];
+            if (!routeConfig) {
+                console.error(`Route ${name} nicht gefunden`);
+                return '#';
+            }
+            
+            let uri = routeConfig.uri;
+            
+            // Parameter ersetzen
+            Object.keys(params).forEach(key => {
+                uri = uri.replace(`{${key}}`, encodeURIComponent(params[key]));
+            });
+            
+            return Ziggy.url + '/' + uri;
+        }
+
+        // Seiten-Navigation
+        function navigateTo(pageId) {
+            // Alle Seiten ausblenden
+            document.querySelectorAll('.login-container, #dashboardPage, .content-page').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Zielseite anzeigen
+            if (pageId === 'loginPage') {
+                document.querySelector('.login-container').classList.remove('hidden');
+            } else if (pageId === 'dashboardPage') {
+                document.getElementById('dashboardPage').classList.remove('hidden');
+            } else {
+                document.getElementById(pageId).classList.remove('hidden');
+            }
+        }
+
+        function loginWithDiscord() {
+            const btn = document.querySelector('.discord-login-btn');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Loading anzeigen
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // Zur Dashboard-Seite weiterleiten (Simulation)
+            setTimeout(() => {
+                navigateTo('dashboardPage');
+            }, 1500);
+        }
+
+        function logout() {
+            if (confirm('Möchten Sie sich wirklich abmelden?')) {
+                // Zurück zum Login
+                navigateTo('loginPage');
+                
+                // Login-Button wieder anzeigen
+                document.querySelector('.discord-login-btn').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Fehlerhandling
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            const btn = document.querySelector('.discord-login-btn');
+            const loading = document.getElementById('loading');
+            
+            btn.style.display = 'block';
+            loading.style.display = 'none';
+        }
+
+        // URL-Parameter prüfen auf Fehler
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            
+            if (error) {
+                switch(error) {
+                    case 'access_denied':
+                        showError('Anmeldung wurde abgebrochen.');
+                        break;
+                    case 'invalid_request':
+                        showError('Ungültige Anfrage. Bitte versuche es erneut.');
+                        break;
+                    default:
+                        showError('Ein Fehler ist aufgetreten. Bitte versuche es erneut.');
+                }
+            }
+            
+            // Standardmäßig Login-Seite anzeigen
+            navigateTo('loginPage');
+        });
+
+        // Tastatur-Shortcuts
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && document.querySelector('.login-container').classList.contains('hidden') === false) {
+                loginWithDiscord();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            // Strg + L für Logout (nur wenn nicht auf Login-Seite)
+            if (event.ctrlKey && event.key === 'l' && document.querySelector('.login-container').classList.contains('hidden')) {
+                event.preventDefault();
+                logout();
+            }
+            
+            // Escape für Zurück-Navigation
+            if (event.key === 'Escape' && !document.getElementById('dashboardPage').classList.contains('hidden')) {
+                navigateTo('dashboardPage');
+            }
+            
+            // Nummern 1-6 für direkte Navigation vom Dashboard
+            if (event.key >= '1' && event.key <= '6' && document.getElementById('dashboardPage').classList.contains('hidden') === false) {
+                const pageIndex = parseInt(event.key) - 1;
+                const pages = [
+                    'weedPage',
+                    'cocainePage', 
+                    'recyclerPage',
+                    'workbenchPage',
+                    'routesPage',
+                    'khuslandPage'
+                ];
+                navigateTo(pages[pageIndex]);
+            }
+        });
+
+        console.log('US Army Management System geladen');
+    </script>
+</body>
+</html>

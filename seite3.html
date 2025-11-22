@@ -87,29 +87,11 @@
         .discord-login-btn:hover {
             background: #4752c4;
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.4);
         }
         
-        .simple-login-btn {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .simple-login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        .discord-login-btn:active {
+            transform: translateY(0);
         }
         
         .loading {
@@ -304,6 +286,45 @@
             display: none;
         }
         
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         /* Notification System */
         .notification {
             position: fixed;
@@ -334,6 +355,208 @@
         .notification.info {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         }
+        
+        /* Access Badge */
+        .access-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+        
+        .access-permanent {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        .access-temporary {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+        
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .settings-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .settings-content {
+            background: rgba(26, 32, 44, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .settings-modal.active .settings-content {
+            transform: translateY(0);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .settings-header h3 {
+            color: #fbbf24;
+            font-size: 1.4rem;
+        }
+        
+        .close-settings {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-settings:hover {
+            color: #fc8181;
+        }
+        
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section h4 {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-form input {
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 6px;
+            color: #e2e8f0;
+        }
+        
+        .settings-form button {
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .settings-form button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Password Protection */
+        .password-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .password-error {
+            color: #fc8181;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        /* System-spezifische Styles */
+        .system-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.9rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -341,7 +564,7 @@
     <div id="loginPage" class="login-container">
         <div class="logo">♻️</div>
         <h1>Materialrecycler Login</h1>
-        <p>Bitte melde dich an, um auf das Panel zuzugreifen.</p>
+        <p>Bitte melde dich mit Discord an, um auf das Panel zuzugreifen.</p>
         
         <div class="error-message" id="errorMessage"></div>
         
@@ -349,16 +572,9 @@
             <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
         
-        <!-- Einfacher Login als Alternative -->
-        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(101, 119, 149, 0.3);">
-            <button id="simpleLoginBtn" class="simple-login-btn">
-                <i class="fas fa-user"></i> Sofort Login (Klick mich!)
-            </button>
-        </div>
-        
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Anmeldung wird vorbereitet...</p>
+            <p>Verbinde mit Discord...</p>
         </div>
     </div>
 
@@ -392,65 +608,109 @@
                 </div>
             </div>
 
-            <!-- System Cards -->
-            <div class="grid-container">
-                <div class="card" data-page="index.html">
-                    <div class="card-icon">🌿</div>
-                    <h3>Weed Ankauf</h3>
-                    <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button id="dashboardTab" class="nav-tab active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button id="recyclerTab" class="nav-tab">
+                    <i class="fas fa-recycle"></i> Recycler System
+                </button>
+                <button id="adminTab" class="nav-tab">
+                    <i class="fas fa-cog"></i> Admin Bereich
+                </button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <!-- System Cards -->
+                <div class="grid-container">
+                    <div class="card" data-page="weed.html">
+                        <div class="card-icon">🌿</div>
+                        <h3>Weed Ankauf</h3>
+                        <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="kokain.html">
+                        <div class="card-icon">💊</div>
+                        <h3>Kokain Ankauf</h3>
+                        <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="recycler.html">
+                        <div class="card-icon">♻️</div>
+                        <h3>Materialrecycler - Produkte</h3>
+                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="werkbank.html">
+                        <div class="card-icon">🔧</div>
+                        <h3>Werkbank Manager</h3>
+                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="routen.html">
+                        <div class="card-icon">🛣️</div>
+                        <h3>Drogenrouten</h3>
+                        <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="khusland.html">
+                        <div class="card-icon">🏞️</div>
+                        <h3>KhusLand Management</h3>
+                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card" data-page="seite2.html">
-                    <div class="card-icon">💊</div>
-                    <h3>Kokain Ankauf</h3>
-                    <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
-                    <div class="status">
+            <!-- Recycler System Tab -->
+            <div id="recycler" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem;">
+                        <i class="fas fa-recycle"></i> Material Recycler System
+                    </h3>
+                    <p>Hier können Sie Recycling-Prozesse verwalten und Materialien produzieren.</p>
+                    <div class="status" style="margin-top: 1rem;">
                         <span class="status-indicator status-online"></span>
-                        System online
+                        Recycler System bereit
                     </div>
                 </div>
+            </div>
 
-                <div class="card" data-page="seite3.html">
-                    <div class="card-icon">♻️</div>
-                    <h3>Materialrecycler - Produkte</h3>
-                    <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
-                    <div class="status">
+            <!-- Admin Tab -->
+            <div id="admin" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem;">
+                        <i class="fas fa-cog"></i> Administrator Bereich
+                    </h3>
+                    <p>Systemeinstellungen und erweiterte Funktionen.</p>
+                    <div class="status" style="margin-top: 1rem;">
                         <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" data-page="seite4.html">
-                    <div class="card-icon">🔧</div>
-                    <h3>Werkbank Manager</h3>
-                    <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" data-page="seite5.html">
-                    <div class="card-icon">🛣️</div>
-                    <h3>Drogenrouten</h3>
-                    <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
-                    </div>
-                </div>
-
-                <div class="card" data-page="seite6.html">
-                    <div class="card-icon">🏞️</div>
-                    <h3>KhusLand Management</h3>
-                    <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
-                    <div class="status">
-                        <span class="status-indicator status-online"></span>
-                        System online
+                        Admin-Rechte aktiv
                     </div>
                 </div>
             </div>
@@ -466,7 +726,7 @@
 
     <script>
         // =============================================
-        // MATERIALRECYCLER SYSTEM - KOMPLETTE LOGIK
+        // MATERIALRECYCLER SYSTEM - NUR DISCORD LOGIN
         // =============================================
         
         console.log('🚀 Materialrecycler System wird gestartet...');
@@ -475,7 +735,6 @@
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
         const discordLoginBtn = document.getElementById('discordLoginBtn');
-        const simpleLoginBtn = document.getElementById('simpleLoginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         const errorMessage = document.getElementById('errorMessage');
         const loading = document.getElementById('loading');
@@ -483,11 +742,18 @@
         const userAvatar = document.getElementById('userAvatar');
         const notification = document.getElementById('notification');
 
+        // Tab Elements
+        const dashboardTab = document.getElementById('dashboardTab');
+        const recyclerTab = document.getElementById('recyclerTab');
+        const adminTab = document.getElementById('adminTab');
+        const dashboardContent = document.getElementById('dashboard');
+        const recyclerContent = document.getElementById('recycler');
+        const adminContent = document.getElementById('admin');
+
         // System-Konfiguration
         const CONFIG = {
             appName: 'Materialrecycler',
             version: '2.0.0',
-            adminPassword: '1101',
             sessionTimeout: 24 * 60 * 60 * 1000 // 24 Stunden
         };
 
@@ -523,10 +789,7 @@
             
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
-            
-            // Buttons wieder anzeigen
             discordLoginBtn.style.display = 'flex';
-            simpleLoginBtn.style.display = 'flex';
             loading.style.display = 'none';
         }
 
@@ -535,7 +798,7 @@
         }
 
         // =============================================
-        // LOGIN SYSTEM
+        // DISCORD LOGIN SYSTEM
         // =============================================
         
         function loginWithDiscord() {
@@ -544,7 +807,6 @@
             // UI zurücksetzen
             hideError();
             discordLoginBtn.style.display = 'none';
-            simpleLoginBtn.style.display = 'none';
             loading.style.display = 'block';
             
             // Simuliere Discord OAuth Prozess
@@ -556,7 +818,8 @@
                         id: "123456789",
                         avatar: null,
                         loginType: "discord",
-                        loginTime: new Date().toISOString()
+                        loginTime: new Date().toISOString(),
+                        premium: true
                     };
                     
                     currentUser = discordUser;
@@ -568,44 +831,9 @@
                     
                 } catch (error) {
                     console.error('Login Fehler:', error);
-                    showError('Login fehlgeschlagen: ' + error.message);
+                    showError('Discord Login fehlgeschlagen: ' + error.message);
                 }
             }, 2000);
-        }
-
-        function loginSimple() {
-            console.log('🔓 Einfacher Login gestartet...');
-            
-            // UI zurücksetzen
-            hideError();
-            discordLoginBtn.style.display = 'none';
-            simpleLoginBtn.style.display = 'none';
-            loading.style.display = 'block';
-            
-            // Sofortiger Login
-            setTimeout(() => {
-                try {
-                    const simpleUser = {
-                        username: "Demo_User",
-                        discriminator: "0000",
-                        id: "999999999", 
-                        avatar: null,
-                        loginType: "simple",
-                        loginTime: new Date().toISOString()
-                    };
-                    
-                    currentUser = simpleUser;
-                    localStorage.setItem('materialrecycler_user', JSON.stringify(simpleUser));
-                    localStorage.setItem('materialrecycler_login_time', Date.now().toString());
-                    
-                    showMainContent(simpleUser);
-                    showNotification('🔓 Demo Login erfolgreich!', 'success');
-                    
-                } catch (error) {
-                    console.error('Login Fehler:', error);
-                    showError('Login fehlgeschlagen: ' + error.message);
-                }
-            }, 800);
         }
 
         // =============================================
@@ -657,7 +885,6 @@
                     // UI zurücksetzen
                     hideMainContent();
                     discordLoginBtn.style.display = 'flex';
-                    simpleLoginBtn.style.display = 'flex';
                     loading.style.display = 'none';
                     hideError();
                     
@@ -671,6 +898,41 @@
                     showError('Logout fehlgeschlagen');
                 }
             }
+        }
+
+        // =============================================
+        // TAB NAVIGATION
+        // =============================================
+        
+        function switchTab(tabName) {
+            console.log(`📑 Wechsle zu Tab: ${tabName}`);
+            
+            // Alle Tabs ausblenden
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Alle Tab-Buttons zurücksetzen
+            document.querySelectorAll('.nav-tab').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Gewählten Tab anzeigen
+            document.getElementById(tabName).classList.add('active');
+            
+            // Aktiven Button markieren
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            showNotification(`📊 ${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+        }
+
+        function getTabDisplayName(tabName) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'recycler': 'Recycler System',
+                'admin': 'Admin Bereich'
+            };
+            return names[tabName] || tabName;
         }
 
         // =============================================
@@ -700,13 +962,6 @@
             } catch (error) {
                 console.error('Session Daten ungültig:', error);
                 return false;
-            }
-        }
-
-        function autoLogoutCheck() {
-            if (currentUser && !checkSession()) {
-                showNotification('🕒 Ihre Sitzung ist abgelaufen', 'error');
-                logout();
             }
         }
 
@@ -743,17 +998,23 @@
                 loginWithDiscord();
             });
             
-            // Simple Login Button
-            simpleLoginBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                loginSimple();
-            });
-            
             // Logout Button
             logoutBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 logout();
+            });
+            
+            // Tab Navigation
+            dashboardTab.addEventListener('click', function() {
+                switchTab('dashboard');
+            });
+            
+            recyclerTab.addEventListener('click', function() {
+                switchTab('recycler');
+            });
+            
+            adminTab.addEventListener('click', function() {
+                switchTab('admin');
             });
             
             // Card Klicks
@@ -767,12 +1028,9 @@
             // Enter-Taste für Login
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !loginPage.classList.contains('hidden')) {
-                    loginSimple(); // Enter für schnellen Login
+                    loginWithDiscord();
                 }
             });
-            
-            // Session Check alle 5 Minuten
-            setInterval(autoLogoutCheck, 5 * 60 * 1000);
         }
 
         // =============================================
@@ -792,13 +1050,12 @@
                 showNotification(`🔓 Willkommen zurück, ${currentUser.username}!`, 'success');
             } else {
                 console.log('ℹ️ Keine aktive Session gefunden');
-                showNotification('🔐 Bitte anmelden um fortzufahren', 'info', 3000);
+                showNotification('🔐 Bitte mit Discord anmelden', 'info', 3000);
             }
             
             // Debug Info
             console.log('📊 App Konfiguration:', CONFIG);
             console.log('🎯 Discord Button:', !!discordLoginBtn);
-            console.log('🎯 Simple Button:', !!simpleLoginBtn);
             console.log('✅ App Initialisierung abgeschlossen');
         }
 
@@ -833,8 +1090,7 @@
                 console.log('UI Elements:', {
                     loginPage: !!loginPage,
                     mainContent: !!mainContent,
-                    discordBtn: !!discordLoginBtn,
-                    simpleBtn: !!simpleLoginBtn
+                    discordBtn: !!discordLoginBtn
                 });
             }
         };

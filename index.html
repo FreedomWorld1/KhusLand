@@ -1312,7 +1312,7 @@
             return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
         }
 
-        // Discord Login Funktion - ECHTE AUTHENTIFIZIERUNG
+        // Discord Login Funktion - KORRIGIERT
         function loginWithDiscord() {
             const btn = discordLoginBtn;
             
@@ -1321,9 +1321,11 @@
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
-            // ECHTE Discord OAuth URL
-            const discordOAuthURL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin)}&response_type=code&scope=identify`;
+            // KORRIGIERT: Feste Redirect URI
+            const redirectUri = 'https://freedomworld1.github.io/KhusLand/';
+            const discordOAuthURL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
             
+            console.log('OAuth URL:', discordOAuthURL);
             // Redirect zu Discord OAuth
             window.location.href = discordOAuthURL;
         }
@@ -1339,21 +1341,31 @@
                 },
                 body: JSON.stringify({
                     accessToken: accessToken,
-                    currentPage: currentPage  // Aktuelle Seite mitsenden
+                    currentPage: currentPage
                 })
             });
             
             return await userResponse.json();
         }
 
-        // OAuth Callback Handler
+        // OAuth Callback Handler - KORRIGIERT
         async function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
+            const error = urlParams.get('error');
+            
+            console.log('OAuth Callback - Code:', code, 'Error:', error);
+            
+            if (error) {
+                showError(`Discord Login fehlgeschlagen: ${error}`);
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
             
             if (code) {
                 try {
                     loading.style.display = 'block';
+                    console.log('Exchanging code for token...');
                     
                     // Token mit Cloudflare Worker austauschen
                     const tokenResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/token`, {
@@ -1362,8 +1374,8 @@
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            code: code,
-                            redirect_uri: window.location.origin
+                            code: code
+                            // Redirect URI wird im Worker fest definiert
                         })
                     });
                     
@@ -1372,6 +1384,8 @@
                     if (!tokenResponse.ok) {
                         throw new Error(tokenData.error || 'Token exchange failed');
                     }
+                    
+                    console.log('Token received, verifying user...');
                     
                     // BENUTZER MIT SEITEN-ZUGRIFF verifizieren
                     const userData = await verifyUserWithPageAccess(tokenData.access_token);
@@ -1389,6 +1403,8 @@
                     // Erfolgreiche Anmeldung für autorisierte Benutzer
                     localStorage.setItem('discord_user', JSON.stringify(userData.user));
                     localStorage.setItem('access_info', JSON.stringify(userData.accessInfo));
+                    localStorage.setItem('discord_access_token', tokenData.access_token);
+                    
                     showAuthorizedContent(userData.user, userData.accessInfo);
                     showNotification(`Erfolgreich eingeloggt als ${userData.user.username}`, 'success');
                     
@@ -1531,6 +1547,7 @@
             const code = urlParams.get('code');
             
             if (code) {
+                console.log('OAuth callback detected, handling...');
                 handleOAuthCallback();
                 return true;
             }
@@ -1846,7 +1863,6 @@
                 return;
             }
             
-            // KEINE Überprüfung auf doppelte Werte mehr - gleiche Prozentwerte sind erlaubt
             const newDiscount = {
                 value: value,
                 label: label
@@ -1872,7 +1888,6 @@
                 availableDiscounts.splice(index, 1);
                 set(discountsRef, availableDiscounts);
                 
-                // Falls der gelöschte Discount aktiv war, auf 0% wechseln
                 if (currentDiscount === discount.value) {
                     currentDiscount = 0;
                     updateWeedPrices();
@@ -1892,14 +1907,13 @@
             const sellerShare = totalPrice - discountValue;
             const buyerShare = discountValue;
 
-            // Update display
             document.getElementById('totalPrice').textContent = `${totalPrice} €`;
             document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
             document.getElementById('sellerShare').textContent = `${sellerShare} €`;
             document.getElementById('buyerShare').textContent = `${buyerShare} €`;
         }
 
-        // Handle Weed Form Submission mit Firebase
+        // Handle Weed Form Submission
         function handleWeedSubmit() {
             const buyer = document.getElementById('weedBuyer').value.trim();
             const seller = document.getElementById('weedSeller').value.trim();
@@ -1916,7 +1930,6 @@
             const sellerShare = totalPrice - discountValue;
             const buyerShare = discountValue;
             
-            // Finde den aktiven Discount mit Label
             const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
             
             const entry = {
@@ -1938,9 +1951,7 @@
                 saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
                 saveWeedBtn.disabled = true;
                 
-                // Firebase-Speicherung
                 push(entriesRef, entry).then(() => {
-                    // Formular zurücksetzen
                     document.getElementById('weedBuyer').value = '';
                     document.getElementById('weedSeller').value = '';
                     weedQuantity.value = '1';
@@ -1974,10 +1985,7 @@
                     entries.push(data);
                 });
                 
-                // Sort entries by timestamp (newest first)
                 entries.sort((a, b) => b.timestamp - a.timestamp);
-                
-                // Render transactions table
                 renderWeedTransactions();
             });
         }
@@ -1997,7 +2005,6 @@
                 return;
             }
             
-            // Nur die letzten 10 Einträge anzeigen
             const recentEntries = entries.slice(0, 10);
             
             recentEntries.forEach(entry => {
@@ -2017,18 +2024,13 @@
 
         // Event Listeners initialisieren
         function initializeEventListeners() {
-            // Login Button
             discordLoginBtn.addEventListener('click', loginWithDiscord);
-            
-            // Logout Button
             logoutBtn.addEventListener('click', logout);
             restrictedLogoutBtn.addEventListener('click', logout);
             
-            // Tab Buttons
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             weedTab.addEventListener('click', () => switchTab('weed'));
             
-            // Navigation Cards - MIT Zugriffsprüfung
             document.querySelectorAll('.nav-card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
@@ -2036,7 +2038,6 @@
                 });
             });
             
-            // Dashboard Cards - MIT Zugriffsprüfung
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
@@ -2044,11 +2045,9 @@
                 });
             });
             
-            // Weed System
             weedQuantity.addEventListener('input', updateWeedPrices);
             saveWeedBtn.addEventListener('click', handleWeedSubmit);
             
-            // Settings System
             headerLogo.addEventListener('click', openDashboardSettings);
             weedSettingsIcon.addEventListener('click', openWeedSettings);
             closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
@@ -2056,54 +2055,35 @@
             addDiscountBtn.addEventListener('click', addNewDiscount);
             saveLogoBtn.addEventListener('click', saveLogoText);
             
-            // Passwort-Verifikation
             verifyDashboardPassword.addEventListener('click', () => verifyPassword(dashboardPassword.value, 'dashboard'));
             verifyWeedPassword.addEventListener('click', () => verifyPassword(weedPassword.value, 'weed'));
             
-            // Enter-Taste für Passwort-Felder
             dashboardPassword.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    verifyPassword(dashboardPassword.value, 'dashboard');
-                }
+                if (e.key === 'Enter') verifyPassword(dashboardPassword.value, 'dashboard');
             });
             
             weedPassword.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    verifyPassword(weedPassword.value, 'weed');
-                }
+                if (e.key === 'Enter') verifyPassword(weedPassword.value, 'weed');
             });
             
-            // Enter-Taste für Logo-Text
             logoTextInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    saveLogoText();
-                }
+                if (e.key === 'Enter') saveLogoText();
             });
             
-            // Modal schließen bei Klick außerhalb
             dashboardSettingsModal.addEventListener('click', (e) => {
-                if (e.target === dashboardSettingsModal) {
-                    closeDashboardSettingsModal();
-                }
+                if (e.target === dashboardSettingsModal) closeDashboardSettingsModal();
             });
             
             weedSettingsModal.addEventListener('click', (e) => {
-                if (e.target === weedSettingsModal) {
-                    closeWeedSettingsModal();
-                }
+                if (e.target === weedSettingsModal) closeWeedSettingsModal();
             });
             
-            // Enter-Taste für Discount-Form
             document.getElementById('newDiscountValue').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addNewDiscount();
-                }
+                if (e.key === 'Enter') addNewDiscount();
             });
             
             document.getElementById('newDiscountLabel').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    addNewDiscount();
-                }
+                if (e.key === 'Enter') addNewDiscount();
             });
         }
 
@@ -2111,12 +2091,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
             checkExistingLogin();
-            
-            // Settings Icon initial ausblenden
             weedSettingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit SEITENWEISER Zugriffskontrolle vollständig geladen!');
+        console.log('KhusLand Panel mit korrigierter OAuth Authentifizierung geladen!');
     </script>
 </body>
 </html>

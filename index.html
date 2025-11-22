@@ -757,16 +757,6 @@
             width: 100%;
         }
 
-        .file-input-container input[type="file"] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-
         .file-input-label {
             display: block;
             padding: 0.8rem;
@@ -781,6 +771,25 @@
 
         .file-input-label:hover {
             background: rgba(66, 153, 225, 0.3);
+        }
+
+        /* Access Restricted Styles */
+        .access-restricted {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .access-restricted h2 {
+            color: #fc8181;
+            margin-bottom: 1rem;
+        }
+
+        .access-restricted p {
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
         }
     </style>
 </head>
@@ -828,180 +837,193 @@
 
         <!-- Main Content -->
         <div class="main-container">
-            <div class="page-header">
-                <h1 style="color: #90cdf4; font-size: 2rem;">Weed Ankauf</h1>
-                <div class="status-indicators">
-                    <span style="color: #48bb78;">
-                        <i class="fas fa-circle"></i> Alle Systeme Online
-                    </span>
-                </div>
-            </div>
-
-            <!-- Navigation Tabs -->
-            <div class="nav-tabs">
-                <button id="dashboardTab" class="nav-tab active">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </button>
-                <button id="weedTab" class="nav-tab">
-                    <i class="fas fa-cannabis"></i> Weed System
+            <!-- Access Restricted Message (Initially Hidden) -->
+            <div id="accessRestricted" class="access-restricted hidden">
+                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
+                <p>Deine Discord-ID ist nicht für den Zugriff auf dieses Panel autorisiert.</p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">ID: <span id="restrictedUserId"></span></p>
+                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Abmelden
                 </button>
             </div>
 
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content active">
-                <!-- System Cards -->
-                <div class="grid-container">
-                    <div class="card" data-page="index.html">
-                        <div class="card-icon">🌿</div>
-                        <h3>Weed Ankauf</h3>
-                        <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite2.html">
-                        <div class="card-icon">💊</div>
-                        <h3>Kokain Ankauf</h3>
-                        <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite3.html">
-                        <div class="card-icon">♻️</div>
-                        <h3>Materialrecycler - Produkte</h3>
-                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite4.html">
-                        <div class="card-icon">🔧</div>
-                        <h3>Werkbank Manager</h3>
-                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite5.html">
-                        <div class="card-icon">🛣️</div>
-                        <h3>Drogenrouten</h3>
-                        <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite6.html">
-                        <div class="card-icon">🏞️</div>
-                        <h3>KhusLand Management</h3>
-                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
+            <!-- Authorized Content (Initially Hidden) -->
+            <div id="authorizedContent" class="hidden">
+                <div class="page-header">
+                    <h1 style="color: #90cdf4; font-size: 2rem;">Weed Ankauf</h1>
+                    <div class="status-indicators">
+                        <span style="color: #48bb78;">
+                            <i class="fas fa-circle"></i> Alle Systeme Online
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Weed System Tab -->
-            <div id="weed" class="tab-content">
-                <!-- Settings Icon (nur im Weed Tab) -->
-                <div class="weed-settings-icon" id="weedSettingsIcon">
-                    <i class="fas fa-cog"></i>
-                </div>
-
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-cannabis"></i> Weed Ankauf Management
-                    </h3>
-                    
-                    <!-- Discount Selection -->
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
-                        <div class="discount-grid" id="discountButtons">
-                            <!-- Discount buttons will be generated here -->
-                        </div>
-                    </div>
-                    
-                    <div class="system-form">
-                        <div class="form-group">
-                            <label for="weedBuyer">Käufer Name</label>
-                            <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="weedSeller">Verkäufer Name</label>
-                            <input type="text" id="weedSeller" required placeholder="Name des Verkäufers">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="weedQuantity">Menge (Bricks)</label>
-                            <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
-                        </div>
-                    </div>
-                    
-                    <!-- Price Breakdown -->
-                    <div class="price-breakdown">
-                        <div class="price-row">
-                            <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
-                            <span class="price-value" id="totalPrice">0 €</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Rabatt:</span>
-                            <span class="price-value" id="discountAmount">0% (0 €)</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Verkäufer Anteil:</span>
-                            <span class="price-value seller-share" id="sellerShare">0 €</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Käufer Anteil:</span>
-                            <span class="price-value buyer-share" id="buyerShare">0 €</span>
-                        </div>
-                    </div>
-                    
-                    <button type="button" id="saveWeedBtn" class="btn-primary">
-                        <i class="fas fa-save"></i> Ankauf speichern
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <button id="dashboardTab" class="nav-tab active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button id="weedTab" class="nav-tab">
+                        <i class="fas fa-cannabis"></i> Weed System
                     </button>
                 </div>
 
-                <!-- Weed Transactions Table -->
-                <div class="system-card">
-                    <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-history"></i> Letzte Weed Ankäufe
-                    </h3>
-                    
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Datum</th>
-                                <th>Käufer</th>
-                                <th>Verkäufer</th>
-                                <th>Menge</th>
-                                <th>Rabatt</th>
-                                <th>Gesamt</th>
-                                <th>Verkäufer</th>
-                                <th>Käufer</th>
-                            </tr>
-                        </thead>
-                        <tbody id="weedTransactions">
-                            <tr>
-                                <td colspan="8" style="text-align: center; color: #a0aec0;">
-                                    Keine Transaktionen vorhanden
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <!-- System Cards -->
+                    <div class="grid-container">
+                        <div class="card" data-page="index.html">
+                            <div class="card-icon">🌿</div>
+                            <h3>Weed Ankauf</h3>
+                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite2.html">
+                            <div class="card-icon">💊</div>
+                            <h3>Kokain Ankauf</h3>
+                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite3.html">
+                            <div class="card-icon">♻️</div>
+                            <h3>Materialrecycler - Produkte</h3>
+                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite4.html">
+                            <div class="card-icon">🔧</div>
+                            <h3>Werkbank Manager</h3>
+                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite5.html">
+                            <div class="card-icon">🛣️</div>
+                            <h3>Drogenrouten</h3>
+                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite6.html">
+                            <div class="card-icon">🏞️</div>
+                            <h3>KhusLand Management</h3>
+                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weed System Tab -->
+                <div id="weed" class="tab-content">
+                    <!-- Settings Icon (nur im Weed Tab) -->
+                    <div class="weed-settings-icon" id="weedSettingsIcon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+
+                    <div class="system-card">
+                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-cannabis"></i> Weed Ankauf Management
+                        </h3>
+                        
+                        <!-- Discount Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
+                            <div class="discount-grid" id="discountButtons">
+                                <!-- Discount buttons will be generated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="system-form">
+                            <div class="form-group">
+                                <label for="weedBuyer">Käufer Name</label>
+                                <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="weedSeller">Verkäufer Name</label>
+                                <input type="text" id="weedSeller" required placeholder="Name des Verkäufers">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="weedQuantity">Menge (Bricks)</label>
+                                <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
+                            </div>
+                        </div>
+                        
+                        <!-- Price Breakdown -->
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
+                                <span class="price-value" id="totalPrice">0 €</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Rabatt:</span>
+                                <span class="price-value" id="discountAmount">0% (0 €)</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Verkäufer Anteil:</span>
+                                <span class="price-value seller-share" id="sellerShare">0 €</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Käufer Anteil:</span>
+                                <span class="price-value buyer-share" id="buyerShare">0 €</span>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="saveWeedBtn" class="btn-primary">
+                            <i class="fas fa-save"></i> Ankauf speichern
+                        </button>
+                    </div>
+
+                    <!-- Weed Transactions Table -->
+                    <div class="system-card">
+                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-history"></i> Letzte Weed Ankäufe
+                        </h3>
+                        
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Käufer</th>
+                                    <th>Verkäufer</th>
+                                    <th>Menge</th>
+                                    <th>Rabatt</th>
+                                    <th>Gesamt</th>
+                                    <th>Verkäufer</th>
+                                    <th>Käufer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weedTransactions">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
+                                        Keine Transaktionen vorhanden
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1117,8 +1139,7 @@
 
         // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+        const CLOUDFLARE_WORKER_URL = 'discord-oauth.ehrlichcolin2.workers.dev'; // HIER DEINE WORKER URL EINTRAGEN
 
         // System Variablen
         const ADMIN_PASSWORD = '1101';
@@ -1135,16 +1156,20 @@
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
         const errorMessage = document.getElementById('errorMessage');
         const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
         const headerLogo = document.getElementById('headerLogo');
+        const restrictedUserId = document.getElementById('restrictedUserId');
         
         // Buttons
         const discordLoginBtn = document.getElementById('discordLoginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
         const weedTab = document.getElementById('weedTab');
         const saveWeedBtn = document.getElementById('saveWeedBtn');
@@ -1167,7 +1192,7 @@
         const logoTextInput = document.getElementById('logoTextInput');
         const logoPreview = document.getElementById('logoPreview');
 
-        // Discord Login Funktion
+        // Discord Login Funktion - ECHTE AUTHENTIFIZIERUNG
         function loginWithDiscord() {
             const btn = discordLoginBtn;
             
@@ -1176,23 +1201,134 @@
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
-            // Simuliere erfolgreichen Login für Demo
-            setTimeout(() => {
-                simulateSuccessfulLogin();
-            }, 1500);
+            // ECHTE Discord OAuth URL
+            const discordOAuthURL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin)}&response_type=code&scope=identify`;
+            
+            // Redirect zu Discord OAuth
+            window.location.href = discordOAuthURL;
         }
 
-        // Erfolgreiche Anmeldung simulieren
-        function simulateSuccessfulLogin() {
-            const mockUser = {
-                username: "KhusLand_User",
-                discriminator: "1234",
-                id: "987654321"
-            };
+        // OAuth Callback Handler
+        async function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
             
-            localStorage.setItem('discord_user', JSON.stringify(mockUser));
-            showMainContent(mockUser);
-            showNotification('Erfolgreich eingeloggt!', 'success');
+            if (code) {
+                try {
+                    loading.style.display = 'block';
+                    
+                    // Token mit Cloudflare Worker austauschen
+                    const tokenResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: code,
+                            redirect_uri: window.location.origin
+                        })
+                    });
+                    
+                    const tokenData = await tokenResponse.json();
+                    
+                    if (!tokenResponse.ok) {
+                        throw new Error(tokenData.error || 'Token exchange failed');
+                    }
+                    
+                    // Benutzer mit Cloudflare Worker verifizieren
+                    const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            accessToken: tokenData.access_token
+                        })
+                    });
+                    
+                    const userData = await userResponse.json();
+                    
+                    if (!userResponse.ok) {
+                        throw new Error('Benutzerverifikation fehlgeschlagen');
+                    }
+
+                    // Zugriffsprüfung - NUR AUTORISIERTE BENUTZER
+                    if (!userData.isAuthorized) {
+                        showAccessRestricted(userData.user);
+                        return;
+                    }
+                    
+                    // Erfolgreiche Anmeldung für autorisierte Benutzer
+                    localStorage.setItem('discord_user', JSON.stringify(userData.user));
+                    localStorage.setItem('access_info', JSON.stringify(userData.accessInfo));
+                    showAuthorizedContent(userData.user, userData.accessInfo);
+                    showNotification(`Erfolgreich eingeloggt als ${userData.user.username}`, 'success');
+                    
+                    // Code aus URL entfernen
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError(error.message || 'Anmeldung fehlgeschlagen');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        }
+
+        // Zugriff verweigert anzeigen
+        function showAccessRestricted(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserId.textContent = user.id;
+            showNotification('Zugriff verweigert - Nicht autorisierte Discord-ID', 'error');
+        }
+
+        // Autorisierten Inhalt anzeigen
+        function showAuthorizedContent(user, accessInfo) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
+            
+            // Benutzerinfo anzeigen
+            if (user) {
+                userWelcome.textContent = `Willkommen, ${user.username}`;
+                const firstLetter = user.username.charAt(0).toUpperCase();
+                document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
+            }
+            
+            // Access Badge mit Message anzeigen
+            if (accessInfo) {
+                accessBadge.textContent = accessInfo.message;
+                accessBadge.classList.remove('hidden');
+                
+                if (accessInfo.isPermanent) {
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
+            // System initialisieren
+            updateWeedPrices();
+            loadWeedEntries();
+            loadDiscountSettings();
+            loadLogoSettings();
+        }
+
+        // Check für OAuth Callback beim Laden
+        function checkForOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                handleOAuthCallback();
+                return true;
+            }
+            return false;
         }
 
         // Notification System
@@ -1220,40 +1356,17 @@
             loading.style.display = 'none';
         }
 
-        // Hauptinhalt anzeigen
-        function showMainContent(user) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            
-            // Benutzerinfo anzeigen
-            if (user) {
-                userWelcome.textContent = `Willkommen, ${user.username}`;
-                // Ersten Buchstaben des Usernamens im Avatar anzeigen
-                const firstLetter = user.username.charAt(0).toUpperCase();
-                document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
-            }
-            
-            // Access Badge anzeigen
-            accessBadge.classList.remove('hidden');
-            
-            // Preise initial berechnen
-            updateWeedPrices();
-            
-            // Firebase Daten laden
-            loadWeedEntries();
-            loadDiscountSettings();
-            loadLogoSettings();
-        }
-
         // Logout
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 localStorage.removeItem('discord_user');
+                localStorage.removeItem('access_info');
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
+                accessRestricted.classList.add('hidden');
+                authorizedContent.classList.add('hidden');
                 
-                // Login-Button wieder anzeigen
                 discordLoginBtn.style.display = 'block';
                 loading.style.display = 'none';
                 errorMessage.style.display = 'none';
@@ -1265,11 +1378,27 @@
 
         // Bereits eingeloggten Benutzer prüfen
         function checkExistingLogin() {
-            const user = localStorage.getItem('discord_user');
+            // Zuerst OAuth Callback prüfen
+            if (checkForOAuthCallback()) {
+                return;
+            }
             
-            if (user) {
-                console.log('User already logged in');
-                showMainContent(JSON.parse(user));
+            // Dann vorhandenen Login prüfen
+            const user = localStorage.getItem('discord_user');
+            const accessInfo = localStorage.getItem('access_info');
+            
+            if (user && accessInfo) {
+                const userData = JSON.parse(user);
+                const accessData = JSON.parse(accessInfo);
+                
+                // Nur anzeigen wenn autorisiert
+                if (accessData) {
+                    console.log('Authorized user already logged in');
+                    showAuthorizedContent(userData, accessData);
+                } else {
+                    // Nicht autorisiert - logout erzwingen
+                    logout();
+                }
             } else {
                 console.log('No existing login found');
             }
@@ -1688,6 +1817,7 @@
             
             // Logout Button
             logoutBtn.addEventListener('click', logout);
+            restrictedLogoutBtn.addEventListener('click', logout);
             
             // Tab Buttons
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
@@ -1773,7 +1903,7 @@
             weedSettingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit vereinfachtem Dashboard vollständig geladen!');
+        console.log('KhusLand Panel mit ECHTER Authentifizierung vollständig geladen!');
     </script>
 </body>
 </html>

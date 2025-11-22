@@ -1140,14 +1140,13 @@
         const discountsRef = ref(db,'discount_settings');
         const logoSettingsRef = ref(db,'logo_settings');
 
-        // HART CODED ZUGRIFFSKONTROLLE - FUNKTIONIERT IMMER
+        // KORRIGIERTE ZUGRIFFSKONTROLLE - REY EHRLICH HAT JETZT WEED ZUGRIFF
         const USER_ACCESS = {
-            '917426398120005653': { // Rey Ehrlich
+            '917426398120005653': { // Rey Ehrlich - JETZT MIT WEED ZUGRIFF
                 username: 'Rey Ehrlich',
                 isPermanent: true,
                 message: '12er',
-                allowedPages: ['dashboard', 'route', 'werkbank', 'materialrecycler', 'kokain', 'management'],
-                deniedPages: ['weed']
+                allowedPages: ['dashboard', 'route', 'werkbank', 'materialrecycler', 'kokain', 'management', 'weed']
             },
             '1387439512438964304': { // Philipp Yane
                 username: 'Philipp Yane',
@@ -1687,14 +1686,8 @@
             });
         }
 
-        // Handle Weed Form Submission
+        // Handle Weed Form Submission - KORRIGIERT: REY BLOCKIERUNG ENTFERNT
         function handleWeedSubmit() {
-            // Weed Zugriff für Rey hart codiert sperren
-            if (currentUser && currentUser.id === '917426398120005653') {
-                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
-                return;
-            }
-            
             const buyer = document.getElementById('weedBuyer').value.trim();
             const seller = document.getElementById('weedSeller').value.trim();
             const quantity = parseInt(weedQuantity.value);
@@ -1861,7 +1854,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Jetzt mit Discord-Login!');
+        console.log('KhusLand Panel - Jetzt mit vollständigem Weed-Zugriff für Rey Ehrlich!');
     </script>
 </body>
 </html>

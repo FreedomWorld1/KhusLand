@@ -149,6 +149,8 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
         }
         
         .logo-icon:hover {
@@ -173,6 +175,8 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            background-size: cover;
+            background-position: center;
         }
         
         .logout-btn {
@@ -223,6 +227,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
         }
         
         .card:hover {
@@ -230,6 +235,18 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             border-color: #4299e1;
             background: rgba(30, 38, 54, 0.9);
+        }
+        
+        .card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: rgba(101, 119, 149, 0.3);
+            background: rgba(26, 32, 44, 0.8);
         }
         
         .card-icon {
@@ -266,6 +283,28 @@
         .status-online {
             background: #48bb78;
             box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+        
+        .access-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .access-allowed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+        
+        .access-denied {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
         
         .footer {
@@ -566,55 +605,6 @@
             color: #a0aec0;
             margin-bottom: 1.5rem;
         }
-
-        /* Navigation Cards */
-        .nav-card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .nav-card:hover {
-            transform: translateY(-2px);
-            border-color: #4299e1;
-        }
-
-        .nav-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .nav-card.disabled:hover {
-            transform: none;
-            border-color: rgba(101, 119, 149, 0.3);
-        }
-
-        .access-status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 0.8rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-
-        .access-allowed {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-        }
-
-        .access-denied {
-            background: rgba(245, 101, 101, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
     </style>
 </head>
 <body>
@@ -695,62 +685,6 @@
 
                 <!-- Dashboard Tab -->
                 <div id="dashboard" class="tab-content active">
-                    <!-- Navigation zu anderen Seiten mit Zugriffsanzeige -->
-                    <div class="system-card">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-share-alt"></i> Navigation zu anderen Seiten
-                        </h3>
-                        
-                        <div class="nav-card" data-page="seite7.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </h4>
-                            <p style="color: #cbd5e0;">Hauptübersicht und Systemstatus</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite5.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-route"></i> Route
-                            </h4>
-                            <p style="color: #cbd5e0;">Transportrouten und Logistik</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite4.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-tools"></i> Werkbank
-                            </h4>
-                            <p style="color: #cbd5e0;">Produktion und Handwerkssystem</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite3.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-recycle"></i> Materialrecycler
-                            </h4>
-                            <p style="color: #cbd5e0;">Rohstoffverarbeitung und Recycling</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite2.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-pills"></i> Kokain
-                            </h4>
-                            <p style="color: #cbd5e0;">Kokain-Operationen und Vertrieb</p>
-                        </div>
-
-                        <div class="nav-card" data-page="index.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-cannabis"></i> Weed
-                            </h4>
-                            <p style="color: #cbd5e0;">Weed-Ankauf und Verarbeitung</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite6.html">
-                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
-                                <i class="fas fa-landmark"></i> Management
-                            </h4>
-                            <p style="color: #cbd5e0;">Geschäftsführung und Kontrolle</p>
-                        </div>
-                    </div>
-
                     <!-- System Cards -->
                     <div class="grid-container">
                         <div class="card" data-page="index.html">
@@ -1049,6 +983,29 @@
             }
         }
 
+        // DISCORD AVATAR LADEN
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                // Header Logo (oben links)
+                headerLogo.style.backgroundImage = `url('${avatarUrl}')`;
+                headerLogo.innerHTML = ''; // Buchstabe entfernen
+                
+                // User Avatar (oben rechts)
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = ''; // Icon entfernen
+            } else {
+                // Fallback: Ersten Buchstaben des Usernamens anzeigen
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                headerLogo.innerHTML = `<span>${firstLetter}</span>`;
+                
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
+        }
+
         // Aktuelle Seite identifizieren
         function getCurrentPageKey() {
             const pathname = window.location.pathname;
@@ -1144,6 +1101,9 @@
                         ...userAccessInfo
                     };
                     
+                    // Discord Avatar laden
+                    await loadDiscordAvatar(user);
+                    
                     if (data.hasPageAccess) {
                         showAuthorizedContent(currentUser);
                         showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
@@ -1236,8 +1196,6 @@
             authorizedContent.classList.remove('hidden');
             
             userWelcome.textContent = `Willkommen, ${user.username}`;
-            const firstLetter = user.username.charAt(0).toUpperCase();
-            document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
             
             if (userAccessInfo && userAccessInfo.message) {
                 accessBadge.textContent = userAccessInfo.message;
@@ -1250,20 +1208,20 @@
                 }
             }
             
-            updateNavigationAccess();
+            updateCardAccess();
             updateWeedPrices();
             loadWeedEntries();
             loadDiscountSettings();
             loadLogoSettings();
         }
 
-        // Navigation-Zugriffsanzeige aktualisieren - OHNE BUTTONS
-        async function updateNavigationAccess() {
+        // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
+        async function updateCardAccess() {
             if (!currentUser) return;
             
-            const navCards = document.querySelectorAll('.nav-card');
+            const cards = document.querySelectorAll('.card');
             
-            for (const card of navCards) {
+            for (const card of cards) {
                 const page = card.getAttribute('data-page');
                 const pageKey = PAGE_ACCESS_CONFIG[page];
                 
@@ -1321,6 +1279,14 @@
             localStorage.removeItem('discord_access_token');
             localStorage.removeItem('user_access_info');
             
+            // Avatare zurücksetzen
+            headerLogo.style.backgroundImage = '';
+            headerLogo.innerHTML = 'A';
+            
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
             showLoginPage();
             accessBadge.classList.add('hidden');
             
@@ -1359,6 +1325,9 @@
                                 username: user.username,
                                 ...userAccessInfo
                             };
+                            
+                            // Discord Avatar laden
+                            await loadDiscordAvatar(user);
                             
                             if (data.hasPageAccess) {
                                 showAuthorizedContent(currentUser);
@@ -1590,7 +1559,7 @@
                 const data = snapshot.val();
                 if (data && data.logoText) {
                     logoText = data.logoText;
-                    headerLogo.textContent = logoText;
+                    // Überschreiben wir nicht das Discord Avatar
                 }
             });
         }
@@ -1603,19 +1572,12 @@
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             weedTab.addEventListener('click', () => switchTab('weed'));
             
-            document.querySelectorAll('.nav-card').forEach(card => {
+            document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     if (!this.classList.contains('disabled')) {
                         const page = this.getAttribute('data-page');
                         navigateToWithAccessCheck(page);
                     }
-                });
-            });
-            
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    navigateToWithAccessCheck(page);
                 });
             });
             
@@ -1635,7 +1597,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Ohne Buttons und mit Worker-Überprüfung!');
+        console.log('KhusLand Panel - Mit Discord Avataren und Zugriffsanzeige!');
     </script>
 </body>
 </html>

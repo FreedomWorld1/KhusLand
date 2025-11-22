@@ -605,6 +605,63 @@
             color: #a0aec0;
             margin-bottom: 1.5rem;
         }
+
+        /* Logo Upload Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .modal-content h3 {
+            color: #90cdf4;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+            font-size: 1rem;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -631,7 +688,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon" id="headerLogo">A</div>
+                <div class="logo-icon" id="headerLogo" onclick="openLogoUploadModal()">A</div>
                 <h2>KhusLand Management Panel</h2>
             </div>
             <div class="user-info">
@@ -646,6 +703,19 @@
                 <button id="logoutBtn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
+            </div>
+        </div>
+
+        <!-- Logo Upload Modal -->
+        <div id="logoUploadModal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <h3>Logo ändern</h3>
+                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <input type="file" id="logoFile" class="file-input" accept="image/*">
+                <div class="modal-buttons">
+                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
+                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
+                </div>
             </div>
         </div>
 
@@ -665,7 +735,7 @@
             <!-- Authorized Content (Initially Hidden) -->
             <div id="authorizedContent" class="hidden">
                 <div class="page-header">
-                    <h1 style="color: #90cdf4; font-size: 2rem;">Weed Ankauf</h1>
+                    <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand</h1>
                     <div class="status-indicators">
                         <span style="color: #48bb78;">
                             <i class="fas fa-circle"></i> Alle Systeme Online
@@ -856,6 +926,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
         import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
 
         // Firebase Konfiguration
         const firebaseConfig = {
@@ -872,9 +943,11 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
+        const storage = getStorage(app);
         const entriesRef = ref(db,'weed_entries');
         const discountsRef = ref(db,'discount_settings');
         const logoSettingsRef = ref(db,'logo_settings');
+        const logoImageRef = storageRef(storage, 'global_logo.png');
 
         // Seitenspezifische Konfiguration
         const PAGE_ACCESS_CONFIG = {
@@ -916,6 +989,13 @@
         const discordLoginBtn = document.getElementById('discordLogin');
         const loginLoading = document.getElementById('loginLoading');
         
+        // Logo Upload Modal Elemente
+        const logoUploadModal = document.getElementById('logoUploadModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const logoFile = document.getElementById('logoFile');
+        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const saveLogo = document.getElementById('saveLogo');
+        
         // Buttons
         const logoutBtn = document.getElementById('logoutBtn');
         const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
@@ -923,6 +1003,81 @@
         const weedTab = document.getElementById('weedTab');
         const saveWeedBtn = document.getElementById('saveWeedBtn');
         const weedQuantity = document.getElementById('weedQuantity');
+
+        // Logo Upload Funktionen
+        function openLogoUploadModal() {
+            logoUploadModal.classList.remove('hidden');
+        }
+
+        function closeLogoUploadModal() {
+            logoUploadModal.classList.add('hidden');
+            adminPassword.value = '';
+            logoFile.value = '';
+        }
+
+        async function handleLogoUpload() {
+            const password = adminPassword.value;
+            const file = logoFile.files[0];
+
+            if (password !== ADMIN_PASSWORD) {
+                showNotification('Falsches Admin Passwort!', 'error');
+                return;
+            }
+
+            if (!file) {
+                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
+                return;
+            }
+
+            try {
+                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
+                saveLogo.disabled = true;
+
+                // Bild in Firebase Storage hochladen
+                await uploadBytes(logoImageRef, file);
+                
+                // Download URL holen
+                const downloadURL = await getDownloadURL(logoImageRef);
+                
+                // Logo in der Datenbank speichern
+                await set(logoSettingsRef, {
+                    logoUrl: downloadURL,
+                    uploadedAt: new Date().toISOString(),
+                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
+                });
+
+                // Logo sofort anwenden
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+
+                showNotification('Logo erfolgreich hochgeladen!', 'success');
+                closeLogoUploadModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Hochladen des Logos:', error);
+                showNotification('Fehler beim Hochladen des Logos!', 'error');
+            } finally {
+                saveLogo.innerHTML = 'Logo speichern';
+                saveLogo.disabled = false;
+            }
+        }
+
+        // Globales Logo laden
+        async function loadGlobalLogo() {
+            try {
+                const downloadURL = await getDownloadURL(logoImageRef);
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+            } catch (error) {
+                // Falls kein Logo vorhanden ist, Standard beibehalten
+                console.log('Kein globales Logo gefunden, verwende Standard');
+            }
+        }
 
         // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
         async function hasAccess(pageKey) {
@@ -988,20 +1143,14 @@
             if (userData.avatar) {
                 const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
                 
-                // Header Logo (oben links)
-                headerLogo.style.backgroundImage = `url('${avatarUrl}')`;
-                headerLogo.innerHTML = ''; // Buchstabe entfernen
-                
                 // User Avatar (oben rechts)
                 const userAvatar = document.getElementById('userAvatar');
                 userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
                 userAvatar.innerHTML = ''; // Icon entfernen
             } else {
                 // Fallback: Ersten Buchstaben des Usernamens anzeigen
-                const firstLetter = userData.username.charAt(0).toUpperCase();
-                headerLogo.innerHTML = `<span>${firstLetter}</span>`;
-                
                 const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
                 userAvatar.innerHTML = `<span>${firstLetter}</span>`;
             }
         }
@@ -1101,7 +1250,7 @@
                         ...userAccessInfo
                     };
                     
-                    // Discord Avatar laden
+                    // Discord Avatar laden (nur für User Avatar)
                     await loadDiscordAvatar(user);
                     
                     if (data.hasPageAccess) {
@@ -1212,7 +1361,7 @@
             updateWeedPrices();
             loadWeedEntries();
             loadDiscountSettings();
-            loadLogoSettings();
+            loadGlobalLogo(); // Globales Logo laden
         }
 
         // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
@@ -1279,10 +1428,7 @@
             localStorage.removeItem('discord_access_token');
             localStorage.removeItem('user_access_info');
             
-            // Avatare zurücksetzen
-            headerLogo.style.backgroundImage = '';
-            headerLogo.innerHTML = 'A';
-            
+            // User Avatar zurücksetzen
             const userAvatar = document.getElementById('userAvatar');
             userAvatar.style.backgroundImage = '';
             userAvatar.innerHTML = '<i class="fas fa-user"></i>';
@@ -1326,7 +1472,7 @@
                                 ...userAccessInfo
                             };
                             
-                            // Discord Avatar laden
+                            // Discord Avatar laden (nur für User Avatar)
                             await loadDiscordAvatar(user);
                             
                             if (data.hasPageAccess) {
@@ -1559,7 +1705,7 @@
                 const data = snapshot.val();
                 if (data && data.logoText) {
                     logoText = data.logoText;
-                    // Überschreiben wir nicht das Discord Avatar
+                    // Überschreiben wir nicht das globale Logo
                 }
             });
         }
@@ -1571,6 +1717,10 @@
             restrictedLogoutBtn.addEventListener('click', logout);
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             weedTab.addEventListener('click', () => switchTab('weed'));
+            
+            // Logo Upload Event Listeners
+            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            saveLogo.addEventListener('click', handleLogoUpload);
             
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -1597,7 +1747,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Mit Discord Avataren und Zugriffsanzeige!');
+        console.log('KhusLand Panel - Mit Logo Upload und KhusLand Titel!');
     </script>
 </body>
 </html>

@@ -791,6 +791,43 @@
             color: #a0aec0;
             margin-bottom: 1.5rem;
         }
+
+        /* Navigation Cards */
+        .nav-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            transition: all 0.3s;
+        }
+
+        .nav-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-card.disabled:hover {
+            transform: none;
+            border-color: rgba(101, 119, 149, 0.3);
+        }
+
+        .access-indicator {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-left: 10px;
+        }
+
+        .access-allowed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+        }
+
+        .access-denied {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+        }
     </style>
 </head>
 <body>
@@ -840,7 +877,8 @@
             <!-- Access Restricted Message (Initially Hidden) -->
             <div id="accessRestricted" class="access-restricted hidden">
                 <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
-                <p>Deine Discord-ID ist nicht für den Zugriff auf dieses Panel autorisiert.</p>
+                <p>Deine Discord-ID ist nicht für den Zugriff auf diese Seite autorisiert.</p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
                 <p style="font-size: 0.9rem; color: #cbd5e0;">ID: <span id="restrictedUserId"></span></p>
                 <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
                     <i class="fas fa-sign-out-alt"></i> Abmelden
@@ -870,6 +908,69 @@
 
                 <!-- Dashboard Tab -->
                 <div id="dashboard" class="tab-content active">
+                    <!-- Navigation zu anderen Seiten mit Zugriffsanzeige -->
+                    <div class="system-card">
+                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-share-alt"></i> Navigation zu anderen Seiten
+                        </h3>
+                        
+                        <div class="nav-card" data-page="seite7.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                                <span class="access-indicator access-allowed" id="accessDashboard">✓ Zugriff</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Hauptübersicht und Systemstatus</p>
+                        </div>
+
+                        <div class="nav-card" data-page="seite5.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-route"></i> Route
+                                <span class="access-indicator" id="accessRoute">Lädt...</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Transportrouten und Logistik</p>
+                        </div>
+
+                        <div class="nav-card" data-page="seite4.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-tools"></i> Werkbank
+                                <span class="access-indicator" id="accessWerkbank">Lädt...</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Produktion und Handwerkssystem</p>
+                        </div>
+
+                        <div class="nav-card" data-page="seite3.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-recycle"></i> Materialrecycler
+                                <span class="access-indicator" id="accessMaterial">Lädt...</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Rohstoffverarbeitung und Recycling</p>
+                        </div>
+
+                        <div class="nav-card" data-page="seite2.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-pills"></i> Kokain
+                                <span class="access-indicator" id="accessKokain">Lädt...</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Kokain-Operationen und Vertrieb</p>
+                        </div>
+
+                        <div class="nav-card" data-page="index.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-cannabis"></i> Weed
+                                <span class="access-indicator" id="accessWeed">Lädt...</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Weed-Ankauf und Verarbeitung</p>
+                        </div>
+
+                        <div class="nav-card" data-page="seite6.html">
+                            <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
+                                <i class="fas fa-landmark"></i> Management
+                                <span class="access-indicator" id="accessManagement">Lädt...</span>
+                            </h4>
+                            <p style="color: #cbd5e0;">Geschäftsführung und Kontrolle</p>
+                        </div>
+                    </div>
+
                     <!-- System Cards -->
                     <div class="grid-container">
                         <div class="card" data-page="index.html">
@@ -1139,7 +1240,18 @@
 
         // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
-        const CLOUDFLARE_WORKER_URL = 'discord-oauth.ehrlichcolin2.workers.dev'; // HIER DEINE WORKER URL EINTRAGEN
+        const CLOUDFLARE_WORKER_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Seitenspezifische Konfiguration
+        const PAGE_ACCESS_CONFIG = {
+            'seite7.html': 'dashboard',
+            'seite5.html': 'route', 
+            'seite4.html': 'werkbank',
+            'seite3.html': 'materialrecycler',
+            'seite2.html': 'kokain',
+            'index.html': 'weed',
+            'seite6.html': 'management'
+        };
 
         // System Variablen
         const ADMIN_PASSWORD = '1101';
@@ -1165,6 +1277,7 @@
         const accessBadge = document.getElementById('accessBadge');
         const headerLogo = document.getElementById('headerLogo');
         const restrictedUserId = document.getElementById('restrictedUserId');
+        const restrictedPageName = document.getElementById('restrictedPageName');
         
         // Buttons
         const discordLoginBtn = document.getElementById('discordLoginBtn');
@@ -1192,6 +1305,13 @@
         const logoTextInput = document.getElementById('logoTextInput');
         const logoPreview = document.getElementById('logoPreview');
 
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+        }
+
         // Discord Login Funktion - ECHTE AUTHENTIFIZIERUNG
         function loginWithDiscord() {
             const btn = discordLoginBtn;
@@ -1206,6 +1326,24 @@
             
             // Redirect zu Discord OAuth
             window.location.href = discordOAuthURL;
+        }
+
+        // Erweiterte Benutzerverifikation mit Seiten-Zugriff
+        async function verifyUserWithPageAccess(accessToken) {
+            const currentPage = getCurrentPageKey();
+            
+            const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accessToken: accessToken,
+                    currentPage: currentPage  // Aktuelle Seite mitsenden
+                })
+            });
+            
+            return await userResponse.json();
         }
 
         // OAuth Callback Handler
@@ -1235,26 +1373,16 @@
                         throw new Error(tokenData.error || 'Token exchange failed');
                     }
                     
-                    // Benutzer mit Cloudflare Worker verifizieren
-                    const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            accessToken: tokenData.access_token
-                        })
-                    });
+                    // BENUTZER MIT SEITEN-ZUGRIFF verifizieren
+                    const userData = await verifyUserWithPageAccess(tokenData.access_token);
                     
-                    const userData = await userResponse.json();
-                    
-                    if (!userResponse.ok) {
-                        throw new Error('Benutzerverifikation fehlgeschlagen');
+                    if (!userData.isAuthorized) {
+                        throw new Error('Benutzer nicht autorisiert');
                     }
 
-                    // Zugriffsprüfung - NUR AUTORISIERTE BENUTZER
-                    if (!userData.isAuthorized) {
-                        showAccessRestricted(userData.user);
+                    // Zugriffsprüfung - NUR AUTORISIERTE BENUTZER mit Seiten-Zugriff
+                    if (!userData.hasPageAccess) {
+                        showAccessRestricted(userData.user, getCurrentPageKey());
                         return;
                     }
                     
@@ -1276,14 +1404,89 @@
         }
 
         // Zugriff verweigert anzeigen
-        function showAccessRestricted(user) {
+        function showAccessRestricted(user, pageKey) {
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
             accessRestricted.classList.remove('hidden');
             authorizedContent.classList.add('hidden');
             
             restrictedUserId.textContent = user.id;
-            showNotification('Zugriff verweigert - Nicht autorisierte Discord-ID', 'error');
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification('Zugriff verweigert - Keine Berechtigung für diese Seite', 'error');
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management'
+            };
+            return names[pageKey] || pageKey;
+        }
+
+        // Zugriffsrechte für Navigation prüfen
+        async function checkPageAccess(pageKey) {
+            const user = JSON.parse(localStorage.getItem('discord_user'));
+            const accessToken = localStorage.getItem('discord_access_token');
+            
+            if (!user || !accessToken) return false;
+            
+            try {
+                const userData = await verifyUserWithPageAccess(accessToken);
+                return userData.hasPageAccess;
+            } catch (error) {
+                console.error('Access check error:', error);
+                return false;
+            }
+        }
+
+        // Navigation-Zugriffsanzeige aktualisieren
+        async function updateNavigationAccess() {
+            const pages = [
+                { key: 'dashboard', element: 'accessDashboard' },
+                { key: 'route', element: 'accessRoute' },
+                { key: 'werkbank', element: 'accessWerkbank' },
+                { key: 'materialrecycler', element: 'accessMaterial' },
+                { key: 'kokain', element: 'accessKokain' },
+                { key: 'weed', element: 'accessWeed' },
+                { key: 'management', element: 'accessManagement' }
+            ];
+
+            for (const page of pages) {
+                const hasAccess = await checkPageAccess(page.key);
+                const element = document.getElementById(page.element);
+                
+                if (element) {
+                    if (hasAccess) {
+                        element.className = 'access-indicator access-allowed';
+                        element.textContent = '✓ Zugriff';
+                    } else {
+                        element.className = 'access-indicator access-denied';
+                        element.textContent = '✗ Kein Zugriff';
+                    }
+                }
+            }
+        }
+
+        // Navigation zu anderen Seiten mit Zugriffsprüfung
+        async function navigateToWithAccessCheck(page) {
+            const pageKey = PAGE_ACCESS_CONFIG[page];
+            const hasAccess = await checkPageAccess(pageKey);
+            
+            if (!hasAccess) {
+                showNotification('Zugriff verweigert - Keine Berechtigung für diese Seite', 'error');
+                return;
+            }
+            
+            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
         }
 
         // Autorisierten Inhalt anzeigen
@@ -1311,6 +1514,9 @@
                     accessBadge.className = 'access-badge access-temporary';
                 }
             }
+            
+            // Navigation-Zugriff aktualisieren
+            updateNavigationAccess();
             
             // System initialisieren
             updateWeedPrices();
@@ -1361,6 +1567,7 @@
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 localStorage.removeItem('discord_user');
                 localStorage.removeItem('access_info');
+                localStorage.removeItem('discord_access_token');
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
@@ -1391,14 +1598,15 @@
                 const userData = JSON.parse(user);
                 const accessData = JSON.parse(accessInfo);
                 
-                // Nur anzeigen wenn autorisiert
-                if (accessData) {
-                    console.log('Authorized user already logged in');
-                    showAuthorizedContent(userData, accessData);
-                } else {
-                    // Nicht autorisiert - logout erzwingen
-                    logout();
-                }
+                // Zugriff auf aktuelle Seite prüfen
+                checkPageAccess(getCurrentPageKey()).then(hasAccess => {
+                    if (hasAccess) {
+                        console.log('Authorized user already logged in');
+                        showAuthorizedContent(userData, accessData);
+                    } else {
+                        showAccessRestricted(userData, getCurrentPageKey());
+                    }
+                });
             } else {
                 console.log('No existing login found');
             }
@@ -1442,10 +1650,7 @@
 
         // Navigation zu anderen Seiten
         function navigateTo(page) {
-            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
+            navigateToWithAccessCheck(page);
         }
 
         // Settings Modal Funktionen
@@ -1823,11 +2028,19 @@
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             weedTab.addEventListener('click', () => switchTab('weed'));
             
-            // Dashboard Cards - MIT Weiterleitung zu GitHub Pages
+            // Navigation Cards - MIT Zugriffsprüfung
+            document.querySelectorAll('.nav-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    navigateToWithAccessCheck(page);
+                });
+            });
+            
+            // Dashboard Cards - MIT Zugriffsprüfung
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
-                    navigateTo(page);
+                    navigateToWithAccessCheck(page);
                 });
             });
             
@@ -1903,7 +2116,7 @@
             weedSettingsIcon.style.display = 'none';
         });
 
-        console.log('KhusLand Panel mit ECHTER Authentifizierung vollständig geladen!');
+        console.log('KhusLand Panel mit SEITENWEISER Zugriffskontrolle vollständig geladen!');
     </script>
 </body>
 </html>

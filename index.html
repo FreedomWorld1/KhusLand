@@ -576,6 +576,7 @@
             border: 1px solid rgba(101, 119, 149, 0.3);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
         }
 
         .nav-card:hover {
@@ -593,21 +594,26 @@
             border-color: rgba(101, 119, 149, 0.3);
         }
 
-        .access-indicator {
+        .access-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
             font-size: 0.8rem;
             padding: 4px 8px;
             border-radius: 6px;
-            margin-left: 10px;
+            font-weight: 600;
         }
 
         .access-allowed {
             background: rgba(72, 187, 120, 0.2);
             color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
         }
 
         .access-denied {
             background: rgba(245, 101, 101, 0.2);
             color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
     </style>
 </head>
@@ -698,7 +704,6 @@
                         <div class="nav-card" data-page="seite7.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-tachometer-alt"></i> Dashboard
-                                <span class="access-indicator access-allowed">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Hauptübersicht und Systemstatus</p>
                         </div>
@@ -706,7 +711,6 @@
                         <div class="nav-card" data-page="seite5.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-route"></i> Route
-                                <span class="access-indicator" id="accessRoute">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Transportrouten und Logistik</p>
                         </div>
@@ -714,7 +718,6 @@
                         <div class="nav-card" data-page="seite4.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-tools"></i> Werkbank
-                                <span class="access-indicator" id="accessWerkbank">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Produktion und Handwerkssystem</p>
                         </div>
@@ -722,7 +725,6 @@
                         <div class="nav-card" data-page="seite3.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-recycle"></i> Materialrecycler
-                                <span class="access-indicator" id="accessMaterial">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Rohstoffverarbeitung und Recycling</p>
                         </div>
@@ -730,7 +732,6 @@
                         <div class="nav-card" data-page="seite2.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-pills"></i> Kokain
-                                <span class="access-indicator" id="accessKokain">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Kokain-Operationen und Vertrieb</p>
                         </div>
@@ -738,7 +739,6 @@
                         <div class="nav-card" data-page="index.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-cannabis"></i> Weed
-                                <span class="access-indicator" id="accessWeed">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Weed-Ankauf und Verarbeitung</p>
                         </div>
@@ -746,7 +746,6 @@
                         <div class="nav-card" data-page="seite6.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-landmark"></i> Management
-                                <span class="access-indicator" id="accessManagement">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Geschäftsführung und Kontrolle</p>
                         </div>
@@ -1021,6 +1020,35 @@
             }
         }
 
+        // BENUTZER EXISTENZ PRÜFEN
+        async function checkUserExists() {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.isAuthorized;
+                
+            } catch (error) {
+                console.error('Fehler bei Benutzerprüfung:', error);
+                return false;
+            }
+        }
+
         // Aktuelle Seite identifizieren
         function getCurrentPageKey() {
             const pathname = window.location.pathname;
@@ -1123,7 +1151,7 @@
                         showAccessRestricted(currentUser, currentPage);
                     }
                 } else {
-                    showError('Zugriff verweigert. Du bist nicht autorisiert.');
+                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
                 }
             } catch (error) {
                 console.error('Fehler bei der Benutzerüberprüfung:', error);
@@ -1174,6 +1202,14 @@
                 return;
             }
             
+            // Prüfen ob Benutzer noch existiert
+            const userExists = await checkUserExists();
+            if (!userExists) {
+                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
+                logout();
+                return;
+            }
+            
             const pageKey = PAGE_ACCESS_CONFIG[page];
             if (!pageKey) {
                 showNotification('Ungültige Seite', 'error');
@@ -1221,29 +1257,37 @@
             loadLogoSettings();
         }
 
-        // Navigation-Zugriffsanzeige aktualisieren
+        // Navigation-Zugriffsanzeige aktualisieren - OHNE BUTTONS
         async function updateNavigationAccess() {
             if (!currentUser) return;
             
-            const pages = [
-                { key: 'route', element: 'accessRoute' },
-                { key: 'werkbank', element: 'accessWerkbank' },
-                { key: 'materialrecycler', element: 'accessMaterial' },
-                { key: 'kokain', element: 'accessKokain' },
-                { key: 'weed', element: 'accessWeed' },
-                { key: 'management', element: 'accessManagement' }
-            ];
-
-            for (const page of pages) {
-                const element = document.getElementById(page.element);
-                if (element) {
-                    const hasAccessToPage = await hasAccess(page.key);
+            const navCards = document.querySelectorAll('.nav-card');
+            
+            for (const card of navCards) {
+                const page = card.getAttribute('data-page');
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                
+                if (pageKey) {
+                    const hasAccessToPage = await hasAccess(pageKey);
+                    
+                    // Entferne bestehende Status-Badges
+                    const existingStatus = card.querySelector('.access-status');
+                    if (existingStatus) {
+                        existingStatus.remove();
+                    }
+                    
                     if (hasAccessToPage) {
-                        element.className = 'access-indicator access-allowed';
-                        element.textContent = '✓ Zugriff';
+                        card.classList.remove('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-allowed';
+                        statusBadge.textContent = '✓ Zugriff';
+                        card.appendChild(statusBadge);
                     } else {
-                        element.className = 'access-indicator access-denied';
-                        element.textContent = '✗ Kein Zugriff';
+                        card.classList.add('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-denied';
+                        statusBadge.textContent = '✗ Kein Zugriff';
+                        card.appendChild(statusBadge);
                     }
                 }
             }
@@ -1271,18 +1315,16 @@
 
         // Logout
         function logout() {
-            if (confirm('Möchten Sie sich wirklich abmelden?')) {
-                currentUser = null;
-                userAccessInfo = null;
-                localStorage.removeItem('discord_user');
-                localStorage.removeItem('discord_access_token');
-                localStorage.removeItem('user_access_info');
-                
-                showLoginPage();
-                accessBadge.classList.add('hidden');
-                
-                showNotification('Erfolgreich ausgeloggt', 'info');
-            }
+            currentUser = null;
+            userAccessInfo = null;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            showLoginPage();
+            accessBadge.classList.add('hidden');
+            
+            showNotification('Erfolgreich ausgeloggt', 'info');
         }
 
         // Session prüfen
@@ -1563,8 +1605,10 @@
             
             document.querySelectorAll('.nav-card').forEach(card => {
                 card.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    navigateToWithAccessCheck(page);
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
                 });
             });
             
@@ -1591,7 +1635,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Schön und mit Cloudflare Sync!');
+        console.log('KhusLand Panel - Ohne Buttons und mit Worker-Überprüfung!');
     </script>
 </body>
 </html>

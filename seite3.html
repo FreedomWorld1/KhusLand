@@ -87,11 +87,6 @@
         .discord-login-btn:hover {
             background: #4752c4;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.4);
-        }
-        
-        .discord-login-btn:active {
-            transform: translateY(0);
         }
         
         .loading {
@@ -284,6 +279,92 @@
         
         .hidden {
             display: none;
+        }
+        
+        /* System-spezifische Styles */
+        .system-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.9rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .table th {
+            background: rgba(26, 32, 44, 0.8);
+            font-weight: 600;
+            color: #fbbf24;
+        }
+        
+        .table td {
+            color: #cbd5e0;
         }
         
         /* Navigation Tabs */
@@ -498,64 +579,554 @@
             display: none;
         }
 
-        /* System-spezifische Styles */
-        .system-card {
-            background: rgba(26, 32, 44, 0.8);
+        /* Product Grid Styles - WIE IM ALTEN SYSTEM */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .product-item {
+            background: rgba(30, 41, 59, 0.6);
             border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            padding: 1.5rem;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            transition: all 0.3s;
         }
-        
-        .form-group {
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            border-color: #f59e0b;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
+        }
+
+        .product-card {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: rgba(30, 41, 59, 0.8);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
         }
-        
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.8rem;
+
+        .resource-tag {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(245, 158, 11, 0.2);
             color: #fbbf24;
-            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 0.9rem;
+
+        .calculator-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            padding: 6px;
+            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .result-range {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        /* Modal Styles - VERBESSERT UND GRÖSSER */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 95%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        /* VERBESSERTE Resource Input Container */
+        .resource-input-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            align-items: end;
+        }
+
+        .resource-input-container input {
+            padding: 0.8rem;
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(101, 119, 149, 0.3);
             border-radius: 8px;
-            font-size: 1rem;
             color: #e2e8f0;
-            transition: all 0.3s;
+            font-size: 0.9rem;
         }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+
+        .resource-input-container input:focus {
             outline: none;
             border-color: #f59e0b;
             box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
         }
-        
-        .btn-primary {
+
+        .add-resource-btn {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.8rem 1.2rem;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
             font-weight: 600;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .add-resource-btn:hover {
+            transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
         }
+
+        .resource-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            min-height: 60px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .remove-resource {
+            background: none;
+            border: none;
+            color: #fc8181;
+            cursor: pointer;
+            padding: 0.2rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-resource:hover {
+            background: rgba(252, 129, 129, 0.2);
+            transform: scale(1.1);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+            border: 2px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        /* Settings Icon - NUR IM RECYCLER TAB */
+        .recycler-settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fbbf24;
+            z-index: 10;
+            display: none;
+        }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        .recycler-settings-icon:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Dashboard Settings Icon */
+        .dashboard-settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fbbf24;
+            z-index: 10;
+            display: none;
+        }
+        
+        .dashboard-settings-icon:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Search Box */
+        .search-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .search-box input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* VERBESSERTE Form Layout */
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        /* KLEINERE ADMIN BUTTONS */
+        .admin-btn-small {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .admin-btn-small:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* KLEINERE LOGIN BUTTONS */
+        .login-btn-small {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .login-btn-small:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
+        /* KLEINERE ACTION BUTTONS IN DER TABELLE */
+        .action-btn-small {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .edit-btn-small {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .edit-btn-small:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .delete-btn-small {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .delete-btn-small:hover {
+            background: rgba(245, 101, 101, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* KLEINERE FORM ELEMENTE */
+        .form-group-small {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .form-group-small label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fbbf24;
+            font-size: 0.85rem;
+        }
+
+        .form-group-small input {
+            padding: 0.7rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .form-group-small input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+
+        /* KLEINERE TABLE */
+        .table-small {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+
+        .table-small th,
+        .table-small td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .table-small th {
+            background: rgba(26, 32, 44, 0.8);
+            font-weight: 600;
+            color: #fbbf24;
+            font-size: 0.8rem;
+        }
+
+        .table-small td {
+            color: #cbd5e0;
+        }
+
+        /* KLEINERE SEARCH BOX */
+        .search-box-small {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box-small input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        .search-box-small input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-box-small input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .flex-1 {
+            flex: 1;
         }
     </style>
 </head>
@@ -574,7 +1145,7 @@
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <p>Verbinde mit Discord...</p>
+            <p>Anmeldung wird vorbereitet...</p>
         </div>
     </div>
 
@@ -583,14 +1154,18 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon">♻️</div>
+                <div class="logo-icon" id="headerLogo">♻️</div>
                 <h2>Materialrecycler Management</h2>
             </div>
             <div class="user-info">
                 <span id="userWelcome">Willkommen, Benutzer</span>
+                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+                
+                <!-- User Avatar -->
                 <div class="user-avatar" id="userAvatar">
                     <i class="fas fa-user"></i>
                 </div>
+                
                 <button id="logoutBtn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
@@ -600,7 +1175,7 @@
         <!-- Main Content -->
         <div class="main-container">
             <div class="page-header">
-                <h1 style="color: #fbbf24; font-size: 2rem;">Materialrecycler Dashboard</h1>
+                <h1 style="color: #fbbf24; font-size: 2rem;">Materialrecycler</h1>
                 <div class="status-indicators">
                     <span style="color: #48bb78;">
                         <i class="fas fa-circle"></i> Alle Systeme Online
@@ -616,16 +1191,18 @@
                 <button id="recyclerTab" class="nav-tab">
                     <i class="fas fa-recycle"></i> Recycler System
                 </button>
-                <button id="adminTab" class="nav-tab">
-                    <i class="fas fa-cog"></i> Admin Bereich
-                </button>
             </div>
 
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
+                <!-- Dashboard Settings Icon -->
+                <div class="dashboard-settings-icon" id="dashboardSettingsIcon">
+                    <i class="fas fa-cog"></i>
+                </div>
+
                 <!-- System Cards -->
                 <div class="grid-container">
-                    <div class="card" data-page="weed.html">
+                    <div class="card" data-page="index.html">
                         <div class="card-icon">🌿</div>
                         <h3>Weed Ankauf</h3>
                         <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
@@ -635,7 +1212,7 @@
                         </div>
                     </div>
 
-                    <div class="card" data-page="kokain.html">
+                    <div class="card" data-page="seite2.html">
                         <div class="card-icon">💊</div>
                         <h3>Kokain Ankauf</h3>
                         <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
@@ -645,7 +1222,7 @@
                         </div>
                     </div>
 
-                    <div class="card" data-page="recycler.html">
+                    <div class="card" data-page="seite3.html">
                         <div class="card-icon">♻️</div>
                         <h3>Materialrecycler - Produkte</h3>
                         <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
@@ -655,7 +1232,7 @@
                         </div>
                     </div>
 
-                    <div class="card" data-page="werkbank.html">
+                    <div class="card" data-page="seite4.html">
                         <div class="card-icon">🔧</div>
                         <h3>Werkbank Manager</h3>
                         <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
@@ -665,7 +1242,7 @@
                         </div>
                     </div>
 
-                    <div class="card" data-page="routen.html">
+                    <div class="card" data-page="seite5.html">
                         <div class="card-icon">🛣️</div>
                         <h3>Drogenrouten</h3>
                         <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
@@ -675,7 +1252,7 @@
                         </div>
                     </div>
 
-                    <div class="card" data-page="khusland.html">
+                    <div class="card" data-page="seite6.html">
                         <div class="card-icon">🏞️</div>
                         <h3>KhusLand Management</h3>
                         <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
@@ -689,28 +1266,81 @@
 
             <!-- Recycler System Tab -->
             <div id="recycler" class="tab-content">
+                <!-- Settings Icon (nur im Recycler Tab) -->
+                <div class="recycler-settings-icon" id="recyclerSettingsIcon">
+                    <i class="fas fa-cog"></i>
+                </div>
+
+                <!-- Search Box -->
                 <div class="system-card">
-                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem;">
-                        <i class="fas fa-recycle"></i> Material Recycler System
-                    </h3>
-                    <p>Hier können Sie Recycling-Prozesse verwalten und Materialien produzieren.</p>
-                    <div class="status" style="margin-top: 1rem;">
-                        <span class="status-indicator status-online"></span>
-                        Recycler System bereit
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Ressourcen suchen...">
                     </div>
                 </div>
-            </div>
 
-            <!-- Admin Tab -->
-            <div id="admin" class="tab-content">
+                <!-- Products Grid - WIE IM ALTEN SYSTEM -->
                 <div class="system-card">
-                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem;">
-                        <i class="fas fa-cog"></i> Administrator Bereich
+                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-box"></i> Produkte
                     </h3>
-                    <p>Systemeinstellungen und erweiterte Funktionen.</p>
-                    <div class="status" style="margin-top: 1rem;">
-                        <span class="status-indicator status-online"></span>
-                        Admin-Rechte aktiv
+                    
+                    <div id="productsList" class="products-grid">
+                        <!-- Products will be dynamically loaded here IN OLD FORMAT -->
+                    </div>
+                </div>
+
+                <!-- Admin Section - MIT KLEINEREN BUTTONS -->
+                <div class="system-card">
+                    <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-cog"></i> Admin Bereich
+                    </h3>
+                    
+                    <div id="adminLoginSection">
+                        <div class="form-group-small">
+                            <label for="adminPass">Admin-Passwort</label>
+                            <input type="password" id="adminPass" placeholder="Passwort eingeben (1101)" class="w-full">
+                        </div>
+                        <button id="adminLoginBtn" class="login-btn-small">
+                            <i class="fas fa-sign-in-alt"></i> Einloggen
+                        </button>
+                        <div class="password-error" id="adminError">Falsches Passwort!</div>
+                    </div>
+                    
+                    <div id="adminContent" class="hidden">
+                        <!-- KLEINERE ADMIN ACTIONS -->
+                        <div class="admin-actions">
+                            <button id="addProductBtn" class="admin-btn-small">
+                                <i class="fas fa-plus"></i> Produkt
+                            </button>
+                            <button id="exportCsv" class="admin-btn-small">
+                                <i class="fas fa-file-export"></i> CSV Export
+                            </button>
+                        </div>
+                        
+                        <!-- KLEINERE SEARCH BOX -->
+                        <div class="search-box-small">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="adminSearchInput" placeholder="Produkt in Adminbereich suchen...">
+                        </div>
+                        
+                        <!-- KLEINERE TABLE -->
+                        <table class="table-small">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Ressourcen</th>
+                                    <th>Aktion</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminTableBody">
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #a0aec0;">
+                                        Keine Produkte vorhanden
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -724,49 +1354,231 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <script>
-        // =============================================
-        // MATERIALRECYCLER SYSTEM - NUR DISCORD LOGIN
-        // =============================================
+    <!-- Dashboard Settings Modal (Logo-Text Änderung) -->
+    <div id="dashboardSettingsModal" class="settings-modal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3><i class="fas fa-palette"></i> Logo Einstellungen</h3>
+                <button class="close-settings" id="closeDashboardSettings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="password-section">
+                <h4>Passwort erforderlich</h4>
+                <div class="settings-form">
+                    <input type="password" id="dashboardPassword" placeholder="Passwort eingeben (1101)">
+                    <button id="verifyDashboardPassword">Passwort prüfen</button>
+                    <div class="password-error" id="dashboardPasswordError">Falsches Passwort!</div>
+                </div>
+            </div>
+            
+            <div class="settings-section hidden" id="dashboardSettingsContent">
+                <h4>Logo Text anpassen</h4>
+                <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
+                    Ändern Sie den Text des Logos im Header (max. 2 Zeichen).
+                </p>
+                
+                <div class="settings-form">
+                    <input type="text" id="logoTextInput" placeholder="Logo Text (max. 2 Zeichen)" maxlength="2" value="♻️">
+                    <button id="saveLogoBtn">Logo speichern</button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
+                    <div style="color: #a0aec0; margin-bottom: 0.5rem;">Vorschau:</div>
+                    <div class="logo-icon" id="logoPreview" style="margin: 0 auto;">♻️</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal - VERBESSERT UND GRÖSSER -->
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="settings-header">
+                <h3 id="productModalTitle"><i class="fas fa-plus"></i> Produkt hinzufügen</h3>
+                <button class="close-settings" id="closeProductModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="productForm" class="modal-form">
+                <input type="hidden" id="productKey">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName">Produkt Name</label>
+                        <input type="text" id="productName" placeholder="z.B.: Aluminium-Dose" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ressourcen hinzufügen</label>
+                    <div class="resource-input-container">
+                        <input type="text" id="newResourceName" placeholder="Ressourcenname (z.B.: Aluminium)">
+                        <input type="number" id="newResourceMin" placeholder="Min" min="1" value="1">
+                        <input type="number" id="newResourceMax" placeholder="Max" min="1" value="1">
+                        <button type="button" id="addResourceBtn" class="add-resource-btn">
+                            <i class="fas fa-plus"></i> Hinzufügen
+                        </button>
+                    </div>
+                    <div id="resourcesList" class="resource-list">
+                        <!-- Resources will be added here -->
+                        <div style="color: #94a3b8; text-align: center; width: 100%; padding: 1rem;">
+                            Noch keine Ressourcen hinzugefügt
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Produkt Bild</label>
+                    <div class="file-input-wrapper">
+                        <button type="button" class="btn-primary w-full">
+                            <i class="fas fa-upload"></i> Bild auswählen
+                        </button>
+                        <input type="file" id="productImageFile" accept="image/*">
+                    </div>
+                    <div style="color: #a0aec0; font-size: 0.8rem; margin-top: 0.5rem;">
+                        Unterstützte Formate: JPG, PNG, GIF (max. 5MB)
+                    </div>
+                    <img id="imagePreview" class="image-preview" alt="Vorschau">
+                    <input type="hidden" id="productImageData">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Produkt speichern
+                    </button>
+                    <button type="button" id="cancelProduct" class="btn-primary" style="background: rgba(101, 119, 149, 0.6);">
+                        <i class="fas fa-times"></i> Abbrechen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase Import und Konfiguration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+        // Firebase Konfiguration - ALTE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+            authDomain: "khusland-b7d13.firebaseapp.com",
+            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+            projectId: "khusland-b7d13",
+            storageBucket: "khusland-b7d13.firebasestorage.app",
+            messagingSenderId: "69573193613",
+            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+            measurementId: "G-JSCWR4207G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
         
-        console.log('🚀 Materialrecycler System wird gestartet...');
+        // ALTE FIREBASE REFERENZEN
+        const productsRef = ref(db,'materialrecycler_products');
+        const logoSettingsRef = ref(db,'materialrecycler_logo_settings');
+
+        // System Variablen
+        const ADMIN_PASSWORD = '1101';
+        let products = [];
+        let currentResources = [];
+        let logoText = '♻️';
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
-        const discordLoginBtn = document.getElementById('discordLoginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
         const errorMessage = document.getElementById('errorMessage');
         const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
-        const userAvatar = document.getElementById('userAvatar');
         const notification = document.getElementById('notification');
-
-        // Tab Elements
+        const accessBadge = document.getElementById('accessBadge');
+        const headerLogo = document.getElementById('headerLogo');
+        
+        // Buttons
+        const discordLoginBtn = document.getElementById('discordLoginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
         const recyclerTab = document.getElementById('recyclerTab');
-        const adminTab = document.getElementById('adminTab');
-        const dashboardContent = document.getElementById('dashboard');
-        const recyclerContent = document.getElementById('recycler');
-        const adminContent = document.getElementById('admin');
-
-        // System-Konfiguration
-        const CONFIG = {
-            appName: 'Materialrecycler',
-            version: '2.0.0',
-            sessionTimeout: 24 * 60 * 60 * 1000 // 24 Stunden
-        };
-
-        // Benutzer-Daten
-        let currentUser = null;
-
-        // =============================================
-        // NOTIFICATION SYSTEM
-        // =============================================
         
-        function showNotification(message, type = 'info', duration = 4000) {
-            console.log(`📢 Notification: ${message} (${type})`);
+        // Settings Icons
+        const recyclerSettingsIcon = document.getElementById('recyclerSettingsIcon');
+        const dashboardSettingsIcon = document.getElementById('dashboardSettingsIcon');
+        
+        // Modal Elements
+        const dashboardSettingsModal = document.getElementById('dashboardSettingsModal');
+        const closeDashboardSettings = document.getElementById('closeDashboardSettings');
+        const saveLogoBtn = document.getElementById('saveLogoBtn');
+        const verifyDashboardPassword = document.getElementById('verifyDashboardPassword');
+        const dashboardPassword = document.getElementById('dashboardPassword');
+        const dashboardPasswordError = document.getElementById('dashboardPasswordError');
+        const dashboardSettingsContent = document.getElementById('dashboardSettingsContent');
+        const logoTextInput = document.getElementById('logoTextInput');
+        const logoPreview = document.getElementById('logoPreview');
+        const searchInput = document.getElementById('searchInput');
+
+        // Admin Elements - MIT KLEINEREN BUTTONS
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminPassInput = document.getElementById('adminPass');
+        const adminError = document.getElementById('adminError');
+        const adminContent = document.getElementById('adminContent');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const exportCsv = document.getElementById('exportCsv');
+        const adminSearchInput = document.getElementById('adminSearchInput');
+        const adminTableBody = document.getElementById('adminTableBody');
+
+        // Product Modal Elements
+        const productModal = document.getElementById('productModal');
+        const productForm = document.getElementById('productForm');
+        const productModalTitle = document.getElementById('productModalTitle');
+        const productKeyInput = document.getElementById('productKey');
+        const closeProductModal = document.getElementById('closeProductModal');
+        const cancelProduct = document.getElementById('cancelProduct');
+        const productImageFile = document.getElementById('productImageFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const productImageData = document.getElementById('productImageData');
+
+        // Resource Elements
+        const newResourceName = document.getElementById('newResourceName');
+        const newResourceMin = document.getElementById('newResourceMin');
+        const newResourceMax = document.getElementById('newResourceMax');
+        const addResourceBtn = document.getElementById('addResourceBtn');
+        const resourcesList = document.getElementById('resourcesList');
+
+        // Discord Login Funktion
+        function loginWithDiscord() {
+            const btn = discordLoginBtn;
             
+            // Loading anzeigen
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // Simuliere erfolgreichen Login für Demo
+            setTimeout(() => {
+                simulateSuccessfulLogin();
+            }, 1500);
+        }
+
+        // Erfolgreiche Anmeldung simulieren
+        function simulateSuccessfulLogin() {
+            const mockUser = {
+                username: "Recycler_User",
+                discriminator: "9012",
+                id: "345678901"
+            };
+            
+            localStorage.setItem('discord_user', JSON.stringify(mockUser));
+            showMainContent(mockUser);
+            showNotification('Erfolgreich eingeloggt!', 'success');
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
             notification.textContent = message;
             notification.className = `notification ${type}`;
             notification.classList.remove('hidden');
@@ -780,133 +1592,69 @@
             }, duration);
         }
 
-        // =============================================
-        // FEHLERBEHANDLUNG
-        // =============================================
-        
+        // Fehler anzeigen
         function showError(message) {
-            console.error(`❌ Error: ${message}`);
-            
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
-            discordLoginBtn.style.display = 'flex';
+            
+            // Login-Button wieder anzeigen
+            discordLoginBtn.style.display = 'block';
             loading.style.display = 'none';
         }
 
-        function hideError() {
-            errorMessage.style.display = 'none';
-        }
-
-        // =============================================
-        // DISCORD LOGIN SYSTEM
-        // =============================================
-        
-        function loginWithDiscord() {
-            console.log('🎮 Discord Login gestartet...');
-            
-            // UI zurücksetzen
-            hideError();
-            discordLoginBtn.style.display = 'none';
-            loading.style.display = 'block';
-            
-            // Simuliere Discord OAuth Prozess
-            setTimeout(() => {
-                try {
-                    const discordUser = {
-                        username: "Discord_User",
-                        discriminator: "1234", 
-                        id: "123456789",
-                        avatar: null,
-                        loginType: "discord",
-                        loginTime: new Date().toISOString(),
-                        premium: true
-                    };
-                    
-                    currentUser = discordUser;
-                    localStorage.setItem('materialrecycler_user', JSON.stringify(discordUser));
-                    localStorage.setItem('materialrecycler_login_time', Date.now().toString());
-                    
-                    showMainContent(discordUser);
-                    showNotification('🎉 Erfolgreich mit Discord eingeloggt!', 'success');
-                    
-                } catch (error) {
-                    console.error('Login Fehler:', error);
-                    showError('Discord Login fehlgeschlagen: ' + error.message);
-                }
-            }, 2000);
-        }
-
-        // =============================================
-        // MAIN CONTENT MANAGEMENT
-        // =============================================
-        
+        // Hauptinhalt anzeigen
         function showMainContent(user) {
-            console.log('📊 Zeige Hauptinhalt für:', user.username);
-            
-            // UI umschalten
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
             
-            // Benutzerinfo aktualisieren
+            // Benutzerinfo anzeigen
             if (user) {
                 userWelcome.textContent = `Willkommen, ${user.username}`;
-                
-                // Avatar mit erstem Buchstaben
+                // Ersten Buchstaben des Usernamens im Avatar anzeigen
                 const firstLetter = user.username.charAt(0).toUpperCase();
-                userAvatar.innerHTML = `<span style="font-size: 1.2rem;">${firstLetter}</span>`;
-                
-                // Titel anpassen
-                document.title = `${CONFIG.appName} - ${user.username}`;
+                document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
             }
             
-            // Scroll nach oben
-            window.scrollTo(0, 0);
+            // Access Badge anzeigen
+            accessBadge.classList.remove('hidden');
+            
+            // Firebase Daten laden
+            loadProducts();
+            loadLogoSettings();
         }
 
-        function hideMainContent() {
-            mainContent.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-        }
-
-        // =============================================
-        // LOGOUT SYSTEM
-        // =============================================
-        
+        // Logout
         function logout() {
-            console.log('🚪 Logout angefordert...');
-            
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
-                try {
-                    // Benutzerdaten löschen
-                    currentUser = null;
-                    localStorage.removeItem('materialrecycler_user');
-                    localStorage.removeItem('materialrecycler_login_time');
-                    
-                    // UI zurücksetzen
-                    hideMainContent();
-                    discordLoginBtn.style.display = 'flex';
-                    loading.style.display = 'none';
-                    hideError();
-                    
-                    // Titel zurücksetzen
-                    document.title = CONFIG.appName;
-                    
-                    showNotification('👋 Erfolgreich ausgeloggt', 'info');
-                    
-                } catch (error) {
-                    console.error('Logout Fehler:', error);
-                    showError('Logout fehlgeschlagen');
-                }
+                localStorage.removeItem('discord_user');
+                
+                mainContent.classList.add('hidden');
+                loginPage.classList.remove('hidden');
+                
+                // Login-Button wieder anzeigen
+                discordLoginBtn.style.display = 'block';
+                loading.style.display = 'none';
+                errorMessage.style.display = 'none';
+                accessBadge.classList.add('hidden');
+                
+                showNotification('Erfolgreich ausgeloggt', 'info');
             }
         }
 
-        // =============================================
-        // TAB NAVIGATION
-        // =============================================
-        
-        function switchTab(tabName) {
-            console.log(`📑 Wechsle zu Tab: ${tabName}`);
+        // Bereits eingeloggten Benutzer prüfen
+        function checkExistingLogin() {
+            const user = localStorage.getItem('discord_user');
             
+            if (user) {
+                console.log('User already logged in');
+                showMainContent(JSON.parse(user));
+            } else {
+                console.log('No existing login found');
+            }
+        }
+
+        // Tab Navigation
+        function switchTab(tabName) {
             // Alle Tabs ausblenden
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -923,101 +1671,581 @@
             // Aktiven Button markieren
             document.getElementById(tabName + 'Tab').classList.add('active');
             
-            showNotification(`📊 ${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+            // Settings Icons entsprechend anzeigen/verstecken
+            if (tabName === 'recycler') {
+                recyclerSettingsIcon.style.display = 'block';
+                dashboardSettingsIcon.style.display = 'none';
+            } else if (tabName === 'dashboard') {
+                recyclerSettingsIcon.style.display = 'none';
+                dashboardSettingsIcon.style.display = 'block';
+            } else {
+                recyclerSettingsIcon.style.display = 'none';
+                dashboardSettingsIcon.style.display = 'none';
+            }
+            
+            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
 
         function getTabDisplayName(tabName) {
             const names = {
                 'dashboard': 'Dashboard',
-                'recycler': 'Recycler System',
-                'admin': 'Admin Bereich'
+                'recycler': 'Recycler System'
             };
             return names[tabName] || tabName;
         }
 
-        // =============================================
-        // SESSION MANAGEMENT
-        // =============================================
-        
-        function checkSession() {
-            const loginTime = localStorage.getItem('materialrecycler_login_time');
-            const userData = localStorage.getItem('materialrecycler_user');
-            
-            if (!loginTime || !userData) {
-                return false;
-            }
-            
-            const sessionAge = Date.now() - parseInt(loginTime);
-            
-            if (sessionAge > CONFIG.sessionTimeout) {
-                console.log('💤 Session abgelaufen');
-                localStorage.removeItem('materialrecycler_user');
-                localStorage.removeItem('materialrecycler_login_time');
-                return false;
-            }
-            
-            try {
-                currentUser = JSON.parse(userData);
-                return true;
-            } catch (error) {
-                console.error('Session Daten ungültig:', error);
-                return false;
-            }
-        }
-
-        // =============================================
-        // NAVIGATION SYSTEM
-        // =============================================
-        
+        // Navigation zu anderen Seiten
         function navigateTo(page) {
-            console.log(`🧭 Navigiere zu: ${page}`);
-            
-            showNotification(`➡️ Weiterleitung zu ${page}...`, 'info', 1500);
-            
+            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
             setTimeout(() => {
-                // Hier würde normalerweise die Seite gewechselt werden
-                // Für Demo: Zeige Alert
-                alert(`Navigation zu: ${page}\n\nDiese Funktion würde Sie normalerweise zur entsprechenden Seite weiterleiten.`);
-                
-                // In einer echten Implementierung:
-                // window.location.href = page;
+                window.location.href = page;
             }, 1500);
         }
 
-        // =============================================
-        // EVENT LISTENER SETUP
-        // =============================================
-        
-        function setupEventListeners() {
-            console.log('🔧 Setup Event Listeners...');
-            
-            // Discord Login Button
-            discordLoginBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                loginWithDiscord();
+        // Settings Modal Funktionen
+        function openDashboardSettings() {
+            resetPasswordForms();
+            logoTextInput.value = logoText;
+            logoPreview.textContent = logoText;
+            dashboardSettingsModal.classList.add('active');
+        }
+
+        function closeDashboardSettingsModal() {
+            dashboardSettingsModal.classList.remove('active');
+            resetPasswordForms();
+        }
+
+        function resetPasswordForms() {
+            // Passwort-Felder zurücksetzen
+            dashboardPassword.value = '';
+            dashboardPasswordError.style.display = 'none';
+            dashboardSettingsContent.classList.add('hidden');
+        }
+
+        // Passwort-Verifikation
+        function verifyPassword(password, type) {
+            if (password === ADMIN_PASSWORD) {
+                if (type === 'dashboard') {
+                    dashboardSettingsContent.classList.remove('hidden');
+                    dashboardPasswordError.style.display = 'none';
+                }
+                showNotification('Passwort korrekt', 'success');
+            } else {
+                if (type === 'dashboard') {
+                    dashboardPasswordError.style.display = 'block';
+                }
+                showNotification('Falsches Passwort', 'error');
+            }
+        }
+
+        // Logo Einstellungen
+        function loadLogoSettings() {
+            onValue(logoSettingsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.logoText) {
+                    logoText = data.logoText;
+                    updateLogoDisplay();
+                }
             });
+        }
+
+        function updateLogoDisplay() {
+            headerLogo.textContent = logoText;
+        }
+
+        function saveLogoText() {
+            const newLogoText = logoTextInput.value.trim();
+            
+            if (!newLogoText) {
+                showNotification('Bitte Logo Text eingeben', 'error');
+                return;
+            }
+            
+            if (newLogoText.length > 2) {
+                showNotification('Logo Text darf maximal 2 Zeichen lang sein', 'error');
+                return;
+            }
+            
+            logoText = newLogoText;
+            set(logoSettingsRef, { logoText: logoText });
+            
+            updateLogoDisplay();
+            logoPreview.textContent = logoText;
+            
+            showNotification('Logo Text gespeichert', 'success');
+            closeDashboardSettingsModal();
+        }
+
+        // Product Management
+        function loadProducts() {
+            onValue(productsRef, (snapshot) => {
+                products = [];
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    data.key = childSnapshot.key;
+                    products.push(data);
+                });
+                
+                // Sort products by timestamp (newest first)
+                products.sort((a, b) => b.timestamp - a.timestamp);
+                
+                // Render products and statistics
+                renderProducts();
+                renderAdminTable();
+            });
+        }
+
+        // KORRIGIERTE PRODUKT-ANZEIGE - WIE IM ALTEN SCRIPT
+        function renderProducts() {
+            const productsList = document.getElementById('productsList');
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Filter products based on search term
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) || 
+                (product.resources && product.resources.some(resource => 
+                    resource.name.toLowerCase().includes(searchTerm)
+                ))
+            );
+            
+            productsList.innerHTML = '';
+            
+            if (filteredProducts.length === 0) {
+                productsList.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #a0aec0;">
+                        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>Keine Produkte gefunden.</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                
+                let imageHtml = '';
+                if (product.imageData) {
+                    imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
+                } else {
+                    imageHtml = `
+                        <div class="product-image">
+                            <i class="fas fa-box" style="font-size: 2rem;"></i>
+                        </div>
+                    `;
+                }
+                
+                // Resources for this product
+                let resourcesHtml = '';
+                if (product.resources && product.resources.length > 0) {
+                    resourcesHtml = product.resources.map(resource => 
+                        `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
+                    ).join('');
+                }
+                
+                productItem.innerHTML = `
+                    <div class="product-card">
+                        <div class="flex-shrink-0">
+                            ${imageHtml}
+                        </div>
+                        <div class="flex-grow">
+                            <div class="font-semibold text-lg mb-2" style="color: #fbbf24;">${product.name}</div>
+                            ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
+                            
+                            <!-- Resource Calculator -->
+                            <div class="calculator-section">
+                                <div style="color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-calculator"></i>
+                                    Ressourcen Rechner
+                                </div>
+                                
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease-quantity">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" value="1" min="1" class="quantity-input product-quantity">
+                                    <button class="quantity-btn increase-quantity">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <span style="color: #cbd5e0; font-size: 0.9rem;">Produkt(e)</span>
+                                </div>
+                                
+                                <div class="calculation-results">
+                                    <!-- Results will be dynamically inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsList.appendChild(productItem);
+                
+                // Event Listeners for Quantity Controls
+                const quantityInput = productItem.querySelector('.product-quantity');
+                const decreaseBtn = productItem.querySelector('.decrease-quantity');
+                const increaseBtn = productItem.querySelector('.increase-quantity');
+                const resultsContainer = productItem.querySelector('.calculation-results');
+                
+                // Calculation for this product
+                const updateCalculation = () => {
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    resultsContainer.innerHTML = '';
+                    
+                    // Only use resources for this specific product
+                    const productResources = product.resources || [];
+                    
+                    if (productResources.length === 0) {
+                        resultsContainer.innerHTML = '<div style="color: #a0aec0; text-align: center; padding: 1rem; font-size: 0.9rem;">Keine Ressourcen für dieses Produkt definiert</div>';
+                        return;
+                    }
+                    
+                    productResources.forEach(resource => {
+                        const minTotal = resource.min * quantity;
+                        const maxTotal = resource.max * quantity;
+                        
+                        const resultEl = document.createElement('div');
+                        resultEl.className = 'result-item';
+                        resultEl.innerHTML = `
+                            <div style="flex: 1; font-weight: 500;">${resource.name}</div>
+                            <div class="result-range">${minTotal}-${maxTotal}</div>
+                        `;
+                        resultsContainer.appendChild(resultEl);
+                    });
+                };
+                
+                // Initial calculation
+                updateCalculation();
+                
+                // Event Listeners
+                decreaseBtn.addEventListener('click', () => {
+                    const current = parseInt(quantityInput.value) || 1;
+                    if (current > 1) {
+                        quantityInput.value = current - 1;
+                        updateCalculation();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', () => {
+                    const current = parseInt(quantityInput.value) || 1;
+                    quantityInput.value = current + 1;
+                    updateCalculation();
+                });
+
+                quantityInput.addEventListener('input', () => {
+                    updateCalculation();
+                });
+            });
+        }
+
+        // VERBESSERTE Resource Management - MEHRERE RESSOURCEN MÖGLICH
+        addResourceBtn.addEventListener('click', () => {
+            const resourceName = newResourceName.value.trim();
+            const resourceMin = parseInt(newResourceMin.value);
+            const resourceMax = parseInt(newResourceMax.value);
+            
+            if (resourceName && resourceMin && resourceMax && resourceMin <= resourceMax) {
+                currentResources.push({
+                    name: resourceName,
+                    min: resourceMin,
+                    max: resourceMax
+                });
+                renderResourcesList();
+                newResourceName.value = '';
+                newResourceMin.value = '1';
+                newResourceMax.value = '1';
+                newResourceName.focus();
+                showNotification('Ressource hinzugefügt', 'success');
+            } else {
+                showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
+            }
+        });
+
+        function renderResourcesList() {
+            resourcesList.innerHTML = '';
+            
+            if (currentResources.length === 0) {
+                resourcesList.innerHTML = '<div style="color: #94a3b8; text-align: center; width: 100%; padding: 1rem;">Noch keine Ressourcen hinzugefügt</div>';
+                return;
+            }
+            
+            currentResources.forEach((resource, index) => {
+                const resourceEl = document.createElement('div');
+                resourceEl.className = 'resource-item';
+                resourceEl.innerHTML = `
+                    <span>${resource.name}</span>
+                    <span style="color: #cbd5e0;">(${resource.min}-${resource.max})</span>
+                    <button type="button" class="remove-resource" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                resourcesList.appendChild(resourceEl);
+            });
+            
+            // Event Listener für Löschen-Buttons
+            document.querySelectorAll('.remove-resource').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    currentResources.splice(index, 1);
+                    renderResourcesList();
+                    showNotification('Ressource entfernt', 'info');
+                });
+            });
+        }
+
+        // Image Upload
+        productImageFile.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('Die Datei ist zu groß. Maximale Größe: 5MB', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    productImageData.value = e.target.result; // Save Base64 data
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Admin Functions - MIT KLEINEREN BUTTONS
+        adminLoginBtn.addEventListener('click', () => {
+            if (adminPassInput.value === ADMIN_PASSWORD) { 
+                adminError.style.display = 'none';
+                adminContent.classList.remove('hidden');
+                adminPassInput.value = '';
+                showNotification('Admin-Bereich erfolgreich betreten', 'success');
+            } else {
+                adminError.style.display = 'block';
+                adminPassInput.value = '';
+                adminPassInput.focus();
+                showNotification('Falsches Admin-Passwort', 'error');
+            }
+        });
+
+        function renderAdminTable() {
+            adminTableBody.innerHTML = '';
+            
+            if (products.length === 0) {
+                adminTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #a0aec0; padding: 1.5rem;">
+                            Keine Produkte vorhanden
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                
+                let resourcesText = '';
+                if (product.resources && product.resources.length > 0) {
+                    resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
+                } else {
+                    resourcesText = 'Keine Ressourcen';
+                }
+                
+                tr.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${resourcesText}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.4rem;">
+                            <button class="action-btn-small edit-btn-small edit-product" data-key="${product.key}" title="Bearbeiten">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn-small delete-btn-small" onclick="deleteProduct('${product.key}')" title="Löschen">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                adminTableBody.appendChild(tr);
+            });
+            
+            // Event Listener für Bearbeiten-Buttons
+            document.querySelectorAll('.edit-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    editProduct(key);
+                });
+            });
+        }
+
+        // Admin Search
+        adminSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = adminTableBody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Product Modal Functions
+        function openProductModal() {
+            productModal.classList.add('active');
+        }
+
+        function closeProductModalFunc() {
+            productModal.classList.remove('active');
+            productForm.reset();
+            imagePreview.style.display = 'none';
+            productImageData.value = '';
+            currentResources = [];
+            renderResourcesList();
+        }
+
+        function editProduct(key) {
+            const product = products.find(p => p.key === key);
+            if (!product) return;
+            
+            // Fill form with product data
+            document.getElementById('productName').value = product.name;
+            productKeyInput.value = key;
+            
+            // Set resources
+            currentResources = product.resources ? [...product.resources] : [];
+            renderResourcesList();
+            
+            // Set image data
+            if (product.imageData) {
+                imagePreview.src = product.imageData;
+                imagePreview.style.display = 'block';
+                productImageData.value = product.imageData;
+            } else {
+                imagePreview.style.display = 'none';
+                productImageData.value = '';
+            }
+            
+            // Change modal title
+            productModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
+            
+            // Show modal
+            openProductModal();
+        }
+
+        // Product Form Submission
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('productName').value;
+            const imageData = productImageData.value;
+            const key = productKeyInput.value;
+            
+            // Create product object
+            const productData = {
+                name,
+                resources: [...currentResources],
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+            
+            // Add image data if available
+            if (imageData) {
+                productData.imageData = imageData;
+            }
+            
+            try {
+                const submitBtn = e.target.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px; width: 16px; height: 16px;"></div> Speichere...';
+                submitBtn.disabled = true;
+                
+                if (key) {
+                    // Update existing product
+                    await update(ref(db, `materialrecycler_products/${key}`), productData);
+                    showNotification('Produkt erfolgreich aktualisiert', 'success');
+                } else {
+                    // Create new product
+                    await push(productsRef, productData);
+                    showNotification('Produkt erfolgreich hinzugefügt', 'success');
+                }
+                
+                closeProductModalFunc();
+                
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+                showNotification('Fehler beim Speichern des Produkts!', 'error');
+            }
+        });
+
+        // Delete Product
+        window.deleteProduct = async function(key) { 
+            if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
+                try {
+                    await remove(ref(db, `materialrecycler_products/${key}`));
+                    showNotification('Produkt erfolgreich gelöscht', 'success');
+                } catch (error) {
+                    console.error('Fehler beim Löschen:', error);
+                    showNotification('Fehler beim Löschen des Produkts!', 'error');
+                }
+            }
+        }
+
+        // CSV Export
+        exportCsv.addEventListener('click', () => {
+            if (products.length === 0) {
+                showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
+                return;
+            }
+            
+            const header = ['Name', 'Ressourcen'];
+            const rows = products.map(product => {
+                const resourcesText = product.resources && product.resources.length > 0 
+                    ? product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join('; ')
+                    : 'Keine Ressourcen';
+                
+                return [
+                    `"${product.name}"`,
+                    `"${resourcesText.replace(/"/g, '""')}"`
+                ].join(';');
+            });
+            
+            const csv = [header.join(';'), ...rows].join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            // Generate filename with current date
+            const now = new Date();
+            const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+            a.download = `materialrecycler_${dateStr}.csv`;
+            
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+            a.remove();
+            
+            showNotification('CSV erfolgreich exportiert', 'success');
+        }
+
+        // Event Listeners initialisieren
+        function initializeEventListeners() {
+            // Login Button
+            discordLoginBtn.addEventListener('click', loginWithDiscord);
             
             // Logout Button
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
+            logoutBtn.addEventListener('click', logout);
             
-            // Tab Navigation
-            dashboardTab.addEventListener('click', function() {
-                switchTab('dashboard');
-            });
+            // Tab Buttons
+            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
+            recyclerTab.addEventListener('click', () => switchTab('recycler'));
             
-            recyclerTab.addEventListener('click', function() {
-                switchTab('recycler');
-            });
-            
-            adminTab.addEventListener('click', function() {
-                switchTab('admin');
-            });
-            
-            // Card Klicks
+            // Dashboard Cards - MIT Weiterleitung zu GitHub Pages
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
@@ -1025,79 +2253,85 @@
                 });
             });
             
-            // Enter-Taste für Login
-            document.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !loginPage.classList.contains('hidden')) {
-                    loginWithDiscord();
+            // Search
+            searchInput.addEventListener('input', renderProducts);
+            
+            // Settings System
+            headerLogo.addEventListener('click', openDashboardSettings);
+            recyclerSettingsIcon.addEventListener('click', openDashboardSettings);
+            dashboardSettingsIcon.addEventListener('click', openDashboardSettings);
+            closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
+            saveLogoBtn.addEventListener('click', saveLogoText);
+            
+            // Passwort-Verifikation
+            verifyDashboardPassword.addEventListener('click', () => verifyPassword(dashboardPassword.value, 'dashboard'));
+            
+            // Enter-Taste für Passwort-Felder
+            dashboardPassword.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyPassword(dashboardPassword.value, 'dashboard');
+                }
+            });
+            
+            // Enter-Taste für Logo-Text
+            logoTextInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveLogoText();
+                }
+            });
+            
+            // Modal schließen bei Klick außerhalb
+            dashboardSettingsModal.addEventListener('click', (e) => {
+                if (e.target === dashboardSettingsModal) {
+                    closeDashboardSettingsModal();
+                }
+            });
+            
+            // Product Modal
+            addProductBtn.addEventListener('click', () => {
+                productForm.reset();
+                productKeyInput.value = '';
+                imagePreview.style.display = 'none';
+                productImageData.value = '';
+                currentResources = [];
+                renderResourcesList();
+                productModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
+                openProductModal();
+            });
+
+            closeProductModal.addEventListener('click', closeProductModalFunc);
+            cancelProduct.addEventListener('click', closeProductModalFunc);
+
+            productModal.addEventListener('click', (e) => {
+                if (e.target === productModal) {
+                    closeProductModalFunc();
+                }
+            });
+
+            // Enter-Taste für Resource-Form
+            newResourceName.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addResourceBtn.click();
                 }
             });
         }
 
-        // =============================================
-        // INITIALISIERUNG
-        // =============================================
-        
-        function initializeApp() {
-            console.log('🚀 Initialisiere Materialrecycler App...');
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            checkExistingLogin();
             
-            // Event Listener setup
-            setupEventListeners();
+            // Settings Icons initial ausblenden
+            recyclerSettingsIcon.style.display = 'none';
+            dashboardSettingsIcon.style.display = 'block'; // Dashboard ist aktiv
             
-            // Session prüfen
-            if (checkSession()) {
-                console.log('✅ Benutzer bereits eingeloggt:', currentUser.username);
-                showMainContent(currentUser);
-                showNotification(`🔓 Willkommen zurück, ${currentUser.username}!`, 'success');
-            } else {
-                console.log('ℹ️ Keine aktive Session gefunden');
-                showNotification('🔐 Bitte mit Discord anmelden', 'info', 3000);
-            }
-            
-            // Debug Info
-            console.log('📊 App Konfiguration:', CONFIG);
-            console.log('🎯 Discord Button:', !!discordLoginBtn);
-            console.log('✅ App Initialisierung abgeschlossen');
-        }
+            // Ensure modals are hidden
+            productModal.classList.remove('active');
+            dashboardSettingsModal.classList.remove('active');
+        });
 
-        // =============================================
-        // APP START
-        // =============================================
-        
-        // Warte bis DOM vollständig geladen
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeApp);
-        } else {
-            initializeApp();
-        }
-
-        // =============================================
-        // GLOBALE FUNKTIONEN (für Debug)
-        // =============================================
-        
-        window.materialrecycler = {
-            version: CONFIG.version,
-            getUser: () => currentUser,
-            getConfig: () => CONFIG,
-            forceLogout: () => logout(),
-            showNotif: (msg, type) => showNotification(msg, type),
-            debug: () => {
-                console.log('🔍 DEBUG INFO:');
-                console.log('Current User:', currentUser);
-                console.log('LocalStorage:', {
-                    user: localStorage.getItem('materialrecycler_user'),
-                    loginTime: localStorage.getItem('materialrecycler_login_time')
-                });
-                console.log('UI Elements:', {
-                    loginPage: !!loginPage,
-                    mainContent: !!mainContent,
-                    discordBtn: !!discordLoginBtn
-                });
-            }
-        };
-
-        console.log('🎉 Materialrecycler System vollständig geladen!');
-        console.log('💡 Tipp: Öffnen Sie die Konsole (F12) und geben Sie "materialrecycler.debug()" für Debug-Info ein.');
-
+        console.log('Materialrecycler Panel vollständig geladen!');
     </script>
 </body>
 </html>

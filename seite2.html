@@ -300,49 +300,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Navigation Cards */
-        .nav-card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .nav-card:hover {
-            transform: translateY(-2px);
-            border-color: #a855f7;
-        }
-
-        .nav-card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .nav-card.disabled:hover {
-            transform: none;
-            border-color: rgba(101, 119, 149, 0.3);
-        }
-
-        .access-indicator {
-            font-size: 0.8rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            margin-left: 10px;
-        }
-
-        .access-allowed {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-        }
-
-        .access-denied {
-            background: rgba(245, 101, 101, 0.2);
-            color: #fc8181;
-        }
-
         /* System-spezifische Styles */
         .system-card {
             background: rgba(26, 32, 44, 0.8);
@@ -610,198 +567,6 @@
             color: #a855f7;
         }
         
-        /* Settings Modal */
-        .settings-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-        }
-        
-        .settings-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .settings-content {
-            background: rgba(26, 32, 44, 0.95);
-            border-radius: 16px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            transform: translateY(20px);
-            transition: transform 0.3s;
-        }
-        
-        .settings-modal.active .settings-content {
-            transform: translateY(0);
-        }
-        
-        .settings-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.3);
-        }
-        
-        .settings-header h3 {
-            color: #d8b4fe;
-            font-size: 1.4rem;
-        }
-        
-        .close-settings {
-            background: none;
-            border: none;
-            color: #a0aec0;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        
-        .close-settings:hover {
-            color: #fc8181;
-        }
-        
-        .settings-section {
-            margin-bottom: 2rem;
-        }
-        
-        .settings-section h4 {
-            color: #d8b4fe;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-        
-        .settings-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .settings-form input {
-            padding: 0.8rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 6px;
-            color: #e2e8f0;
-        }
-        
-        .settings-form button {
-            padding: 0.8rem 1.2rem;
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .settings-form button:hover {
-            transform: translateY(-2px);
-        }
-        
-        .discount-list {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            padding: 1rem;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .discount-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-        }
-        
-        .discount-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .discount-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .discount-value {
-            background: rgba(168, 85, 247, 0.2);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            color: #d8b4fe;
-        }
-        
-        .delete-discount {
-            background: rgba(245, 101, 101, 0.2);
-            border: 1px solid rgba(245, 101, 101, 0.3);
-            color: #fc8181;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .delete-discount:hover {
-            background: rgba(245, 101, 101, 0.3);
-        }
-
-        /* Settings Icon in Kokain Tab */
-        .kokain-settings-icon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(168, 85, 247, 0.2);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            border-radius: 8px;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #d8b4fe;
-            z-index: 10;
-        }
-        
-        .kokain-settings-icon:hover {
-            background: rgba(168, 85, 247, 0.3);
-            transform: rotate(90deg);
-        }
-
-        /* Password Protection */
-        .password-section {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-
-        .password-error {
-            color: #fc8181;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            text-align: center;
-            display: none;
-        }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -859,21 +624,18 @@
     <div id="loginPage" class="login-container">
         <div class="logo">💊</div>
         <h1>Kokain Ankauf Login</h1>
-        <p>Wähle einen Benutzer zum Testen:</p>
+        <p>Bitte melde dich mit Discord an, um auf das Panel zuzugreifen.</p>
         
         <div class="error-message" id="errorMessage"></div>
         
-        <button id="loginRey" class="discord-login-btn" style="background: #48bb78; margin-bottom: 1rem;">
-            <i class="fas fa-crown"></i> Als Rey anmelden (Admin)
+        <button id="discordLoginBtn" class="discord-login-btn">
+            <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
         
-        <button id="loginPhilipp" class="discord-login-btn" style="background: #a855f7; margin-bottom: 1rem;">
-            <i class="fas fa-user"></i> Als Philipp anmelden
-        </button>
-        
-        <button id="loginKai" class="discord-login-btn" style="background: #ed8936;">
-            <i class="fas fa-user"></i> Als Kai anmelden
-        </button>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Anmeldung wird vorbereitet...</p>
+        </div>
     </div>
 
     <!-- Main Content (Hidden until login) -->
@@ -901,293 +663,211 @@
 
         <!-- Main Content -->
         <div class="main-container">
-            <!-- Access Restricted Message (Initially Hidden) -->
-            <div id="accessRestricted" class="access-restricted hidden">
-                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
-                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
-                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
-                    <i class="fas fa-sign-out-alt"></i> Abmelden
+            <div class="page-header">
+                <h1 style="color: #d8b4fe; font-size: 2rem;">Kokain Ankauf</h1>
+                <div class="status-indicators">
+                    <span style="color: #48bb78;">
+                        <i class="fas fa-circle"></i> Alle Systeme Online
+                    </span>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="nav-tabs">
+                <button id="dashboardTab" class="nav-tab active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+                <button id="kokainTab" class="nav-tab">
+                    <i class="fas fa-pills"></i> Kokain System
                 </button>
             </div>
 
-            <!-- Authorized Content (Initially Hidden) -->
-            <div id="authorizedContent" class="hidden">
-                <div class="page-header">
-                    <h1 style="color: #d8b4fe; font-size: 2rem;">Kokain Ankauf</h1>
-                    <div class="status-indicators">
-                        <span style="color: #48bb78;">
-                            <i class="fas fa-circle"></i> Alle Systeme Online
-                        </span>
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <!-- System Cards -->
+                <div class="grid-container">
+                    <div class="card" data-page="index.html">
+                        <div class="card-icon">🌿</div>
+                        <h3>Weed Ankauf</h3>
+                        <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="seite2.html">
+                        <div class="card-icon">💊</div>
+                        <h3>Kokain Ankauf</h3>
+                        <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="seite3.html">
+                        <div class="card-icon">♻️</div>
+                        <h3>Materialrecycler - Produkte</h3>
+                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="seite4.html">
+                        <div class="card-icon">🔧</div>
+                        <h3>Werkbank Manager</h3>
+                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="seite5.html">
+                        <div class="card-icon">🛣️</div>
+                        <h3>Drogenrouten</h3>
+                        <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="seite6.html">
+                        <div class="card-icon">🏞️</div>
+                        <h3>KhusLand Management</h3>
+                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                        <div class="status">
+                            <span class="status-indicator status-online"></span>
+                            System online
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Navigation Tabs -->
-                <div class="nav-tabs">
-                    <button id="dashboardTab" class="nav-tab active">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
+            <!-- Kokain System Tab -->
+            <div id="kokain" class="tab-content">
+                <div class="system-card">
+                    <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-pills"></i> Kokain Ankauf Management
+                    </h3>
+                    
+                    <!-- Discount Selection -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="color: #d8b4fe; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
+                        <div class="discount-grid" id="discountButtons">
+                            <!-- Discount buttons will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="system-form">
+                        <div class="form-group">
+                            <label for="kokainBuyer">Käufer Name</label>
+                            <input type="text" id="kokainBuyer" required placeholder="Name des Käufers">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="kokainSeller">Verkäufer Name</label>
+                            <input type="text" id="kokainSeller" required placeholder="Name des Verkäufers">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="kokainQuantity">Menge (Gramm)</label>
+                            <input type="number" id="kokainQuantity" required placeholder="Menge in Gramm" min="1" value="1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="kokainCash">Cash Betrag ($)</label>
+                            <input type="number" id="kokainCash" required placeholder="Cash in $" min="1" value="100">
+                        </div>
+                    </div>
+                    
+                    <!-- Price Breakdown -->
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span class="price-label">Gesamtpreis:</span>
+                            <span class="price-value" id="totalPrice">0 $</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Rabatt:</span>
+                            <span class="price-value" id="discountAmount">0% (0 $)</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Verkäufer Anteil:</span>
+                            <span class="price-value seller-share" id="sellerShare">0 $</span>
+                        </div>
+                        <div class="price-row">
+                            <span class="price-label">Käufer Anteil:</span>
+                            <span class="price-value buyer-share" id="buyerShare">0 $</span>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="saveKokainBtn" class="btn-primary">
+                        <i class="fas fa-save"></i> Ankauf speichern
                     </button>
-                    <button id="kokainTab" class="nav-tab">
-                        <i class="fas fa-pills"></i> Kokain System
-                    </button>
                 </div>
 
-                <!-- Dashboard Tab -->
-                <div id="dashboard" class="tab-content active">
-                    <!-- Navigation zu anderen Seiten mit Zugriffsanzeige -->
-                    <div class="system-card">
-                        <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-share-alt"></i> Navigation zu anderen Seiten
-                        </h3>
-                        
-                        <div class="nav-card" data-page="seite7.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                                <span class="access-indicator access-allowed">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Hauptübersicht und Systemstatus</p>
+                <!-- Statistics Section -->
+                <div class="system-card">
+                    <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-chart-bar"></i> Statistiken
+                    </h3>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Gesamtumsatz</div>
+                            <div id="totalRevenue" class="stat-value" style="color: #48bb78;">0 $</div>
                         </div>
-
-                        <div class="nav-card" data-page="seite5.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-route"></i> Route
-                                <span class="access-indicator" id="accessRoute">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Transportrouten und Logistik</p>
+                        <div class="stat-card">
+                            <div class="stat-label">Anzahl Transaktionen</div>
+                            <div id="totalTransactions" class="stat-value" style="color: #a855f7;">0</div>
                         </div>
-
-                        <div class="nav-card" data-page="seite4.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-tools"></i> Werkbank
-                                <span class="access-indicator" id="accessWerkbank">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Produktion und Handwerkssystem</p>
+                        <div class="stat-card">
+                            <div class="stat-label">Ø pro Transaktion</div>
+                            <div id="avgTransaction" class="stat-value" style="color: #ed8936;">0 $</div>
                         </div>
-
-                        <div class="nav-card" data-page="seite3.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-recycle"></i> Materialrecycler
-                                <span class="access-indicator" id="accessMaterial">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Rohstoffverarbeitung und Recycling</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite2.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-pills"></i> Kokain
-                                <span class="access-indicator" id="accessKokain">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Kokain-Operationen und Vertrieb</p>
-                        </div>
-
-                        <div class="nav-card" data-page="index.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-cannabis"></i> Weed
-                                <span class="access-indicator" id="accessWeed">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Weed-Ankauf und Verarbeitung</p>
-                        </div>
-
-                        <div class="nav-card" data-page="seite6.html">
-                            <h4 style="color: #d8b4fe; margin-bottom: 0.5rem;">
-                                <i class="fas fa-landmark"></i> Management
-                                <span class="access-indicator" id="accessManagement">✓ Zugriff</span>
-                            </h4>
-                            <p style="color: #cbd5e0;">Geschäftsführung und Kontrolle</p>
-                        </div>
-                    </div>
-
-                    <!-- System Cards -->
-                    <div class="grid-container">
-                        <div class="card" data-page="index.html">
-                            <div class="card-icon">🌿</div>
-                            <h3>Weed Ankauf</h3>
-                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite2.html">
-                            <div class="card-icon">💊</div>
-                            <h3>Kokain Ankauf</h3>
-                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite3.html">
-                            <div class="card-icon">♻️</div>
-                            <h3>Materialrecycler - Produkte</h3>
-                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite4.html">
-                            <div class="card-icon">🔧</div>
-                            <h3>Werkbank Manager</h3>
-                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite5.html">
-                            <div class="card-icon">🛣️</div>
-                            <h3>Drogenrouten</h3>
-                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite6.html">
-                            <div class="card-icon">🏞️</div>
-                            <h3>KhusLand Management</h3>
-                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Dein Gesamtanteil</div>
+                            <div id="yourTotalShare" class="stat-value" style="color: #4299e1;">0 $</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kokain System Tab -->
-                <div id="kokain" class="tab-content">
-                    <!-- Settings Icon (nur im Kokain Tab) -->
-                    <div class="kokain-settings-icon" id="kokainSettingsIcon">
-                        <i class="fas fa-cog"></i>
+                <!-- Kokain Transactions Table -->
+                <div class="system-card">
+                    <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                        <i class="fas fa-history"></i> Letzte Kokain Ankäufe
+                    </h3>
+
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Suchen nach Käufer/Verkäufer...">
                     </div>
-
-                    <div class="system-card">
-                        <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-pills"></i> Kokain Ankauf Management
-                        </h3>
-                        
-                        <!-- Discount Selection -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="color: #d8b4fe; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
-                            <div class="discount-grid" id="discountButtons">
-                                <!-- Discount buttons will be generated here -->
-                            </div>
-                        </div>
-                        
-                        <div class="system-form">
-                            <div class="form-group">
-                                <label for="kokainBuyer">Käufer Name</label>
-                                <input type="text" id="kokainBuyer" required placeholder="Name des Käufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="kokainSeller">Verkäufer Name</label>
-                                <input type="text" id="kokainSeller" required placeholder="Name des Verkäufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="kokainQuantity">Menge (Gramm)</label>
-                                <input type="number" id="kokainQuantity" required placeholder="Menge in Gramm" min="1" value="1">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="kokainCash">Cash Betrag ($)</label>
-                                <input type="number" id="kokainCash" required placeholder="Cash in $" min="1" value="100">
-                            </div>
-                        </div>
-                        
-                        <!-- Price Breakdown -->
-                        <div class="price-breakdown">
-                            <div class="price-row">
-                                <span class="price-label">Gesamtpreis:</span>
-                                <span class="price-value" id="totalPrice">0 $</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Rabatt:</span>
-                                <span class="price-value" id="discountAmount">0% (0 $)</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Verkäufer Anteil:</span>
-                                <span class="price-value seller-share" id="sellerShare">0 $</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Käufer Anteil:</span>
-                                <span class="price-value buyer-share" id="buyerShare">0 $</span>
-                            </div>
-                        </div>
-                        
-                        <button type="button" id="saveKokainBtn" class="btn-primary">
-                            <i class="fas fa-save"></i> Ankauf speichern
-                        </button>
-                    </div>
-
-                    <!-- Statistics Section -->
-                    <div class="system-card">
-                        <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-chart-bar"></i> Statistiken
-                        </h3>
-                        
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-label">Gesamtumsatz</div>
-                                <div id="totalRevenue" class="stat-value" style="color: #48bb78;">0 $</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Anzahl Transaktionen</div>
-                                <div id="totalTransactions" class="stat-value" style="color: #a855f7;">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Ø pro Transaktion</div>
-                                <div id="avgTransaction" class="stat-value" style="color: #ed8936;">0 $</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Dein Gesamtanteil</div>
-                                <div id="yourTotalShare" class="stat-value" style="color: #4299e1;">0 $</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kokain Transactions Table -->
-                    <div class="system-card">
-                        <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-history"></i> Letzte Kokain Ankäufe
-                        </h3>
-
-                        <!-- Search Box -->
-                        <div class="search-box">
-                            <input type="text" id="searchInput" placeholder="Suchen nach Käufer/Verkäufer...">
-                        </div>
-                        
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Datum</th>
-                                    <th>Käufer</th>
-                                    <th>Verkäufer</th>
-                                    <th>Menge</th>
-                                    <th>Rabatt</th>
-                                    <th>Gesamt</th>
-                                    <th>Verkäufer</th>
-                                    <th>Käufer</th>
-                                </tr>
-                            </thead>
-                            <tbody id="kokainTransactions">
-                                <tr>
-                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
-                                        Keine Transaktionen vorhanden
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Käufer</th>
+                                <th>Verkäufer</th>
+                                <th>Menge</th>
+                                <th>Rabatt</th>
+                                <th>Gesamt</th>
+                                <th>Verkäufer</th>
+                                <th>Käufer</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kokainTransactions">
+                            <tr>
+                                <td colspan="8" style="text-align: center; color: #a0aec0;">
+                                    Keine Transaktionen vorhanden
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -1225,40 +905,31 @@
         const discountsRef = ref(db,'kokain_discount_settings');
         const logoSettingsRef = ref(db,'kokain_logo_settings');
 
-        // HART CODED ZUGRIFFSKONTROLLE - FUNKTIONIERT IMMER
+        // Discord OAuth Konfiguration - WIE IM ANDEREN SCRIPT
+        const DISCORD_CLIENT_ID = '1432942180770644079';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // HART CODED ZUGRIFFSKONTROLLE - WIE IM ANDEREN SCRIPT
         const USER_ACCESS = {
-            'rey': {
-                id: '917426398120005653',
+            '917426398120005653': { // Rey
                 username: 'Rey Ehrlich',
                 isPermanent: true,
                 message: '12er',
-                allowedPages: ['dashboard', 'route', 'werkbank', 'materialrecycler', 'kokain', 'management'] // KEIN WEED!
+                allowedPages: ['dashboard', 'route', 'werkbank', 'materialrecycler', 'kokain', 'management']
             },
-            'philipp': {
-                id: '1387439512438964304', 
+            '1387439512438964304': { // Philipp
                 username: 'Philipp Yane',
                 isPermanent: false,
-                message: '11er',
-                allowedPages: ['dashboard', 'kokain'] // Hat Kokain Zugriff
+                message: '11er', 
+                allowedPages: ['dashboard', 'kokain']
             },
-            'kai': {
-                id: '1294708021196357642',
+            '1294708021196357642': { // Kai
                 username: 'Kai Dimauro',
                 isPermanent: false,
                 message: '2er',
-                allowedPages: ['dashboard', 'route'] // Nur Dashboard + Route
+                allowedPages: ['dashboard', 'route']
             }
-        };
-
-        // Seitenspezifische Konfiguration
-        const PAGE_ACCESS_CONFIG = {
-            'seite7.html': 'dashboard',
-            'seite5.html': 'route', 
-            'seite4.html': 'werkbank',
-            'seite3.html': 'materialrecycler',
-            'seite2.html': 'kokain',
-            'index.html': 'weed',
-            'seite6.html': 'management'
         };
 
         // System Variablen
@@ -1277,161 +948,154 @@
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
-        const authorizedContent = document.getElementById('authorizedContent');
-        const accessRestricted = document.getElementById('accessRestricted');
         const errorMessage = document.getElementById('errorMessage');
+        const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
         const headerLogo = document.getElementById('headerLogo');
-        const restrictedUserName = document.getElementById('restrictedUserName');
-        const restrictedPageName = document.getElementById('restrictedPageName');
         
         // Buttons
-        const loginRey = document.getElementById('loginRey');
-        const loginPhilipp = document.getElementById('loginPhilipp');
-        const loginKai = document.getElementById('loginKai');
+        const discordLoginBtn = document.getElementById('discordLoginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
-        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
         const kokainTab = document.getElementById('kokainTab');
         const saveKokainBtn = document.getElementById('saveKokainBtn');
         const kokainQuantity = document.getElementById('kokainQuantity');
         const kokainCash = document.getElementById('kokainCash');
-        const kokainSettingsIcon = document.getElementById('kokainSettingsIcon');
         const searchInput = document.getElementById('searchInput');
 
-        // Aktuelle Seite identifizieren
-        function getCurrentPageKey() {
-            const pathname = window.location.pathname;
-            const filename = pathname.split('/').pop();
-            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+        // Discord OAuth Flow - WIE IM ANDEREN SCRIPT
+        function startDiscordOAuth() {
+            const btn = discordLoginBtn;
+            
+            // Loading anzeigen
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // Discord OAuth URL erstellen
+            const state = generateRandomState();
+            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=1432942180770644079&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20email&state=${state}`;
+            
+            // State in localStorage speichern für Verifikation
+            localStorage.setItem('oauth_state', state);
+            
+            // Zu Discord OAuth weiterleiten
+            window.location.href = discordAuthUrl;
         }
 
-        // Einfache Login Funktionen
-        function loginAs(userKey) {
-            const user = USER_ACCESS[userKey];
-            if (!user) return;
-            
-            currentUser = user;
-            // SPEICHERE DASS DER BENUTZER SCHON EINMAL ANGEMELDET WAR
-            localStorage.setItem('was_logged_in', 'true');
-            localStorage.setItem('current_user', JSON.stringify(user));
-            
-            // Zugriff auf aktuelle Seite prüfen
-            const currentPage = getCurrentPageKey();
-            const hasAccess = user.allowedPages.includes(currentPage);
-            
-            if (hasAccess) {
-                showAuthorizedContent(user);
-                showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-            } else {
-                showAccessRestricted(user, currentPage);
-            }
+        // Random State generieren
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
-        // Zugriff verweigert anzeigen
-        function showAccessRestricted(user, pageKey) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.remove('hidden');
-            authorizedContent.classList.add('hidden');
+        // OAuth Callback verarbeiten
+        async function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const storedState = localStorage.getItem('oauth_state');
             
-            restrictedUserName.textContent = user.username;
-            restrictedPageName.textContent = getPageDisplayName(pageKey);
-            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
-        }
-
-        // Seiten-Namen für Anzeige
-        function getPageDisplayName(pageKey) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'route': 'Route',
-                'werkbank': 'Werkbank', 
-                'materialrecycler': 'Materialrecycler',
-                'kokain': 'Kokain',
-                'weed': 'Weed',
-                'management': 'Management'
-            };
-            return names[pageKey] || pageKey;
-        }
-
-        // Navigation zu anderen Seiten mit Zugriffsprüfung
-        function navigateToWithAccessCheck(page) {
-            if (!currentUser) return;
-            
-            const pageKey = PAGE_ACCESS_CONFIG[page];
-            const hasAccess = currentUser.allowedPages.includes(pageKey);
-            
-            if (!hasAccess) {
-                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                return;
-            }
-            
-            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
-        }
-
-        // Autorisierten Inhalt anzeigen
-        function showAuthorizedContent(user) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.add('hidden');
-            authorizedContent.classList.remove('hidden');
-            
-            // Benutzerinfo anzeigen
-            userWelcome.textContent = `Willkommen, ${user.username}`;
-            const firstLetter = user.username.charAt(0).toUpperCase();
-            document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
-            
-            // Access Badge mit Message anzeigen
-            accessBadge.textContent = user.message;
-            accessBadge.classList.remove('hidden');
-            
-            if (user.isPermanent) {
-                accessBadge.className = 'access-badge access-permanent';
-            } else {
-                accessBadge.className = 'access-badge access-temporary';
-            }
-            
-            // Navigation-Zugriff aktualisieren
-            updateNavigationAccess();
-            
-            // System initialisieren
-            updateKokainPrices();
-            loadKokainEntries();
-            loadDiscountSettings();
-            loadLogoSettings();
-        }
-
-        // Navigation-Zugriffsanzeige aktualisieren
-        function updateNavigationAccess() {
-            if (!currentUser) return;
-            
-            const pages = [
-                { key: 'route', element: 'accessRoute' },
-                { key: 'werkbank', element: 'accessWerkbank' },
-                { key: 'materialrecycler', element: 'accessMaterial' },
-                { key: 'kokain', element: 'accessKokain' },
-                { key: 'weed', element: 'accessWeed' },
-                { key: 'management', element: 'accessManagement' }
-            ];
-
-            pages.forEach(page => {
-                const element = document.getElementById(page.element);
-                if (element) {
-                    const hasAccess = currentUser.allowedPages.includes(page.key);
-                    if (hasAccess) {
-                        element.className = 'access-indicator access-allowed';
-                        element.textContent = '✓ Zugriff';
-                    } else {
-                        element.className = 'access-indicator access-denied';
-                        element.textContent = '✗ Kein Zugriff';
+            if (code && state && state === storedState) {
+                try {
+                    loading.style.display = 'block';
+                    
+                    // Token über Backend holen
+                    const tokenResponse = await fetch(`${BACKEND_URL}/api/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: code,
+                            redirect_uri: DISCORD_REDIRECT_URI
+                        })
+                    });
+                    
+                    if (!tokenResponse.ok) {
+                        throw new Error('Token request failed');
                     }
+                    
+                    const tokenData = await tokenResponse.json();
+                    
+                    // User Info holen
+                    const userResponse = await fetch(`${BACKEND_URL}/api/user`, {
+                        headers: {
+                            'Authorization': `Bearer ${tokenData.access_token}`
+                        }
+                    });
+                    
+                    if (!userResponse.ok) {
+                        throw new Error('User request failed');
+                    }
+                    
+                    const userData = await userResponse.json();
+                    
+                    // User Zugriff prüfen
+                    if (USER_ACCESS[userData.id]) {
+                        currentUser = {
+                            ...USER_ACCESS[userData.id],
+                            id: userData.id,
+                            avatar: userData.avatar,
+                            discriminator: userData.discriminator
+                        };
+                        
+                        // User in localStorage speichern
+                        localStorage.setItem('current_user', JSON.stringify(currentUser));
+                        localStorage.setItem('was_logged_in', 'true');
+                        
+                        // Erfolgreich einloggen
+                        showMainContent(currentUser);
+                        showNotification(`Erfolgreich eingeloggt als ${currentUser.username}`, 'success');
+                        
+                        // URL bereinigen
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        
+                    } else {
+                        showError('Dein Discord Account hat keinen Zugriff auf dieses System.');
+                    }
+                    
+                } catch (error) {
+                    console.error('OAuth Error:', error);
+                    showError('Fehler bei der Anmeldung. Bitte versuche es erneut.');
+                } finally {
+                    loading.style.display = 'none';
+                    discordLoginBtn.style.display = 'block';
+                    localStorage.removeItem('oauth_state');
                 }
-            });
+            }
+        }
+
+        // Fallback für Demo (wenn Backend nicht verfügbar)
+        function simulateDiscordLogin() {
+            const btn = discordLoginBtn;
+            
+            btn.style.display = 'none';
+            loading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // Simuliere erfolgreichen Login mit einem der Test-User
+            setTimeout(() => {
+                const mockUser = {
+                    id: '1387439512438964304', // Philipp
+                    username: 'Philipp Yane',
+                    isPermanent: false,
+                    message: '11er',
+                    allowedPages: ['dashboard', 'kokain'],
+                    avatar: null,
+                    discriminator: '1234'
+                };
+                
+                currentUser = mockUser;
+                localStorage.setItem('current_user', JSON.stringify(mockUser));
+                localStorage.setItem('was_logged_in', 'true');
+                
+                showMainContent(mockUser);
+                showNotification('Erfolgreich eingeloggt! (Demo Mode)', 'success');
+                
+                loading.style.display = 'none';
+            }, 2000);
         }
 
         // Notification System
@@ -1449,66 +1113,81 @@
             }, duration);
         }
 
+        // Fehler anzeigen
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            discordLoginBtn.style.display = 'block';
+            loading.style.display = 'none';
+        }
+
+        // Hauptinhalt anzeigen
+        function showMainContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            
+            // Benutzerinfo anzeigen
+            if (user) {
+                userWelcome.textContent = `Willkommen, ${user.username}`;
+                // Ersten Buchstaben des Usernamens im Avatar anzeigen
+                const firstLetter = user.username.charAt(0).toUpperCase();
+                document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
+            }
+            
+            // Access Badge anzeigen
+            accessBadge.textContent = user.message;
+            accessBadge.classList.remove('hidden');
+            
+            if (user.isPermanent) {
+                accessBadge.className = 'access-badge access-permanent';
+            } else {
+                accessBadge.className = 'access-badge access-temporary';
+            }
+            
+            // Preise initial berechnen
+            updateKokainPrices();
+            
+            // Firebase Daten laden
+            loadKokainEntries();
+            loadDiscountSettings();
+            loadLogoSettings();
+        }
+
         // Logout
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 currentUser = null;
                 localStorage.removeItem('current_user');
-                localStorage.removeItem('was_logged_in'); // WICHTIG: Auch das Flag entfernen
+                localStorage.removeItem('was_logged_in');
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
-                accessRestricted.classList.add('hidden');
-                authorizedContent.classList.add('hidden');
                 
+                // Login-Button wieder anzeigen
+                discordLoginBtn.style.display = 'block';
+                loading.style.display = 'none';
+                errorMessage.style.display = 'none';
                 accessBadge.classList.add('hidden');
                 
                 showNotification('Erfolgreich ausgeloggt', 'info');
             }
         }
 
-        // Bereits eingeloggten Benutzer prüfen - KORRIGIERT
+        // Bereits eingeloggten Benutzer prüfen
         function checkExistingLogin() {
             const userData = localStorage.getItem('current_user');
             const wasLoggedIn = localStorage.getItem('was_logged_in');
             
-            // WENN DER BENUTZER SCHON EINMAL ANGEMELDET WAR, LASSE IHN REIN
             if (wasLoggedIn === 'true' && userData) {
                 const user = JSON.parse(userData);
                 currentUser = user;
-                
-                // Zeige direkt den autorisierten Inhalt an, OHNE Zugriffsprüfung
-                // Das ist der wichtige Teil: Keine Zugriffsprüfung mehr!
-                showAuthorizedContent(user);
+                showMainContent(user);
                 showNotification(`Willkommen zurück, ${user.username}`, 'info');
-                return;
-            }
-            
-            // NUR FÜR NEUE BESUCHER: Zugriffsprüfung durchführen
-            if (userData && !wasLoggedIn) {
-                const user = JSON.parse(userData);
-                currentUser = user;
-                
-                // Zugriff auf aktuelle Seite prüfen
-                const currentPage = getCurrentPageKey();
-                const hasAccess = user.allowedPages.includes(currentPage);
-                
-                if (hasAccess) {
-                    showAuthorizedContent(user);
-                } else {
-                    showAccessRestricted(user, currentPage);
-                }
             }
         }
 
         // Tab Navigation
         function switchTab(tabName) {
-            // Kokain Tab für bestimmte User sperren falls nötig
-            if (tabName === 'kokain' && currentUser && !currentUser.allowedPages.includes('kokain')) {
-                showNotification('Zugriff auf Kokain System wurde für deinen Account deaktiviert', 'error');
-                return;
-            }
-            
             // Alle Tabs ausblenden
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -1525,13 +1204,6 @@
             // Aktiven Button markieren
             document.getElementById(tabName + 'Tab').classList.add('active');
             
-            // Settings Icon nur im Kokain-Tab anzeigen
-            if (tabName === 'kokain') {
-                kokainSettingsIcon.style.display = 'block';
-            } else {
-                kokainSettingsIcon.style.display = 'none';
-            }
-            
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
 
@@ -1545,18 +1217,16 @@
 
         // Navigation zu anderen Seiten
         function navigateTo(page) {
-            navigateToWithAccessCheck(page);
+            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
         }
 
-        // Kokain Price Calculation - GLEICHE LOGIK WIE WEED
+        // Kokain Price Calculation
         function updateKokainPrices() {
             const quantity = parseInt(kokainQuantity.value) || 0;
             const cash = parseInt(kokainCash.value) || 0;
-            
-            // GLEICHE LOGIK WIE BEIM WEED SYSTEM:
-            // Basispreis = Cash Betrag
-            // Rabatt wird vom Gesamtbetrag abgezogen
-            // Verkäufer bekommt (100 - Rabatt)%, Käufer bekommt Rabatt%
             
             const totalPrice = cash;
             const discountValue = (totalPrice * currentDiscount) / 100;
@@ -1617,14 +1287,8 @@
             });
         }
 
-        // Handle Kokain Form Submission mit Firebase - KORRIGIERTE LOGIK
+        // Handle Kokain Form Submission
         function handleKokainSubmit() {
-            // Kokain Zugriff prüfen
-            if (currentUser && !currentUser.allowedPages.includes('kokain')) {
-                showNotification('Zugriff auf Kokain System wurde für deinen Account deaktiviert', 'error');
-                return;
-            }
-            
             const buyer = document.getElementById('kokainBuyer').value.trim();
             const seller = document.getElementById('kokainSeller').value.trim();
             const quantity = parseInt(kokainQuantity.value);
@@ -1635,13 +1299,11 @@
                 return;
             }
             
-            // KORRIGIERTE BERECHNUNG - GLEICHE LOGIK WIE WEED
             const totalPrice = cash;
             const discountValue = (totalPrice * currentDiscount) / 100;
             const sellerShare = totalPrice - discountValue;
             const buyerShare = discountValue;
             
-            // Finde den aktiven Discount mit Label
             const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
             
             const entry = {
@@ -1664,20 +1326,14 @@
                 saveKokainBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
                 saveKokainBtn.disabled = true;
                 
-                // Firebase-Speicherung
                 push(entriesRef, entry).then(() => {
-                    // Formular zurücksetzen
                     document.getElementById('kokainBuyer').value = '';
                     document.getElementById('kokainSeller').value = '';
                     kokainQuantity.value = '1';
                     kokainCash.value = '100';
                     updateKokainPrices();
                     
-                    if (currentDiscount === 0) {
-                        showNotification('Kokain Ankauf gespeichert! Verkäufer 100% / Käufer 0%', 'success');
-                    } else {
-                        showNotification(`Kokain Ankauf gespeichert! Verkäufer ${100 - currentDiscount}% / Käufer ${currentDiscount}%`, 'success');
-                    }
+                    showNotification('Kokain Ankauf gespeichert!', 'success');
                     
                     saveKokainBtn.innerHTML = originalText;
                     saveKokainBtn.disabled = false;
@@ -1705,10 +1361,7 @@
                     entries.push(data);
                 });
                 
-                // Sort entries by timestamp (newest first)
                 entries.sort((a, b) => b.timestamp - a.timestamp);
-                
-                // Render transactions table and statistics
                 renderKokainTransactions();
                 updateStatistics();
             });
@@ -1718,7 +1371,6 @@
             const tbody = document.getElementById('kokainTransactions');
             const searchTerm = searchInput.value.toLowerCase();
             
-            // Filter entries based on search term
             const filteredEntries = entries.filter(entry => 
                 entry.buyer.toLowerCase().includes(searchTerm) || 
                 entry.seller.toLowerCase().includes(searchTerm)
@@ -1737,7 +1389,6 @@
                 return;
             }
             
-            // Nur die letzten 10 Einträge anzeigen
             const recentEntries = filteredEntries.slice(0, 10);
             
             recentEntries.forEach(entry => {
@@ -1797,32 +1448,21 @@
 
         // Event Listeners initialisieren
         function initializeEventListeners() {
-            // Login Buttons
-            loginRey.addEventListener('click', () => loginAs('rey'));
-            loginPhilipp.addEventListener('click', () => loginAs('philipp'));
-            loginKai.addEventListener('click', () => loginAs('kai'));
+            // Login Button - ECHTE DISCORD OAUTH
+            discordLoginBtn.addEventListener('click', startDiscordOAuth);
             
-            // Logout Buttons
+            // Logout Button
             logoutBtn.addEventListener('click', logout);
-            restrictedLogoutBtn.addEventListener('click', logout);
             
             // Tab Buttons
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             kokainTab.addEventListener('click', () => switchTab('kokain'));
             
-            // Navigation Cards
-            document.querySelectorAll('.nav-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    navigateToWithAccessCheck(page);
-                });
-            });
-            
             // Dashboard Cards
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
-                    navigateToWithAccessCheck(page);
+                    navigateTo(page);
                 });
             });
             
@@ -1831,21 +1471,22 @@
             kokainCash.addEventListener('input', updateKokainPrices);
             saveKokainBtn.addEventListener('click', handleKokainSubmit);
             searchInput.addEventListener('input', renderKokainTransactions);
-            
-            // Settings Icon
-            kokainSettingsIcon.addEventListener('click', () => {
-                showNotification('Settings für Kokain System', 'info');
-            });
         }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
-            checkExistingLogin();
-            kokainSettingsIcon.style.display = 'none';
+            
+            // OAuth Callback verarbeiten falls in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('code')) {
+                handleOAuthCallback();
+            } else {
+                checkExistingLogin();
+            }
         });
 
-        console.log('Kokain Ankauf Panel mit Discord Auth vollständig geladen!');
+        console.log('Kokain Ankauf Panel mit ECHTER Discord OAuth geladen!');
     </script>
 </body>
 </html>

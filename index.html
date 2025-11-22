@@ -740,39 +740,6 @@
             display: none;
         }
 
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 2px solid #4299e1;
-            margin: 1rem auto;
-            display: block;
-        }
-
-        .file-input-container {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-input-label {
-            display: block;
-            padding: 0.8rem;
-            background: rgba(66, 153, 225, 0.2);
-            border: 1px dashed #4299e1;
-            border-radius: 6px;
-            text-align: center;
-            color: #90cdf4;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .file-input-label:hover {
-            background: rgba(66, 153, 225, 0.3);
-        }
-
         /* Access Restricted Styles */
         .access-restricted {
             text-align: center;
@@ -800,6 +767,12 @@
             margin-bottom: 1rem;
             border: 1px solid rgba(101, 119, 149, 0.3);
             transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-2px);
+            border-color: #4299e1;
         }
 
         .nav-card.disabled {
@@ -835,18 +808,21 @@
     <div id="loginPage" class="login-container">
         <div class="logo">KL</div>
         <h1>KhusLand Panel Login</h1>
-        <p>Bitte melde dich mit Discord an, um auf das Panel zuzugreifen.</p>
+        <p>Wähle einen Benutzer zum Testen:</p>
         
         <div class="error-message" id="errorMessage"></div>
         
-        <button id="discordLoginBtn" class="discord-login-btn">
-            <i class="fab fa-discord"></i> Mit Discord anmelden
+        <button id="loginRey" class="discord-login-btn" style="background: #48bb78; margin-bottom: 1rem;">
+            <i class="fas fa-crown"></i> Als Rey anmelden (Admin)
         </button>
         
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Anmeldung wird vorbereitet...</p>
-        </div>
+        <button id="loginPhilipp" class="discord-login-btn" style="background: #4299e1; margin-bottom: 1rem;">
+            <i class="fas fa-user"></i> Als Philipp anmelden
+        </button>
+        
+        <button id="loginKai" class="discord-login-btn" style="background: #ed8936;">
+            <i class="fas fa-user"></i> Als Kai anmelden
+        </button>
     </div>
 
     <!-- Main Content (Hidden until login) -->
@@ -877,9 +853,9 @@
             <!-- Access Restricted Message (Initially Hidden) -->
             <div id="accessRestricted" class="access-restricted hidden">
                 <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
-                <p>Deine Discord-ID ist nicht für den Zugriff auf diese Seite autorisiert.</p>
+                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
                 <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">ID: <span id="restrictedUserId"></span></p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
                 <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
                     <i class="fas fa-sign-out-alt"></i> Abmelden
                 </button>
@@ -917,7 +893,7 @@
                         <div class="nav-card" data-page="seite7.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-tachometer-alt"></i> Dashboard
-                                <span class="access-indicator access-allowed" id="accessDashboard">✓ Zugriff</span>
+                                <span class="access-indicator access-allowed">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Hauptübersicht und Systemstatus</p>
                         </div>
@@ -925,7 +901,7 @@
                         <div class="nav-card" data-page="seite5.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-route"></i> Route
-                                <span class="access-indicator" id="accessRoute">Lädt...</span>
+                                <span class="access-indicator" id="accessRoute">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Transportrouten und Logistik</p>
                         </div>
@@ -933,7 +909,7 @@
                         <div class="nav-card" data-page="seite4.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-tools"></i> Werkbank
-                                <span class="access-indicator" id="accessWerkbank">Lädt...</span>
+                                <span class="access-indicator" id="accessWerkbank">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Produktion und Handwerkssystem</p>
                         </div>
@@ -941,7 +917,7 @@
                         <div class="nav-card" data-page="seite3.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-recycle"></i> Materialrecycler
-                                <span class="access-indicator" id="accessMaterial">Lädt...</span>
+                                <span class="access-indicator" id="accessMaterial">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Rohstoffverarbeitung und Recycling</p>
                         </div>
@@ -949,7 +925,7 @@
                         <div class="nav-card" data-page="seite2.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-pills"></i> Kokain
-                                <span class="access-indicator" id="accessKokain">Lädt...</span>
+                                <span class="access-indicator" id="accessKokain">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Kokain-Operationen und Vertrieb</p>
                         </div>
@@ -957,7 +933,7 @@
                         <div class="nav-card" data-page="index.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-cannabis"></i> Weed
-                                <span class="access-indicator" id="accessWeed">Lädt...</span>
+                                <span class="access-indicator" id="accessWeed">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Weed-Ankauf und Verarbeitung</p>
                         </div>
@@ -965,7 +941,7 @@
                         <div class="nav-card" data-page="seite6.html">
                             <h4 style="color: #90cdf4; margin-bottom: 0.5rem;">
                                 <i class="fas fa-landmark"></i> Management
-                                <span class="access-indicator" id="accessManagement">Lädt...</span>
+                                <span class="access-indicator" id="accessManagement">✓ Zugriff</span>
                             </h4>
                             <p style="color: #cbd5e0;">Geschäftsführung und Kontrolle</p>
                         </div>
@@ -1137,82 +1113,6 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <!-- Dashboard Settings Modal (Logo-Text Änderung) -->
-    <div id="dashboardSettingsModal" class="settings-modal">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h3><i class="fas fa-palette"></i> Logo Einstellungen</h3>
-                <button class="close-settings" id="closeDashboardSettings">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="password-section">
-                <h4>Passwort erforderlich</h4>
-                <div class="settings-form">
-                    <input type="password" id="dashboardPassword" placeholder="Passwort eingeben (1101)">
-                    <button id="verifyDashboardPassword">Passwort prüfen</button>
-                    <div class="password-error" id="dashboardPasswordError">Falsches Passwort!</div>
-                </div>
-            </div>
-            
-            <div class="settings-section hidden" id="dashboardSettingsContent">
-                <h4>Logo Text anpassen</h4>
-                <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
-                    Ändern Sie den Text des Logos im Header (max. 2 Zeichen).
-                </p>
-                
-                <div class="settings-form">
-                    <input type="text" id="logoTextInput" placeholder="Logo Text (max. 2 Zeichen)" maxlength="2" value="A">
-                    <button id="saveLogoBtn">Logo speichern</button>
-                </div>
-                
-                <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
-                    <div style="color: #a0aec0; margin-bottom: 0.5rem;">Vorschau:</div>
-                    <div class="logo-icon" id="logoPreview" style="margin: 0 auto;">A</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Weed Settings Modal (Rabatt-Einstellungen) -->
-    <div id="weedSettingsModal" class="settings-modal">
-        <div class="settings-content">
-            <div class="settings-header">
-                <h3><i class="fas fa-cog"></i> Weed System Einstellungen</h3>
-                <button class="close-settings" id="closeWeedSettings">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="password-section">
-                <h4>Passwort erforderlich</h4>
-                <div class="settings-form">
-                    <input type="password" id="weedPassword" placeholder="Passwort eingeben (1101)">
-                    <button id="verifyWeedPassword">Passwort prüfen</button>
-                    <div class="password-error" id="weedPasswordError">Falsches Passwort!</div>
-                </div>
-            </div>
-            
-            <div class="settings-section hidden" id="weedSettingsContent">
-                <h4>Rabatt-Einstellungen</h4>
-                <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
-                    Verwalten Sie die verfügbaren Rabattstufen für das Weed-System. Gleiche Prozentwerte sind mehrfach möglich.
-                </p>
-                
-                <div class="settings-form">
-                    <input type="number" id="newDiscountValue" placeholder="Rabatt % (0-100)" min="0" max="100">
-                    <input type="text" id="newDiscountLabel" placeholder="Bezeichnung">
-                    <button id="addDiscountBtn">Hinzufügen</button>
-                </div>
-                
-                <div class="discount-list" id="discountSettingsList">
-                    <!-- Discount settings will be listed here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
@@ -1238,9 +1138,30 @@
         const discountsRef = ref(db,'discount_settings');
         const logoSettingsRef = ref(db,'logo_settings');
 
-        // Discord OAuth Konfiguration
-        const DISCORD_CLIENT_ID = '1432942180770644079';
-        const CLOUDFLARE_WORKER_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+        // HART CODED ZUGRIFFSKONTROLLE - FUNKTIONIERT IMMER
+        const USER_ACCESS = {
+            'rey': {
+                id: '917426398120005653',
+                username: 'Rey Ehrlich',
+                isPermanent: true,
+                message: '12er',
+                allowedPages: ['dashboard', 'route', 'werkbank', 'materialrecycler', 'kokain', 'management'] // KEIN WEED!
+            },
+            'philipp': {
+                id: '1387439512438964304', 
+                username: 'Philipp Yane',
+                isPermanent: false,
+                message: '11er',
+                allowedPages: ['dashboard', 'weed'] // Hat Weed Zugriff
+            },
+            'kai': {
+                id: '1294708021196357642',
+                username: 'Kai Dimauro',
+                isPermanent: false,
+                message: '2er',
+                allowedPages: ['dashboard', 'route'] // Nur Dashboard + Route
+            }
+        };
 
         // Seitenspezifische Konfiguration
         const PAGE_ACCESS_CONFIG = {
@@ -1264,6 +1185,7 @@
             { value: 20, label: 'Normal' }
         ];
         let logoText = 'A';
+        let currentUser = null;
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -1271,16 +1193,17 @@
         const authorizedContent = document.getElementById('authorizedContent');
         const accessRestricted = document.getElementById('accessRestricted');
         const errorMessage = document.getElementById('errorMessage');
-        const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
         const headerLogo = document.getElementById('headerLogo');
-        const restrictedUserId = document.getElementById('restrictedUserId');
+        const restrictedUserName = document.getElementById('restrictedUserName');
         const restrictedPageName = document.getElementById('restrictedPageName');
         
         // Buttons
-        const discordLoginBtn = document.getElementById('discordLoginBtn');
+        const loginRey = document.getElementById('loginRey');
+        const loginPhilipp = document.getElementById('loginPhilipp');
+        const loginKai = document.getElementById('loginKai');
         const logoutBtn = document.getElementById('logoutBtn');
         const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
@@ -1288,22 +1211,6 @@
         const saveWeedBtn = document.getElementById('saveWeedBtn');
         const weedQuantity = document.getElementById('weedQuantity');
         const weedSettingsIcon = document.getElementById('weedSettingsIcon');
-        const dashboardSettingsModal = document.getElementById('dashboardSettingsModal');
-        const weedSettingsModal = document.getElementById('weedSettingsModal');
-        const closeDashboardSettings = document.getElementById('closeDashboardSettings');
-        const closeWeedSettings = document.getElementById('closeWeedSettings');
-        const addDiscountBtn = document.getElementById('addDiscountBtn');
-        const saveLogoBtn = document.getElementById('saveLogoBtn');
-        const verifyDashboardPassword = document.getElementById('verifyDashboardPassword');
-        const verifyWeedPassword = document.getElementById('verifyWeedPassword');
-        const dashboardPassword = document.getElementById('dashboardPassword');
-        const weedPassword = document.getElementById('weedPassword');
-        const dashboardPasswordError = document.getElementById('dashboardPasswordError');
-        const weedPasswordError = document.getElementById('weedPasswordError');
-        const dashboardSettingsContent = document.getElementById('dashboardSettingsContent');
-        const weedSettingsContent = document.getElementById('weedSettingsContent');
-        const logoTextInput = document.getElementById('logoTextInput');
-        const logoPreview = document.getElementById('logoPreview');
 
         // Aktuelle Seite identifizieren
         function getCurrentPageKey() {
@@ -1312,110 +1219,23 @@
             return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
         }
 
-        // Discord Login Funktion - KORRIGIERT
-        function loginWithDiscord() {
-            const btn = discordLoginBtn;
+        // Einfache Login Funktionen
+        function loginAs(userKey) {
+            const user = USER_ACCESS[userKey];
+            if (!user) return;
             
-            // Loading anzeigen
-            btn.style.display = 'none';
-            loading.style.display = 'block';
-            errorMessage.style.display = 'none';
+            currentUser = user;
+            localStorage.setItem('current_user', JSON.stringify(user));
             
-            // KORRIGIERT: Feste Redirect URI
-            const redirectUri = 'https://freedomworld1.github.io/KhusLand/';
-            const discordOAuthURL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=identify`;
-            
-            console.log('OAuth URL:', discordOAuthURL);
-            // Redirect zu Discord OAuth
-            window.location.href = discordOAuthURL;
-        }
-
-        // Erweiterte Benutzerverifikation mit Seiten-Zugriff
-        async function verifyUserWithPageAccess(accessToken) {
+            // Zugriff auf aktuelle Seite prüfen
             const currentPage = getCurrentPageKey();
+            const hasAccess = user.allowedPages.includes(currentPage);
             
-            const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    accessToken: accessToken,
-                    currentPage: currentPage
-                })
-            });
-            
-            return await userResponse.json();
-        }
-
-        // OAuth Callback Handler - KORRIGIERT
-        async function handleOAuthCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const error = urlParams.get('error');
-            
-            console.log('OAuth Callback - Code:', code, 'Error:', error);
-            
-            if (error) {
-                showError(`Discord Login fehlgeschlagen: ${error}`);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return;
-            }
-            
-            if (code) {
-                try {
-                    loading.style.display = 'block';
-                    console.log('Exchanging code for token...');
-                    
-                    // Token mit Cloudflare Worker austauschen
-                    const tokenResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/token`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            code: code
-                            // Redirect URI wird im Worker fest definiert
-                        })
-                    });
-                    
-                    const tokenData = await tokenResponse.json();
-                    
-                    if (!tokenResponse.ok) {
-                        throw new Error(tokenData.error || 'Token exchange failed');
-                    }
-                    
-                    console.log('Token received, verifying user...');
-                    
-                    // BENUTZER MIT SEITEN-ZUGRIFF verifizieren
-                    const userData = await verifyUserWithPageAccess(tokenData.access_token);
-                    
-                    if (!userData.isAuthorized) {
-                        throw new Error('Benutzer nicht autorisiert');
-                    }
-
-                    // Zugriffsprüfung - NUR AUTORISIERTE BENUTZER mit Seiten-Zugriff
-                    if (!userData.hasPageAccess) {
-                        showAccessRestricted(userData.user, getCurrentPageKey());
-                        return;
-                    }
-                    
-                    // Erfolgreiche Anmeldung für autorisierte Benutzer
-                    localStorage.setItem('discord_user', JSON.stringify(userData.user));
-                    localStorage.setItem('access_info', JSON.stringify(userData.accessInfo));
-                    localStorage.setItem('discord_access_token', tokenData.access_token);
-                    
-                    showAuthorizedContent(userData.user, userData.accessInfo);
-                    showNotification(`Erfolgreich eingeloggt als ${userData.user.username}`, 'success');
-                    
-                    // Code aus URL entfernen
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                } catch (error) {
-                    console.error('Login error:', error);
-                    showError(error.message || 'Anmeldung fehlgeschlagen');
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
+            if (hasAccess) {
+                showAuthorizedContent(user);
+                showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+            } else {
+                showAccessRestricted(user, currentPage);
             }
         }
 
@@ -1426,9 +1246,9 @@
             accessRestricted.classList.remove('hidden');
             authorizedContent.classList.add('hidden');
             
-            restrictedUserId.textContent = user.id;
+            restrictedUserName.textContent = user.username;
             restrictedPageName.textContent = getPageDisplayName(pageKey);
-            showNotification('Zugriff verweigert - Keine Berechtigung für diese Seite', 'error');
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
         }
 
         // Seiten-Namen für Anzeige
@@ -1445,57 +1265,15 @@
             return names[pageKey] || pageKey;
         }
 
-        // Zugriffsrechte für Navigation prüfen
-        async function checkPageAccess(pageKey) {
-            const user = JSON.parse(localStorage.getItem('discord_user'));
-            const accessToken = localStorage.getItem('discord_access_token');
-            
-            if (!user || !accessToken) return false;
-            
-            try {
-                const userData = await verifyUserWithPageAccess(accessToken);
-                return userData.hasPageAccess;
-            } catch (error) {
-                console.error('Access check error:', error);
-                return false;
-            }
-        }
-
-        // Navigation-Zugriffsanzeige aktualisieren
-        async function updateNavigationAccess() {
-            const pages = [
-                { key: 'dashboard', element: 'accessDashboard' },
-                { key: 'route', element: 'accessRoute' },
-                { key: 'werkbank', element: 'accessWerkbank' },
-                { key: 'materialrecycler', element: 'accessMaterial' },
-                { key: 'kokain', element: 'accessKokain' },
-                { key: 'weed', element: 'accessWeed' },
-                { key: 'management', element: 'accessManagement' }
-            ];
-
-            for (const page of pages) {
-                const hasAccess = await checkPageAccess(page.key);
-                const element = document.getElementById(page.element);
-                
-                if (element) {
-                    if (hasAccess) {
-                        element.className = 'access-indicator access-allowed';
-                        element.textContent = '✓ Zugriff';
-                    } else {
-                        element.className = 'access-indicator access-denied';
-                        element.textContent = '✗ Kein Zugriff';
-                    }
-                }
-            }
-        }
-
         // Navigation zu anderen Seiten mit Zugriffsprüfung
-        async function navigateToWithAccessCheck(page) {
+        function navigateToWithAccessCheck(page) {
+            if (!currentUser) return;
+            
             const pageKey = PAGE_ACCESS_CONFIG[page];
-            const hasAccess = await checkPageAccess(pageKey);
+            const hasAccess = currentUser.allowedPages.includes(pageKey);
             
             if (!hasAccess) {
-                showNotification('Zugriff verweigert - Keine Berechtigung für diese Seite', 'error');
+                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
                 return;
             }
             
@@ -1506,29 +1284,25 @@
         }
 
         // Autorisierten Inhalt anzeigen
-        function showAuthorizedContent(user, accessInfo) {
+        function showAuthorizedContent(user) {
             loginPage.classList.add('hidden');
             mainContent.classList.remove('hidden');
             accessRestricted.classList.add('hidden');
             authorizedContent.classList.remove('hidden');
             
             // Benutzerinfo anzeigen
-            if (user) {
-                userWelcome.textContent = `Willkommen, ${user.username}`;
-                const firstLetter = user.username.charAt(0).toUpperCase();
-                document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
-            }
+            userWelcome.textContent = `Willkommen, ${user.username}`;
+            const firstLetter = user.username.charAt(0).toUpperCase();
+            document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
             
             // Access Badge mit Message anzeigen
-            if (accessInfo) {
-                accessBadge.textContent = accessInfo.message;
-                accessBadge.classList.remove('hidden');
-                
-                if (accessInfo.isPermanent) {
-                    accessBadge.className = 'access-badge access-permanent';
-                } else {
-                    accessBadge.className = 'access-badge access-temporary';
-                }
+            accessBadge.textContent = user.message;
+            accessBadge.classList.remove('hidden');
+            
+            if (user.isPermanent) {
+                accessBadge.className = 'access-badge access-permanent';
+            } else {
+                accessBadge.className = 'access-badge access-temporary';
             }
             
             // Navigation-Zugriff aktualisieren
@@ -1541,17 +1315,32 @@
             loadLogoSettings();
         }
 
-        // Check für OAuth Callback beim Laden
-        function checkForOAuthCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
+        // Navigation-Zugriffsanzeige aktualisieren
+        function updateNavigationAccess() {
+            if (!currentUser) return;
             
-            if (code) {
-                console.log('OAuth callback detected, handling...');
-                handleOAuthCallback();
-                return true;
-            }
-            return false;
+            const pages = [
+                { key: 'route', element: 'accessRoute' },
+                { key: 'werkbank', element: 'accessWerkbank' },
+                { key: 'materialrecycler', element: 'accessMaterial' },
+                { key: 'kokain', element: 'accessKokain' },
+                { key: 'weed', element: 'accessWeed' },
+                { key: 'management', element: 'accessManagement' }
+            ];
+
+            pages.forEach(page => {
+                const element = document.getElementById(page.element);
+                if (element) {
+                    const hasAccess = currentUser.allowedPages.includes(page.key);
+                    if (hasAccess) {
+                        element.className = 'access-indicator access-allowed';
+                        element.textContent = '✓ Zugriff';
+                    } else {
+                        element.className = 'access-indicator access-denied';
+                        element.textContent = '✗ Kein Zugriff';
+                    }
+                }
+            });
         }
 
         // Notification System
@@ -1569,31 +1358,17 @@
             }, duration);
         }
 
-        // Fehler anzeigen
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            
-            // Login-Button wieder anzeigen
-            discordLoginBtn.style.display = 'block';
-            loading.style.display = 'none';
-        }
-
         // Logout
         function logout() {
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
-                localStorage.removeItem('discord_user');
-                localStorage.removeItem('access_info');
-                localStorage.removeItem('discord_access_token');
+                currentUser = null;
+                localStorage.removeItem('current_user');
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
                 accessRestricted.classList.add('hidden');
                 authorizedContent.classList.add('hidden');
                 
-                discordLoginBtn.style.display = 'block';
-                loading.style.display = 'none';
-                errorMessage.style.display = 'none';
                 accessBadge.classList.add('hidden');
                 
                 showNotification('Erfolgreich ausgeloggt', 'info');
@@ -1602,35 +1377,32 @@
 
         // Bereits eingeloggten Benutzer prüfen
         function checkExistingLogin() {
-            // Zuerst OAuth Callback prüfen
-            if (checkForOAuthCallback()) {
-                return;
-            }
+            const userData = localStorage.getItem('current_user');
             
-            // Dann vorhandenen Login prüfen
-            const user = localStorage.getItem('discord_user');
-            const accessInfo = localStorage.getItem('access_info');
-            
-            if (user && accessInfo) {
-                const userData = JSON.parse(user);
-                const accessData = JSON.parse(accessInfo);
+            if (userData) {
+                const user = JSON.parse(userData);
+                currentUser = user;
                 
                 // Zugriff auf aktuelle Seite prüfen
-                checkPageAccess(getCurrentPageKey()).then(hasAccess => {
-                    if (hasAccess) {
-                        console.log('Authorized user already logged in');
-                        showAuthorizedContent(userData, accessData);
-                    } else {
-                        showAccessRestricted(userData, getCurrentPageKey());
-                    }
-                });
-            } else {
-                console.log('No existing login found');
+                const currentPage = getCurrentPageKey();
+                const hasAccess = user.allowedPages.includes(currentPage);
+                
+                if (hasAccess) {
+                    showAuthorizedContent(user);
+                } else {
+                    showAccessRestricted(user, currentPage);
+                }
             }
         }
 
         // Tab Navigation
         function switchTab(tabName) {
+            // Weed Tab für Rey sperren
+            if (tabName === 'weed' && currentUser && currentUser.id === USER_ACCESS.rey.id) {
+                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
+                return;
+            }
+            
             // Alle Tabs ausblenden
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -1670,96 +1442,19 @@
             navigateToWithAccessCheck(page);
         }
 
-        // Settings Modal Funktionen
-        function openDashboardSettings() {
-            resetPasswordForms();
-            logoTextInput.value = logoText;
-            logoPreview.textContent = logoText;
-            dashboardSettingsModal.classList.add('active');
-        }
+        // Weed Price Calculation
+        function updateWeedPrices() {
+            const quantity = parseInt(weedQuantity.value) || 0;
+            const pricePerBrick = 2500;
+            const totalPrice = quantity * pricePerBrick;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
 
-        function openWeedSettings() {
-            resetPasswordForms();
-            weedSettingsModal.classList.add('active');
-        }
-
-        function closeDashboardSettingsModal() {
-            dashboardSettingsModal.classList.remove('active');
-            resetPasswordForms();
-        }
-
-        function closeWeedSettingsModal() {
-            weedSettingsModal.classList.remove('active');
-            resetPasswordForms();
-        }
-
-        function resetPasswordForms() {
-            // Passwort-Felder zurücksetzen
-            dashboardPassword.value = '';
-            weedPassword.value = '';
-            dashboardPasswordError.style.display = 'none';
-            weedPasswordError.style.display = 'none';
-            dashboardSettingsContent.classList.add('hidden');
-            weedSettingsContent.classList.add('hidden');
-        }
-
-        // Passwort-Verifikation
-        function verifyPassword(password, type) {
-            if (password === ADMIN_PASSWORD) {
-                if (type === 'dashboard') {
-                    dashboardSettingsContent.classList.remove('hidden');
-                    dashboardPasswordError.style.display = 'none';
-                } else if (type === 'weed') {
-                    weedSettingsContent.classList.remove('hidden');
-                    weedPasswordError.style.display = 'none';
-                }
-                showNotification('Passwort korrekt', 'success');
-            } else {
-                if (type === 'dashboard') {
-                    dashboardPasswordError.style.display = 'block';
-                } else if (type === 'weed') {
-                    weedPasswordError.style.display = 'block';
-                }
-                showNotification('Falsches Passwort', 'error');
-            }
-        }
-
-        // Logo Einstellungen
-        function loadLogoSettings() {
-            onValue(logoSettingsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.logoText) {
-                    logoText = data.logoText;
-                    updateLogoDisplay();
-                }
-            });
-        }
-
-        function updateLogoDisplay() {
-            headerLogo.textContent = logoText;
-        }
-
-        function saveLogoText() {
-            const newLogoText = logoTextInput.value.trim().toUpperCase();
-            
-            if (!newLogoText) {
-                showNotification('Bitte Logo Text eingeben', 'error');
-                return;
-            }
-            
-            if (newLogoText.length > 2) {
-                showNotification('Logo Text darf maximal 2 Zeichen lang sein', 'error');
-                return;
-            }
-            
-            logoText = newLogoText;
-            set(logoSettingsRef, { logoText: logoText });
-            
-            updateLogoDisplay();
-            logoPreview.textContent = logoText;
-            
-            showNotification('Logo Text gespeichert', 'success');
-            closeDashboardSettingsModal();
+            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
+            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
+            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
+            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
         }
 
         // Discount System
@@ -1769,9 +1464,7 @@
                 if (data) {
                     availableDiscounts = Object.values(data);
                     renderDiscountButtons();
-                    renderDiscountSettings();
                 } else {
-                    // Initiale Discounts setzen
                     set(discountsRef, availableDiscounts);
                 }
             });
@@ -1786,7 +1479,6 @@
                 button.type = 'button';
                 button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
                 button.setAttribute('data-discount', discount.value);
-                button.setAttribute('data-index', index);
                 button.innerHTML = `
                     <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
                     <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
@@ -1812,109 +1504,14 @@
             });
         }
 
-        function renderDiscountSettings() {
-            const container = document.getElementById('discountSettingsList');
-            container.innerHTML = '';
-            
-            if (availableDiscounts.length === 0) {
-                container.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte konfiguriert</p>';
-                return;
-            }
-            
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const item = document.createElement('div');
-                item.className = 'discount-item';
-                item.innerHTML = `
-                    <div class="discount-info">
-                        <span class="discount-value">${discount.value}%</span>
-                        <span>${discount.label}</span>
-                    </div>
-                    <button class="delete-discount" data-index="${index}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                `;
-                
-                container.appendChild(item);
-            });
-            
-            // Event Listener für Delete-Buttons
-            document.querySelectorAll('.delete-discount').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const index = parseInt(e.target.closest('button').getAttribute('data-index'));
-                    deleteDiscount(index);
-                });
-            });
-        }
-
-        function addNewDiscount() {
-            const valueInput = document.getElementById('newDiscountValue');
-            const labelInput = document.getElementById('newDiscountLabel');
-            
-            const value = parseInt(valueInput.value);
-            const label = labelInput.value.trim();
-            
-            if (isNaN(value) || value < 0 || value > 100) {
-                showNotification('Bitte gültigen Rabattwert eingeben (0-100)', 'error');
-                return;
-            }
-            
-            if (!label) {
-                showNotification('Bitte Bezeichnung eingeben', 'error');
-                return;
-            }
-            
-            const newDiscount = {
-                value: value,
-                label: label
-            };
-            
-            availableDiscounts.push(newDiscount);
-            set(discountsRef, availableDiscounts);
-            
-            valueInput.value = '';
-            labelInput.value = '';
-            
-            showNotification(`Rabatt ${value}% (${label}) hinzugefügt`, 'success');
-        }
-
-        function deleteDiscount(index) {
-            if (availableDiscounts.length <= 1) {
-                showNotification('Mindestens ein Rabatt muss vorhanden sein', 'error');
-                return;
-            }
-            
-            const discount = availableDiscounts[index];
-            if (confirm(`Rabatt ${discount.value}% (${discount.label}) löschen?`)) {
-                availableDiscounts.splice(index, 1);
-                set(discountsRef, availableDiscounts);
-                
-                if (currentDiscount === discount.value) {
-                    currentDiscount = 0;
-                    updateWeedPrices();
-                    renderDiscountButtons();
-                }
-                
-                showNotification(`Rabatt ${discount.value}% gelöscht`, 'success');
-            }
-        }
-
-        // Weed Price Calculation
-        function updateWeedPrices() {
-            const quantity = parseInt(weedQuantity.value) || 0;
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-
-            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
-            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
-            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
-            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
-        }
-
         // Handle Weed Form Submission
         function handleWeedSubmit() {
+            // Weed Zugriff für Rey hart codiert sperren
+            if (currentUser && currentUser.id === USER_ACCESS.rey.id) {
+                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
+                return;
+            }
+            
             const buyer = document.getElementById('weedBuyer').value.trim();
             const seller = document.getElementById('weedSeller').value.trim();
             const quantity = parseInt(weedQuantity.value);
@@ -2022,15 +1619,33 @@
             });
         }
 
+        // Logo Einstellungen
+        function loadLogoSettings() {
+            onValue(logoSettingsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.logoText) {
+                    logoText = data.logoText;
+                    headerLogo.textContent = logoText;
+                }
+            });
+        }
+
         // Event Listeners initialisieren
         function initializeEventListeners() {
-            discordLoginBtn.addEventListener('click', loginWithDiscord);
+            // Login Buttons
+            loginRey.addEventListener('click', () => loginAs('rey'));
+            loginPhilipp.addEventListener('click', () => loginAs('philipp'));
+            loginKai.addEventListener('click', () => loginAs('kai'));
+            
+            // Logout Buttons
             logoutBtn.addEventListener('click', logout);
             restrictedLogoutBtn.addEventListener('click', logout);
             
+            // Tab Buttons
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             weedTab.addEventListener('click', () => switchTab('weed'));
             
+            // Navigation Cards
             document.querySelectorAll('.nav-card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
@@ -2038,6 +1653,7 @@
                 });
             });
             
+            // Dashboard Cards
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     const page = this.getAttribute('data-page');
@@ -2045,46 +1661,9 @@
                 });
             });
             
+            // Weed System
             weedQuantity.addEventListener('input', updateWeedPrices);
             saveWeedBtn.addEventListener('click', handleWeedSubmit);
-            
-            headerLogo.addEventListener('click', openDashboardSettings);
-            weedSettingsIcon.addEventListener('click', openWeedSettings);
-            closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
-            closeWeedSettings.addEventListener('click', closeWeedSettingsModal);
-            addDiscountBtn.addEventListener('click', addNewDiscount);
-            saveLogoBtn.addEventListener('click', saveLogoText);
-            
-            verifyDashboardPassword.addEventListener('click', () => verifyPassword(dashboardPassword.value, 'dashboard'));
-            verifyWeedPassword.addEventListener('click', () => verifyPassword(weedPassword.value, 'weed'));
-            
-            dashboardPassword.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') verifyPassword(dashboardPassword.value, 'dashboard');
-            });
-            
-            weedPassword.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') verifyPassword(weedPassword.value, 'weed');
-            });
-            
-            logoTextInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') saveLogoText();
-            });
-            
-            dashboardSettingsModal.addEventListener('click', (e) => {
-                if (e.target === dashboardSettingsModal) closeDashboardSettingsModal();
-            });
-            
-            weedSettingsModal.addEventListener('click', (e) => {
-                if (e.target === weedSettingsModal) closeWeedSettingsModal();
-            });
-            
-            document.getElementById('newDiscountValue').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addNewDiscount();
-            });
-            
-            document.getElementById('newDiscountLabel').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addNewDiscount();
-            });
         }
 
         // Initialisierung
@@ -2092,9 +1671,14 @@
             initializeEventListeners();
             checkExistingLogin();
             weedSettingsIcon.style.display = 'none';
+            
+            // Clear any old Discord data
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('access_info');
+            localStorage.removeItem('discord_access_token');
         });
 
-        console.log('KhusLand Panel mit korrigierter OAuth Authentifizierung geladen!');
+        console.log('KhusLand Panel - Vereinfachte Version mit harter Zugriffskontrolle geladen!');
     </script>
 </body>
 </html>

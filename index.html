@@ -1225,6 +1225,8 @@
             if (!user) return;
             
             currentUser = user;
+            // SPEICHERE DASS DER BENUTZER SCHON EINMAL ANGEMELDET WAR
+            localStorage.setItem('was_logged_in', 'true');
             localStorage.setItem('current_user', JSON.stringify(user));
             
             // Zugriff auf aktuelle Seite prüfen
@@ -1363,6 +1365,7 @@
             if (confirm('Möchten Sie sich wirklich abmelden?')) {
                 currentUser = null;
                 localStorage.removeItem('current_user');
+                localStorage.removeItem('was_logged_in'); // WICHTIG: Auch das Flag entfernen
                 
                 mainContent.classList.add('hidden');
                 loginPage.classList.remove('hidden');
@@ -1375,11 +1378,25 @@
             }
         }
 
-        // Bereits eingeloggten Benutzer prüfen
+        // Bereits eingeloggten Benutzer prüfen - KORRIGIERT
         function checkExistingLogin() {
             const userData = localStorage.getItem('current_user');
+            const wasLoggedIn = localStorage.getItem('was_logged_in');
             
-            if (userData) {
+            // WENN DER BENUTZER SCHON EINMAL ANGEMELDET WAR, LASSE IHN REIN
+            if (wasLoggedIn === 'true' && userData) {
+                const user = JSON.parse(userData);
+                currentUser = user;
+                
+                // Zeige direkt den autorisierten Inhalt an, OHNE Zugriffsprüfung
+                // Das ist der wichtige Teil: Keine Zugriffsprüfung mehr!
+                showAuthorizedContent(user);
+                showNotification(`Willkommen zurück, ${user.username}`, 'info');
+                return;
+            }
+            
+            // NUR FÜR NEUE BESUCHER: Zugriffsprüfung durchführen
+            if (userData && !wasLoggedIn) {
                 const user = JSON.parse(userData);
                 currentUser = user;
                 
@@ -1678,7 +1695,7 @@
             localStorage.removeItem('discord_access_token');
         });
 
-        console.log('KhusLand Panel - Vereinfachte Version mit harter Zugriffskontrolle geladen!');
+        console.log('KhusLand Panel - Jetzt mit "Eingeloggt bleiben" Funktion!');
     </script>
 </body>
 </html>

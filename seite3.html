@@ -90,10 +90,6 @@
             box-shadow: 0 8px 25px rgba(88, 101, 242, 0.4);
         }
         
-        .discord-login-btn:active {
-            transform: translateY(0);
-        }
-        
         .loading {
             display: none;
             margin-top: 1.5rem;
@@ -375,6 +371,129 @@
             color: white;
         }
         
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .settings-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .settings-content {
+            background: rgba(26, 32, 44, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+        
+        .settings-modal.active .settings-content {
+            transform: translateY(0);
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .settings-header h3 {
+            color: #fbbf24;
+            font-size: 1.4rem;
+        }
+        
+        .close-settings {
+            background: none;
+            border: none;
+            color: #a0aec0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close-settings:hover {
+            color: #fc8181;
+        }
+        
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section h4 {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-form input {
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 6px;
+            color: #e2e8f0;
+        }
+        
+        .settings-form button {
+            padding: 0.8rem 1.2rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .settings-form button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Password Protection */
+        .password-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .password-error {
+            color: #fc8181;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
         /* System-spezifische Styles */
         .system-card {
             background: rgba(26, 32, 44, 0.8);
@@ -661,6 +780,27 @@
             transform: scale(1.1);
         }
 
+        /* Dashboard Settings Icon */
+        .dashboard-settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fbbf24;
+            z-index: 10;
+            font-size: 1.2rem;
+        }
+        
+        .dashboard-settings-icon:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: scale(1.1);
+        }
+
         /* Search Box */
         .search-box {
             background: rgba(30, 41, 59, 0.6);
@@ -843,6 +983,44 @@
         .w-full {
             width: 100%;
         }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .edit-btn {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .edit-btn:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+
+        .delete-btn {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .delete-btn:hover {
+            background: rgba(245, 101, 101, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -869,7 +1047,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon">♻️</div>
+                <div class="logo-icon" id="headerLogo">♻️</div>
                 <h2>Materialrecycler Management</h2>
             </div>
             <div class="user-info">
@@ -902,10 +1080,14 @@
                 <button id="recyclerTab" class="nav-tab">
                     <i class="fas fa-recycle"></i> Recycler System
                 </button>
-            </div>
-
-            <!-- Dashboard Tab -->
+            </
+     <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
+                <!-- Dashboard Settings Icon -->
+                <div class="dashboard-settings-icon" id="dashboardSettingsIcon">
+                    ⚙️
+                </div>
+
                 <!-- System Cards -->
                 <div class="grid-container">
                     <div class="card" data-page="weed.html">
@@ -1017,7 +1199,7 @@
                         <!-- ADMIN ACTIONS -->
                         <div class="admin-actions">
                             <button id="addProductBtn" class="admin-btn-small">
-                                <i class="fas fa-plus"></i> Produkt
+                                <i class="fas fa-plus"></i> Produkt hinzufügen
                             </button>
                             <button id="exportCsv" class="admin-btn-small">
                                 <i class="fas fa-file-export"></i> CSV Export
@@ -1036,7 +1218,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Ressourcen</th>
-                                    <th>Aktion</th>
+                                    <th>Aktionen</th>
                                 </tr>
                             </thead>
                             <tbody id="adminTableBody">
@@ -1059,6 +1241,44 @@
 
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
+
+    <!-- Dashboard Settings Modal -->
+    <div id="dashboardSettingsModal" class="settings-modal">
+        <div class="settings-content">
+            <div class="settings-header">
+                <h3><i class="fas fa-palette"></i> Logo Einstellungen</h3>
+                <button class="close-settings" id="closeDashboardSettings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="password-section">
+                <h4>Passwort erforderlich</h4>
+                <div class="settings-form">
+                    <input type="password" id="dashboardPassword" placeholder="Passwort eingeben (1101)">
+                    <button id="verifyDashboardPassword">Passwort prüfen</button>
+                    <div class="password-error" id="dashboardPasswordError">Falsches Passwort!</div>
+                </div>
+            </div>
+            
+            <div class="settings-section hidden" id="dashboardSettingsContent">
+                <h4>Logo Text anpassen</h4>
+                <p style="color: #a0aec0; margin-bottom: 1rem; font-size: 0.9rem;">
+                    Ändern Sie den Text des Logos im Header (max. 2 Zeichen).
+                </p>
+                
+                <div class="settings-form">
+                    <input type="text" id="logoTextInput" placeholder="Logo Text (max. 2 Zeichen)" maxlength="2" value="♻️">
+                    <button id="saveLogoBtn">Logo speichern</button>
+                </div>
+                
+                <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
+                    <div style="color: #a0aec0; margin-bottom: 0.5rem;">Vorschau:</div>
+                    <div class="logo-icon" id="logoPreview" style="margin: 0 auto;">♻️</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Product Modal -->
     <div id="productModal" class="modal-overlay">
@@ -1111,7 +1331,7 @@
 
     <script>
         // =============================================
-        // MATERIALRECYCLER SYSTEM - NUR DISCORD LOGIN
+        // MATERIALRECYCLER SYSTEM - KOMPLETTE VERSION
         // =============================================
         
         console.log('🚀 Materialrecycler System wird gestartet...');
@@ -1126,12 +1346,25 @@
         const userWelcome = document.getElementById('userWelcome');
         const userAvatar = document.getElementById('userAvatar');
         const notification = document.getElementById('notification');
+        const headerLogo = document.getElementById('headerLogo');
 
         // Tab Elements
         const dashboardTab = document.getElementById('dashboardTab');
         const recyclerTab = document.getElementById('recyclerTab');
         const dashboardContent = document.getElementById('dashboard');
         const recyclerContent = document.getElementById('recycler');
+
+        // Settings Elements
+        const dashboardSettingsIcon = document.getElementById('dashboardSettingsIcon');
+        const dashboardSettingsModal = document.getElementById('dashboardSettingsModal');
+        const closeDashboardSettings = document.getElementById('closeDashboardSettings');
+        const verifyDashboardPassword = document.getElementById('verifyDashboardPassword');
+        const dashboardPassword = document.getElementById('dashboardPassword');
+        const dashboardPasswordError = document.getElementById('dashboardPasswordError');
+        const dashboardSettingsContent = document.getElementById('dashboardSettingsContent');
+        const logoTextInput = document.getElementById('logoTextInput');
+        const logoPreview = document.getElementById('logoPreview');
+        const saveLogoBtn = document.getElementById('saveLogoBtn');
 
         // Admin Elements
         const adminEmojiBtn = document.getElementById('adminEmojiBtn');
@@ -1144,6 +1377,8 @@
         const exportCsv = document.getElementById('exportCsv');
         const adminSearchInput = document.getElementById('adminSearchInput');
         const adminTableBody = document.getElementById('adminTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const productsList = document.getElementById('productsList');
 
         // Product Modal Elements
         const productModal = document.getElementById('productModal');
@@ -1165,13 +1400,22 @@
             appName: 'Materialrecycler',
             version: '2.0.0',
             adminPassword: '1101',
-            sessionTimeout: 24 * 60 * 60 * 1000 // 24 Stunden
+            sessionTimeout: 24 * 60 * 60 * 1000,
+            authorizedUsers: [
+                '917426398120005653', // Rey Ehrlich
+                '1387439512438964304', // Philipp Yane
+                '1294708021196357642', // Kai Dimauro
+                '916626532666077194', // Lisa Ehrlich
+                '1236794174301274287', // Mike Von Maukenburg
+                '434368649692708875'  // Marcel Morreti
+            ]
         };
 
         // Benutzer-Daten
         let currentUser = null;
         let currentResources = [];
         let products = [];
+        let logoText = '♻️';
 
         // =============================================
         // NOTIFICATION SYSTEM
@@ -1211,7 +1455,7 @@
         }
 
         // =============================================
-        // DISCORD LOGIN SYSTEM - MIT CLOUDFLARE WORKER
+        // DISCORD LOGIN SYSTEM - MIT AUTORISIERUNG
         // =============================================
         
         async function loginWithDiscord() {
@@ -1223,18 +1467,19 @@
             loading.style.display = 'block';
             
             try {
-                // Simuliere Cloudflare Worker Verifikation
-                const mockResponse = await simulateCloudflareVerification();
+                // Simuliere Discord OAuth mit Cloudflare Worker
+                const mockResponse = await simulateDiscordOAuth();
                 
                 if (mockResponse.isAuthorized) {
                     currentUser = mockResponse.user;
                     localStorage.setItem('materialrecycler_user', JSON.stringify(mockResponse.user));
                     localStorage.setItem('materialrecycler_login_time', Date.now().toString());
+                    localStorage.setItem('materialrecycler_logo', logoText);
                     
                     showMainContent(mockResponse.user);
                     showNotification('🎉 Erfolgreich mit Discord eingeloggt!', 'success');
                 } else {
-                    throw new Error('Zugriff verweigert: Nicht autorisierter Benutzer');
+                    throw new Error('Zugriff verweigert: Sie sind nicht in der autorisierten Benutzerliste');
                 }
                 
             } catch (error) {
@@ -1243,26 +1488,16 @@
             }
         }
 
-        // Simuliere Cloudflare Worker Verifikation
-        async function simulateCloudflareVerification() {
+        // Simuliere Discord OAuth mit Cloudflare Worker Verifikation
+        async function simulateDiscordOAuth() {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    // Simuliere autorisierte Benutzer
-                    const authorizedUsers = [
-                        '917426398120005653', // Rey Ehrlich
-                        '1387439512438964304', // Philipp Yane
-                        '1294708021196357642', // Kai Dimauro
-                        '916626532666077194', // Lisa Ehrlich
-                        '1236794174301274287', // Mike Von Maukenburg
-                        '434368649692708875'  // Marcel Morreti
-                    ];
-                    
                     // Zufälligen autorisierten Benutzer auswählen
-                    const randomUserId = authorizedUsers[Math.floor(Math.random() * authorizedUsers.length)];
+                    const randomUserId = CONFIG.authorizedUsers[Math.floor(Math.random() * CONFIG.authorizedUsers.length)];
                     
                     const userData = {
                         id: randomUserId,
-                        username: "Autorisierter_User",
+                        username: getUsernameById(randomUserId),
                         discriminator: "1234",
                         avatar: null,
                         loginType: "discord",
@@ -1274,13 +1509,25 @@
                         isAuthorized: true,
                         user: userData,
                         accessInfo: {
-                            username: 'Autorisierter Benutzer',
+                            username: userData.username,
                             isPermanent: true,
                             message: '12er'
                         }
                     });
                 }, 2000);
             });
+        }
+
+        function getUsernameById(userId) {
+            const usernames = {
+                '917426398120005653': 'Rey Ehrlich',
+                '1387439512438964304': 'Philipp Yane',
+                '1294708021196357642': 'Kai Dimauro',
+                '916626532666077194': 'Lisa Ehrlich',
+                '1236794174301274287': 'Mike Von Maukenburg',
+                '434368649692708875': 'Marcel Morreti'
+            };
+            return usernames[userId] || 'Autorisierter_User';
         }
 
         // =============================================
@@ -1305,6 +1552,12 @@
                 // Titel anpassen
                 document.title = `${CONFIG.appName} - ${user.username}`;
             }
+            
+            // Logo laden
+            loadLogo();
+            
+            // Produkte laden
+            loadProducts();
             
             // Scroll nach oben
             window.scrollTo(0, 0);
@@ -1370,6 +1623,14 @@
             // Aktiven Button markieren
             document.getElementById(tabName + 'Tab').classList.add('active');
             
+            // Admin Section verstecken beim Tab-Wechsel
+            if (tabName !== 'recycler') {
+                adminSection.classList.add('hidden');
+                adminContent.classList.add('hidden');
+                adminPassInput.value = '';
+                adminError.style.display = 'none';
+            }
+            
             showNotification(`📊 ${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
 
@@ -1379,6 +1640,74 @@
                 'recycler': 'Recycler System'
             };
             return names[tabName] || tabName;
+        }
+
+        // =============================================
+        // DASHBOARD SETTINGS SYSTEM
+        // =============================================
+        
+        function openDashboardSettings() {
+            resetPasswordForms();
+            logoTextInput.value = logoText;
+            logoPreview.textContent = logoText;
+            dashboardSettingsModal.classList.add('active');
+        }
+
+        function closeDashboardSettingsModal() {
+            dashboardSettingsModal.classList.remove('active');
+            resetPasswordForms();
+        }
+
+        function resetPasswordForms() {
+            dashboardPassword.value = '';
+            dashboardPasswordError.style.display = 'none';
+            dashboardSettingsContent.classList.add('hidden');
+        }
+
+        function verifyDashboardPassword() {
+            if (dashboardPassword.value === CONFIG.adminPassword) {
+                dashboardSettingsContent.classList.remove('hidden');
+                dashboardPasswordError.style.display = 'none';
+                showNotification('🔓 Passwort korrekt', 'success');
+            } else {
+                dashboardPasswordError.style.display = 'block';
+                showNotification('❌ Falsches Passwort', 'error');
+            }
+        }
+
+        function loadLogo() {
+            const savedLogo = localStorage.getItem('materialrecycler_logo');
+            if (savedLogo) {
+                logoText = savedLogo;
+                updateLogoDisplay();
+            }
+        }
+
+        function updateLogoDisplay() {
+            headerLogo.textContent = logoText;
+        }
+
+        function saveLogoText() {
+            const newLogoText = logoTextInput.value.trim();
+            
+            if (!newLogoText) {
+                showNotification('❌ Bitte Logo Text eingeben', 'error');
+                return;
+            }
+            
+            if (newLogoText.length > 2) {
+                showNotification('❌ Logo Text darf maximal 2 Zeichen lang sein', 'error');
+                return;
+            }
+            
+            logoText = newLogoText;
+            localStorage.setItem('materialrecycler_logo', logoText);
+            
+            updateLogoDisplay();
+            logoPreview.textContent = logoText;
+            
+            showNotification('✅ Logo Text gespeichert', 'success');
+            closeDashboardSettingsModal();
         }
 
         // =============================================
@@ -1413,7 +1742,222 @@
         }
 
         // =============================================
-        // RESOURCE MANAGEMENT - VERBESSERT
+        // PRODUCT MANAGEMENT SYSTEM
+        // =============================================
+        
+        function loadProducts() {
+            // Simuliere Produkte laden
+            products = [
+                {
+                    key: '1',
+                    name: 'Aluminium-Dose',
+                    resources: [
+                        { name: 'Aluminium', min: 2, max: 4 },
+                        { name: 'Stahl', min: 1, max: 2 }
+                    ],
+                    timestamp: Date.now()
+                },
+                {
+                    key: '2',
+                    name: 'Kupfer-Rohr',
+                    resources: [
+                        { name: 'Kupfer', min: 3, max: 5 },
+                        { name: 'Zinn', min: 1, max: 1 }
+                    ],
+                    timestamp: Date.now() - 100000
+                }
+            ];
+            
+            renderProducts();
+            renderAdminTable();
+        }
+
+        function renderProducts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Filter products based on search term
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) || 
+                (product.resources && product.resources.some(resource => 
+                    resource.name.toLowerCase().includes(searchTerm)
+                ))
+            );
+            
+            productsList.innerHTML = '';
+            
+            if (filteredProducts.length === 0) {
+                productsList.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #a0aec0;">
+                        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>Keine Produkte gefunden.</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                
+                let imageHtml = `
+                    <div class="product-image">
+                        <i class="fas fa-box" style="font-size: 2rem;"></i>
+                    </div>
+                `;
+                
+                // Resources for this product
+                let resourcesHtml = '';
+                if (product.resources && product.resources.length > 0) {
+                    resourcesHtml = product.resources.map(resource => 
+                        `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
+                    ).join('');
+                }
+                
+                productItem.innerHTML = `
+                    <div class="product-card">
+                        <div class="flex-shrink-0">
+                            ${imageHtml}
+                        </div>
+                        <div class="flex-grow">
+                            <div class="font-semibold text-lg mb-2" style="color: #fbbf24;">${product.name}</div>
+                            ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
+                            
+                            <!-- Resource Calculator -->
+                            <div class="calculator-section">
+                                <div style="color: #fbbf24; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-calculator"></i>
+                                    Ressourcen Rechner
+                                </div>
+                                
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease-quantity">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" value="1" min="1" class="quantity-input product-quantity">
+                                    <button class="quantity-btn increase-quantity">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <span style="color: #cbd5e0; font-size: 0.9rem;">Produkt(e)</span>
+                                </div>
+                                
+                                <div class="calculation-results">
+                                    <!-- Results will be dynamically inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsList.appendChild(productItem);
+                
+                // Event Listeners for Quantity Controls
+                const quantityInput = productItem.querySelector('.product-quantity');
+                const decreaseBtn = productItem.querySelector('.decrease-quantity');
+                const increaseBtn = productItem.querySelector('.increase-quantity');
+                const resultsContainer = productItem.querySelector('.calculation-results');
+                
+                // Calculation for this product
+                const updateCalculation = () => {
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    resultsContainer.innerHTML = '';
+                    
+                    const productResources = product.resources || [];
+                    
+                    if (productResources.length === 0) {
+                        resultsContainer.innerHTML = '<div style="color: #a0aec0; text-align: center; padding: 1rem; font-size: 0.9rem;">Keine Ressourcen für dieses Produkt definiert</div>';
+                        return;
+                    }
+                    
+                    productResources.forEach(resource => {
+                        const minTotal = resource.min * quantity;
+                        const maxTotal = resource.max * quantity;
+                        
+                        const resultEl = document.createElement('div');
+                        resultEl.className = 'result-item';
+                        resultEl.innerHTML = `
+                            <div style="flex: 1; font-weight: 500;">${resource.name}</div>
+                            <div class="result-range">${minTotal}-${maxTotal}</div>
+                        `;
+                        resultsContainer.appendChild(resultEl);
+                    });
+                };
+                
+                // Initial calculation
+                updateCalculation();
+                
+                // Event Listeners
+                decreaseBtn.addEventListener('click', () => {
+                    const current = parseInt(quantityInput.value) || 1;
+                    if (current > 1) {
+                        quantityInput.value = current - 1;
+                        updateCalculation();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', () => {
+                    const current = parseInt(quantityInput.value) || 1;
+                    quantityInput.value = current + 1;
+                    updateCalculation();
+                });
+
+                quantityInput.addEventListener('input', () => {
+                    updateCalculation();
+                });
+            });
+        }
+
+        function renderAdminTable() {
+            adminTableBody.innerHTML = '';
+            
+            if (products.length === 0) {
+                adminTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #a0aec0; padding: 1.5rem;">
+                            Keine Produkte vorhanden
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                
+                let resourcesText = '';
+                if (product.resources && product.resources.length > 0) {
+                    resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
+                } else {
+                    resourcesText = 'Keine Ressourcen';
+                }
+                
+                tr.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${resourcesText}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn edit-btn edit-product" data-key="${product.key}" title="Bearbeiten">
+                                <i class="fas fa-edit"></i> Bearbeiten
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteProduct('${product.key}')" title="Löschen">
+                                <i class="fas fa-trash"></i> Löschen
+                            </button>
+                        </div>
+                    </td>
+                `;
+                adminTableBody.appendChild(tr);
+            });
+            
+            // Event Listener für Bearbeiten-Buttons
+            document.querySelectorAll('.edit-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    editProduct(key);
+                });
+            });
+        }
+
+        // =============================================
+        // RESOURCE MANAGEMENT
         // =============================================
         
         function addResource() {
@@ -1475,6 +2019,11 @@
         // =============================================
         
         function openProductModal() {
+            productForm.reset();
+            productKeyInput.value = '';
+            currentResources = [];
+            renderResourcesList();
+            productModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
             productModal.classList.add('active');
         }
 
@@ -1484,6 +2033,121 @@
             currentResources = [];
             renderResourcesList();
         }
+
+        function editProduct(key) {
+            const product = products.find(p => p.key === key);
+            if (!product) return;
+            
+            // Fill form with product data
+            document.getElementById('productName').value = product.name;
+            productKeyInput.value = key;
+            
+            // Set resources
+            currentResources = product.resources ? [...product.resources] : [];
+            renderResourcesList();
+            
+            // Change modal title
+            productModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
+            
+            // Show modal
+            productModal.classList.add('active');
+        }
+
+        // Product Form Submission
+        productForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('productName').value;
+            const key = productKeyInput.value;
+            
+            // Create product object
+            const productData = {
+                name,
+                resources: [...currentResources],
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+            
+            try {
+                if (key) {
+                    // Update existing product
+                    const index = products.findIndex(p => p.key === key);
+                    if (index !== -1) {
+                        products[index] = { ...products[index], ...productData };
+                        showNotification('✅ Produkt erfolgreich aktualisiert', 'success');
+                    }
+                } else {
+                    // Create new product
+                    const newKey = Date.now().toString();
+                    products.unshift({
+                        key: newKey,
+                        ...productData
+                    });
+                    showNotification('✅ Produkt erfolgreich hinzugefügt', 'success');
+                }
+                
+                renderProducts();
+                renderAdminTable();
+                closeProductModalFunc();
+                
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+                showNotification('❌ Fehler beim Speichern des Produkts!', 'error');
+            }
+        });
+
+        // Delete Product
+        window.deleteProduct = function(key) { 
+            if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
+                try {
+                    products = products.filter(p => p.key !== key);
+                    renderProducts();
+                    renderAdminTable();
+                    showNotification('✅ Produkt erfolgreich gelöscht', 'success');
+                } catch (error) {
+                    console.error('Fehler beim Löschen:', error);
+                    showNotification('❌ Fehler beim Löschen des Produkts!', 'error');
+                }
+            }
+        }
+
+        // CSV Export
+        exportCsv.addEventListener('click', () => {
+            if (products.length === 0) {
+                showNotification('❌ Keine Produkte zum Exportieren vorhanden.', 'error');
+                return;
+            }
+            
+            const header = ['Name', 'Ressourcen'];
+            const rows = products.map(product => {
+                const resourcesText = product.resources && product.resources.length > 0 
+                    ? product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join('; ')
+                    : 'Keine Ressourcen';
+                
+                return [
+                    `"${product.name}"`,
+                    `"${resourcesText.replace(/"/g, '""')}"`
+                ].join(';');
+            });
+            
+            const csv = [header.join(';'), ...rows].join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            // Generate filename with current date
+            const now = new Date();
+            const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+            a.download = `materialrecycler_${dateStr}.csv`;
+            
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+            a.remove();
+            
+            showNotification('✅ CSV erfolgreich exportiert', 'success');
+        });
 
         // =============================================
         // SESSION MANAGEMENT
@@ -1558,6 +2222,12 @@
                 switchTab('recycler');
             });
             
+            // Dashboard Settings
+            dashboardSettingsIcon.addEventListener('click', openDashboardSettings);
+            closeDashboardSettings.addEventListener('click', closeDashboardSettingsModal);
+            verifyDashboardPassword.addEventListener('click', verifyDashboardPassword);
+            saveLogoBtn.addEventListener('click', saveLogoText);
+            
             // Admin System
             adminEmojiBtn.addEventListener('click', toggleAdminSection);
             adminLoginBtn.addEventListener('click', adminLogin);
@@ -1575,6 +2245,22 @@
                 }
             });
 
+            // Search
+            searchInput.addEventListener('input', renderProducts);
+            adminSearchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = adminTableBody.querySelectorAll('tr');
+                
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
             // Card Klicks
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -1587,6 +2273,13 @@
             document.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !loginPage.classList.contains('hidden')) {
                     loginWithDiscord();
+                }
+            });
+
+            // Modal schließen bei Klick außerhalb
+            dashboardSettingsModal.addEventListener('click', (e) => {
+                if (e.target === dashboardSettingsModal) {
+                    closeDashboardSettingsModal();
                 }
             });
         }

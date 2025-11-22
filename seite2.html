@@ -886,12 +886,12 @@
         const discountsRef = ref(db,'kokain_discount_settings');
         const logoSettingsRef = ref(db,'kokain_logo_settings');
 
-        // Cloudflare Worker URL - DEIN WORKER
+        // Cloudflare Worker URL
         const CLOUDFLARE_WORKER_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-        // Discord OAuth Konfiguration
+        // Discord OAuth Konfiguration - FESTE REDIRECT URI WIE IM WORKER
         const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/'; // GENAU WIE IM WORKER
 
         // System Variablen
         const ADMIN_PASSWORD = '1101';
@@ -941,6 +941,7 @@
             
             // State in localStorage speichern für Verifikation
             localStorage.setItem('oauth_state', state);
+            localStorage.setItem('target_page', 'seite2.html'); // Merken welche Seite wir wollen
             
             // Zu Discord OAuth weiterleiten
             window.location.href = discordAuthUrl;
@@ -951,91 +952,16 @@
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
-        // OAuth Callback verarbeiten - KORRIGIERT FÜR DEINEN WORKER
-        async function handleOAuthCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            const storedState = localStorage.getItem('oauth_state');
+        // Bereits eingeloggten Benutzer prüfen
+        function checkExistingLogin() {
+            const userData = localStorage.getItem('current_user');
+            const wasLoggedIn = localStorage.getItem('was_logged_in');
             
-            if (code && state && state === storedState) {
-                try {
-                    loading.style.display = 'block';
-                    
-                    // Token über Cloudflare Worker holen - KORREKTE ENDPOINTS
-                    const tokenResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/token`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            code: code,
-                            redirect_uri: DISCORD_REDIRECT_URI
-                        })
-                    });
-                    
-                    if (!tokenResponse.ok) {
-                        throw new Error('Token request failed');
-                    }
-                    
-                    const tokenData = await tokenResponse.json();
-                    
-                    if (tokenData.error) {
-                        throw new Error(tokenData.error);
-                    }
-                    
-                    // User Info über Cloudflare Worker verifizieren
-                    const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            accessToken: tokenData.access_token,
-                            currentPage: 'kokain' // Aktuelle Seite für Zugriffsprüfung
-                        })
-                    });
-                    
-                    if (!userResponse.ok) {
-                        throw new Error('User verification failed');
-                    }
-                    
-                    const userData = await userResponse.json();
-                    
-                    if (userData.error) {
-                        throw new Error(userData.error);
-                    }
-                    
-                    if (userData.isAuthorized && userData.hasPageAccess) {
-                        currentUser = {
-                            id: userData.user.id,
-                            username: userData.user.username,
-                            ...userData.accessInfo
-                        };
-                        
-                        // User in localStorage speichern
-                        localStorage.setItem('current_user', JSON.stringify(currentUser));
-                        localStorage.setItem('was_logged_in', 'true');
-                        
-                        // Erfolgreich einloggen
-                        showMainContent(currentUser);
-                        showNotification(`Erfolgreich eingeloggt als ${currentUser.username}`, 'success');
-                        
-                        // URL bereinigen
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        
-                    } else {
-                        showError('Dein Discord Account hat keinen Zugriff auf das Kokain System.');
-                    }
-                    
-                } catch (error) {
-                    console.error('OAuth Error:', error);
-                    showError('Fehler bei der Anmeldung: ' + error.message);
-                } finally {
-                    loading.style.display = 'none';
-                    discordLoginBtn.style.display = 'block';
-                    localStorage.removeItem('oauth_state');
-                }
+            if (wasLoggedIn === 'true' && userData) {
+                const user = JSON.parse(userData);
+                currentUser = user;
+                showMainContent(user);
+                showNotification(`Willkommen zurück, ${user.username}`, 'info');
             }
         }
 
@@ -1111,19 +1037,6 @@
                 accessBadge.classList.add('hidden');
                 
                 showNotification('Erfolgreich ausgeloggt', 'info');
-            }
-        }
-
-        // Bereits eingeloggten Benutzer prüfen
-        function checkExistingLogin() {
-            const userData = localStorage.getItem('current_user');
-            const wasLoggedIn = localStorage.getItem('was_logged_in');
-            
-            if (wasLoggedIn === 'true' && userData) {
-                const user = JSON.parse(userData);
-                currentUser = user;
-                showMainContent(user);
-                showNotification(`Willkommen zurück, ${user.username}`, 'info');
             }
         }
 
@@ -1417,17 +1330,10 @@
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
-            
-            // OAuth Callback verarbeiten falls in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('code')) {
-                handleOAuthCallback();
-            } else {
-                checkExistingLogin();
-            }
+            checkExistingLogin();
         });
 
-        console.log('Kokain Ankauf Panel mit Cloudflare Worker geladen!');
+        console.log('Kokain Ankauf Panel mit korrigierter Discord Auth geladen!');
     </script>
 </body>
 </html>

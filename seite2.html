@@ -281,25 +281,6 @@
             display: none;
         }
         
-        /* Access Restricted Styles */
-        .access-restricted {
-            text-align: center;
-            padding: 3rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
-
-        .access-restricted h2 {
-            color: #fc8181;
-            margin-bottom: 1rem;
-        }
-
-        .access-restricted p {
-            color: #a0aec0;
-            margin-bottom: 1.5rem;
-        }
-
         /* System-spezifische Styles */
         .system-card {
             background: rgba(26, 32, 44, 0.8);
@@ -905,32 +886,12 @@
         const discountsRef = ref(db,'kokain_discount_settings');
         const logoSettingsRef = ref(db,'kokain_logo_settings');
 
-        // Discord OAuth Konfiguration - WIE IM ANDEREN SCRIPT
+        // Cloudflare Worker URL - DEIN WORKER
+        const CLOUDFLARE_WORKER_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
-        // HART CODED ZUGRIFFSKONTROLLE - WIE IM ANDEREN SCRIPT
-        const USER_ACCESS = {
-            '917426398120005653': { // Rey
-                username: 'Rey Ehrlich',
-                isPermanent: true,
-                message: '12er',
-                allowedPages: ['dashboard', 'route', 'werkbank', 'materialrecycler', 'kokain', 'management']
-            },
-            '1387439512438964304': { // Philipp
-                username: 'Philipp Yane',
-                isPermanent: false,
-                message: '11er', 
-                allowedPages: ['dashboard', 'kokain']
-            },
-            '1294708021196357642': { // Kai
-                username: 'Kai Dimauro',
-                isPermanent: false,
-                message: '2er',
-                allowedPages: ['dashboard', 'route']
-            }
-        };
 
         // System Variablen
         const ADMIN_PASSWORD = '1101';
@@ -965,7 +926,7 @@
         const kokainCash = document.getElementById('kokainCash');
         const searchInput = document.getElementById('searchInput');
 
-        // Discord OAuth Flow - WIE IM ANDEREN SCRIPT
+        // Discord OAuth Flow - KORRIGIERT FÜR DEINEN WORKER
         function startDiscordOAuth() {
             const btn = discordLoginBtn;
             
@@ -974,9 +935,9 @@
             loading.style.display = 'block';
             errorMessage.style.display = 'none';
             
-            // Discord OAuth URL erstellen
+            // Discord OAuth URL erstellen - MIT KORREKTER REDIRECT URI
             const state = generateRandomState();
-            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=1432942180770644079&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20email&state=${state}`;
+            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20email&state=${state}`;
             
             // State in localStorage speichern für Verifikation
             localStorage.setItem('oauth_state', state);
@@ -990,7 +951,7 @@
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
-        // OAuth Callback verarbeiten
+        // OAuth Callback verarbeiten - KORRIGIERT FÜR DEINEN WORKER
         async function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
@@ -1001,8 +962,8 @@
                 try {
                     loading.style.display = 'block';
                     
-                    // Token über Backend holen
-                    const tokenResponse = await fetch(`${BACKEND_URL}/api/token`, {
+                    // Token über Cloudflare Worker holen - KORREKTE ENDPOINTS
+                    const tokenResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/token`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1019,26 +980,37 @@
                     
                     const tokenData = await tokenResponse.json();
                     
-                    // User Info holen
-                    const userResponse = await fetch(`${BACKEND_URL}/api/user`, {
+                    if (tokenData.error) {
+                        throw new Error(tokenData.error);
+                    }
+                    
+                    // User Info über Cloudflare Worker verifizieren
+                    const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
+                        method: 'POST',
                         headers: {
-                            'Authorization': `Bearer ${tokenData.access_token}`
-                        }
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            accessToken: tokenData.access_token,
+                            currentPage: 'kokain' // Aktuelle Seite für Zugriffsprüfung
+                        })
                     });
                     
                     if (!userResponse.ok) {
-                        throw new Error('User request failed');
+                        throw new Error('User verification failed');
                     }
                     
                     const userData = await userResponse.json();
                     
-                    // User Zugriff prüfen
-                    if (USER_ACCESS[userData.id]) {
+                    if (userData.error) {
+                        throw new Error(userData.error);
+                    }
+                    
+                    if (userData.isAuthorized && userData.hasPageAccess) {
                         currentUser = {
-                            ...USER_ACCESS[userData.id],
-                            id: userData.id,
-                            avatar: userData.avatar,
-                            discriminator: userData.discriminator
+                            id: userData.user.id,
+                            username: userData.user.username,
+                            ...userData.accessInfo
                         };
                         
                         // User in localStorage speichern
@@ -1053,49 +1025,18 @@
                         window.history.replaceState({}, document.title, window.location.pathname);
                         
                     } else {
-                        showError('Dein Discord Account hat keinen Zugriff auf dieses System.');
+                        showError('Dein Discord Account hat keinen Zugriff auf das Kokain System.');
                     }
                     
                 } catch (error) {
                     console.error('OAuth Error:', error);
-                    showError('Fehler bei der Anmeldung. Bitte versuche es erneut.');
+                    showError('Fehler bei der Anmeldung: ' + error.message);
                 } finally {
                     loading.style.display = 'none';
                     discordLoginBtn.style.display = 'block';
                     localStorage.removeItem('oauth_state');
                 }
             }
-        }
-
-        // Fallback für Demo (wenn Backend nicht verfügbar)
-        function simulateDiscordLogin() {
-            const btn = discordLoginBtn;
-            
-            btn.style.display = 'none';
-            loading.style.display = 'block';
-            errorMessage.style.display = 'none';
-            
-            // Simuliere erfolgreichen Login mit einem der Test-User
-            setTimeout(() => {
-                const mockUser = {
-                    id: '1387439512438964304', // Philipp
-                    username: 'Philipp Yane',
-                    isPermanent: false,
-                    message: '11er',
-                    allowedPages: ['dashboard', 'kokain'],
-                    avatar: null,
-                    discriminator: '1234'
-                };
-                
-                currentUser = mockUser;
-                localStorage.setItem('current_user', JSON.stringify(mockUser));
-                localStorage.setItem('was_logged_in', 'true');
-                
-                showMainContent(mockUser);
-                showNotification('Erfolgreich eingeloggt! (Demo Mode)', 'success');
-                
-                loading.style.display = 'none';
-            }, 2000);
         }
 
         // Notification System
@@ -1448,7 +1389,7 @@
 
         // Event Listeners initialisieren
         function initializeEventListeners() {
-            // Login Button - ECHTE DISCORD OAUTH
+            // Login Button - MIT CLOUDFLARE WORKER
             discordLoginBtn.addEventListener('click', startDiscordOAuth);
             
             // Logout Button
@@ -1486,7 +1427,7 @@
             }
         });
 
-        console.log('Kokain Ankauf Panel mit ECHTER Discord OAuth geladen!');
+        console.log('Kokain Ankauf Panel mit Cloudflare Worker geladen!');
     </script>
 </body>
 </html>

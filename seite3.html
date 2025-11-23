@@ -1347,7 +1347,7 @@
     <div id="notification" class="notification hidden"></div>
 
     <script type="module">
-        // Discord OAuth Konfiguration - KORRIGIERT
+        // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
@@ -1458,13 +1458,13 @@
         const addResourceBtn = document.getElementById('addResourceBtn');
         const resourcesList = document.getElementById('resourcesList');
 
-        // ========== KORRIGIERTER LOGIN-BUTTON ==========
+        // ========== KORRIGIERTER LOGIN-BUTTON MIT VERBESSERTEM FEHLERHANDLING ==========
 
-        // Discord OAuth Login - KOMPLETT REPARIERT
+        // Discord OAuth Login - REPARIERT
         function startDiscordOAuth() {
             console.log('Starte Discord OAuth...');
             
-            // Loading anzeigen
+            // Loading anzeigen, Login-Button ausblenden
             discordLoginBtn.style.display = 'none';
             loginLoading.style.display = 'block';
             errorMessage.style.display = 'none';
@@ -1495,7 +1495,14 @@
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
-        // OAuth Callback verarbeiten
+        // WICHTIG: Login-UI zurücksetzen Funktion
+        function resetLoginUI() {
+            loginLoading.style.display = 'none';
+            discordLoginBtn.style.display = 'flex';
+            errorMessage.style.display = 'block';
+        }
+
+        // OAuth Callback verarbeiten - VERBESSERTES FEHLERHANDLING
         async function handleOAuthCallback() {
             console.log('Verarbeite OAuth Callback...');
             
@@ -1503,8 +1510,17 @@
             const code = urlParams.get('code');
             const state = urlParams.get('state');
             const storedState = localStorage.getItem('oauth_state');
+            const error = urlParams.get('error');
             
-            console.log('URL Parameters:', { code: !!code, state, storedState });
+            console.log('URL Parameters:', { code: !!code, state, storedState, error });
+            
+            // Fehler von Discord behandeln
+            if (error) {
+                console.error('Discord OAuth Error:', error);
+                resetLoginUI();
+                showError('Anmeldung abgebrochen: ' + error);
+                return;
+            }
             
             if (code && state && state === storedState) {
                 try {
@@ -1528,7 +1544,7 @@
                     if (!tokenResponse.ok) {
                         const errorText = await tokenResponse.text();
                         console.error('Token Request failed:', tokenResponse.status, errorText);
-                        throw new Error(`Token request failed: ${tokenResponse.status} ${errorText}`);
+                        throw new Error(`Token request failed: ${tokenResponse.status}`);
                     }
                     
                     const tokenData = await tokenResponse.json();
@@ -1548,9 +1564,8 @@
                     
                 } catch (error) {
                     console.error('OAuth Error:', error);
+                    resetLoginUI();
                     showError('Fehler bei der Anmeldung: ' + error.message);
-                    loginLoading.style.display = 'none';
-                    discordLoginBtn.style.display = 'block';
                 } finally {
                     localStorage.removeItem('oauth_state');
                     // URL bereinigen
@@ -1560,12 +1575,16 @@
                 }
             } else {
                 console.log('Kein valider OAuth Callback');
-                loginLoading.style.display = 'none';
-                discordLoginBtn.style.display = 'block';
+                resetLoginUI();
+                
+                // Wenn State nicht übereinstimmt, könnte es ein Sicherheitsproblem sein
+                if (state && state !== storedState) {
+                    showError('Sicherheitsfehler: State-Parameter stimmt nicht überein');
+                }
             }
         }
 
-        // User verifizieren
+        // User verifizieren - MIT FEHLERHANDLING
         async function verifyUser(accessToken) {
             try {
                 console.log('Verifiziere Benutzer...');
@@ -1583,7 +1602,7 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('Verification failed');
+                    throw new Error('Verification failed with status: ' + response.status);
                 }
 
                 const data = await response.json();
@@ -1621,13 +1640,13 @@
                     } else {
                         errorMsg += 'Du bist nicht autorisiert.';
                     }
+                    resetLoginUI();
                     showError(errorMsg);
                 }
             } catch (error) {
                 console.error('Fehler bei der Benutzerüberprüfung:', error);
-                showError('Fehler bei der Berechtigungsprüfung');
-            } finally {
-                loginLoading.style.display = 'none';
+                resetLoginUI();
+                showError('Fehler bei der Berechtigungsprüfung: ' + error.message);
             }
         }
 
@@ -1649,8 +1668,6 @@
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
-            discordLoginBtn.style.display = 'block';
-            loginLoading.style.display = 'none';
         }
 
         // DISCORD AVATAR LADEN
@@ -1765,13 +1782,22 @@
             
             if (user && token) {
                 console.log('Bereits eingeloggt');
-                showAuthorizedContent(accessInfo ? JSON.parse(accessInfo) : null);
+                const userData = JSON.parse(user);
+                userAccessInfo = accessInfo ? JSON.parse(accessInfo) : null;
+                currentUser = {
+                    id: userData.id,
+                    username: userData.username,
+                    ...userAccessInfo
+                };
+                showAuthorizedContent(currentUser);
             } else {
-                console.log('Nicht eingeloggt');
+                console.log('Nicht eingeloggt - Login-UI anzeigen');
                 // Lösche eventuelle fehlerhafte Daten
                 localStorage.removeItem('discord_user');
                 localStorage.removeItem('discord_access_token');
                 localStorage.removeItem('user_access_info');
+                // Stelle sicher, dass Login-UI sichtbar ist
+                resetLoginUI();
             }
         }
 
@@ -1816,18 +1842,436 @@
             
             // Zuerst OAuth Callback prüfen
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('code')) {
-                console.log('OAuth Code gefunden, verarbeite Callback...');
+            if (urlParams.get('code') || urlParams.get('error')) {
+                console.log('OAuth Callback gefunden, verarbeite...');
                 handleOAuthCallback();
             } else {
                 // Dann bestehende Session prüfen
-                console.log('Kein OAuth Code, prüfe bestehende Session...');
+                console.log('Kein OAuth Callback, prüfe bestehende Session...');
                 checkExistingLogin();
             }
         });
 
         // ========== RESTLICHE FUNKTIONEN (Materialrecycler) ==========
-        // [Hier folgen alle Materialrecycler-Funktionen...]
+        
+        // Tab wechseln Funktion
+        function switchTab(tabName) {
+            // Tabs deaktivieren
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Gewählten Tab aktivieren
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Produkte laden
+        function loadProducts() {
+            onValue(productsRef, (snapshot) => {
+                products = [];
+                snapshot.forEach((childSnapshot) => {
+                    const product = childSnapshot.val();
+                    product.key = childSnapshot.key;
+                    products.push(product);
+                });
+                filteredProducts = [...products];
+                renderProducts();
+                renderAdminTable();
+            });
+        }
+
+        // Produkte rendern
+        function renderProducts() {
+            if (!productsGrid) return;
+            
+            productsGrid.innerHTML = '';
+            
+            filteredProducts.forEach(product => {
+                const productElement = createProductElement(product);
+                productsGrid.appendChild(productElement);
+            });
+        }
+
+        // Produkt-Element erstellen
+        function createProductElement(product) {
+            const div = document.createElement('div');
+            div.className = 'product-item';
+            div.innerHTML = `
+                <div class="product-card">
+                    ${product.image ? 
+                        `<img src="${product.image}" alt="${product.name}" class="product-image">` : 
+                        `<div style="width: 100px; height: 100px; background: rgba(245, 158, 11, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #f59e0b;">
+                            <i class="fas fa-box" style="font-size: 2rem;"></i>
+                        </div>`
+                    }
+                    <div>
+                        <h4 style="color: #fbbf24; margin-bottom: 0.5rem; font-size: 1.2rem;">${product.name}</h4>
+                        <div class="resource-list">
+                            ${product.resources ? Object.entries(product.resources).map(([name, range]) => 
+                                `<span class="resource-tag">${name}: ${range.min}-${range.max}</span>`
+                            ).join('') : ''}
+                        </div>
+                        <div class="calculator-section">
+                            <div class="calculator-title">
+                                <i class="fas fa-calculator"></i> Rechner
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" onchange="calculateResources(this, '${product.key}')">
+                                <button class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>
+                            </div>
+                            <div id="results-${product.key}" class="results-container">
+                                <!-- Ergebnisse werden hier dynamisch eingefügt -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        // Admin-Tabelle rendern
+        function renderAdminTable() {
+            if (!adminTableBody) return;
+            
+            adminTableBody.innerHTML = '';
+            totalProducts.textContent = products.length;
+            
+            filteredProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>
+                        ${product.resources ? Object.entries(product.resources).map(([name, range]) => 
+                            `${name}: ${range.min}-${range.max}`
+                        ).join(', ') : 'Keine Ressourcen'}
+                    </td>
+                    <td>
+                        <button onclick="editProduct('${product.key}')" class="btn-primary" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteProduct('${product.key}')" class="logout-btn" style="padding: 0.5rem 1rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                adminTableBody.appendChild(row);
+            });
+        }
+
+        // Globales Logo laden
+        function loadGlobalLogo() {
+            getDownloadURL(logoImageRef)
+                .then((url) => {
+                    headerLogo.style.backgroundImage = `url('${url}')`;
+                    headerLogo.innerHTML = '';
+                })
+                .catch((error) => {
+                    console.log('Kein custom Logo gefunden, verwende Standard-Logo');
+                });
+        }
+
+        // Weitere Materialrecycler-Funktionen...
+        function changeQuantity(button, change) {
+            const input = button.parentElement.querySelector('.quantity-input');
+            let value = parseInt(input.value) + change;
+            if (value < 1) value = 1;
+            input.value = value;
+            
+            const productKey = input.getAttribute('onchange').split("'")[1];
+            calculateResources(input, productKey);
+        }
+
+        function calculateResources(input, productKey) {
+            const quantity = parseInt(input.value);
+            const product = products.find(p => p.key === productKey);
+            if (!product || !product.resources) return;
+            
+            const resultsContainer = document.getElementById(`results-${productKey}`);
+            resultsContainer.innerHTML = '';
+            
+            Object.entries(product.resources).forEach(([resourceName, range]) => {
+                const minTotal = range.min * quantity;
+                const maxTotal = range.max * quantity;
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `
+                    <span>${resourceName}</span>
+                    <span class="result-range">${minTotal} - ${maxTotal}</span>
+                `;
+                resultsContainer.appendChild(resultItem);
+            });
+        }
+
+        function editProduct(productKey) {
+            const product = products.find(p => p.key === productKey);
+            if (!product) return;
+            
+            productKeyInput.value = productKey;
+            productName.value = product.name;
+            productImageData.value = product.image || '';
+            
+            // Bild-Vorschau
+            if (product.image) {
+                imagePreview.src = product.image;
+                imagePreview.style.display = 'block';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+            
+            // Ressourcen zurücksetzen und neu laden
+            currentResources = [];
+            resourcesList.innerHTML = '';
+            
+            if (product.resources) {
+                Object.entries(product.resources).forEach(([name, range]) => {
+                    currentResources.push({ name, min: range.min, max: range.max });
+                });
+                renderResourcesList();
+            }
+            
+            productModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
+            productModal.classList.add('active');
+        }
+
+        function deleteProduct(productKey) {
+            if (confirm('Sind Sie sicher, dass Sie dieses Produkt löschen möchten?')) {
+                const productRef = ref(db, `materialrecycler/products/${productKey}`);
+                remove(productRef)
+                    .then(() => {
+                        showNotification('Produkt erfolgreich gelöscht', 'success');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Löschen des Produkts', 'error');
+                    });
+            }
+        }
+
+        function renderResourcesList() {
+            resourcesList.innerHTML = '';
+            currentResources.forEach((resource, index) => {
+                const resourceElement = document.createElement('div');
+                resourceElement.className = 'resource-tag';
+                resourceElement.innerHTML = `
+                    ${resource.name}: ${resource.min}-${resource.max}
+                    <button type="button" onclick="removeResource(${index})" style="background: none; border: none; color: #f56565; margin-left: 5px; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                resourcesList.appendChild(resourceElement);
+            });
+        }
+
+        function removeResource(index) {
+            currentResources.splice(index, 1);
+            renderResourcesList();
+        }
+
+        // Event Listener für Materialrecycler-Komponenten
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin Login
+            if (adminLoginBtn) {
+                adminLoginBtn.addEventListener('click', function() {
+                    const password = adminPassInput.value;
+                    if (password === ADMIN_PASSWORD) {
+                        adminContent.classList.remove('hidden');
+                        adminLoginSection.classList.add('hidden');
+                        showNotification('Admin-Bereich erfolgreich betreten', 'success');
+                    } else {
+                        adminError.classList.remove('hidden');
+                    }
+                });
+            }
+
+            // Produkt hinzufügen Button
+            if (addProductBtn) {
+                addProductBtn.addEventListener('click', function() {
+                    productKeyInput.value = '';
+                    productName.value = '';
+                    productImageData.value = '';
+                    imagePreview.style.display = 'none';
+                    currentResources = [];
+                    resourcesList.innerHTML = '';
+                    productModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
+                    productModal.classList.add('active');
+                });
+            }
+
+            // Ressource hinzufügen
+            if (addResourceBtn) {
+                addResourceBtn.addEventListener('click', function() {
+                    const name = newResourceName.value.trim();
+                    const min = parseInt(newResourceMin.value);
+                    const max = parseInt(newResourceMax.value);
+                    
+                    if (name && min && max && min > 0 && max >= min) {
+                        currentResources.push({ name, min, max });
+                        renderResourcesList();
+                        newResourceName.value = '';
+                        newResourceMin.value = '';
+                        newResourceMax.value = '';
+                    }
+                });
+            }
+
+            // Produkt Formular
+            if (productForm) {
+                productForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const productData = {
+                        name: productName.value,
+                        resources: {},
+                        image: productImageData.value
+                    };
+                    
+                    currentResources.forEach(resource => {
+                        productData.resources[resource.name] = {
+                            min: resource.min,
+                            max: resource.max
+                        };
+                    });
+                    
+                    const productKey = productKeyInput.value;
+                    
+                    if (productKey) {
+                        // Produkt aktualisieren
+                        const productRef = ref(db, `materialrecycler/products/${productKey}`);
+                        update(productRef, productData)
+                            .then(() => {
+                                showNotification('Produkt erfolgreich aktualisiert', 'success');
+                                productModal.classList.remove('active');
+                            })
+                            .catch((error) => {
+                                showNotification('Fehler beim Aktualisieren des Produkts', 'error');
+                            });
+                    } else {
+                        // Neues Produkt hinzufügen
+                        push(productsRef, productData)
+                            .then(() => {
+                                showNotification('Produkt erfolgreich hinzugefügt', 'success');
+                                productModal.classList.remove('active');
+                            })
+                            .catch((error) => {
+                                showNotification('Fehler beim Hinzufügen des Produkts', 'error');
+                            });
+                    }
+                });
+            }
+
+            // Produkt Bild Upload
+            if (productImageFile) {
+                productImageFile.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                            productImageData.value = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Modal schließen
+            if (cancelProduct) {
+                cancelProduct.addEventListener('click', function() {
+                    productModal.classList.remove('active');
+                });
+            }
+
+            // Suche
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(searchTerm) ||
+                        (product.resources && Object.keys(product.resources).some(resource => 
+                            resource.toLowerCase().includes(searchTerm)
+                        ))
+                    );
+                    renderProducts();
+                });
+            }
+
+            if (adminSearchInput) {
+                adminSearchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    filteredProducts = products.filter(product => 
+                        product.name.toLowerCase().includes(searchTerm) ||
+                        (product.resources && Object.keys(product.resources).some(resource => 
+                            resource.toLowerCase().includes(searchTerm)
+                        ))
+                    );
+                    renderAdminTable();
+                });
+            }
+        });
+
+        // Logo Upload Funktionen
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
+        }
+
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            logoPassword.value = '';
+        }
+
+        function closeLogoUploadModal() {
+            logoUploadModal.classList.remove('active');
+            adminPassword.value = '';
+            logoFile.value = '';
+        }
+
+        function verifyLogoPassword() {
+            if (logoPassword.value === ADMIN_PASSWORD) {
+                passwordModal.classList.remove('active');
+                logoUploadModal.classList.add('active');
+                logoPassword.value = '';
+            } else {
+                alert('Falsches Passwort!');
+            }
+        }
+
+        function handleLogoUpload() {
+            if (adminPassword.value !== ADMIN_PASSWORD) {
+                alert('Falsches Admin-Passwort!');
+                return;
+            }
+
+            const file = logoFile.files[0];
+            if (!file) {
+                alert('Bitte wählen Sie eine Bilddatei aus!');
+                return;
+            }
+
+            // Bild in Firebase Storage hochladen
+            uploadBytes(logoImageRef, file)
+                .then((snapshot) => {
+                    return getDownloadURL(snapshot.ref);
+                })
+                .then((downloadURL) => {
+                    // Logo in der UI aktualisieren
+                    headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                    headerLogo.innerHTML = '';
+                    
+                    // Modal schließen
+                    closeLogoUploadModal();
+                    showNotification('Logo erfolgreich aktualisiert', 'success');
+                })
+                .catch((error) => {
+                    console.error('Error uploading logo:', error);
+                    showNotification('Fehler beim Hochladen des Logos', 'error');
+                });
+        }
 
         console.log('Materialrecycler Panel - Login Button komplett repariert!');
     </script>

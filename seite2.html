@@ -1058,7 +1058,7 @@
     <div id="notification" class="notification hidden"></div>
 
     <script type="module">
-        // Discord OAuth Konfiguration
+        // Discord OAuth Konfiguration - KORRIGIERT
         const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
@@ -1084,6 +1084,7 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
+        const storage = getStorage(app); // WICHTIG: storage wurde vergessen
         const entriesRef = ref(db,'kokain_entries');
         const discountsRef = ref(db,'kokain_discount_settings');
         const logoSettingsRef = ref(db,'kokain_logo_settings');
@@ -1161,6 +1162,150 @@
         const saveKokainBtn = document.getElementById('saveKokainBtn');
         const kokainQuantity = document.getElementById('kokainQuantity');
         const kokainCash = document.getElementById('kokainCash');
+
+        // Discord OAuth Login - KORRIGIERTE VERSION
+        function startDiscordOAuth() {
+            const scope = 'identify';
+            const state = generateRandomState();
+            
+            // Korrekte OAuth URL erstellen
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
+            
+            // Loading anzeigen
+            discordLoginBtn.style.display = 'none';
+            loginLoading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            // State in localStorage speichern für Sicherheit
+            localStorage.setItem('oauth_state', state);
+            
+            // Zu Discord weiterleiten
+            setTimeout(() => {
+                window.location.href = authUrl.toString();
+            }, 500);
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        // OAuth Callback verarbeiten
+        async function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const storedState = localStorage.getItem('oauth_state');
+            
+            if (code && state && state === storedState) {
+                try {
+                    loginLoading.style.display = 'block';
+                    discordLoginBtn.style.display = 'none';
+                    
+                    // Token über Cloudflare Worker holen
+                    const tokenResponse = await fetch(`${BACKEND_URL}/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: code,
+                            redirect_uri: DISCORD_REDIRECT_URI
+                        })
+                    });
+                    
+                    if (!tokenResponse.ok) {
+                        const errorText = await tokenResponse.text();
+                        throw new Error(`Token request failed: ${tokenResponse.status} ${errorText}`);
+                    }
+                    
+                    const tokenData = await tokenResponse.json();
+                    
+                    if (tokenData.error) {
+                        throw new Error(tokenData.error);
+                    }
+                    
+                    if (!tokenData.access_token) {
+                        throw new Error('Kein Access Token erhalten');
+                    }
+                    
+                    // User Info verifizieren
+                    await verifyUser(tokenData.access_token);
+                    
+                } catch (error) {
+                    console.error('OAuth Error:', error);
+                    showError('Fehler bei der Anmeldung: ' + error.message);
+                    loginLoading.style.display = 'none';
+                    discordLoginBtn.style.display = 'block';
+                } finally {
+                    localStorage.removeItem('oauth_state');
+                    // URL bereinigen
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        }
+
+        // User verifizieren
+        async function verifyUser(accessToken) {
+            try {
+                const currentPage = getCurrentPageKey();
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken,
+                        currentPage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed');
+                }
+
+                const data = await response.json();
+
+                if (data.isAuthorized) {
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    
+                    const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        ...userAccessInfo
+                    };
+                    
+                    await loadDiscordAvatar(user);
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
+                } else {
+                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            } finally {
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        // Rest des Codes bleibt gleich wie vorher...
+        // [Hier folgen alle anderen Funktionen aus dem vorherigen Code...]
 
         // Logo Upload Funktionen
         function openPasswordModal() {
@@ -1245,20 +1390,15 @@
                 saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
                 saveLogo.disabled = true;
 
-                // Bild in Firebase Storage hochladen
                 await uploadBytes(logoImageRef, file);
-                
-                // Download URL holen
                 const downloadURL = await getDownloadURL(logoImageRef);
                 
-                // Logo in der Datenbank speichern
                 await set(logoSettingsRef, {
                     logoUrl: downloadURL,
                     uploadedAt: new Date().toISOString(),
                     uploadedBy: currentUser ? currentUser.username : 'Unknown'
                 });
 
-                // Logo sofort anwenden
                 headerLogo.style.backgroundImage = `url('${downloadURL}')`;
                 headerLogo.innerHTML = '';
 
@@ -1527,113 +1667,6 @@
             return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
         }
 
-        // Discord OAuth Login
-        function startDiscordOAuth() {
-            const scope = 'identify';
-            const state = generateRandomState();
-            
-            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-            authUrl.searchParams.set('response_type', 'code');
-            authUrl.searchParams.set('scope', scope);
-            authUrl.searchParams.set('state', state);
-            
-            window.location.href = authUrl.toString();
-        }
-
-        function generateRandomState() {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        }
-
-        async function exchangeCodeForToken(code) {
-            try {
-                loginLoading.style.display = 'block';
-                
-                const response = await fetch(`${BACKEND_URL}/token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        code, 
-                        redirect_uri: DISCORD_REDIRECT_URI
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Worker responded with status ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.access_token) {
-                    await verifyUser(data.access_token);
-                } else {
-                    throw new Error('Kein Access Token erhalten');
-                }
-            } catch (error) {
-                console.error('Fehler beim Token-Austausch:', error);
-                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-                loginLoading.style.display = 'none';
-            }
-        }
-
-        async function verifyUser(accessToken) {
-            try {
-                const currentPage = getCurrentPageKey();
-                
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken,
-                        currentPage
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Verification failed');
-                }
-
-                const data = await response.json();
-
-                if (data.isAuthorized) {
-                    localStorage.setItem('discord_user', JSON.stringify(data.user));
-                    localStorage.setItem('discord_access_token', accessToken);
-                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-                    
-                    const user = data.user;
-                    userAccessInfo = data.accessInfo;
-                    
-                    currentUser = {
-                        id: user.id,
-                        username: user.username,
-                        ...userAccessInfo
-                    };
-                    
-                    await loadDiscordAvatar(user);
-                    
-                    if (data.hasPageAccess) {
-                        showAuthorizedContent(currentUser);
-                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-                    } else {
-                        showAccessRestricted(currentUser, currentPage);
-                    }
-                } else {
-                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
-                }
-            } catch (error) {
-                console.error('Fehler bei der Benutzerüberprüfung:', error);
-                showError('Fehler bei der Berechtigungsprüfung');
-            } finally {
-                loginLoading.style.display = 'none';
-            }
-        }
-
         // Zugriff verweigert anzeigen
         function showAccessRestricted(user, pageKey) {
             loginPage.classList.add('hidden');
@@ -1780,6 +1813,8 @@
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
+            discordLoginBtn.style.display = 'block';
+            loginLoading.style.display = 'none';
         }
 
         // Logout
@@ -2068,16 +2103,18 @@
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
-            checkExistingLogin();
             
+            // Zuerst OAuth Callback prüfen
             const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            if (code) {
-                exchangeCodeForToken(code);
+            if (urlParams.get('code')) {
+                handleOAuthCallback();
+            } else {
+                // Dann bestehende Session prüfen
+                checkExistingLogin();
             }
         });
 
-        console.log('Kokain Ankauf Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
+        console.log('Kokain Ankauf Panel - Login Button repariert!');
     </script>
 </body>
 </html>

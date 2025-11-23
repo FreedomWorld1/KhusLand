@@ -1,1744 +1,2374 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Materialrecycler - Produkte</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { 
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
-    }
-    .card { 
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
-      border: 1px solid rgba(245, 158, 11, 0.3); 
-      border-radius: 16px; 
-      backdrop-filter: blur(10px);
-    }
-    .shadow-soft { 
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
-                  0 5px 10px rgba(0, 0, 0, 0.3),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1); 
-    }
-    .small-muted { 
-      color: #94a3b8; 
-      font-size: 0.85rem; 
-    }
-    .btn { 
-      transition: all 0.2s ease; 
-      font-size: 0.9rem; 
-      font-weight: 500;
-    }
-    .btn:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    .hidden { 
-      display: none !important; 
-    }
-    input, select, textarea { 
-      transition: all 0.2s ease; 
-      font-size: 0.95rem; 
-    }
-    input:focus, select:focus, textarea:focus { 
-      outline: none; 
-      border-color: #f59e0b; 
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3); 
-    }
-    .active-link { 
-      background-color: #d97706 !important; 
-      color: #fff !important; 
-      font-weight: 600; 
-    }
-    .gradient-text {
-      background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-    .fade-in {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .pulse-glow {
-      animation: pulseGlow 2s infinite;
-    }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.5); }
-    }
-    .scrollbar-custom::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 10px;
-    }
-    .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #f59e0b;
-      border-radius: 10px;
-    }
-    .hamburger-container {
-      position: relative;
-      z-index: 1000;
-    }
-    .hamburger-menu {
-      z-index: 1001;
-    }
-    .product-item {
-      transition: all 0.2s ease;
-    }
-    .product-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .product-image {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    .image-preview {
-      max-width: 100%;
-      max-height: 200px;
-      border-radius: 8px;
-      margin-top: 10px;
-      display: none;
-    }
-    .file-input-wrapper {
-      position: relative;
-      overflow: hidden;
-      display: inline-block;
-      width: 100%;
-    }
-    .file-input-wrapper input[type=file] {
-      position: absolute;
-      left: 0;
-      top: 0;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-    .product-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    @media (min-width: 768px) {
-      .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    .product-card {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 1rem;
-      align-items: start;
-    }
-    .resource-tag {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(147, 51, 234, 0.2);
-      color: #a855f7;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      margin: 2px;
-    }
-    .resource-input-container {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .resource-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 8px;
-    }
-    .resource-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      padding: 8px;
-      background: rgba(245, 158, 11, 0.1);
-      border-radius: 8px;
-    }
-    .resource-range {
-      color: #f59e0b;
-      font-weight: 600;
-    }
-    .quantity-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 12px 0;
-    }
-    .quantity-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      background: rgba(245, 158, 11, 0.2);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #f59e0b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .quantity-btn:hover {
-      background: rgba(245, 158, 11, 0.3);
-      transform: scale(1.05);
-    }
-    .quantity-input {
-      width: 80px;
-      text-align: center;
-      padding: 6px 8px;
-      border-radius: 6px;
-      background: rgba(30, 41, 59, 0.5);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #f59e0b;
-      font-weight: 600;
-    }
-    .result-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: rgba(245, 158, 11, 0.1);
-      border-radius: 8px;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-    }
-    .result-range {
-      color: #f59e0b;
-      font-weight: 600;
-    }
-    .calculator-section {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(245, 158, 11, 0.2);
-    }
-    .calculator-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #f59e0b;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 10000;
-      padding: 12px 20px;
-      border-radius: 8px;
-      color: white;
-      font-weight: 500;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transform: translateX(150%);
-      transition: transform 0.3s ease;
-    }
-    .notification.show {
-      transform: translateX(0);
-    }
-    .notification.success {
-      background-color: #10b981;
-    }
-    .notification.error {
-      background-color: #ef4444;
-    }
-    .notification.info {
-      background-color: #3b82f6;
-    }
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    .search-box {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(245, 158, 11, 0.2);
-      border-radius: 10px;
-      padding: 10px 15px;
-      margin-bottom: 15px;
-    }
-    .search-box input {
-      background: transparent;
-      border: none;
-      width: 100%;
-      color: white;
-      font-size: 0.95rem;
-    }
-    .search-box input::placeholder {
-      color: #94a3b8;
-    }
-    .search-box input:focus {
-      outline: none;
-      box-shadow: none;
-    }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .stat-card {
-      background: rgba(30, 41, 59, 0.6);
-      border-radius: 12px;
-      padding: 16px;
-      text-align: center;
-      border: 1px solid rgba(245, 158, 11, 0.1);
-    }
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin: 8px 0;
-    }
-    .stat-label {
-      font-size: 0.85rem;
-      color: #94a3b8;
-    }
-    .access-badge {
-      font-size: 0.75rem;
-      padding: 2px 8px;
-      border-radius: 12px;
-      margin-left: 8px;
-    }
-    .access-permanent {
-      background-color: #10b981;
-      color: white;
-    }
-    .access-temporary {
-      background-color: #f59e0b;
-      color: black;
-    }
-    .access-expired {
-      background-color: #ef4444;
-      color: white;
-    }
-    .force-check-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      background: #ef4444;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      cursor: pointer;
-      z-index: 1000;
-      opacity: 0.5;
-      transition: opacity 0.3s;
-    }
-    .force-check-btn:hover {
-      opacity: 1;
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Materialrecycler - KhusLand</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+        
+        /* Login Styles */
+        .login-container {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        h1 {
+            color: #fbbf24;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .login-container p {
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+        
+        .discord-login-btn {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .discord-login-btn:hover {
+            background: #4752c4;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 1.5rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #f59e0b;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(254, 178, 178, 0.1);
+            color: #fc8181;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            display: none;
+            border-left: 4px solid #f56565;
+        }
+        
+        /* Main Content Styles */
+        .header {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #f59e0b;
+        }
+        
+        .logo-small {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .logo-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #cbd5e0;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .logout-btn {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid #f59e0b;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(245, 158, 11, 0.25);
+        }
+        
+        .main-container {
+            max-width: 1300px;
+            margin: 2.5rem auto;
+            padding: 0 2.5rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: rgba(26, 32, 44, 0.9);
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        .card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 16px;
+            padding: 2.2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: #f59e0b;
+            background: rgba(30, 38, 54, 0.9);
+        }
+        
+        .card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: rgba(101, 119, 149, 0.3);
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: #fbbf24;
+        }
+        
+        .card p {
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+        
+        .access-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .access-allowed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+        
+        .access-denied {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(101, 119, 149, 0.3);
+            color: #a0aec0;
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* System-spezifische Styles */
+        .system-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .system-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #fbbf24;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 0.9rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+        
+        .price-display {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .price-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #48bb78;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .table th {
+            background: rgba(26, 32, 44, 0.8);
+            font-weight: 600;
+            color: #fbbf24;
+        }
+        
+        .table td {
+            color: #cbd5e0;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        /* Access Badge */
+        .access-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+        
+        .access-permanent {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        .access-temporary {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+        
+        /* Access Restricted Styles */
+        .access-restricted {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .access-restricted h2 {
+            color: #fc8181;
+            margin-bottom: 1rem;
+        }
+
+        .access-restricted p {
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Logo Upload Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .modal-content h3 {
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+            font-size: 1rem;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Materialrecycler spezifische Styles */
+        .search-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .search-box input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(245, 158, 11, 0.1);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .product-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            transition: all 0.3s;
+        }
+
+        .product-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .resource-tag {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(147, 51, 234, 0.2);
+            color: #a855f7;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
+
+        .resource-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .calculator-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .calculator-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f59e0b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: scale(1.05);
+        }
+
+        .quantity-input {
+            width: 80px;
+            text-align: center;
+            padding: 6px 8px;
+            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .result-range {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .admin-table-container {
+            overflow: auto;
+            max-height: 50vh;
+            border-radius: 8px;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .resource-input-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body class="text-gray-100 antialiased min-h-screen">
-  
-  <!-- Notification System -->
-  <div id="notification" class="notification hidden"></div>
-  
-  <!-- Force Check Button -->
-  <div id="forceCheckBtn" class="force-check-btn hidden" title="Sofort-Überprüfung">
-    <i class="fas fa-shield-alt"></i>
-  </div>
-  
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
-    <div class="card p-8 shadow-soft max-w-md w-full text-center">
-      <div class="w-20 h-20 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 flex items-center justify-center mx-auto mb-6">
-        <span class="text-white text-2xl">🏭</span>
-      </div>
-      <h1 class="text-3xl font-bold gradient-text mb-2">Materialrecycler</h1>
-      <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
-      
-      <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
-        <i class="fab fa-discord text-xl"></i>
-        Mit Discord anmelden
-      </button>
-      
-      <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
-        <p id="errorMessage">Zugriff verweigert. Du bist nicht autorisiert.</p>
-      </div>
-
-      <div id="debugInfo" class="mt-4 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-xs hidden">
-        <p id="debugMessage"></p>
-      </div>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="logo">♻️</div>
+        <h1>Materialrecycler Login</h1>
+        <p>Bitte mit Discord anmelden um fortzufahren</p>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <button id="discordLogin" class="discord-login-btn">
+            <i class="fab fa-discord"></i> Mit Discord anmelden
+        </button>
+        
+        <div class="loading" id="loginLoading">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Anmeldung läuft...</p>
+        </div>
     </div>
-  </div>
 
-  <!-- MAIN CONTENT (Versteckt bis Login) -->
-  <div id="mainContent" class="hidden">
-    <div class="max-w-6xl mx-auto p-4 md:p-6">
-
-      <!-- HEADER -->
-      <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-600 to-amber-500 flex items-center justify-center">
-            <span class="text-white font-bold">🏭</span>
-          </div>
-          <div>
-            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
-            <p id="userInfo" class="text-sm text-gray-400">
-              Eingeloggt als: <span id="username">Unbekannt</span>
-              <span id="accessBadge" class="access-badge access-permanent hidden">Permanent</span>
-            </p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button id="btnProducts" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm pulse-glow">
-            <i class="fas fa-box mr-1"></i> Produkte
-          </button>
-          <button id="btnAdmin" class="btn px-3 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg shadow-sm">
-            <i class="fas fa-cog mr-1"></i> Admin
-          </button>
-          <div class="hamburger-container">
-            <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-amber-900/50 hover:bg-amber-800/50">
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-              <span class="block h-0.5 bg-amber-100 rounded-full"></span>
-            </button>
-            <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-amber-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">
-                <i class="fas fa-cannabis mr-2"></i> Weed
-              </a>
-              <a href="seite2.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">
-                <i class="fas fa-pills mr-2"></i> Kokain
-              </a>
-              <a href="https://khusland.github.io/KhusLand2/" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">
-                <i class="fas fa-calculator mr-2"></i> 30% Rechner
-              </a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">
-                <i class="fas fa-industry mr-2"></i> Herstellung
-              </a>
-              <a href="seite3.html" class="block px-4 py-3 hover:bg-amber-800/50 active-link transition-colors">
-                <i class="fas fa-recycle mr-2"></i> Materialrecycler
-              </a>
-              <a href="seite5.html" class="block px-4 py-3 hover:bg-amber-800/50 transition-colors">
-                <i class="fas fa-route mr-2"></i> Routen
-              </a>
+    <!-- Main Content (Hidden until login) -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-small">
+                <div class="logo-icon" id="headerLogo">♻️</div>
+                <h2>Materialrecycler Management</h2>
             </div>
-          </div>
-          <button id="logoutBtn" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm ml-2">
-            <i class="fas fa-sign-out-alt mr-1"></i> Logout
-          </button>
-        </div>
-      </header>
-
-      <div id="mainContainer" class="space-y-6 relative z-0">
-
-        <!-- SUCHLEISTE -->
-        <div class="card p-4 shadow-soft">
-          <div class="search-box">
-            <i class="fas fa-search text-gray-400 mr-2"></i>
-            <input type="text" id="searchInput" placeholder="Ressourcen suchen...">
-          </div>
-        </div>
-
-        <!-- PRODUKTE -->
-        <div id="productsSection" class="card p-6 shadow-soft fade-in">
-          <h2 class="text-xl font-semibold mb-4 text-amber-400 flex items-center gap-2">
-            <i class="fas fa-box"></i>
-            Produkte
-          </h2>
-          
-          <!-- Statistik-Karten -->
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Gesamt Produkte</div>
-              <div id="totalProductsOverview" class="stat-value text-amber-400">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Ressourcen</div>
-              <div id="totalResources" class="stat-value text-amber-400">0</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Letzte hinzugefügt</div>
-              <div id="lastAdded" class="stat-value text-amber-400">-</div>
-            </div>
-          </div>
-          
-          <!-- Products Grid -->
-          <div id="productsGrid" class="product-grid">
-            <!-- Produkte werden hier dynamisch geladen -->
-          </div>
-        </div>
-
-        <!-- ADMIN -->
-        <div id="adminPanel" class="card p-5 shadow-soft hidden fade-in">
-          <h2 class="text-lg font-semibold mb-4 text-amber-400 flex items-center gap-2">
-            <i class="fas fa-cog"></i>
-            Adminbereich
-          </h2>
-          <div id="adminLoginSection">
-            <div class="mb-4">
-              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
-                <i class="fas fa-key mr-1"></i> Admin-Passwort
-              </label>
-              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-amber-500"/>
-            </div>
-            <button id="adminLoginBtn" class="w-full py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-sign-in-alt"></i>
-              Einloggen
-            </button>
-            <span id="adminError" class="text-red-400 mt-3 block hidden text-center text-sm py-2 bg-red-900/20 rounded-lg">
-              <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
-            </span>
-          </div>
-          <div id="adminContent" class="hidden">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-              <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-white">0</span></div>
-              <div class="flex gap-2">
-                <button id="addProductBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                  <i class="fas fa-plus mr-1"></i>
-                  Produkt
+            <div class="user-info">
+                <span id="userWelcome">Willkommen, Benutzer</span>
+                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+                
+                <!-- User Avatar -->
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
-                <button id="exportCsv" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                  <i class="fas fa-file-export mr-1"></i>
-                  CSV Export
-                </button>
-              </div>
             </div>
-            
-            <!-- Admin-Suchleiste -->
-            <div class="search-box mb-4">
-              <i class="fas fa-search text-gray-400 mr-2"></i>
-              <input type="text" id="adminSearchInput" placeholder="Produkt in Adminbereich suchen...">
-            </div>
-            
-            <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
-              <table class="w-full text-left text-sm">
-                <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
-                  <tr>
-                    <th class="p-3 font-medium">Name</th>
-                    <th class="p-3 font-medium">Ressourcen</th>
-                    <th class="p-3 font-medium">Aktion</th>
-                  </tr>
-                </thead>
-                <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
-              </table>
-            </div>
-          </div>
         </div>
 
-      </div>
+        <!-- Logo Upload Modal -->
+        <div id="logoUploadModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Logo ändern</h3>
+                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <input type="file" id="logoFile" class="file-input" accept="image/*">
+                <div class="modal-buttons">
+                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
+                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Modal für Logo -->
+        <div id="passwordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort erforderlich</h3>
+                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Access Restricted Message (Initially Hidden) -->
+            <div id="accessRestricted" class="access-restricted hidden">
+                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
+                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
+                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Abmelden
+                </button>
+            </div>
+
+            <!-- Authorized Content (Initially Hidden) -->
+            <div id="authorizedContent" class="hidden">
+                <div class="page-header">
+                    <h1 style="color: #fbbf24; font-size: 2rem;">Materialrecycler</h1>
+                    <div class="status-indicators">
+                        <span style="color: #48bb78;">
+                            <i class="fas fa-circle"></i> Alle Systeme Online
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <button id="dashboardTab" class="nav-tab active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button id="recyclerTab" class="nav-tab">
+                        <i class="fas fa-recycle"></i> Recycler System
+                    </button>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <!-- System Cards -->
+                    <div class="grid-container">
+                        <div class="card" data-page="index.html">
+                            <div class="card-icon">🌿</div>
+                            <h3>Weed Ankauf</h3>
+                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite2.html">
+                            <div class="card-icon">💊</div>
+                            <h3>Kokain Ankauf</h3>
+                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite3.html">
+                            <div class="card-icon">♻️</div>
+                            <h3>Materialrecycler - Produkte</h3>
+                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite4.html">
+                            <div class="card-icon">🔧</div>
+                            <h3>Werkbank Manager</h3>
+                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite5.html">
+                            <div class="card-icon">🛣️</div>
+                            <h3>Drogenrouten</h3>
+                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite6.html">
+                            <div class="card-icon">🏞️</div>
+                            <h3>KhusLand Management</h3>
+                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recycler System Tab -->
+                <div id="recycler" class="tab-content">
+                    <!-- Suchleiste -->
+                    <div class="system-card">
+                        <div class="search-box">
+                            <i class="fas fa-search text-gray-400 mr-2"></i>
+                            <input type="text" id="searchInput" placeholder="Ressourcen suchen...">
+                        </div>
+                    </div>
+
+                    <!-- Statistiken -->
+                    <div class="system-card">
+                        <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-chart-bar"></i> Statistiken
+                        </h3>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-label">Gesamt Produkte</div>
+                                <div id="totalProductsOverview" class="stat-value" style="color: #f59e0b;">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Ressourcen</div>
+                                <div id="totalResources" class="stat-value" style="color: #f59e0b;">0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Letzte hinzugefügt</div>
+                                <div id="lastAdded" class="stat-value" style="color: #f59e0b;">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Produkte Grid -->
+                    <div class="system-card">
+                        <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-box"></i> Produkte
+                        </h3>
+                        
+                        <div id="productsGrid" class="product-grid">
+                            <!-- Produkte werden hier dynamisch geladen -->
+                        </div>
+                    </div>
+
+                    <!-- Admin Panel -->
+                    <div class="system-card">
+                        <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-cog"></i> Adminbereich
+                        </h3>
+                        
+                        <div id="adminLoginSection">
+                            <div class="form-group">
+                                <label for="adminPass">Admin-Passwort</label>
+                                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full">
+                            </div>
+                            <button id="adminLoginBtn" class="btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Einloggen
+                            </button>
+                            <span id="adminError" class="error-message hidden" style="margin-top: 1rem;">
+                                <i class="fas fa-exclamation-triangle"></i> Falsches Passwort
+                            </span>
+                        </div>
+                        
+                        <div id="adminContent" class="hidden">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
+                                <div style="color: #a0aec0; font-size: 0.9rem;">
+                                    Produkte: <span id="totalProducts" style="font-weight: bold; color: white;">0</span>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button id="addProductBtn" class="btn-primary">
+                                        <i class="fas fa-plus"></i> Produkt
+                                    </button>
+                                    <button id="exportCsv" class="btn-primary">
+                                        <i class="fas fa-file-export"></i> CSV Export
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Admin-Suchleiste -->
+                            <div class="search-box mb-4">
+                                <i class="fas fa-search text-gray-400 mr-2"></i>
+                                <input type="text" id="adminSearchInput" placeholder="Produkt in Adminbereich suchen...">
+                            </div>
+                            
+                            <div class="admin-table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Ressourcen</th>
+                                            <th>Aktion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminTableBody">
+                                        <!-- Admin Table wird hier dynamisch geladen -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>KhusLand Materialrecycler © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
+        </div>
     </div>
 
     <!-- Modal für Produkt hinzufügen -->
-    <div id="productModal" class="modal-overlay hidden">
-      <div class="card p-6 m-4 max-w-md w-full shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-amber-400" id="productModalTitle">
-          <i class="fas fa-plus mr-2"></i> Produkt hinzufügen
-        </h3>
-        <form id="productForm" class="space-y-4">
-          <input type="hidden" id="productKey">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-tag mr-1"></i> Name
-            </label>
-            <input type="text" id="productName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-amber-500" placeholder="z.B.: Aluminium-Dose" required/>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-cubes mr-1"></i> Ressourcen
-            </label>
-            <div class="resource-input-container">
-              <input type="text" id="newResourceName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-amber-500" placeholder="Ressourcenname"/>
-              <input type="number" id="newResourceMin" class="w-20 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-amber-500" placeholder="Min" min="1"/>
-              <input type="number" id="newResourceMax" class="w-20 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-amber-500" placeholder="Max" min="1"/>
-              <button type="button" id="addResourceBtn" class="px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-            <div id="resourcesList" class="resource-list">
-              <!-- Ressourcen werden hier dynamisch hinzugefügt -->
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-image mr-1"></i> Bild hochladen
-            </label>
-            <div class="file-input-wrapper">
-              <button type="button" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700/50 flex items-center justify-center gap-2">
-                <i class="fas fa-upload mr-2"></i>
-                Bild auswählen
-              </button>
-              <input type="file" id="productImageFile" accept="image/*" class="file-input">
-            </div>
-            <div class="text-xs text-gray-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</div>
-            <img id="imagePreview" class="image-preview" alt="Vorschau">
-            <input type="hidden" id="productImageData">
-          </div>
-          <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-amber-600 hover:bg-amber-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-save"></i>
-              Speichern
-            </button>
-            <button type="button" id="cancelProduct" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-times"></i>
-              Abbrechen
-            </button>
-          </div>
-        </form>
-      </div>
+    <div id="productModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3 id="productModalTitle">
+                <i class="fas fa-plus"></i> Produkt hinzufügen
+            </h3>
+            <form id="productForm" class="space-y-4">
+                <input type="hidden" id="productKey">
+                <div class="form-group">
+                    <label for="productName">Name</label>
+                    <input type="text" id="productName" placeholder="z.B.: Aluminium-Dose" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Ressourcen</label>
+                    <div class="resource-input-container">
+                        <input type="text" id="newResourceName" placeholder="Ressourcenname" style="flex: 1;">
+                        <input type="number" id="newResourceMin" placeholder="Min" min="1" style="width: 80px;">
+                        <input type="number" id="newResourceMax" placeholder="Max" min="1" style="width: 80px;">
+                        <button type="button" id="addResourceBtn" class="btn-primary" style="padding: 0.5rem;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="resourcesList" class="resource-list">
+                        <!-- Ressourcen werden hier dynamisch hinzugefügt -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Bild hochladen</label>
+                    <div class="file-input-wrapper">
+                        <button type="button" class="logout-btn" style="width: 100%; padding: 0.8rem;">
+                            <i class="fas fa-upload"></i> Bild auswählen
+                        </button>
+                        <input type="file" id="productImageFile" accept="image/*" class="file-input">
+                    </div>
+                    <div style="color: #a0aec0; font-size: 0.8rem; margin-top: 0.5rem;">
+                        Unterstützte Formate: JPG, PNG, GIF (max. 5MB)
+                    </div>
+                    <img id="imagePreview" class="image-preview" alt="Vorschau">
+                    <input type="hidden" id="productImageData">
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Speichern
+                    </button>
+                    <button type="button" id="cancelProduct" class="logout-btn">
+                        <i class="fas fa-times"></i> Abbrechen
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <script type="module">
-    // Discord OAuth Konfiguration
-    const DISCORD_CLIENT_ID = '1432942180770644079';
-    const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-    const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+    <!-- Notification Container -->
+    <div id="notification" class="notification hidden"></div>
 
-    // Firebase Import und Konfiguration
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    <script type="module">
+        // Discord OAuth Konfiguration
+        const DISCORD_CLIENT_ID = '1432942180770644079';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-      authDomain: "khusland-b7d13.firebaseapp.com",
-      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-      projectId: "khusland-b7d13",
-      storageBucket: "khusland-b7d13.firebasestorage.app",
-      messagingSenderId: "69573193613",
-      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-      measurementId: "G-JSCWR4207G"
-    };
+        // Firebase Import und Konfiguration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getDatabase(app);
-    
-    // Firebase Referenzen
-    const productsRef = ref(db, 'materialrecycler/products');
+        // Firebase Konfiguration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+            authDomain: "khusland-b7d13.firebaseapp.com",
+            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+            projectId: "khusland-b7d13",
+            storageBucket: "khusland-b7d13.firebasestorage.app",
+            messagingSenderId: "69573193613",
+            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+            measurementId: "G-JSCWR4207G"
+        };
 
-    // DOM Elemente
-    const loginScreen = document.getElementById('loginScreen');
-    const mainContent = document.getElementById('mainContent');
-    const discordLoginBtn = document.getElementById('discordLogin');
-    const loginError = document.getElementById('loginError');
-    const errorMessage = document.getElementById('errorMessage');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const debugInfo = document.getElementById('debugInfo');
-    const debugMessage = document.getElementById('debugMessage');
-    const usernameElement = document.getElementById('username');
-    const notification = document.getElementById('notification');
-    const accessBadge = document.getElementById('accessBadge');
-    const forceCheckBtn = document.getElementById('forceCheckBtn');
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+        const productsRef = ref(db,'materialrecycler/products');
+        const logoSettingsRef = ref(db,'materialrecycler_logo_settings');
+        const logoImageRef = storageRef(storage, 'materialrecycler_logo.png');
 
-    // Notification System
-    function showNotification(message, type = 'info', duration = 5000) {
-      notification.textContent = message;
-      notification.className = `notification ${type}`;
-      notification.classList.remove('hidden');
-      notification.classList.add('show');
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          notification.classList.add('hidden');
-        }, 300);
-      }, duration);
-    }
+        // Seitenspezifische Konfiguration
+        const PAGE_ACCESS_CONFIG = {
+            'seite7.html': 'dashboard',
+            'seite5.html': 'route', 
+            'seite4.html': 'werkbank',
+            'seite3.html': 'materialrecycler',
+            'seite2.html': 'kokain',
+            'index.html': 'weed',
+            'seite6.html': 'management'
+        };
 
-    // Debug-Funktion
-    function showDebugInfo(message) {
-      debugMessage.textContent = message;
-      debugInfo.classList.remove('hidden');
-    }
+        // System Variablen
+        const ADMIN_PASSWORD = '1101';
+        let products = [];
+        let filteredProducts = [];
+        let currentResources = [];
+        let currentUser = null;
+        let userAccessInfo = null;
 
-    // Discord OAuth Login
-    function startDiscordOAuth() {
-      const scope = 'identify';
-      const state = generateRandomState();
-      
-      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-      authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', scope);
-      authUrl.searchParams.set('state', state);
-      
-      showDebugInfo('Starte OAuth Flow...');
-      window.location.href = authUrl.toString();
-    }
-
-    // Generiere random state für OAuth
-    function generateRandomState() {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
-
-    // Token Austausch
-    async function exchangeCodeForToken(code) {
-      try {
-        showDebugInfo('Tausche Code gegen Token...');
+        // DOM Elemente
+        const loginPage = document.getElementById('loginPage');
+        const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
+        const errorMessage = document.getElementById('errorMessage');
+        const userWelcome = document.getElementById('userWelcome');
+        const notification = document.getElementById('notification');
+        const accessBadge = document.getElementById('accessBadge');
+        const headerLogo = document.getElementById('headerLogo');
+        const restrictedUserName = document.getElementById('restrictedUserName');
+        const restrictedPageName = document.getElementById('restrictedPageName');
+        const discordLoginBtn = document.getElementById('discordLogin');
+        const loginLoading = document.getElementById('loginLoading');
         
-        const response = await fetch(`${BACKEND_URL}/token`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            code, 
-            redirect_uri: DISCORD_REDIRECT_URI
-          })
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          showDebugInfo(`Worker Response Error: ${response.status} - ${errorText}`);
-          throw new Error(`Worker responded with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        showDebugInfo(`Token Response: ${JSON.stringify(data)}`);
-
-        if (data.access_token) {
-          showDebugInfo('Access Token erhalten, überprüfe Benutzer...');
-          await verifyUser(data.access_token);
-        } else {
-          showDebugInfo(`Kein Access Token: ${JSON.stringify(data)}`);
-          throw new Error('Kein Access Token erhalten');
-        }
-      } catch (error) {
-        console.error('Fehler beim Token-Austausch:', error);
-        showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-        showDebugInfo(`Fehler: ${error.message}`);
-      }
-    }
-
-    // Benutzer überprüfen mit Lifetime-Check
-    async function verifyUser(accessToken) {
-      try {
-        showDebugInfo('Überprüfe Benutzer mit Lifetime-Check...');
+        // Logo Upload Modal Elemente
+        const logoUploadModal = document.getElementById('logoUploadModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const logoPassword = document.getElementById('logoPassword');
+        const logoFile = document.getElementById('logoFile');
+        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const cancelPassword = document.getElementById('cancelPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const saveLogo = document.getElementById('saveLogo');
         
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken
-          })
-        });
+        // Buttons
+        const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
+        const dashboardTab = document.getElementById('dashboardTab');
+        const recyclerTab = document.getElementById('recyclerTab');
 
-        if (!response.ok) {
-          throw new Error('Verification failed');
+        // Materialrecycler spezifische Elemente
+        const searchInput = document.getElementById('searchInput');
+        const productsGrid = document.getElementById('productsGrid');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminPassInput = document.getElementById('adminPass');
+        const adminError = document.getElementById('adminError');
+        const adminContent = document.getElementById('adminContent');
+        const totalProducts = document.getElementById('totalProducts');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const exportCsv = document.getElementById('exportCsv');
+        const adminSearchInput = document.getElementById('adminSearchInput');
+        const adminTableBody = document.getElementById('adminTableBody');
+        const totalProductsOverview = document.getElementById('totalProductsOverview');
+        const totalResources = document.getElementById('totalResources');
+        const lastAdded = document.getElementById('lastAdded');
+
+        // Modal Elemente
+        const productModal = document.getElementById('productModal');
+        const productForm = document.getElementById('productForm');
+        const productModalTitle = document.getElementById('productModalTitle');
+        const productKeyInput = document.getElementById('productKey');
+        const cancelProduct = document.getElementById('cancelProduct');
+        const productImageFile = document.getElementById('productImageFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const productImageData = document.getElementById('productImageData');
+        const newResourceName = document.getElementById('newResourceName');
+        const newResourceMin = document.getElementById('newResourceMin');
+        const newResourceMax = document.getElementById('newResourceMax');
+        const addResourceBtn = document.getElementById('addResourceBtn');
+        const resourcesList = document.getElementById('resourcesList');
+
+        // ========== LOGIN & AUTH SYSTEM (Identisch zu Script 1) ==========
+
+        // Logo Upload Funktionen
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
         }
 
-        const data = await response.json();
-        showDebugInfo(`Verification Response: ${JSON.stringify(data)}`);
-
-        if (data.isAuthorized) {
-          showDebugInfo('Benutzer autorisiert!');
-          localStorage.setItem('discord_user', JSON.stringify(data.user));
-          localStorage.setItem('discord_access_token', accessToken);
-          localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-          showMainContent(data.accessInfo || {});
-          showNotification(`Erfolgreich eingeloggt als ${data.user.username}`, 'success');
-        } else {
-          let errorMsg = 'Zugriff verweigert. ';
-          if (data.accessInfo && data.accessInfo.message === 'access expired') {
-            errorMsg += 'Dein Zugang ist abgelaufen.';
-          } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
-            errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
-          } else {
-            errorMsg += 'Du bist nicht autorisiert.';
-          }
-          showError(errorMsg);
-          showDebugInfo('Benutzer nicht autorisiert: ' + (data.accessInfo?.message || 'unknown reason'));
-        }
-      } catch (error) {
-        console.error('Fehler bei der Benutzerüberprüfung:', error);
-        showError('Fehler bei der Berechtigungsprüfung');
-        showDebugInfo(`Verification Error: ${error.message}`);
-      }
-    }
-
-    // Regelmäßige Überprüfung ob User noch autorisiert ist
-    async function checkUserAuthorization() {
-      const token = localStorage.getItem('discord_access_token');
-      const user = localStorage.getItem('discord_user');
-      
-      if (!token || !user) {
-        return { isAuthorized: false, reason: 'No token or user' };
-      }
-      
-      try {
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken: token
-          })
-        });
-
-        if (!response.ok) {
-          // Token ist ungültig - lösche lokal
-          localStorage.removeItem('discord_access_token');
-          localStorage.removeItem('discord_user');
-          localStorage.removeItem('user_access_info');
-          return { isAuthorized: false, reason: 'Token invalid' };
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            logoPassword.value = '';
         }
 
-        const data = await response.json();
-        
-        // SOFORTIGE Reaktion wenn nicht autorisiert
-        if (!data.isAuthorized) {
-          // Lösche lokale Daten
-          localStorage.removeItem('discord_access_token');
-          localStorage.removeItem('discord_user');
-          localStorage.removeItem('user_access_info');
+        function openLogoUploadModal() {
+            logoUploadModal.classList.add('active');
         }
-        
-        return data;
-        
-      } catch (error) {
-        console.error('Fehler bei der Autorisierungsprüfung:', error);
-        return { isAuthorized: false, reason: error.message };
-      }
-    }
 
-    // Sofortige erzwungene Überprüfung
-    async function forceImmediateCheck() {
-      const token = localStorage.getItem('discord_access_token');
-      if (!token) return;
-      
-      try {
-        showNotification('Überprüfe Zugriff...', 'info', 2000);
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken: token
-          })
-        });
-        
-        const data = await response.json();
-        
-        if (!data.isAuthorized) {
-          showNotification('Zugriff wurde entzogen!', 'error');
-          setTimeout(logout, 1000);
-        } else {
-          showNotification('Zugriff ist weiterhin aktiv ✓', 'success', 3000);
+        function closeLogoUploadModal() {
+            logoUploadModal.classList.remove('active');
+            adminPassword.value = '';
+            logoFile.value = '';
         }
-      } catch (error) {
-        console.error('Sofort-Überprüfung fehlgeschlagen:', error);
-        showNotification('Überprüfung fehlgeschlagen', 'error');
-      }
-    }
 
-    // Alle 30 Sekunden überprüfen ob User noch berechtigt ist
-    setInterval(async () => {
-      if (localStorage.getItem('discord_user')) {
-        const authResult = await checkUserAuthorization();
-        if (!authResult.isAuthorized) {
-          let message = 'Deine Berechtigung wurde widerrufen';
-          if (authResult.accessInfo?.message === 'access expired') {
-            message = 'Dein Zugang ist abgelaufen';
-          }
-          showNotification(message, 'error');
-          setTimeout(() => {
-            logout();
-          }, 3000);
+        function verifyLogoPassword() {
+            const password = logoPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                closePasswordModal();
+                openLogoUploadModal();
+            } else {
+                showNotification('Falsches Passwort!', 'error');
+            }
         }
-      }
-    }, 30000); // 30 Sekunden
 
-    // Auch beim Seitenwechsel überprüfen
-    document.addEventListener('visibilitychange', async () => {
-      if (!document.hidden && localStorage.getItem('discord_user')) {
-        const authResult = await checkUserAuthorization();
-        if (!authResult.isAuthorized) {
-          let message = 'Deine Berechtigung wurde widerrufen';
-          if (authResult.accessInfo?.message === 'access expired') {
-            message = 'Dein Zugang ist abgelaufen';
-          }
-          showNotification(message, 'error');
-          setTimeout(() => {
-            logout();
-          }, 2000);
-        }
-      }
-    });
+        async function handleLogoUpload() {
+            const password = adminPassword.value;
+            const file = logoFile.files[0];
 
-    // Überprüfung bei wichtigen Aktionen
-    async function validateAccess() {
-      const authResult = await checkUserAuthorization();
-      if (!authResult.isAuthorized && localStorage.getItem('discord_user')) {
-        let message = 'Zugriff wurde entzogen';
-        if (authResult.accessInfo?.message === 'access expired') {
-          message = 'Dein Zugang ist abgelaufen';
-        }
-        showNotification(message, 'error');
-        setTimeout(logout, 2000);
-        return false;
-      }
-      return true;
-    }
+            if (password !== ADMIN_PASSWORD) {
+                showNotification('Falsches Admin Passwort!', 'error');
+                return;
+            }
 
-    function showError(message) {
-      errorMessage.textContent = message;
-      loginError.classList.remove('hidden');
-    }
+            if (!file) {
+                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
+                return;
+            }
 
-    function showMainContent(accessInfo) {
-      console.log('Zeige Main Content an...');
-      
-      // WICHTIG: Korrekte Klassen verwenden - nur 'hidden'
-      loginScreen.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-      debugInfo.classList.add('hidden');
-      forceCheckBtn.classList.remove('hidden');
-      
-      // Benutzerinformationen anzeigen
-      const user = JSON.parse(localStorage.getItem('discord_user'));
-      if (user) {
-        usernameElement.textContent = user.username;
-      }
-      
-      // Access Badge anzeigen
-      if (accessInfo) {
-        accessBadge.classList.remove('hidden');
-        if (accessInfo.isPermanent) {
-          accessBadge.textContent = 'Permanent';
-          accessBadge.className = 'access-badge access-permanent';
-        } else {
-          accessBadge.textContent = accessInfo.message || 'Temporary';
-          accessBadge.className = 'access-badge access-temporary';
-        }
-      }
-      
-      // Setze URL zurück ohne Code-Parameter
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-      
-      console.log('Main Content sollte jetzt sichtbar sein');
-    }
+            if (!file.type.startsWith('image/')) {
+                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
+                return;
+            }
 
-    function logout() {
-      console.log('Logout durchgeführt');
-      
-      // Alle gespeicherten Daten löschen
-      localStorage.removeItem('discord_user');
-      localStorage.removeItem('discord_access_token');
-      localStorage.removeItem('user_access_info');
-      
-      // UI zurücksetzen - nur 'hidden' verwenden
-      mainContent.classList.add('hidden');
-      loginScreen.classList.remove('hidden');
-      loginError.classList.add('hidden');
-      debugInfo.classList.add('hidden');
-      accessBadge.classList.add('hidden');
-      forceCheckBtn.classList.add('hidden');
-      
-      showNotification('Erfolgreich ausgeloggt', 'info');
-    }
+            try {
+                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
+                saveLogo.disabled = true;
 
-    // Überprüfe gespeicherten Login beim Laden
-    function checkExistingLogin() {
-      const user = localStorage.getItem('discord_user');
-      const token = localStorage.getItem('discord_access_token');
-      const accessInfo = localStorage.getItem('user_access_info');
-      
-      console.log('Check existing login:', { user: !!user, token: !!token });
-      
-      if (user && token) {
-        showDebugInfo('Bereits eingeloggt');
-        showMainContent(accessInfo ? JSON.parse(accessInfo) : null);
-        
-        // Zusätzliche Überprüfung ob wirklich autorisiert
-        setTimeout(async () => {
-          const authResult = await checkUserAuthorization();
-          if (!authResult.isAuthorized) {
-            showNotification('Deine Sitzung ist abgelaufen', 'error');
-            setTimeout(logout, 2000);
-          }
-        }, 1000);
-        
-      } else {
-        showDebugInfo('Nicht eingeloggt');
-        // Lösche eventuelle fehlerhafte Daten
-        localStorage.removeItem('discord_user');
-        localStorage.removeItem('discord_access_token');
-        localStorage.removeItem('user_access_info');
-      }
-    }
-
-    // Event Listeners
-    discordLoginBtn.addEventListener('click', startDiscordOAuth);
-    logoutBtn.addEventListener('click', logout);
-    forceCheckBtn.addEventListener('click', forceImmediateCheck);
-
-    // Initialisierung
-    checkExistingLogin();
-
-    // URL Parameters überprüfen
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    if (code) {
-      console.log('OAuth Code gefunden:', code);
-      exchangeCodeForToken(code);
-    }
-
-    // Globale Variablen
-    let products = [];
-    let filteredProducts = [];
-    let currentResources = [];
-    const ADMIN_PASSWORD = '1101';
-
-    // Utility
-    function show(el) { 
-      el.classList.remove('hidden'); 
-      el.classList.add('fade-in');
-    }
-    function hide(el) { 
-      el.classList.add('hidden'); 
-      el.classList.remove('fade-in');
-    }
-
-    // Firebase Funktionen
-    async function saveProduct(product) {
-      try {
-        await push(productsRef, product);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Speichern des Produkts:', error);
-        return false;
-      }
-    }
-
-    async function updateProduct(key, product) {
-      try {
-        await update(ref(db, `materialrecycler/products/${key}`), product);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Aktualisieren des Produkts:', error);
-        return false;
-      }
-    }
-
-    async function deleteProductFromFirebase(key) {
-      try {
-        await remove(ref(db, `materialrecycler/products/${key}`));
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Löschen des Produkts:', error);
-        return false;
-      }
-    }
-
-    // Firebase Listener
-    onValue(productsRef, (snapshot) => {
-      products = [];
-      snapshot.forEach((childSnap) => {
-        const data = childSnap.val();
-        data.key = childSnap.key;
-        products.push(data);
-      });
-      filteredProducts = [...products];
-      renderProducts();
-      renderAdminTable();
-      updateStatistics();
-    });
-
-    // Hamburger Menu
-    document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.getElementById('hamburgerMenu').classList.toggle('hidden');
-    });
-
-    // Close hamburger menu when clicking outside
-    document.addEventListener('click', (e) => {
-      const hamburgerMenu = document.getElementById('hamburgerMenu');
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      
-      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-        hamburgerMenu.classList.add('hidden');
-      }
-    });
-
-    // Tabs Navigation
-    document.getElementById('btnProducts').addEventListener('click', async () => {
-      await validateAccess();
-      show(document.getElementById('productsSection')); 
-      hide(document.getElementById('adminPanel'));
-      updateButtonStates('products');
-    });
-    
-    document.getElementById('btnAdmin').addEventListener('click', async () => {
-      await validateAccess();
-      hide(document.getElementById('productsSection')); 
-      show(document.getElementById('adminPanel'));
-      updateButtonStates('admin');
-    });
-
-    function updateButtonStates(activeButton) {
-      const buttons = {
-        products: document.getElementById('btnProducts'),
-        admin: document.getElementById('btnAdmin')
-      };
-      
-      Object.values(buttons).forEach(btn => {
-        btn.classList.remove('pulse-glow', 'bg-amber-600');
-        btn.classList.add('bg-gray-700');
-      });
-      
-      if (buttons[activeButton]) {
-        buttons[activeButton].classList.remove('bg-gray-700');
-        buttons[activeButton].classList.add('bg-amber-600');
-        if (activeButton === 'products') {
-          buttons[activeButton].classList.add('pulse-glow');
-        }
-      }
-    }
-
-    // Suchfunktion
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase();
-      
-      if (searchTerm.trim() === '') {
-        filteredProducts = [...products];
-      } else {
-        filteredProducts = products.filter(product => 
-          product.name.toLowerCase().includes(searchTerm) || 
-          (product.resources && product.resources.some(resource => 
-            resource.name.toLowerCase().includes(searchTerm)
-          ))
-        );
-      }
-      
-      renderProducts();
-    });
-
-    // Produkte rendern
-    function renderProducts() {
-      const productsGrid = document.getElementById('productsGrid');
-      productsGrid.innerHTML = '';
-      
-      if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = `
-          <div class="col-span-full text-center py-8 text-gray-400">
-            <i class="fas fa-box text-4xl mb-4 text-gray-600"></i>
-            <p>Keine Produkte gefunden.</p>
-            <p class="text-sm mt-2">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      filteredProducts.forEach(product => {
-        const el = document.createElement('div');
-        el.className = 'product-item p-4 rounded-lg bg-gray-800/50 border border-gray-700 hover:border-amber-500/30 transition-all duration-200';
-        
-        let imageHtml = '';
-        if (product.imageData) {
-          imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
-        } else {
-          imageHtml = `<div class="product-image bg-gray-700 flex items-center justify-center text-gray-400">
-            <i class="fas fa-image text-3xl"></i>
-          </div>`;
-        }
-        
-        // Ressourcen für dieses Produkt
-        let resourcesHtml = '';
-        if (product.resources && product.resources.length > 0) {
-          resourcesHtml = product.resources.map(resource => 
-            `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
-          ).join('');
-        }
-        
-        el.innerHTML = `
-          <div class="product-card">
-            <div class="flex-shrink-0">
-              ${imageHtml}
-            </div>
-            <div class="flex-grow">
-              <div class="font-semibold text-lg mb-2">${product.name}</div>
-              ${resourcesHtml ? `<div class="resource-list mb-3">${resourcesHtml}</div>` : ''}
-              
-              <!-- Ressourcen Rechner -->
-              <div class="calculator-section">
-                <div class="calculator-title">
-                  <i class="fas fa-calculator"></i>
-                  Ressourcen Rechner
-                </div>
+                await uploadBytes(logoImageRef, file);
+                const downloadURL = await getDownloadURL(logoImageRef);
                 
-                <div class="quantity-controls">
-                  <button class="quantity-btn decrease-quantity">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <input type="number" value="1" min="1" class="quantity-input product-quantity">
-                  <button class="quantity-btn increase-quantity">
-                    <i class="fas fa-plus"></i>
-                  </button>
-                  <span class="text-gray-300 ml-2 text-sm">Produkt(e)</span>
-                </div>
+                await set(logoSettingsRef, {
+                    logoUrl: downloadURL,
+                    uploadedAt: new Date().toISOString(),
+                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
+                });
+
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+
+                showNotification('Logo erfolgreich hochgeladen!', 'success');
+                closeLogoUploadModal();
                 
-                <div class="calculation-results">
-                  <!-- Ergebnisse werden hier dynamisch eingefügt -->
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        productsGrid.appendChild(el);
-        
-        // Event Listener für Quantity Controls
-        const quantityInput = el.querySelector('.product-quantity');
-        const decreaseBtn = el.querySelector('.decrease-quantity');
-        const increaseBtn = el.querySelector('.increase-quantity');
-        const resultsContainer = el.querySelector('.calculation-results');
-        
-        // Berechnung für dieses Produkt
-        const updateCalculation = () => {
-          const quantity = parseInt(quantityInput.value) || 1;
-          resultsContainer.innerHTML = '';
-          
-          // Nur die Ressourcen dieses spezifischen Produkts verwenden
-          const productResources = product.resources || [];
-          
-          if (productResources.length === 0) {
-            resultsContainer.innerHTML = '<div class="text-gray-400 text-center py-2 text-sm">Keine Ressourcen für dieses Produkt definiert</div>';
-            return;
-          }
-          
-          productResources.forEach(resource => {
-            const minTotal = resource.min * quantity;
-            const maxTotal = resource.max * quantity;
+            } catch (error) {
+                console.error('Fehler beim Hochladen des Logos:', error);
+                showNotification('Fehler beim Hochladen des Logos!', 'error');
+            } finally {
+                saveLogo.innerHTML = 'Logo speichern';
+                saveLogo.disabled = false;
+            }
+        }
+
+        // Globales Logo laden
+        async function loadGlobalLogo() {
+            try {
+                const downloadURL = await getDownloadURL(logoImageRef);
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+            } catch (error) {
+                console.log('Kein globales Logo gefunden, verwende Standard');
+            }
+        }
+
+        // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
+        async function hasAccess(pageKey) {
+            if (!currentUser) return false;
             
-            const resultEl = document.createElement('div');
-            resultEl.className = 'result-item';
-            resultEl.innerHTML = `
-              <div class="flex-1 font-medium text-sm">${resource.name}</div>
-              <div class="result-range text-sm">${minTotal}-${maxTotal}</div>
-            `;
-            resultsContainer.appendChild(resultEl);
-          });
-        };
-        
-        // Initiale Berechnung
-        updateCalculation();
-        
-        // Event Listener
-        decreaseBtn.addEventListener('click', () => {
-          const current = parseInt(quantityInput.value) || 1;
-          if (current > 1) {
-            quantityInput.value = current - 1;
-            updateCalculation();
-          }
-        });
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
 
-        increaseBtn.addEventListener('click', () => {
-          const current = parseInt(quantityInput.value) || 1;
-          quantityInput.value = current + 1;
-          updateCalculation();
-        });
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token,
+                        currentPage: pageKey
+                    })
+                });
 
-        quantityInput.addEventListener('input', () => {
-          updateCalculation();
-        });
-      });
-    }
+                if (!response.ok) return false;
 
-    // Statistiken aktualisieren
-    function updateStatistics() {
-      document.getElementById('totalProductsOverview').textContent = products.length;
-      
-      // Gesamtzahl der Ressourcen berechnen
-      const totalResources = products.reduce((total, product) => {
-        return total + (product.resources ? product.resources.length : 0);
-      }, 0);
-      document.getElementById('totalResources').textContent = totalResources;
-      
-      // Letzte hinzugefügte Produkt
-      if (products.length > 0) {
-        const lastProduct = products.reduce((latest, current) => {
-          return new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest;
-        });
-        document.getElementById('lastAdded').textContent = lastProduct.name;
-      } else {
-        document.getElementById('lastAdded').textContent = '-';
-      }
-    }
-
-    // Adminbereich
-    const adminLoginBtn = document.getElementById('adminLoginBtn');
-    const adminPassInput = document.getElementById('adminPass');
-    const adminError = document.getElementById('adminError');
-    const adminTableBody = document.getElementById('adminTableBody');
-    const totalProducts = document.getElementById('totalProducts');
-    const addProductBtn = document.getElementById('addProductBtn');
-    const exportCsv = document.getElementById('exportCsv');
-    
-    // Modal Elemente
-    const productModal = document.getElementById('productModal');
-    const productForm = document.getElementById('productForm');
-    const productModalTitle = document.getElementById('productModalTitle');
-    const productKeyInput = document.getElementById('productKey');
-    const cancelProduct = document.getElementById('cancelProduct');
-    const productImageFile = document.getElementById('productImageFile');
-    const imagePreview = document.getElementById('imagePreview');
-    const productImageData = document.getElementById('productImageData');
-    
-    // Ressourcen Elemente
-    const newResourceName = document.getElementById('newResourceName');
-    const newResourceMin = document.getElementById('newResourceMin');
-    const newResourceMax = document.getElementById('newResourceMax');
-    const addResourceBtn = document.getElementById('addResourceBtn');
-    const resourcesList = document.getElementById('resourcesList');
-
-    // Ressource hinzufügen
-    addResourceBtn.addEventListener('click', () => {
-      const resourceName = newResourceName.value.trim();
-      const resourceMin = parseInt(newResourceMin.value);
-      const resourceMax = parseInt(newResourceMax.value);
-      
-      if (resourceName && resourceMin && resourceMax && resourceMin <= resourceMax) {
-        currentResources.push({
-          name: resourceName,
-          min: resourceMin,
-          max: resourceMax
-        });
-        renderResourcesList();
-        newResourceName.value = '';
-        newResourceMin.value = '';
-        newResourceMax.value = '';
-        newResourceName.focus();
-        showNotification('Ressource hinzugefügt', 'success');
-      } else {
-        showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
-      }
-    });
-
-    // Ressourcen mit Enter hinzufügen
-    newResourceName.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addResourceBtn.click();
-      }
-    });
-
-    // Ressourcen Liste rendern
-    function renderResourcesList() {
-      resourcesList.innerHTML = '';
-      currentResources.forEach((resource, index) => {
-        const span = document.createElement('span');
-        span.className = 'resource-tag flex items-center';
-        span.innerHTML = `
-          ${resource.name} (${resource.min}-${resource.max})
-          <button type="button" class="ml-1 text-red-400 hover:text-red-300 remove-resource" data-index="${index}">
-            <i class="fas fa-times"></i>
-          </button>
-        `;
-        resourcesList.appendChild(span);
-      });
-      
-      // Event Listener für Löschen-Buttons
-      document.querySelectorAll('.remove-resource').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const index = parseInt(this.getAttribute('data-index'));
-          currentResources.splice(index, 1);
-          renderResourcesList();
-          showNotification('Ressource entfernt', 'info');
-        });
-      });
-    }
-
-    // Bild-Upload Event Listener
-    productImageFile.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        // Dateigröße prüfen (max. 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          showNotification('Die Datei ist zu groß. Maximale Größe: 5MB', 'error');
-          this.value = '';
-          return;
+                const data = await response.json();
+                return data.hasPageAccess;
+                
+            } catch (error) {
+                console.error('Fehler bei Zugriffsprüfung:', error);
+                return false;
+            }
         }
-        
-        // Vorschau anzeigen
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          imagePreview.src = e.target.result;
-          imagePreview.style.display = 'block';
-          productImageData.value = e.target.result; // Base64 Daten speichern
-        };
-        reader.readAsDataURL(file);
-      }
-    });
 
-    adminLoginBtn.addEventListener('click', () => {
-      if (adminPassInput.value === ADMIN_PASSWORD) { 
-        adminError.classList.add('hidden'); 
-        show(document.getElementById('adminContent')); 
-        renderAdminTable(); 
-        adminPassInput.value = '';
-        showNotification('Admin-Bereich erfolgreich betreten', 'success');
-      } else {
-        adminError.classList.remove('hidden');
-        adminPassInput.value = '';
-        adminPassInput.focus();
-        showNotification('Falsches Admin-Passwort', 'error');
-      }
-    });
+        // BENUTZER EXISTENZ PRÜFEN
+        async function checkUserExists() {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
 
-    // Allow login with Enter key
-    adminPassInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        adminLoginBtn.click();
-      }
-    });
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token
+                    })
+                });
 
-    function renderAdminTable() {
-      adminTableBody.innerHTML = '';
-      
-      // Produkte in Admin-Tabelle
-      products.forEach(product => {
-        const tr = document.createElement('tr');
-        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-        
-        let resourcesText = '';
-        if (product.resources && product.resources.length > 0) {
-          resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
-        } else {
-          resourcesText = 'Keine Ressourcen';
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.isAuthorized;
+                
+            } catch (error) {
+                console.error('Fehler bei Benutzerprüfung:', error);
+                return false;
+            }
         }
-        
-        tr.innerHTML = `
-          <td class="p-3">${product.name}</td>
-          <td class="p-3">${resourcesText}</td>
-          <td class="p-3">
-            <div class="flex gap-2">
-              <button class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-sm rounded-lg btn flex items-center gap-1 edit-product" data-key="${product.key}">
-                <i class="fas fa-edit mr-1"></i>
-                Bearbeiten
-              </button>
-              <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-product" data-key="${product.key}">
-                <i class="fas fa-trash mr-1"></i>
-                Löschen
-              </button>
-            </div>
-          </td>`;
-        adminTableBody.appendChild(tr);
-      });
-      
-      // Event Listener für Bearbeiten-Buttons
-      document.querySelectorAll('.edit-product').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const key = this.getAttribute('data-key');
-          editProduct(key);
-        });
-      });
-      
-      // Event Listener für Löschen-Buttons
-      document.querySelectorAll('.delete-product').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const key = this.getAttribute('data-key');
-          deleteProduct(key);
-        });
-      });
-      
-      totalProducts.innerText = products.length;
-    }
 
-    // Admin-Suchfunktion
-    document.getElementById('adminSearchInput').addEventListener('input', function() {
-      const searchTerm = this.value.toLowerCase();
-      
-      if (searchTerm === '') {
-        renderAdminTable();
-        return;
-      }
-      
-      const filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm) ||
-        (product.resources && product.resources.some(resource => 
-          resource.name.toLowerCase().includes(searchTerm)
-        ))
-      );
-      
-      adminTableBody.innerHTML = '';
-      
-      if (filteredProducts.length === 0) {
-        adminTableBody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Keine Produkte gefunden</td></tr>';
-        return;
-      }
-      
-      filteredProducts.forEach(product => {
-        const tr = document.createElement('tr');
-        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-        
-        let resourcesText = '';
-        if (product.resources && product.resources.length > 0) {
-          resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
-        } else {
-          resourcesText = 'Keine Ressourcen';
+        // DISCORD AVATAR LADEN
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = '';
+            } else {
+                const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
         }
-        
-        tr.innerHTML = `
-          <td class="p-3">${product.name}</td>
-          <td class="p-3">${resourcesText}</td>
-          <td class="p-3">
-            <div class="flex gap-2">
-              <button class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-sm rounded-lg btn flex items-center gap-1 edit-product" data-key="${product.key}">
-                <i class="fas fa-edit mr-1"></i>
-                Bearbeiten
-              </button>
-              <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-product" data-key="${product.key}">
-                <i class="fas fa-trash mr-1"></i>
-                Löschen
-              </button>
-            </div>
-          </td>`;
-        adminTableBody.appendChild(tr);
-      });
-      
-      // Event Listener für Bearbeiten-Buttons
-      document.querySelectorAll('.edit-product').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const key = this.getAttribute('data-key');
-          editProduct(key);
-        });
-      });
-      
-      // Event Listener für Löschen-Buttons
-      document.querySelectorAll('.delete-product').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const key = this.getAttribute('data-key');
-          deleteProduct(key);
-        });
-      });
-    });
 
-    // Produkt bearbeiten
-    function editProduct(key) {
-      const product = products.find(p => p.key === key);
-      if (!product) return;
-      
-      // Formular mit Produkt-Daten füllen
-      document.getElementById('productName').value = product.name;
-      productKeyInput.value = key;
-      
-      // Ressourcen setzen
-      currentResources = product.resources ? [...product.resources] : [];
-      renderResourcesList();
-      
-      // Bild-Daten setzen
-      if (product.imageData) {
-        imagePreview.src = product.imageData;
-        imagePreview.style.display = 'block';
-        productImageData.value = product.imageData;
-      } else {
-        imagePreview.style.display = 'none';
-        productImageData.value = '';
-      }
-      
-      // Modal-Titel ändern
-      productModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Produkt bearbeiten';
-      
-      // Modal anzeigen
-      show(productModal);
-    }
-
-    // Modal für Produkt hinzufügen
-    addProductBtn.addEventListener('click', () => {
-      // Formular zurücksetzen
-      productForm.reset();
-      productKeyInput.value = '';
-      imagePreview.style.display = 'none';
-      productImageData.value = '';
-      currentResources = [];
-      renderResourcesList();
-      
-      // Modal-Titel ändern
-      productModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Produkt hinzufügen';
-      
-      show(productModal);
-    });
-
-    cancelProduct.addEventListener('click', () => {
-      hide(productModal);
-      productForm.reset();
-      imagePreview.style.display = 'none';
-      productImageData.value = '';
-      currentResources = [];
-      renderResourcesList();
-    });
-
-    // Modal schließen, wenn außerhalb geklickt wird
-    productModal.addEventListener('click', (e) => {
-      if (e.target === productModal) {
-        hide(productModal);
-        productForm.reset();
-        imagePreview.style.display = 'none';
-        productImageData.value = '';
-        currentResources = [];
-        renderResourcesList();
-      }
-    });
-
-    productForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const hasAccess = await validateAccess();
-      if (!hasAccess) {
-        e.preventDefault();
-        return;
-      }
-      
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.innerHTML = '<div class="loading mr-2"></div> Speichere...';
-      submitBtn.disabled = true;
-      
-      const name = document.getElementById('productName').value;
-      const imageData = productImageData.value;
-      const key = productKeyInput.value;
-      
-      // Produkt-Objekt erstellen
-      const productData = {
-        name,
-        resources: [...currentResources],
-        date: new Date().toISOString(),
-        timestamp: Date.now()
-      };
-      
-      // Bild-Daten hinzufügen, falls vorhanden
-      if (imageData) {
-        productData.imageData = imageData;
-      }
-      
-      let success;
-      if (key) {
-        // Bestehendes Produkt aktualisieren
-        success = await updateProduct(key, productData);
-      } else {
-        // Neues Produkt erstellen
-        success = await saveProduct(productData);
-      }
-      
-      if (success) {
-        hide(productModal);
-        productForm.reset();
-        imagePreview.style.display = 'none';
-        productImageData.value = '';
-        currentResources = [];
-        renderResourcesList();
-        showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
-      } else {
-        showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
-      }
-      
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
-    });
-
-    // Löschfunktion
-    window.deleteProduct = async function(key) { 
-      if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-        const success = await deleteProductFromFirebase(key);
-        if (success) {
-          showNotification('Produkt erfolgreich gelöscht', 'success');
-        } else {
-          showNotification('Fehler beim Löschen des Produkts!', 'error');
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
         }
-      }
-    }
 
-    // CSV Export
-    exportCsv.addEventListener('click', () => {
-      if (products.length === 0) {
-        showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
-        return;
-      }
-      
-      const header = ['Name', 'Ressourcen'];
-      const rows = products.map(product => {
-        const resourcesText = product.resources && product.resources.length > 0 
-          ? product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join('; ')
-          : 'Keine Ressourcen';
-        
-        return [
-          `"${product.name}"`,
-          `"${resourcesText.replace(/"/g, '""')}"`
-        ].join(';');
-      });
-      
-      const csv = [header.join(';'), ...rows].join('\n');
-      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      
-      // Generate filename with current date
-      const now = new Date();
-      const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
-      a.download = `materialrecycler_${dateStr}.csv`;
-      
-      document.body.appendChild(a);
-      a.click();
-      URL.revokeObjectURL(url);
-      a.remove();
-      
-      showNotification('CSV erfolgreich exportiert', 'success');
-    });
+        // Discord OAuth Login
+        function startDiscordOAuth() {
+            const scope = 'identify';
+            const state = generateRandomState();
+            
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
+            
+            window.location.href = authUrl.toString();
+        }
 
-    // Initialisierung
-    document.addEventListener('DOMContentLoaded', () => {
-      renderProducts();
-      updateButtonStates('products');
-      
-      // Sicherstellen, dass alle Modals versteckt sind
-      hide(productModal);
-    });
-  </script>
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        async function exchangeCodeForToken(code) {
+            try {
+                loginLoading.style.display = 'block';
+                
+                const response = await fetch(`${BACKEND_URL}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        code, 
+                        redirect_uri: DISCORD_REDIRECT_URI
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Worker responded with status ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.access_token) {
+                    await verifyUser(data.access_token);
+                } else {
+                    throw new Error('Kein Access Token erhalten');
+                }
+            } catch (error) {
+                console.error('Fehler beim Token-Austausch:', error);
+                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        async function verifyUser(accessToken) {
+            try {
+                const currentPage = getCurrentPageKey();
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken,
+                        currentPage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed');
+                }
+
+                const data = await response.json();
+
+                if (data.isAuthorized) {
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    
+                    const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        ...userAccessInfo
+                    };
+                    
+                    await loadDiscordAvatar(user);
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
+                } else {
+                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            } finally {
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        // Zugriff verweigert anzeigen
+        function showAccessRestricted(user, pageKey) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserName.textContent = user.username;
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
+        }
+
+        // Login-Seite anzeigen
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.add('hidden');
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management'
+            };
+            return names[pageKey] || pageKey;
+        }
+
+        // Navigation zu anderen Seiten mit Zugriffsprüfung
+        async function navigateToWithAccessCheck(page) {
+            if (!currentUser) {
+                showNotification('Bitte zuerst anmelden', 'error');
+                return;
+            }
+            
+            const userExists = await checkUserExists();
+            if (!userExists) {
+                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
+                logout();
+                return;
+            }
+            
+            const pageKey = PAGE_ACCESS_CONFIG[page];
+            if (!pageKey) {
+                showNotification('Ungültige Seite', 'error');
+                return;
+            }
+            
+            const hasAccessToPage = await hasAccess(pageKey);
+            if (!hasAccessToPage) {
+                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                return;
+            }
+            
+            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
+        }
+
+        // Autorisierten Inhalt anzeigen
+        function showAuthorizedContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
+            
+            userWelcome.textContent = `Willkommen, ${user.username}`;
+            
+            if (userAccessInfo && userAccessInfo.message) {
+                accessBadge.textContent = userAccessInfo.message;
+                accessBadge.classList.remove('hidden');
+                
+                if (userAccessInfo.isPermanent) {
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
+            updateCardAccess();
+            loadProducts();
+            loadGlobalLogo();
+        }
+
+        // Karten-Zugriffsanzeige aktualisieren
+        async function updateCardAccess() {
+            if (!currentUser) return;
+            
+            const cards = document.querySelectorAll('.card');
+            
+            for (const card of cards) {
+                const page = card.getAttribute('data-page');
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                
+                if (pageKey) {
+                    const hasAccessToPage = await hasAccess(pageKey);
+                    
+                    const existingStatus = card.querySelector('.access-status');
+                    if (existingStatus) {
+                        existingStatus.remove();
+                    }
+                    
+                    if (hasAccessToPage) {
+                        card.classList.remove('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-allowed';
+                        statusBadge.textContent = '✓ Zugriff';
+                        card.appendChild(statusBadge);
+                    } else {
+                        card.classList.add('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-denied';
+                        statusBadge.textContent = '✗ Kein Zugriff';
+                        card.appendChild(statusBadge);
+                    }
+                }
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, duration);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            userAccessInfo = null;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
+            showLoginPage();
+            accessBadge.classList.add('hidden');
+            
+            showNotification('Erfolgreich ausgeloggt', 'info');
+        }
+
+        // Session prüfen
+        async function checkExistingLogin() {
+            const userData = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const storedAccessInfo = localStorage.getItem('user_access_info');
+            
+            if (userData && token) {
+                try {
+                    const user = JSON.parse(userData);
+                    userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
+                    
+                    const currentPage = getCurrentPageKey();
+                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            accessToken: token,
+                            currentPage
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.isAuthorized) {
+                            currentUser = {
+                                id: user.id,
+                                username: user.username,
+                                ...userAccessInfo
+                            };
+                            
+                            await loadDiscordAvatar(user);
+                            
+                            if (data.hasPageAccess) {
+                                showAuthorizedContent(currentUser);
+                                showNotification(`Willkommen zurück, ${user.username}`, 'info');
+                            } else {
+                                showAccessRestricted(currentUser, currentPage);
+                            }
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Fehler beim Laden der Benutzerdaten:', e);
+                }
+            }
+            
+            showLoginPage();
+        }
+
+        // Tab Navigation
+        async function switchTab(tabName) {
+            const hasAccessToTab = await hasAccess(tabName);
+            if (!hasAccessToTab) {
+                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
+                return;
+            }
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+        }
+
+        function getTabDisplayName(tabName) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'recycler': 'Recycler System'
+            };
+            return names[tabName] || tabName;
+        }
+
+        // ========== MATERIALRECYCLER FUNKTIONEN (Original) ==========
+
+        // Firebase Funktionen
+        async function saveProduct(product) {
+            try {
+                await push(productsRef, product);
+                return true;
+            } catch (error) {
+                console.error('Fehler beim Speichern des Produkts:', error);
+                return false;
+            }
+        }
+
+        async function updateProduct(key, product) {
+            try {
+                await update(ref(db, `materialrecycler/products/${key}`), product);
+                return true;
+            } catch (error) {
+                console.error('Fehler beim Aktualisieren des Produkts:', error);
+                return false;
+            }
+        }
+
+        async function deleteProductFromFirebase(key) {
+            try {
+                await remove(ref(db, `materialrecycler/products/${key}`));
+                return true;
+            } catch (error) {
+                console.error('Fehler beim Löschen des Produkts:', error);
+                return false;
+            }
+        }
+
+        // Firebase Listener
+        function loadProducts() {
+            onValue(productsRef, (snapshot) => {
+                products = [];
+                snapshot.forEach((childSnap) => {
+                    const data = childSnap.val();
+                    data.key = childSnap.key;
+                    products.push(data);
+                });
+                filteredProducts = [...products];
+                renderProducts();
+                renderAdminTable();
+                updateStatistics();
+            });
+        }
+
+        // Produkte rendern
+        function renderProducts() {
+            productsGrid.innerHTML = '';
+            
+            if (filteredProducts.length === 0) {
+                productsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #a0aec0;">
+                        <i class="fas fa-box" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>Keine Produkte gefunden.</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const el = document.createElement('div');
+                el.className = 'product-item';
+                
+                let imageHtml = '';
+                if (product.imageData) {
+                    imageHtml = `<img src="${product.imageData}" alt="${product.name}" class="product-image">`;
+                } else {
+                    imageHtml = `<div class="product-image" style="background: rgba(30, 41, 59, 0.8); display: flex; align-items: center; justify-content: center; color: #a0aec0;">
+                        <i class="fas fa-image" style="font-size: 2rem;"></i>
+                    </div>`;
+                }
+                
+                // Ressourcen für dieses Produkt
+                let resourcesHtml = '';
+                if (product.resources && product.resources.length > 0) {
+                    resourcesHtml = product.resources.map(resource => 
+                        `<span class="resource-tag">${resource.name} (${resource.min}-${resource.max})</span>`
+                    ).join('');
+                }
+                
+                el.innerHTML = `
+                    <div class="product-card">
+                        <div style="flex-shrink: 0;">
+                            ${imageHtml}
+                        </div>
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem; color: #fbbf24;">${product.name}</div>
+                            ${resourcesHtml ? `<div class="resource-list" style="margin-bottom: 1rem;">${resourcesHtml}</div>` : ''}
+                            
+                            <!-- Ressourcen Rechner -->
+                            <div class="calculator-section">
+                                <div class="calculator-title">
+                                    <i class="fas fa-calculator"></i>
+                                    Ressourcen Rechner
+                                </div>
+                                
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease-quantity">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <input type="number" value="1" min="1" class="quantity-input product-quantity">
+                                    <button class="quantity-btn increase-quantity">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <span style="color: #cbd5e0; margin-left: 0.5rem; font-size: 0.9rem;">Produkt(e)</span>
+                                </div>
+                                
+                                <div class="calculation-results">
+                                    <!-- Ergebnisse werden hier dynamisch eingefügt -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(el);
+                
+                // Event Listener für Quantity Controls
+                const quantityInput = el.querySelector('.product-quantity');
+                const decreaseBtn = el.querySelector('.decrease-quantity');
+                const increaseBtn = el.querySelector('.increase-quantity');
+                const resultsContainer = el.querySelector('.calculation-results');
+                
+                // Berechnung für dieses Produkt
+                const updateCalculation = () => {
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    resultsContainer.innerHTML = '';
+                    
+                    // Nur die Ressourcen dieses spezifischen Produkts verwenden
+                    const productResources = product.resources || [];
+                    
+                    if (productResources.length === 0) {
+                        resultsContainer.innerHTML = '<div style="color: #a0aec0; text-align: center; padding: 0.5rem; font-size: 0.9rem;">Keine Ressourcen für dieses Produkt definiert</div>';
+                        return;
+                    }
+                    
+                    productResources.forEach(resource => {
+                        const minTotal = resource.min * quantity;
+                        const maxTotal = resource.max * quantity;
+                        
+                        const resultEl = document.createElement('div');
+                        resultEl.className = 'result-item';
+                        resultEl.innerHTML = `
+                            <div style="flex: 1; font-weight: 500; font-size: 0.9rem;">${resource.name}</div>
+                            <div class="result-range" style="font-size: 0.9rem;">${minTotal}-${maxTotal}</div>
+                        `;
+                        resultsContainer.appendChild(resultEl);
+                    });
+                };
+                
+                // Initiale Berechnung
+                updateCalculation();
+                
+                // Event Listener
+                decreaseBtn.addEventListener('click', () => {
+                    const current = parseInt(quantityInput.value) || 1;
+                    if (current > 1) {
+                        quantityInput.value = current - 1;
+                        updateCalculation();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', () => {
+                    const current = parseInt(quantityInput.value) || 1;
+                    quantityInput.value = current + 1;
+                    updateCalculation();
+                });
+
+                quantityInput.addEventListener('input', () => {
+                    updateCalculation();
+                });
+            });
+        }
+
+        // Statistiken aktualisieren
+        function updateStatistics() {
+            totalProductsOverview.textContent = products.length;
+            
+            // Gesamtzahl der Ressourcen berechnen
+            const totalResourcesCount = products.reduce((total, product) => {
+                return total + (product.resources ? product.resources.length : 0);
+            }, 0);
+            totalResources.textContent = totalResourcesCount;
+            
+            // Letzte hinzugefügte Produkt
+            if (products.length > 0) {
+                const lastProduct = products.reduce((latest, current) => {
+                    return new Date(current.timestamp) > new Date(latest.timestamp) ? current : latest;
+                });
+                lastAdded.textContent = lastProduct.name;
+            } else {
+                lastAdded.textContent = '-';
+            }
+        }
+
+        // Ressource hinzufügen
+        addResourceBtn.addEventListener('click', () => {
+            const resourceName = newResourceName.value.trim();
+            const resourceMin = parseInt(newResourceMin.value);
+            const resourceMax = parseInt(newResourceMax.value);
+            
+            if (resourceName && resourceMin && resourceMax && resourceMin <= resourceMax) {
+                currentResources.push({
+                    name: resourceName,
+                    min: resourceMin,
+                    max: resourceMax
+                });
+                renderResourcesList();
+                newResourceName.value = '';
+                newResourceMin.value = '';
+                newResourceMax.value = '';
+                newResourceName.focus();
+                showNotification('Ressource hinzugefügt', 'success');
+            } else {
+                showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
+            }
+        });
+
+        // Ressourcen Liste rendern
+        function renderResourcesList() {
+            resourcesList.innerHTML = '';
+            currentResources.forEach((resource, index) => {
+                const span = document.createElement('span');
+                span.className = 'resource-tag';
+                span.style.display = 'inline-flex';
+                span.style.alignItems = 'center';
+                span.innerHTML = `
+                    ${resource.name} (${resource.min}-${resource.max})
+                    <button type="button" style="margin-left: 4px; color: #fc8181; background: none; border: none; cursor: pointer;" class="remove-resource" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                resourcesList.appendChild(span);
+            });
+            
+            // Event Listener für Löschen-Buttons
+            document.querySelectorAll('.remove-resource').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    currentResources.splice(index, 1);
+                    renderResourcesList();
+                    showNotification('Ressource entfernt', 'info');
+                });
+            });
+        }
+
+        // Bild-Upload Event Listener
+        productImageFile.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Dateigröße prüfen (max. 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('Die Datei ist zu groß. Maximale Größe: 5MB', 'error');
+                    this.value = '';
+                    return;
+                }
+                
+                // Vorschau anzeigen
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    productImageData.value = e.target.result; // Base64 Daten speichern
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Admin Login
+        adminLoginBtn.addEventListener('click', () => {
+            if (adminPassInput.value === ADMIN_PASSWORD) { 
+                adminError.classList.add('hidden'); 
+                adminContent.classList.remove('hidden'); 
+                renderAdminTable(); 
+                adminPassInput.value = '';
+                showNotification('Admin-Bereich erfolgreich betreten', 'success');
+            } else {
+                adminError.classList.remove('hidden');
+                adminPassInput.value = '';
+                adminPassInput.focus();
+                showNotification('Falsches Admin-Passwort', 'error');
+            }
+        });
+
+        // Admin Table rendern
+        function renderAdminTable() {
+            adminTableBody.innerHTML = '';
+            totalProducts.textContent = products.length;
+            
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                tr.style.borderTop = '1px solid rgba(101, 119, 149, 0.2)';
+                tr.style.transition = 'background-color 0.2s';
+                
+                tr.addEventListener('mouseenter', () => {
+                    tr.style.backgroundColor = 'rgba(30, 41, 59, 0.3)';
+                });
+                
+                tr.addEventListener('mouseleave', () => {
+                    tr.style.backgroundColor = '';
+                });
+                
+                let resourcesText = '';
+                if (product.resources && product.resources.length > 0) {
+                    resourcesText = product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join(', ');
+                } else {
+                    resourcesText = 'Keine Ressourcen';
+                }
+                
+                tr.innerHTML = `
+                    <td style="padding: 1rem;">${product.name}</td>
+                    <td style="padding: 1rem;">${resourcesText}</td>
+                    <td style="padding: 1rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;" data-key="${product.key}">
+                                <i class="fas fa-edit"></i> Bearbeiten
+                            </button>
+                            <button class="logout-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: rgba(245, 101, 101, 0.15); border-color: #f56565; color: #fc8181;" data-key="${product.key}">
+                                <i class="fas fa-trash"></i> Löschen
+                            </button>
+                        </div>
+                    </td>`;
+                adminTableBody.appendChild(tr);
+                
+                // Event Listener für Bearbeiten-Buttons
+                tr.querySelector('.btn-primary').addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    editProduct(key);
+                });
+                
+                // Event Listener für Löschen-Buttons
+                tr.querySelector('.logout-btn').addEventListener('click', function() {
+                    const key = this.getAttribute('data-key');
+                    deleteProduct(key);
+                });
+            });
+        }
+
+        // Produkt bearbeiten
+        function editProduct(key) {
+            const product = products.find(p => p.key === key);
+            if (!product) return;
+            
+            // Formular mit Produkt-Daten füllen
+            document.getElementById('productName').value = product.name;
+            productKeyInput.value = key;
+            
+            // Ressourcen setzen
+            currentResources = product.resources ? [...product.resources] : [];
+            renderResourcesList();
+            
+            // Bild-Daten setzen
+            if (product.imageData) {
+                imagePreview.src = product.imageData;
+                imagePreview.style.display = 'block';
+                productImageData.value = product.imageData;
+            } else {
+                imagePreview.style.display = 'none';
+                productImageData.value = '';
+            }
+            
+            // Modal-Titel ändern
+            productModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
+            
+            // Modal anzeigen
+            productModal.classList.add('active');
+        }
+
+        // Modal für Produkt hinzufügen
+        addProductBtn.addEventListener('click', () => {
+            // Formular zurücksetzen
+            productForm.reset();
+            productKeyInput.value = '';
+            imagePreview.style.display = 'none';
+            productImageData.value = '';
+            currentResources = [];
+            renderResourcesList();
+            
+            // Modal-Titel ändern
+            productModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
+            
+            productModal.classList.add('active');
+        });
+
+        // Modal schließen
+        cancelProduct.addEventListener('click', () => {
+            productModal.classList.remove('active');
+            productForm.reset();
+            imagePreview.style.display = 'none';
+            productImageData.value = '';
+            currentResources = [];
+            renderResourcesList();
+        });
+
+        // Modal schließen, wenn außerhalb geklickt wird
+        productModal.addEventListener('click', (e) => {
+            if (e.target === productModal) {
+                productModal.classList.remove('active');
+                productForm.reset();
+                imagePreview.style.display = 'none';
+                productImageData.value = '';
+                currentResources = [];
+                renderResourcesList();
+            }
+        });
+
+        // Produkt speichern
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
+            submitBtn.disabled = true;
+            
+            const name = document.getElementById('productName').value;
+            const imageData = productImageData.value;
+            const key = productKeyInput.value;
+            
+            // Produkt-Objekt erstellen
+            const productData = {
+                name,
+                resources: [...currentResources],
+                date: new Date().toISOString(),
+                timestamp: Date.now()
+            };
+            
+            // Bild-Daten hinzufügen, falls vorhanden
+            if (imageData) {
+                productData.imageData = imageData;
+            }
+            
+            let success;
+            if (key) {
+                // Bestehendes Produkt aktualisieren
+                success = await updateProduct(key, productData);
+            } else {
+                // Neues Produkt erstellen
+                success = await saveProduct(productData);
+            }
+            
+            if (success) {
+                productModal.classList.remove('active');
+                productForm.reset();
+                imagePreview.style.display = 'none';
+                productImageData.value = '';
+                currentResources = [];
+                renderResourcesList();
+                showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
+            } else {
+                showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
+            }
+            
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+
+        // Löschfunktion
+        function deleteProduct(key) { 
+            if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
+                deleteProductFromFirebase(key).then(success => {
+                    if (success) {
+                        showNotification('Produkt erfolgreich gelöscht', 'success');
+                    } else {
+                        showNotification('Fehler beim Löschen des Produkts!', 'error');
+                    }
+                });
+            }
+        }
+
+        // CSV Export
+        exportCsv.addEventListener('click', () => {
+            if (products.length === 0) {
+                showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
+                return;
+            }
+            
+            const header = ['Name', 'Ressourcen'];
+            const rows = products.map(product => {
+                const resourcesText = product.resources && product.resources.length > 0 
+                    ? product.resources.map(r => `${r.name} (${r.min}-${r.max})`).join('; ')
+                    : 'Keine Ressourcen';
+                
+                return [
+                    `"${product.name}"`,
+                    `"${resourcesText.replace(/"/g, '""')}"`
+                ].join(';');
+            });
+            
+            const csv = [header.join(';'), ...rows].join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            // Generate filename with current date
+            const now = new Date();
+            const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+            a.download = `materialrecycler_${dateStr}.csv`;
+            
+            document.body.appendChild(a);
+            a.click();
+            URL.revokeObjectURL(url);
+            a.remove();
+            
+            showNotification('CSV erfolgreich exportiert', 'success');
+        });
+
+        // Suchfunktion
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm.trim() === '') {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) || 
+                    (product.resources && product.resources.some(resource => 
+                        resource.name.toLowerCase().includes(searchTerm)
+                    ))
+                );
+            }
+            
+            renderProducts();
+        });
+
+        // Admin-Suchfunktion
+        adminSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = adminTableBody.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const productName = row.cells[0].textContent.toLowerCase();
+                const resourcesText = row.cells[1].textContent.toLowerCase();
+                
+                if (productName.includes(searchTerm) || resourcesText.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Event Listeners initialisieren
+        function initializeEventListeners() {
+            discordLoginBtn.addEventListener('click', startDiscordOAuth);
+            logoutBtn.addEventListener('click', logout);
+            restrictedLogoutBtn.addEventListener('click', logout);
+            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
+            recyclerTab.addEventListener('click', () => switchTab('recycler'));
+            
+            // Logo Upload Event Listeners
+            headerLogo.addEventListener('click', openPasswordModal);
+            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            cancelPassword.addEventListener('click', closePasswordModal);
+            confirmPassword.addEventListener('click', verifyLogoPassword);
+            saveLogo.addEventListener('click', handleLogoUpload);
+            
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
+                });
+            });
+        }
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            checkExistingLogin();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                exchangeCodeForToken(code);
+            }
+        });
+
+        console.log('Materialrecycler Panel - Mit allen Funktionen und Script 1 Design!');
+    </script>
 </body>
 </html>

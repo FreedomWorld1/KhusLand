@@ -614,10 +614,14 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
         }
 
         .modal-content {
@@ -688,7 +692,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon" id="headerLogo" onclick="openLogoUploadModal()">A</div>
+                <div class="logo-icon" id="headerLogo">A</div>
                 <h2>KhusLand Management Panel</h2>
             </div>
             <div class="user-info">
@@ -707,7 +711,7 @@
         </div>
 
         <!-- Logo Upload Modal -->
-        <div id="logoUploadModal" class="modal-overlay hidden">
+        <div id="logoUploadModal" class="modal-overlay">
             <div class="modal-content">
                 <h3>Logo ändern</h3>
                 <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
@@ -1006,11 +1010,11 @@
 
         // Logo Upload Funktionen
         function openLogoUploadModal() {
-            logoUploadModal.classList.remove('hidden');
+            logoUploadModal.classList.add('active');
         }
 
         function closeLogoUploadModal() {
-            logoUploadModal.classList.add('hidden');
+            logoUploadModal.classList.remove('active');
             adminPassword.value = '';
             logoFile.value = '';
         }
@@ -1719,6 +1723,7 @@
             weedTab.addEventListener('click', () => switchTab('weed'));
             
             // Logo Upload Event Listeners
+            headerLogo.addEventListener('click', openLogoUploadModal);
             cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
             saveLogo.addEventListener('click', handleLogoUpload);
             

@@ -654,11 +654,11 @@
         }
 
         .product-image {
-            width: 100%;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             border-radius: 8px;
-            margin-bottom: 10px;
+            border: 2px solid rgba(245, 158, 11, 0.3);
         }
 
         .resource-tag {
@@ -767,6 +767,7 @@
             border-radius: 8px;
             margin-top: 10px;
             display: none;
+            border: 2px solid rgba(245, 158, 11, 0.3);
         }
 
         .file-input-wrapper {
@@ -784,124 +785,6 @@
             width: 100%;
             height: 100%;
             cursor: pointer;
-        }
-
-        /* Settings Styles */
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .setting-card {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-        }
-
-        .setting-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            color: #fbbf24;
-            font-weight: 600;
-        }
-
-        .setting-description {
-            color: #a0aec0;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #4a5568;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: #f59e0b;
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-
-        .select-input {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 8px;
-            color: #e2e8f0;
-            font-size: 0.9rem;
-        }
-
-        .color-picker {
-            width: 100%;
-            height: 40px;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 8px;
-            background: rgba(30, 41, 59, 0.6);
-            cursor: pointer;
-        }
-
-        .backup-section {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .backup-btn {
-            flex: 1;
-            padding: 0.75rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 8px;
-            color: #e2e8f0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .backup-btn:hover {
-            background: rgba(245, 158, 11, 0.2);
-            border-color: #f59e0b;
         }
     </style>
 </head>
@@ -1004,9 +887,6 @@
                     <button id="recyclerTab" class="nav-tab">
                         <i class="fas fa-recycle"></i> Recycler System
                     </button>
-                    <button id="settingsTab" class="nav-tab">
-                        <i class="fas fa-cog"></i> Einstellungen
-                    </button>
                 </div>
 
                 <!-- Dashboard Tab -->
@@ -1105,7 +985,7 @@
                         <div id="adminLoginSection">
                             <div class="form-group">
                                 <label for="adminPass">Admin-Passwort</label>
-                                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full">
+                                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein">
                             </div>
                             <button id="adminLoginBtn" class="btn-primary">
                                 <i class="fas fa-sign-in-alt"></i> Einloggen
@@ -1149,133 +1029,6 @@
                                         <!-- Admin Table wird hier dynamisch geladen -->
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Einstellungen Tab -->
-                <div id="settings" class="tab-content">
-                    <div class="system-card">
-                        <h3 style="color: #fbbf24; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-cog"></i> System Einstellungen
-                        </h3>
-                        
-                        <div class="settings-grid">
-                            <!-- Allgemeine Einstellungen -->
-                            <div class="setting-card">
-                                <div class="setting-header">
-                                    <i class="fas fa-palette"></i>
-                                    <span>Design Einstellungen</span>
-                                </div>
-                                <div class="setting-description">
-                                    Passen Sie das Aussehen des Materialrecyclers an Ihre Vorlieben an.
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="themeSelect">Farbschema</label>
-                                    <select id="themeSelect" class="select-input">
-                                        <option value="orange">Orange (Standard)</option>
-                                        <option value="blue">Blau</option>
-                                        <option value="green">Grün</option>
-                                        <option value="purple">Lila</option>
-                                        <option value="red">Rot</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="darkModeToggle">Dunkelmodus</label>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="darkModeToggle" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Benachrichtigungen -->
-                            <div class="setting-card">
-                                <div class="setting-header">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Benachrichtigungen</span>
-                                </div>
-                                <div class="setting-description">
-                                    Konfigurieren Sie, welche Benachrichtigungen Sie erhalten möchten.
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="notificationsToggle">Benachrichtigungen aktivieren</label>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="notificationsToggle" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="soundToggle">Sound bei Benachrichtigungen</label>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="soundToggle">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Daten Management -->
-                            <div class="setting-card">
-                                <div class="setting-header">
-                                    <i class="fas fa-database"></i>
-                                    <span>Daten Management</span>
-                                </div>
-                                <div class="setting-description">
-                                    Verwalten Sie Ihre Daten und erstellen Sie Sicherungen.
-                                </div>
-                                
-                                <div class="backup-section">
-                                    <button id="exportData" class="backup-btn">
-                                        <i class="fas fa-download"></i> Daten exportieren
-                                    </button>
-                                    <button id="importData" class="backup-btn">
-                                        <i class="fas fa-upload"></i> Daten importieren
-                                    </button>
-                                </div>
-                                
-                                <div class="form-group" style="margin-top: 1rem;">
-                                    <label for="autoBackupToggle">Automatische Backups</label>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="autoBackupToggle">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Erweiterte Einstellungen -->
-                            <div class="setting-card">
-                                <div class="setting-header">
-                                    <i class="fas fa-sliders-h"></i>
-                                    <span>Erweiterte Einstellungen</span>
-                                </div>
-                                <div class="setting-description">
-                                    Erweiterte Optionen für Power-User.
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="autoSaveToggle">Auto-Save</label>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="autoSaveToggle" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="developerModeToggle">Developer Mode</label>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="developerModeToggle">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                
-                                <button id="resetSettings" class="logout-btn" style="width: 100%; margin-top: 1rem;">
-                                    <i class="fas fa-undo"></i> Einstellungen zurücksetzen
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -1428,7 +1181,6 @@
         const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
         const recyclerTab = document.getElementById('recyclerTab');
-        const settingsTab = document.getElementById('settingsTab');
 
         // Materialrecycler spezifische Elemente
         const searchInput = document.getElementById('searchInput');
@@ -1814,7 +1566,6 @@
             // Tab Navigation
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             recyclerTab.addEventListener('click', () => switchTab('recycler'));
-            settingsTab.addEventListener('click', () => switchTab('settings'));
             
             // Logo Upload Event Listeners
             headerLogo.addEventListener('click', openPasswordModal);
@@ -1832,28 +1583,78 @@
                     }
                 });
             });
+
+            // Materialrecycler Event Listeners
+            initializeRecyclerListeners();
         }
 
-        // ========== INITIALISIERUNG ==========
+        // ========== RECYCLER FUNKTIONEN ==========
 
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM geladen - Initialisiere App...');
-            initializeEventListeners();
-            
-            // Zuerst OAuth Callback prüfen
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('code') || urlParams.get('error')) {
-                console.log('OAuth Callback gefunden, verarbeite...');
-                handleOAuthCallback();
-            } else {
-                // Dann bestehende Session prüfen
-                console.log('Kein OAuth Callback, prüfe bestehende Session...');
-                checkExistingLogin();
+        function initializeRecyclerListeners() {
+            // Admin Login
+            if (adminLoginBtn) {
+                adminLoginBtn.addEventListener('click', function() {
+                    const password = adminPassInput.value;
+                    if (password === ADMIN_PASSWORD) {
+                        adminContent.classList.remove('hidden');
+                        adminLoginSection.classList.add('hidden');
+                        showNotification('Admin-Bereich erfolgreich betreten', 'success');
+                    } else {
+                        adminError.classList.remove('hidden');
+                    }
+                });
             }
-        });
 
-        // ========== RESTLICHE FUNKTIONEN (Materialrecycler) ==========
-        
+            // Produkt hinzufügen Button
+            if (addProductBtn) {
+                addProductBtn.addEventListener('click', function() {
+                    openProductModal();
+                });
+            }
+
+            // Ressource hinzufügen
+            if (addResourceBtn) {
+                addResourceBtn.addEventListener('click', function() {
+                    addResource();
+                });
+            }
+
+            // Produkt Formular
+            if (productForm) {
+                productForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveProduct();
+                });
+            }
+
+            // Produkt Bild Upload
+            if (productImageFile) {
+                productImageFile.addEventListener('change', function(e) {
+                    handleImageUpload(e);
+                });
+            }
+
+            // Modal schließen
+            if (cancelProduct) {
+                cancelProduct.addEventListener('click', function() {
+                    productModal.classList.remove('active');
+                });
+            }
+
+            // Suche
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    filterProducts(e.target.value);
+                });
+            }
+
+            if (adminSearchInput) {
+                adminSearchInput.addEventListener('input', function(e) {
+                    filterAdminProducts(e.target.value);
+                });
+            }
+        }
+
         // Tab wechseln Funktion
         function switchTab(tabName) {
             // Tabs deaktivieren
@@ -1975,7 +1776,181 @@
                 });
         }
 
-        // Weitere Materialrecycler-Funktionen...
+        // Produkt Modal öffnen
+        function openProductModal() {
+            productKeyInput.value = '';
+            productName.value = '';
+            productImageData.value = '';
+            imagePreview.style.display = 'none';
+            currentResources = [];
+            resourcesList.innerHTML = '';
+            productModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
+            productModal.classList.add('active');
+        }
+
+        // Ressource hinzufügen
+        function addResource() {
+            const name = newResourceName.value.trim();
+            const min = parseInt(newResourceMin.value);
+            const max = parseInt(newResourceMax.value);
+            
+            if (name && min && max && min > 0 && max >= min) {
+                currentResources.push({ name, min, max });
+                renderResourcesList();
+                newResourceName.value = '';
+                newResourceMin.value = '';
+                newResourceMax.value = '';
+            }
+        }
+
+        // Ressourcen Liste rendern
+        function renderResourcesList() {
+            resourcesList.innerHTML = '';
+            currentResources.forEach((resource, index) => {
+                const resourceElement = document.createElement('div');
+                resourceElement.className = 'resource-tag';
+                resourceElement.innerHTML = `
+                    ${resource.name}: ${resource.min}-${resource.max}
+                    <button type="button" onclick="removeResource(${index})" style="background: none; border: none; color: #f56565; margin-left: 5px; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                resourcesList.appendChild(resourceElement);
+            });
+        }
+
+        // Ressource entfernen
+        function removeResource(index) {
+            currentResources.splice(index, 1);
+            renderResourcesList();
+        }
+
+        // Bild Upload behandeln
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    productImageData.value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Produkt speichern
+        function saveProduct() {
+            const productData = {
+                name: productName.value,
+                resources: {},
+                image: productImageData.value
+            };
+            
+            currentResources.forEach(resource => {
+                productData.resources[resource.name] = {
+                    min: resource.min,
+                    max: resource.max
+                };
+            });
+            
+            const productKey = productKeyInput.value;
+            
+            if (productKey) {
+                // Produkt aktualisieren
+                const productRef = ref(db, `materialrecycler/products/${productKey}`);
+                update(productRef, productData)
+                    .then(() => {
+                        showNotification('Produkt erfolgreich aktualisiert', 'success');
+                        productModal.classList.remove('active');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Aktualisieren des Produkts', 'error');
+                    });
+            } else {
+                // Neues Produkt hinzufügen
+                push(productsRef, productData)
+                    .then(() => {
+                        showNotification('Produkt erfolgreich hinzugefügt', 'success');
+                        productModal.classList.remove('active');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Hinzufügen des Produkts', 'error');
+                    });
+            }
+        }
+
+        // Produkt bearbeiten
+        function editProduct(productKey) {
+            const product = products.find(p => p.key === productKey);
+            if (!product) return;
+            
+            productKeyInput.value = productKey;
+            productName.value = product.name;
+            productImageData.value = product.image || '';
+            
+            // Bild-Vorschau
+            if (product.image) {
+                imagePreview.src = product.image;
+                imagePreview.style.display = 'block';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+            
+            // Ressourcen zurücksetzen und neu laden
+            currentResources = [];
+            resourcesList.innerHTML = '';
+            
+            if (product.resources) {
+                Object.entries(product.resources).forEach(([name, range]) => {
+                    currentResources.push({ name, min: range.min, max: range.max });
+                });
+                renderResourcesList();
+            }
+            
+            productModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
+            productModal.classList.add('active');
+        }
+
+        // Produkt löschen
+        function deleteProduct(productKey) {
+            if (confirm('Sind Sie sicher, dass Sie dieses Produkt löschen möchten?')) {
+                const productRef = ref(db, `materialrecycler/products/${productKey}`);
+                remove(productRef)
+                    .then(() => {
+                        showNotification('Produkt erfolgreich gelöscht', 'success');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Löschen des Produkts', 'error');
+                    });
+            }
+        }
+
+        // Produkte filtern
+        function filterProducts(searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                (product.resources && Object.keys(product.resources).some(resource => 
+                    resource.toLowerCase().includes(searchTerm)
+                ))
+            );
+            renderProducts();
+        }
+
+        // Admin Produkte filtern
+        function filterAdminProducts(searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                (product.resources && Object.keys(product.resources).some(resource => 
+                    resource.toLowerCase().includes(searchTerm)
+                ))
+            );
+            renderAdminTable();
+        }
+
+        // Rechner Funktionen
         function changeQuantity(button, change) {
             const input = button.parentElement.querySelector('.quantity-input');
             let value = parseInt(input.value) + change;
@@ -2008,212 +1983,10 @@
             });
         }
 
-        function editProduct(productKey) {
-            const product = products.find(p => p.key === productKey);
-            if (!product) return;
-            
-            productKeyInput.value = productKey;
-            productName.value = product.name;
-            productImageData.value = product.image || '';
-            
-            // Bild-Vorschau
-            if (product.image) {
-                imagePreview.src = product.image;
-                imagePreview.style.display = 'block';
-            } else {
-                imagePreview.style.display = 'none';
-            }
-            
-            // Ressourcen zurücksetzen und neu laden
-            currentResources = [];
-            resourcesList.innerHTML = '';
-            
-            if (product.resources) {
-                Object.entries(product.resources).forEach(([name, range]) => {
-                    currentResources.push({ name, min: range.min, max: range.max });
-                });
-                renderResourcesList();
-            }
-            
-            productModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
-            productModal.classList.add('active');
+        // Navigation zu anderen Seiten
+        function navigateToWithAccessCheck(page) {
+            window.location.href = page;
         }
-
-        function deleteProduct(productKey) {
-            if (confirm('Sind Sie sicher, dass Sie dieses Produkt löschen möchten?')) {
-                const productRef = ref(db, `materialrecycler/products/${productKey}`);
-                remove(productRef)
-                    .then(() => {
-                        showNotification('Produkt erfolgreich gelöscht', 'success');
-                    })
-                    .catch((error) => {
-                        showNotification('Fehler beim Löschen des Produkts', 'error');
-                    });
-            }
-        }
-
-        function renderResourcesList() {
-            resourcesList.innerHTML = '';
-            currentResources.forEach((resource, index) => {
-                const resourceElement = document.createElement('div');
-                resourceElement.className = 'resource-tag';
-                resourceElement.innerHTML = `
-                    ${resource.name}: ${resource.min}-${resource.max}
-                    <button type="button" onclick="removeResource(${index})" style="background: none; border: none; color: #f56565; margin-left: 5px; cursor: pointer;">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                resourcesList.appendChild(resourceElement);
-            });
-        }
-
-        function removeResource(index) {
-            currentResources.splice(index, 1);
-            renderResourcesList();
-        }
-
-        // Event Listener für Materialrecycler-Komponenten
-        document.addEventListener('DOMContentLoaded', function() {
-            // Admin Login
-            if (adminLoginBtn) {
-                adminLoginBtn.addEventListener('click', function() {
-                    const password = adminPassInput.value;
-                    if (password === ADMIN_PASSWORD) {
-                        adminContent.classList.remove('hidden');
-                        adminLoginSection.classList.add('hidden');
-                        showNotification('Admin-Bereich erfolgreich betreten', 'success');
-                    } else {
-                        adminError.classList.remove('hidden');
-                    }
-                });
-            }
-
-            // Produkt hinzufügen Button
-            if (addProductBtn) {
-                addProductBtn.addEventListener('click', function() {
-                    productKeyInput.value = '';
-                    productName.value = '';
-                    productImageData.value = '';
-                    imagePreview.style.display = 'none';
-                    currentResources = [];
-                    resourcesList.innerHTML = '';
-                    productModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
-                    productModal.classList.add('active');
-                });
-            }
-
-            // Ressource hinzufügen
-            if (addResourceBtn) {
-                addResourceBtn.addEventListener('click', function() {
-                    const name = newResourceName.value.trim();
-                    const min = parseInt(newResourceMin.value);
-                    const max = parseInt(newResourceMax.value);
-                    
-                    if (name && min && max && min > 0 && max >= min) {
-                        currentResources.push({ name, min, max });
-                        renderResourcesList();
-                        newResourceName.value = '';
-                        newResourceMin.value = '';
-                        newResourceMax.value = '';
-                    }
-                });
-            }
-
-            // Produkt Formular
-            if (productForm) {
-                productForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const productData = {
-                        name: productName.value,
-                        resources: {},
-                        image: productImageData.value
-                    };
-                    
-                    currentResources.forEach(resource => {
-                        productData.resources[resource.name] = {
-                            min: resource.min,
-                            max: resource.max
-                        };
-                    });
-                    
-                    const productKey = productKeyInput.value;
-                    
-                    if (productKey) {
-                        // Produkt aktualisieren
-                        const productRef = ref(db, `materialrecycler/products/${productKey}`);
-                        update(productRef, productData)
-                            .then(() => {
-                                showNotification('Produkt erfolgreich aktualisiert', 'success');
-                                productModal.classList.remove('active');
-                            })
-                            .catch((error) => {
-                                showNotification('Fehler beim Aktualisieren des Produkts', 'error');
-                            });
-                    } else {
-                        // Neues Produkt hinzufügen
-                        push(productsRef, productData)
-                            .then(() => {
-                                showNotification('Produkt erfolgreich hinzugefügt', 'success');
-                                productModal.classList.remove('active');
-                            })
-                            .catch((error) => {
-                                showNotification('Fehler beim Hinzufügen des Produkts', 'error');
-                            });
-                    }
-                });
-            }
-
-            // Produkt Bild Upload
-            if (productImageFile) {
-                productImageFile.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            imagePreview.src = e.target.result;
-                            imagePreview.style.display = 'block';
-                            productImageData.value = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            }
-
-            // Modal schließen
-            if (cancelProduct) {
-                cancelProduct.addEventListener('click', function() {
-                    productModal.classList.remove('active');
-                });
-            }
-
-            // Suche
-            if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    filteredProducts = products.filter(product => 
-                        product.name.toLowerCase().includes(searchTerm) ||
-                        (product.resources && Object.keys(product.resources).some(resource => 
-                            resource.toLowerCase().includes(searchTerm)
-                        ))
-                    );
-                    renderProducts();
-                });
-            }
-
-            if (adminSearchInput) {
-                adminSearchInput.addEventListener('input', function(e) {
-                    const searchTerm = e.target.value.toLowerCase();
-                    filteredProducts = products.filter(product => 
-                        product.name.toLowerCase().includes(searchTerm) ||
-                        (product.resources && Object.keys(product.resources).some(resource => 
-                            resource.toLowerCase().includes(searchTerm)
-                        ))
-                    );
-                    renderAdminTable();
-                });
-            }
-        });
 
         // Logo Upload Funktionen
         function openPasswordModal() {
@@ -2273,7 +2046,32 @@
                 });
         }
 
-        console.log('Materialrecycler Panel - Login Button komplett repariert!');
+        // ========== INITIALISIERUNG ==========
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM geladen - Initialisiere App...');
+            initializeEventListeners();
+            
+            // Zuerst OAuth Callback prüfen
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('code') || urlParams.get('error')) {
+                console.log('OAuth Callback gefunden, verarbeite...');
+                handleOAuthCallback();
+            } else {
+                // Dann bestehende Session prüfen
+                console.log('Kein OAuth Callback, prüfe bestehende Session...');
+                checkExistingLogin();
+            }
+        });
+
+        // Globale Funktionen für onclick Events
+        window.changeQuantity = changeQuantity;
+        window.calculateResources = calculateResources;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.removeResource = removeResource;
+
+        console.log('Materialrecycler Panel - Vollständig repariert!');
     </script>
 </body>
 </html>

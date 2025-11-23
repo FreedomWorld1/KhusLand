@@ -149,6 +149,8 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
         }
         
         .logo-icon:hover {
@@ -173,6 +175,8 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            background-size: cover;
+            background-position: center;
         }
         
         .logout-btn {
@@ -223,6 +227,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
         }
         
         .card:hover {
@@ -230,6 +235,18 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
             border-color: #a855f7;
             background: rgba(30, 38, 54, 0.9);
+        }
+        
+        .card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: rgba(101, 119, 149, 0.3);
+            background: rgba(26, 32, 44, 0.8);
         }
         
         .card-icon {
@@ -266,6 +283,28 @@
         .status-online {
             background: #48bb78;
             box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+        
+        .access-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .access-allowed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+        
+        .access-denied {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
         
         .footer {
@@ -548,55 +587,158 @@
             color: #a855f7;
         }
         
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            padding: 1rem;
+        /* Access Restricted Styles */
+        .access-restricted {
             text-align: center;
-            border: 1px solid rgba(168, 85, 247, 0.1);
+            padding: 3rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 101, 101, 0.3);
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0.5rem 0;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .search-box {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(168, 85, 247, 0.2);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
+        .access-restricted h2 {
+            color: #fc8181;
             margin-bottom: 1rem;
         }
 
-        .search-box input {
-            background: transparent;
-            border: none;
+        .access-restricted p {
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Logo Upload Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            color: white;
-            font-size: 0.9rem;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
         }
 
-        .search-box input::placeholder {
-            color: #94a3b8;
+        .modal-overlay.active {
+            display: flex;
         }
 
-        .search-box input:focus {
-            outline: none;
-            box-shadow: none;
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .modal-content h3 {
+            color: #d8b4fe;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+            font-size: 1rem;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Discount Settings Styles */
+        .discount-settings {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .discount-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .discount-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .discount-list {
+            margin-top: 1rem;
+        }
+
+        .discount-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .discount-item-info {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .discount-value {
+            font-weight: bold;
+            color: #a855f7;
+        }
+
+        .discount-label {
+            color: #cbd5e0;
+        }
+
+        .delete-discount {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-discount:hover {
+            background: rgba(245, 101, 101, 0.3);
+        }
+
+        .discount-settings-content {
+            display: none;
+        }
+
+        .discount-settings-content.active {
+            display: block;
         }
     </style>
 </head>
@@ -605,17 +747,17 @@
     <div id="loginPage" class="login-container">
         <div class="logo">💊</div>
         <h1>Kokain Ankauf Login</h1>
-        <p>Bitte melde dich mit Discord an, um auf das Panel zuzugreifen.</p>
+        <p>Bitte mit Discord anmelden um fortzufahren</p>
         
         <div class="error-message" id="errorMessage"></div>
         
-        <button id="discordLoginBtn" class="discord-login-btn">
+        <button id="discordLogin" class="discord-login-btn">
             <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
         
-        <div class="loading" id="loading">
+        <div class="loading" id="loginLoading">
             <div class="spinner"></div>
-            <p>Anmeldung wird vorbereitet...</p>
+            <p style="margin-top: 1rem;">Anmeldung läuft...</p>
         </div>
     </div>
 
@@ -642,213 +784,267 @@
             </div>
         </div>
 
+        <!-- Logo Upload Modal -->
+        <div id="logoUploadModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Logo ändern</h3>
+                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <input type="file" id="logoFile" class="file-input" accept="image/*">
+                <div class="modal-buttons">
+                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
+                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Modal für Logo -->
+        <div id="passwordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort erforderlich</h3>
+                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Modal für Discount Settings -->
+        <div id="discountPasswordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort für Rabatt-Einstellungen</h3>
+                <input type="password" id="discountPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelDiscountPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmDiscountPassword" class="btn-primary">Bestätigen</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <div class="main-container">
-            <div class="page-header">
-                <h1 style="color: #d8b4fe; font-size: 2rem;">Kokain Ankauf</h1>
-                <div class="status-indicators">
-                    <span style="color: #48bb78;">
-                        <i class="fas fa-circle"></i> Alle Systeme Online
-                    </span>
-                </div>
-            </div>
-
-            <!-- Navigation Tabs -->
-            <div class="nav-tabs">
-                <button id="dashboardTab" class="nav-tab active">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </button>
-                <button id="kokainTab" class="nav-tab">
-                    <i class="fas fa-pills"></i> Kokain System
+            <!-- Access Restricted Message (Initially Hidden) -->
+            <div id="accessRestricted" class="access-restricted hidden">
+                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
+                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
+                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Abmelden
                 </button>
             </div>
 
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content active">
-                <!-- System Cards -->
-                <div class="grid-container">
-                    <div class="card" data-page="index.html">
-                        <div class="card-icon">🌿</div>
-                        <h3>Weed Ankauf</h3>
-                        <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite2.html">
-                        <div class="card-icon">💊</div>
-                        <h3>Kokain Ankauf</h3>
-                        <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite3.html">
-                        <div class="card-icon">♻️</div>
-                        <h3>Materialrecycler - Produkte</h3>
-                        <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite4.html">
-                        <div class="card-icon">🔧</div>
-                        <h3>Werkbank Manager</h3>
-                        <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite5.html">
-                        <div class="card-icon">🛣️</div>
-                        <h3>Drogenrouten</h3>
-                        <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
-                    </div>
-
-                    <div class="card" data-page="seite6.html">
-                        <div class="card-icon">🏞️</div>
-                        <h3>KhusLand Management</h3>
-                        <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
-                        <div class="status">
-                            <span class="status-indicator status-online"></span>
-                            System online
-                        </div>
+            <!-- Authorized Content (Initially Hidden) -->
+            <div id="authorizedContent" class="hidden">
+                <div class="page-header">
+                    <h1 style="color: #d8b4fe; font-size: 2rem;">Kokain Ankauf</h1>
+                    <div class="status-indicators">
+                        <span style="color: #48bb78;">
+                            <i class="fas fa-circle"></i> Alle Systeme Online
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Kokain System Tab -->
-            <div id="kokain" class="tab-content">
-                <div class="system-card">
-                    <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-pills"></i> Kokain Ankauf Management
-                    </h3>
-                    
-                    <!-- Discount Selection -->
-                    <div style="margin-bottom: 1.5rem;">
-                        <label style="color: #d8b4fe; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
-                        <div class="discount-grid" id="discountButtons">
-                            <!-- Discount buttons will be generated here -->
-                        </div>
-                    </div>
-                    
-                    <div class="system-form">
-                        <div class="form-group">
-                            <label for="kokainBuyer">Käufer Name</label>
-                            <input type="text" id="kokainBuyer" required placeholder="Name des Käufers">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="kokainSeller">Verkäufer Name</label>
-                            <input type="text" id="kokainSeller" required placeholder="Name des Verkäufers">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="kokainQuantity">Menge (Gramm)</label>
-                            <input type="number" id="kokainQuantity" required placeholder="Menge in Gramm" min="1" value="1">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="kokainCash">Cash Betrag ($)</label>
-                            <input type="number" id="kokainCash" required placeholder="Cash in $" min="1" value="100">
-                        </div>
-                    </div>
-                    
-                    <!-- Price Breakdown -->
-                    <div class="price-breakdown">
-                        <div class="price-row">
-                            <span class="price-label">Gesamtpreis:</span>
-                            <span class="price-value" id="totalPrice">0 $</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Rabatt:</span>
-                            <span class="price-value" id="discountAmount">0% (0 $)</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Verkäufer Anteil:</span>
-                            <span class="price-value seller-share" id="sellerShare">0 $</span>
-                        </div>
-                        <div class="price-row">
-                            <span class="price-label">Käufer Anteil:</span>
-                            <span class="price-value buyer-share" id="buyerShare">0 $</span>
-                        </div>
-                    </div>
-                    
-                    <button type="button" id="saveKokainBtn" class="btn-primary">
-                        <i class="fas fa-save"></i> Ankauf speichern
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <button id="dashboardTab" class="nav-tab active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button id="kokainTab" class="nav-tab">
+                        <i class="fas fa-pills"></i> Kokain System
                     </button>
                 </div>
 
-                <!-- Statistics Section -->
-                <div class="system-card">
-                    <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-chart-bar"></i> Statistiken
-                    </h3>
-                    
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Gesamtumsatz</div>
-                            <div id="totalRevenue" class="stat-value" style="color: #48bb78;">0 $</div>
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <!-- System Cards -->
+                    <div class="grid-container">
+                        <div class="card" data-page="index.html">
+                            <div class="card-icon">🌿</div>
+                            <h3>Weed Ankauf</h3>
+                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Anzahl Transaktionen</div>
-                            <div id="totalTransactions" class="stat-value" style="color: #a855f7;">0</div>
+
+                        <div class="card" data-page="seite2.html">
+                            <div class="card-icon">💊</div>
+                            <h3>Kokain Ankauf</h3>
+                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Ø pro Transaktion</div>
-                            <div id="avgTransaction" class="stat-value" style="color: #ed8936;">0 $</div>
+
+                        <div class="card" data-page="seite3.html">
+                            <div class="card-icon">♻️</div>
+                            <h3>Materialrecycler - Produkte</h3>
+                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Dein Gesamtanteil</div>
-                            <div id="yourTotalShare" class="stat-value" style="color: #4299e1;">0 $</div>
+
+                        <div class="card" data-page="seite4.html">
+                            <div class="card-icon">🔧</div>
+                            <h3>Werkbank Manager</h3>
+                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite5.html">
+                            <div class="card-icon">🛣️</div>
+                            <h3>Drogenrouten</h3>
+                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite6.html">
+                            <div class="card-icon">🏞️</div>
+                            <h3>KhusLand Management</h3>
+                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kokain Transactions Table -->
-                <div class="system-card">
-                    <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                        <i class="fas fa-history"></i> Letzte Kokain Ankäufe
-                    </h3>
-
-                    <!-- Search Box -->
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Suchen nach Käufer/Verkäufer...">
+                <!-- Kokain System Tab -->
+                <div id="kokain" class="tab-content">
+                    <!-- Discount Settings -->
+                    <div class="discount-settings">
+                        <div class="discount-header">
+                            <h3 style="color: #d8b4fe; font-size: 1.5rem;">
+                                <i class="fas fa-percentage"></i> Rabatt Einstellungen
+                            </h3>
+                            <button id="openDiscountSettings" class="btn-primary">
+                                <i class="fas fa-cog"></i> Einstellungen öffnen
+                            </button>
+                        </div>
+                        
+                        <div class="discount-settings-content" id="discountSettingsContent">
+                            <div class="discount-form">
+                                <div class="form-group">
+                                    <label for="discountValue">Rabatt Wert (%)</label>
+                                    <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="discountName">Rabatt Name</label>
+                                    <input type="text" id="discountName" placeholder="Name des Rabatts" value="Kein Rabatt">
+                                </div>
+                                
+                                <button id="addDiscount" class="btn-primary" style="align-self: end;">
+                                    <i class="fas fa-plus"></i> Hinzufügen
+                                </button>
+                            </div>
+                            
+                            <div class="discount-list" id="discountList">
+                                <!-- Discount items will be generated here -->
+                            </div>
+                        </div>
                     </div>
-                    
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Datum</th>
-                                <th>Käufer</th>
-                                <th>Verkäufer</th>
-                                <th>Menge</th>
-                                <th>Rabatt</th>
-                                <th>Gesamt</th>
-                                <th>Verkäufer</th>
-                                <th>Käufer</th>
-                            </tr>
-                        </thead>
-                        <tbody id="kokainTransactions">
-                            <tr>
-                                <td colspan="8" style="text-align: center; color: #a0aec0;">
-                                    Keine Transaktionen vorhanden
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    <div class="system-card">
+                        <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-pills"></i> Kokain Ankauf Management
+                        </h3>
+                        
+                        <!-- Discount Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="color: #d8b4fe; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
+                            <div class="discount-grid" id="discountButtons">
+                                <!-- Discount buttons will be generated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="system-form">
+                            <div class="form-group">
+                                <label for="kokainBuyer">Käufer Name</label>
+                                <input type="text" id="kokainBuyer" required placeholder="Name des Käufers">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="kokainSeller">Verkäufer Name</label>
+                                <input type="text" id="kokainSeller" required placeholder="Name des Verkäufers">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="kokainQuantity">Menge (Gramm)</label>
+                                <input type="number" id="kokainQuantity" required placeholder="Menge in Gramm" min="1" value="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="kokainCash">Cash Betrag ($)</label>
+                                <input type="number" id="kokainCash" required placeholder="Cash in $" min="1" value="100">
+                            </div>
+                        </div>
+                        
+                        <!-- Price Breakdown -->
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span class="price-label">Gesamtpreis:</span>
+                                <span class="price-value" id="totalPrice">0 $</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Rabatt:</span>
+                                <span class="price-value" id="discountAmount">0% (0 $)</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Verkäufer Anteil:</span>
+                                <span class="price-value seller-share" id="sellerShare">0 $</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Käufer Anteil:</span>
+                                <span class="price-value buyer-share" id="buyerShare">0 $</span>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="saveKokainBtn" class="btn-primary">
+                            <i class="fas fa-save"></i> Ankauf speichern
+                        </button>
+                    </div>
+
+                    <!-- Kokain Transactions Table -->
+                    <div class="system-card">
+                        <h3 style="color: #d8b4fe; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-history"></i> Letzte Kokain Ankäufe
+                        </h3>
+                        
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Käufer</th>
+                                    <th>Verkäufer</th>
+                                    <th>Menge</th>
+                                    <th>Rabatt</th>
+                                    <th>Gesamt</th>
+                                    <th>Verkäufer</th>
+                                    <th>Käufer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="kokainTransactions">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
+                                        Keine Transaktionen vorhanden
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -862,10 +1058,16 @@
     <div id="notification" class="notification hidden"></div>
 
     <script type="module">
+        // Discord OAuth Konfiguration
+        const DISCORD_CLIENT_ID = '1432942180770644079';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
         import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
 
         // Firebase Konfiguration
         const firebaseConfig = {
@@ -885,13 +1087,18 @@
         const entriesRef = ref(db,'kokain_entries');
         const discountsRef = ref(db,'kokain_discount_settings');
         const logoSettingsRef = ref(db,'kokain_logo_settings');
+        const logoImageRef = storageRef(storage, 'kokain_logo.png');
 
-        // Cloudflare Worker URL
-        const CLOUDFLARE_WORKER_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
-        // Discord OAuth Konfiguration - DIREKT ZURÜCK ZU seite2.html
-        const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/seite2.html'; // WICHTIG: Gleiche Seite
+        // Seitenspezifische Konfiguration
+        const PAGE_ACCESS_CONFIG = {
+            'seite7.html': 'dashboard',
+            'seite5.html': 'route', 
+            'seite4.html': 'werkbank',
+            'seite3.html': 'materialrecycler',
+            'seite2.html': 'kokain',
+            'index.html': 'weed',
+            'seite6.html': 'management'
+        };
 
         // System Variablen
         const ADMIN_PASSWORD = '1101';
@@ -905,293 +1112,292 @@
         ];
         let logoText = '💊';
         let currentUser = null;
+        let userAccessInfo = null;
+        let discountSettingsUnlocked = false;
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
         const errorMessage = document.getElementById('errorMessage');
-        const loading = document.getElementById('loading');
         const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
         const accessBadge = document.getElementById('accessBadge');
         const headerLogo = document.getElementById('headerLogo');
+        const restrictedUserName = document.getElementById('restrictedUserName');
+        const restrictedPageName = document.getElementById('restrictedPageName');
+        const discordLoginBtn = document.getElementById('discordLogin');
+        const loginLoading = document.getElementById('loginLoading');
+        
+        // Logo Upload Modal Elemente
+        const logoUploadModal = document.getElementById('logoUploadModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const discountPasswordModal = document.getElementById('discountPasswordModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const logoPassword = document.getElementById('logoPassword');
+        const discountPassword = document.getElementById('discountPassword');
+        const logoFile = document.getElementById('logoFile');
+        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const cancelPassword = document.getElementById('cancelPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const cancelDiscountPassword = document.getElementById('cancelDiscountPassword');
+        const confirmDiscountPassword = document.getElementById('confirmDiscountPassword');
+        const saveLogo = document.getElementById('saveLogo');
+        
+        // Discount Settings Elemente
+        const openDiscountSettings = document.getElementById('openDiscountSettings');
+        const discountSettingsContent = document.getElementById('discountSettingsContent');
+        const discountValue = document.getElementById('discountValue');
+        const discountName = document.getElementById('discountName');
+        const addDiscount = document.getElementById('addDiscount');
+        const discountList = document.getElementById('discountList');
         
         // Buttons
-        const discordLoginBtn = document.getElementById('discordLoginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
         const kokainTab = document.getElementById('kokainTab');
         const saveKokainBtn = document.getElementById('saveKokainBtn');
         const kokainQuantity = document.getElementById('kokainQuantity');
         const kokainCash = document.getElementById('kokainCash');
-        const searchInput = document.getElementById('searchInput');
 
-        // Discord OAuth Flow - KORRIGIERT
-        function startDiscordOAuth() {
-            const btn = discordLoginBtn;
-            
-            // Loading anzeigen
-            btn.style.display = 'none';
-            loading.style.display = 'block';
-            errorMessage.style.display = 'none';
-            
-            // Discord OAuth URL - DIREKT ZURÜCK ZU seite2.html
-            const state = generateRandomState();
-            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20email&state=${state}`;
-            
-            // State in localStorage speichern
-            localStorage.setItem('oauth_state', state);
-            
-            // Zu Discord OAuth weiterleiten
-            window.location.href = discordAuthUrl;
+        // Logo Upload Funktionen
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
         }
 
-        // Random State generieren
-        function generateRandomState() {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            logoPassword.value = '';
         }
 
-        // OAuth Callback verarbeiten - AUF DER GLEICHEN SEITE
-        async function handleOAuthCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            const storedState = localStorage.getItem('oauth_state');
-            
-            if (code && state && state === storedState) {
-                try {
-                    loading.style.display = 'block';
-                    
-                    // Token über Cloudflare Worker holen
-                    const tokenResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/token`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            code: code,
-                            redirect_uri: DISCORD_REDIRECT_URI // GLEICHE URL
-                        })
-                    });
-                    
-                    if (!tokenResponse.ok) {
-                        throw new Error('Token request failed');
-                    }
-                    
-                    const tokenData = await tokenResponse.json();
-                    
-                    if (tokenData.error) {
-                        throw new Error(tokenData.error);
-                    }
-                    
-                    // User Info über Cloudflare Worker verifizieren
-                    const userResponse = await fetch(`${CLOUDFLARE_WORKER_URL}/verify-user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            accessToken: tokenData.access_token,
-                            currentPage: 'kokain'
-                        })
-                    });
-                    
-                    if (!userResponse.ok) {
-                        throw new Error('User verification failed');
-                    }
-                    
-                    const userData = await userResponse.json();
-                    
-                    if (userData.error) {
-                        throw new Error(userData.error);
-                    }
-                    
-                    if (userData.isAuthorized && userData.hasPageAccess) {
-                        // User in localStorage speichern
-                        currentUser = {
-                            id: userData.user.id,
-                            username: userData.user.username,
-                            ...userData.accessInfo
-                        };
-                        
-                        localStorage.setItem('current_user', JSON.stringify(currentUser));
-                        localStorage.setItem('was_logged_in', 'true');
-                        
-                        // URL bereinigen (Code entfernen)
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        
-                        // Hauptinhalt anzeigen
-                        showMainContent(currentUser);
-                        showNotification(`Erfolgreich eingeloggt als ${currentUser.username}`, 'success');
-                        
-                    } else {
-                        showError('Dein Discord Account hat keinen Zugriff auf das Kokain System.');
-                    }
-                    
-                } catch (error) {
-                    console.error('OAuth Error:', error);
-                    showError('Fehler bei der Anmeldung: ' + error.message);
-                } finally {
-                    loading.style.display = 'none';
-                    discordLoginBtn.style.display = 'block';
-                    localStorage.removeItem('oauth_state');
-                }
-            }
+        function openLogoUploadModal() {
+            logoUploadModal.classList.add('active');
         }
 
-        // Notification System
-        function showNotification(message, type = 'info', duration = 4000) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.remove('hidden');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.classList.add('hidden');
-                }, 300);
-            }, duration);
+        function closeLogoUploadModal() {
+            logoUploadModal.classList.remove('active');
+            adminPassword.value = '';
+            logoFile.value = '';
         }
 
-        // Fehler anzeigen
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            discordLoginBtn.style.display = 'block';
-            loading.style.display = 'none';
-        }
-
-        // Hauptinhalt anzeigen
-        function showMainContent(user) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            
-            // Benutzerinfo anzeigen
-            if (user) {
-                userWelcome.textContent = `Willkommen, ${user.username}`;
-                // Ersten Buchstaben des Usernamens im Avatar anzeigen
-                const firstLetter = user.username.charAt(0).toUpperCase();
-                document.getElementById('userAvatar').innerHTML = `<span>${firstLetter}</span>`;
-            }
-            
-            // Access Badge anzeigen
-            accessBadge.textContent = user.message;
-            accessBadge.classList.remove('hidden');
-            
-            if (user.isPermanent) {
-                accessBadge.className = 'access-badge access-permanent';
+        function verifyLogoPassword() {
+            const password = logoPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                closePasswordModal();
+                openLogoUploadModal();
             } else {
-                accessBadge.className = 'access-badge access-temporary';
-            }
-            
-            // Preise initial berechnen
-            updateKokainPrices();
-            
-            // Firebase Daten laden
-            loadKokainEntries();
-            loadDiscountSettings();
-            loadLogoSettings();
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Möchten Sie sich wirklich abmelden?')) {
-                currentUser = null;
-                localStorage.removeItem('current_user');
-                localStorage.removeItem('was_logged_in');
-                
-                mainContent.classList.add('hidden');
-                loginPage.classList.remove('hidden');
-                
-                // Login-Button wieder anzeigen
-                discordLoginBtn.style.display = 'block';
-                loading.style.display = 'none';
-                errorMessage.style.display = 'none';
-                accessBadge.classList.add('hidden');
-                
-                showNotification('Erfolgreich ausgeloggt', 'info');
+                showNotification('Falsches Passwort!', 'error');
             }
         }
 
-        // Bereits eingeloggten Benutzer prüfen
-        function checkExistingLogin() {
-            const userData = localStorage.getItem('current_user');
-            const wasLoggedIn = localStorage.getItem('was_logged_in');
-            
-            if (wasLoggedIn === 'true' && userData) {
-                const user = JSON.parse(userData);
-                currentUser = user;
-                showMainContent(user);
-                showNotification(`Willkommen zurück, ${user.username}`, 'info');
+        // Discount Settings Funktionen
+        function openDiscountPasswordModal() {
+            discountPasswordModal.classList.add('active');
+        }
+
+        function closeDiscountPasswordModal() {
+            discountPasswordModal.classList.remove('active');
+            discountPassword.value = '';
+        }
+
+        function verifyDiscountPassword() {
+            const password = discountPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                discountSettingsUnlocked = true;
+                discountSettingsContent.classList.add('active');
+                openDiscountSettings.classList.add('hidden');
+                closeDiscountPasswordModal();
+                loadDiscountSettings();
+                showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
+            } else {
+                showNotification('Falsches Passwort!', 'error');
             }
         }
 
-        // Tab Navigation
-        function switchTab(tabName) {
-            // Alle Tabs ausblenden
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Alle Tab-Buttons zurücksetzen
-            document.querySelectorAll('.nav-tab').forEach(button => {
-                button.classList.remove('active');
-            });
-            
-            // Gewählten Tab anzeigen
-            document.getElementById(tabName).classList.add('active');
-            
-            // Aktiven Button markieren
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            
-            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+        function lockDiscountSettings() {
+            discountSettingsUnlocked = false;
+            discountSettingsContent.classList.remove('active');
+            openDiscountSettings.classList.remove('hidden');
         }
 
-        function getTabDisplayName(tabName) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'kokain': 'Kokain System'
-            };
-            return names[tabName] || tabName;
+        async function handleLogoUpload() {
+            const password = adminPassword.value;
+            const file = logoFile.files[0];
+
+            if (password !== ADMIN_PASSWORD) {
+                showNotification('Falsches Admin Passwort!', 'error');
+                return;
+            }
+
+            if (!file) {
+                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
+                return;
+            }
+
+            try {
+                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
+                saveLogo.disabled = true;
+
+                // Bild in Firebase Storage hochladen
+                await uploadBytes(logoImageRef, file);
+                
+                // Download URL holen
+                const downloadURL = await getDownloadURL(logoImageRef);
+                
+                // Logo in der Datenbank speichern
+                await set(logoSettingsRef, {
+                    logoUrl: downloadURL,
+                    uploadedAt: new Date().toISOString(),
+                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
+                });
+
+                // Logo sofort anwenden
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+
+                showNotification('Logo erfolgreich hochgeladen!', 'success');
+                closeLogoUploadModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Hochladen des Logos:', error);
+                showNotification('Fehler beim Hochladen des Logos!', 'error');
+            } finally {
+                saveLogo.innerHTML = 'Logo speichern';
+                saveLogo.disabled = false;
+            }
         }
 
-        // Navigation zu anderen Seiten
-        function navigateTo(page) {
-            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
-        }
-
-        // Kokain Price Calculation
-        function updateKokainPrices() {
-            const quantity = parseInt(kokainQuantity.value) || 0;
-            const cash = parseInt(kokainCash.value) || 0;
-            
-            const totalPrice = cash;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-            
-            // Update display
-            document.getElementById('totalPrice').textContent = `${totalPrice} $`;
-            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${Math.round(discountValue)} $)`;
-            document.getElementById('sellerShare').textContent = `${Math.round(sellerShare)} $`;
-            document.getElementById('buyerShare').textContent = `${Math.round(buyerShare)} $`;
-        }
-
-        // Discount System
+        // Discount Settings Funktionen
         function loadDiscountSettings() {
             onValue(discountsRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    availableDiscounts = Object.values(data);
+                    availableDiscounts = [];
+                    if (Array.isArray(data)) {
+                        availableDiscounts = data;
+                    } else {
+                        availableDiscounts = Object.values(data);
+                    }
+                    
                     renderDiscountButtons();
+                    if (discountSettingsUnlocked) {
+                        renderDiscountList();
+                    }
                 } else {
                     set(discountsRef, availableDiscounts);
                 }
             });
+        }
+
+        function renderDiscountList() {
+            discountList.innerHTML = '';
+            
+            if (availableDiscounts.length === 0) {
+                discountList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte vorhanden</p>';
+                return;
+            }
+            
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+                const discountItem = document.createElement('div');
+                discountItem.className = 'discount-item';
+                discountItem.innerHTML = `
+                    <div class="discount-item-info">
+                        <span class="discount-value">${discount.value}%</span>
+                        <span class="discount-label">${discount.label}</span>
+                    </div>
+                    <button class="delete-discount" data-index="${index}">
+                        <i class="fas fa-trash"></i> Löschen
+                    </button>
+                `;
+                discountList.appendChild(discountItem);
+            });
+
+            document.querySelectorAll('.delete-discount').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteDiscount(index);
+                });
+            });
+        }
+
+        function addNewDiscount() {
+            if (!discountSettingsUnlocked) {
+                showNotification('Bitte zuerst Passwort eingeben!', 'error');
+                return;
+            }
+
+            const value = parseInt(discountValue.value);
+            const name = discountName.value.trim();
+
+            if (isNaN(value) || value < 0 || value > 100) {
+                showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein!', 'error');
+                return;
+            }
+
+            if (!name) {
+                showNotification('Bitte geben Sie einen Namen für den Rabatt ein!', 'error');
+                return;
+            }
+
+            const newDiscount = {
+                value: value,
+                label: name
+            };
+
+            const exists = availableDiscounts.some(d => d.value === value && d.label === name);
+            if (exists) {
+                showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
+                return;
+            }
+
+            availableDiscounts.push(newDiscount);
+            saveDiscountsToFirebase();
+            
+            discountValue.value = '0';
+            discountName.value = 'Kein Rabatt';
+
+            showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
+        }
+
+        function deleteDiscount(index) {
+            if (!discountSettingsUnlocked) {
+                showNotification('Bitte zuerst Passwort eingeben!', 'error');
+                return;
+            }
+
+            if (index >= 0 && index < availableDiscounts.length) {
+                const discount = availableDiscounts[index];
+                
+                if (discount.value === 0 && discount.label === 'Kein Rabatt') {
+                    showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
+                    return;
+                }
+                
+                availableDiscounts.splice(index, 1);
+                saveDiscountsToFirebase();
+                showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');
+            }
+        }
+
+        function saveDiscountsToFirebase() {
+            set(discountsRef, availableDiscounts)
+                .then(() => {
+                    renderDiscountButtons();
+                    if (discountSettingsUnlocked) {
+                        renderDiscountList();
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler beim Speichern der Rabatte:', error);
+                    showNotification('Fehler beim Speichern der Rabatte!', 'error');
+                });
         }
 
         function renderDiscountButtons() {
@@ -1203,6 +1409,7 @@
                 button.type = 'button';
                 button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
                 button.setAttribute('data-discount', discount.value);
+                button.setAttribute('data-label', discount.label);
                 button.innerHTML = `
                     <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
                     <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
@@ -1228,8 +1435,482 @@
             });
         }
 
+        // Globales Logo laden
+        async function loadGlobalLogo() {
+            try {
+                const downloadURL = await getDownloadURL(logoImageRef);
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+            } catch (error) {
+                console.log('Kein globales Logo gefunden, verwende Standard');
+            }
+        }
+
+        // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
+        async function hasAccess(pageKey) {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token,
+                        currentPage: pageKey
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.hasPageAccess;
+                
+            } catch (error) {
+                console.error('Fehler bei Zugriffsprüfung:', error);
+                return false;
+            }
+        }
+
+        // BENUTZER EXISTENZ PRÜFEN
+        async function checkUserExists() {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.isAuthorized;
+                
+            } catch (error) {
+                console.error('Fehler bei Benutzerprüfung:', error);
+                return false;
+            }
+        }
+
+        // DISCORD AVATAR LADEN
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = '';
+            } else {
+                const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
+        }
+
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+        }
+
+        // Discord OAuth Login
+        function startDiscordOAuth() {
+            const scope = 'identify';
+            const state = generateRandomState();
+            
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
+            
+            window.location.href = authUrl.toString();
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        async function exchangeCodeForToken(code) {
+            try {
+                loginLoading.style.display = 'block';
+                
+                const response = await fetch(`${BACKEND_URL}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        code, 
+                        redirect_uri: DISCORD_REDIRECT_URI
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Worker responded with status ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.access_token) {
+                    await verifyUser(data.access_token);
+                } else {
+                    throw new Error('Kein Access Token erhalten');
+                }
+            } catch (error) {
+                console.error('Fehler beim Token-Austausch:', error);
+                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        async function verifyUser(accessToken) {
+            try {
+                const currentPage = getCurrentPageKey();
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken,
+                        currentPage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed');
+                }
+
+                const data = await response.json();
+
+                if (data.isAuthorized) {
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    
+                    const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        ...userAccessInfo
+                    };
+                    
+                    await loadDiscordAvatar(user);
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
+                } else {
+                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            } finally {
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        // Zugriff verweigert anzeigen
+        function showAccessRestricted(user, pageKey) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserName.textContent = user.username;
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
+        }
+
+        // Login-Seite anzeigen
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.add('hidden');
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management'
+            };
+            return names[pageKey] || pageKey;
+        }
+
+        // Navigation zu anderen Seiten mit Zugriffsprüfung
+        async function navigateToWithAccessCheck(page) {
+            if (!currentUser) {
+                showNotification('Bitte zuerst anmelden', 'error');
+                return;
+            }
+            
+            const userExists = await checkUserExists();
+            if (!userExists) {
+                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
+                logout();
+                return;
+            }
+            
+            const pageKey = PAGE_ACCESS_CONFIG[page];
+            if (!pageKey) {
+                showNotification('Ungültige Seite', 'error');
+                return;
+            }
+            
+            const hasAccessToPage = await hasAccess(pageKey);
+            if (!hasAccessToPage) {
+                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                return;
+            }
+            
+            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
+        }
+
+        // Autorisierten Inhalt anzeigen
+        function showAuthorizedContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
+            
+            userWelcome.textContent = `Willkommen, ${user.username}`;
+            
+            if (userAccessInfo && userAccessInfo.message) {
+                accessBadge.textContent = userAccessInfo.message;
+                accessBadge.classList.remove('hidden');
+                
+                if (userAccessInfo.isPermanent) {
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
+            updateCardAccess();
+            updateKokainPrices();
+            loadKokainEntries();
+            loadDiscountSettings();
+            loadGlobalLogo();
+        }
+
+        // Karten-Zugriffsanzeige aktualisieren
+        async function updateCardAccess() {
+            if (!currentUser) return;
+            
+            const cards = document.querySelectorAll('.card');
+            
+            for (const card of cards) {
+                const page = card.getAttribute('data-page');
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                
+                if (pageKey) {
+                    const hasAccessToPage = await hasAccess(pageKey);
+                    
+                    const existingStatus = card.querySelector('.access-status');
+                    if (existingStatus) {
+                        existingStatus.remove();
+                    }
+                    
+                    if (hasAccessToPage) {
+                        card.classList.remove('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-allowed';
+                        statusBadge.textContent = '✓ Zugriff';
+                        card.appendChild(statusBadge);
+                    } else {
+                        card.classList.add('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-denied';
+                        statusBadge.textContent = '✗ Kein Zugriff';
+                        card.appendChild(statusBadge);
+                    }
+                }
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, duration);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            userAccessInfo = null;
+            discountSettingsUnlocked = false;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
+            showLoginPage();
+            accessBadge.classList.add('hidden');
+            
+            showNotification('Erfolgreich ausgeloggt', 'info');
+        }
+
+        // Session prüfen
+        async function checkExistingLogin() {
+            const userData = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const storedAccessInfo = localStorage.getItem('user_access_info');
+            
+            if (userData && token) {
+                try {
+                    const user = JSON.parse(userData);
+                    userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
+                    
+                    const currentPage = getCurrentPageKey();
+                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            accessToken: token,
+                            currentPage
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.isAuthorized) {
+                            currentUser = {
+                                id: user.id,
+                                username: user.username,
+                                ...userAccessInfo
+                            };
+                            
+                            await loadDiscordAvatar(user);
+                            
+                            if (data.hasPageAccess) {
+                                showAuthorizedContent(currentUser);
+                                showNotification(`Willkommen zurück, ${user.username}`, 'info');
+                            } else {
+                                showAccessRestricted(currentUser, currentPage);
+                            }
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Fehler beim Laden der Benutzerdaten:', e);
+                }
+            }
+            
+            showLoginPage();
+        }
+
+        // Tab Navigation
+        async function switchTab(tabName) {
+            const hasAccessToTab = await hasAccess(tabName);
+            if (!hasAccessToTab) {
+                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
+                return;
+            }
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            if (tabName !== 'kokain') {
+                lockDiscountSettings();
+            }
+            
+            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+        }
+
+        function getTabDisplayName(tabName) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'kokain': 'Kokain System'
+            };
+            return names[tabName] || tabName;
+        }
+
+        // Kokain Price Calculation
+        function updateKokainPrices() {
+            const quantity = parseInt(kokainQuantity.value) || 0;
+            const cash = parseInt(kokainCash.value) || 0;
+            
+            const totalPrice = cash;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
+            
+            document.getElementById('totalPrice').textContent = `${totalPrice} $`;
+            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${Math.round(discountValue)} $)`;
+            document.getElementById('sellerShare').textContent = `${Math.round(sellerShare)} $`;
+            document.getElementById('buyerShare').textContent = `${Math.round(buyerShare)} $`;
+        }
+
         // Handle Kokain Form Submission
-        function handleKokainSubmit() {
+        async function handleKokainSubmit() {
+            const hasAccessToKokain = await hasAccess('kokain');
+            if (!hasAccessToKokain) {
+                showNotification('Zugriff auf Kokain System wurde für deinen Account deaktiviert', 'error');
+                return;
+            }
+            
             const buyer = document.getElementById('kokainBuyer').value.trim();
             const seller = document.getElementById('kokainSeller').value.trim();
             const quantity = parseInt(kokainQuantity.value);
@@ -1304,33 +1985,25 @@
                 
                 entries.sort((a, b) => b.timestamp - a.timestamp);
                 renderKokainTransactions();
-                updateStatistics();
             });
         }
 
         function renderKokainTransactions() {
             const tbody = document.getElementById('kokainTransactions');
-            const searchTerm = searchInput.value.toLowerCase();
-            
-            const filteredEntries = entries.filter(entry => 
-                entry.buyer.toLowerCase().includes(searchTerm) || 
-                entry.seller.toLowerCase().includes(searchTerm)
-            );
-            
             tbody.innerHTML = '';
             
-            if (filteredEntries.length === 0) {
+            if (entries.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="8" style="text-align: center; color: #a0aec0;">
-                            ${entries.length === 0 ? 'Keine Transaktionen vorhanden' : 'Keine passenden Ergebnisse'}
+                            Keine Transaktionen vorhanden
                         </td>
                     </tr>
                 `;
                 return;
             }
             
-            const recentEntries = filteredEntries.slice(0, 10);
+            const recentEntries = entries.slice(0, 10);
             
             recentEntries.forEach(entry => {
                 const row = tbody.insertRow();
@@ -1347,87 +2020,64 @@
             });
         }
 
-        function updateStatistics() {
-            if (entries.length === 0) {
-                document.getElementById('totalRevenue').textContent = '0 $';
-                document.getElementById('totalTransactions').textContent = '0';
-                document.getElementById('avgTransaction').textContent = '0 $';
-                document.getElementById('yourTotalShare').textContent = '0 $';
-                return;
-            }
-            
-            let totalRevenue = 0;
-            let totalYourShare = 0;
-            
-            entries.forEach(entry => {
-                totalRevenue += entry.cash;
-                totalYourShare += entry.buyerShare;
-            });
-            
-            const avgTransaction = totalRevenue / entries.length;
-            
-            document.getElementById('totalRevenue').textContent = `${Math.round(totalRevenue)} $`;
-            document.getElementById('totalTransactions').textContent = entries.length;
-            document.getElementById('avgTransaction').textContent = `${Math.round(avgTransaction)} $`;
-            document.getElementById('yourTotalShare').textContent = `${Math.round(totalYourShare)} $`;
-        }
-
         // Logo Einstellungen
         function loadLogoSettings() {
             onValue(logoSettingsRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data && data.logoText) {
                     logoText = data.logoText;
-                    updateLogoDisplay();
                 }
             });
         }
 
-        function updateLogoDisplay() {
-            headerLogo.textContent = logoText;
-        }
-
         // Event Listeners initialisieren
         function initializeEventListeners() {
-            // Login Button - MIT KORRIGIERTER REDIRECT URI
             discordLoginBtn.addEventListener('click', startDiscordOAuth);
-            
-            // Logout Button
             logoutBtn.addEventListener('click', logout);
-            
-            // Tab Buttons
+            restrictedLogoutBtn.addEventListener('click', logout);
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
             kokainTab.addEventListener('click', () => switchTab('kokain'));
             
-            // Dashboard Cards
+            // Logo Upload Event Listeners
+            headerLogo.addEventListener('click', openPasswordModal);
+            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            cancelPassword.addEventListener('click', closePasswordModal);
+            confirmPassword.addEventListener('click', verifyLogoPassword);
+            saveLogo.addEventListener('click', handleLogoUpload);
+            
+            // Discount Settings Event Listeners
+            openDiscountSettings.addEventListener('click', openDiscountPasswordModal);
+            cancelDiscountPassword.addEventListener('click', closeDiscountPasswordModal);
+            confirmDiscountPassword.addEventListener('click', verifyDiscountPassword);
+            addDiscount.addEventListener('click', addNewDiscount);
+            
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    navigateTo(page);
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
                 });
             });
             
-            // Kokain System
             kokainQuantity.addEventListener('input', updateKokainPrices);
             kokainCash.addEventListener('input', updateKokainPrices);
             saveKokainBtn.addEventListener('click', handleKokainSubmit);
-            searchInput.addEventListener('input', renderKokainTransactions);
         }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             initializeEventListeners();
+            checkExistingLogin();
             
-            // OAuth Callback verarbeiten falls in URL
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('code')) {
-                handleOAuthCallback();
-            } else {
-                checkExistingLogin();
+            const code = urlParams.get('code');
+            if (code) {
+                exchangeCodeForToken(code);
             }
         });
 
-        console.log('Kokain Ankauf Panel mit korrigierter Discord Auth geladen!');
+        console.log('Kokain Ankauf Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
     </script>
 </body>
 </html>

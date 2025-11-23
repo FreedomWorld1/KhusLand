@@ -676,6 +676,13 @@
             border: 1px solid rgba(101, 119, 149, 0.3);
         }
 
+        .discount-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
         .discount-form {
             display: grid;
             grid-template-columns: 1fr 1fr auto;
@@ -794,6 +801,18 @@
             </div>
         </div>
 
+        <!-- Password Modal für Discount Settings -->
+        <div id="discountPasswordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort für Rabatt-Einstellungen</h3>
+                <input type="password" id="discountPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelDiscountPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmDiscountPassword" class="btn-primary">Bestätigen</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <div class="main-container">
             <!-- Access Restricted Message (Initially Hidden) -->
@@ -898,11 +917,16 @@
                 <div id="weed" class="tab-content">
                     <!-- Discount Settings -->
                     <div class="discount-settings">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-percentage"></i> Rabatt Einstellungen
-                        </h3>
+                        <div class="discount-header">
+                            <h3 style="color: #90cdf4; font-size: 1.5rem;">
+                                <i class="fas fa-percentage"></i> Rabatt Einstellungen
+                            </h3>
+                            <button id="openDiscountSettings" class="btn-primary">
+                                <i class="fas fa-cog"></i> Einstellungen öffnen
+                            </button>
+                        </div>
                         
-                        <div class="discount-form">
+                        <div class="discount-form hidden" id="discountForm">
                             <div class="form-group">
                                 <label for="discountValue">Rabatt Wert (%)</label>
                                 <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
@@ -1075,6 +1099,7 @@
         let logoText = 'A';
         let currentUser = null;
         let userAccessInfo = null;
+        let discountSettingsUnlocked = false;
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -1094,15 +1119,21 @@
         // Logo Upload Modal Elemente
         const logoUploadModal = document.getElementById('logoUploadModal');
         const passwordModal = document.getElementById('passwordModal');
+        const discountPasswordModal = document.getElementById('discountPasswordModal');
         const adminPassword = document.getElementById('adminPassword');
         const logoPassword = document.getElementById('logoPassword');
+        const discountPassword = document.getElementById('discountPassword');
         const logoFile = document.getElementById('logoFile');
         const cancelLogoUpload = document.getElementById('cancelLogoUpload');
         const cancelPassword = document.getElementById('cancelPassword');
         const confirmPassword = document.getElementById('confirmPassword');
+        const cancelDiscountPassword = document.getElementById('cancelDiscountPassword');
+        const confirmDiscountPassword = document.getElementById('confirmDiscountPassword');
         const saveLogo = document.getElementById('saveLogo');
         
         // Discount Settings Elemente
+        const openDiscountSettings = document.getElementById('openDiscountSettings');
+        const discountForm = document.getElementById('discountForm');
         const discountValue = document.getElementById('discountValue');
         const discountName = document.getElementById('discountName');
         const addDiscount = document.getElementById('addDiscount');
@@ -1144,6 +1175,35 @@
             } else {
                 showNotification('Falsches Passwort!', 'error');
             }
+        }
+
+        // Discount Settings Funktionen
+        function openDiscountPasswordModal() {
+            discountPasswordModal.classList.add('active');
+        }
+
+        function closeDiscountPasswordModal() {
+            discountPasswordModal.classList.remove('active');
+            discountPassword.value = '';
+        }
+
+        function verifyDiscountPassword() {
+            const password = discountPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                discountSettingsUnlocked = true;
+                discountForm.classList.remove('hidden');
+                openDiscountSettings.classList.add('hidden');
+                closeDiscountPasswordModal();
+                showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
+            } else {
+                showNotification('Falsches Passwort!', 'error');
+            }
+        }
+
+        function lockDiscountSettings() {
+            discountSettingsUnlocked = false;
+            discountForm.classList.add('hidden');
+            openDiscountSettings.classList.remove('hidden');
         }
 
         async function handleLogoUpload() {
@@ -1224,9 +1284,12 @@
                         <span class="discount-value">${discount.value}%</span>
                         <span class="discount-label">${discount.label}</span>
                     </div>
-                    <button class="delete-discount" data-index="${index}">
-                        <i class="fas fa-trash"></i> Löschen
-                    </button>
+                    ${discountSettingsUnlocked ? 
+                        `<button class="delete-discount" data-index="${index}">
+                            <i class="fas fa-trash"></i> Löschen
+                        </button>` : 
+                        `<span style="color: #a0aec0; font-size: 0.8rem;">Passwort erforderlich</span>`
+                    }
                 `;
                 discountList.appendChild(discountItem);
             });
@@ -1241,6 +1304,11 @@
         }
 
         function addNewDiscount() {
+            if (!discountSettingsUnlocked) {
+                showNotification('Bitte zuerst Passwort eingeben!', 'error');
+                return;
+            }
+
             const value = parseInt(discountValue.value);
             const name = discountName.value.trim();
 
@@ -1276,6 +1344,11 @@
         }
 
         function deleteDiscount(index) {
+            if (!discountSettingsUnlocked) {
+                showNotification('Bitte zuerst Passwort eingeben!', 'error');
+                return;
+            }
+
             if (index >= 0 && index < availableDiscounts.length) {
                 const discount = availableDiscounts[index];
                 availableDiscounts.splice(index, 1);
@@ -1342,7 +1415,7 @@
             }
         }
 
-        // [Rest des Codes bleibt gleich - nur die Event Listener wurden angepasst]
+        // [Rest des Codes bleibt gleich...]
 
         // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
         async function hasAccess(pageKey) {
@@ -1689,6 +1762,7 @@
         function logout() {
             currentUser = null;
             userAccessInfo = null;
+            discountSettingsUnlocked = false;
             localStorage.removeItem('discord_user');
             localStorage.removeItem('discord_access_token');
             localStorage.removeItem('user_access_info');
@@ -1775,6 +1849,11 @@
             
             document.getElementById(tabName).classList.add('active');
             document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Rabatt-Einstellungen zurücksetzen beim Tab-Wechsel
+            if (tabName !== 'weed') {
+                lockDiscountSettings();
+            }
             
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
@@ -1944,6 +2023,9 @@
             saveLogo.addEventListener('click', handleLogoUpload);
             
             // Discount Settings Event Listeners
+            openDiscountSettings.addEventListener('click', openDiscountPasswordModal);
+            cancelDiscountPassword.addEventListener('click', closeDiscountPasswordModal);
+            confirmDiscountPassword.addEventListener('click', verifyDiscountPassword);
             addDiscount.addEventListener('click', addNewDiscount);
             
             document.querySelectorAll('.card').forEach(card => {
@@ -1971,7 +2053,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Mit Passwort-geschütztem Logo Upload und Rabatt-Einstellungen!');
+        console.log('KhusLand Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
     </script>
 </body>
 </html>

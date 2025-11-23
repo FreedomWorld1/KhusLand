@@ -1350,10 +1350,10 @@
                 label: name
             };
 
-            // Prüfen ob Rabatt mit gleichem Wert bereits existiert
-            const exists = availableDiscounts.some(d => d.value === value);
+            // Prüfen ob Rabatt mit gleichem Wert UND Namen bereits existiert
+            const exists = availableDiscounts.some(d => d.value === value && d.label === name);
             if (exists) {
-                showNotification('Ein Rabatt mit diesem Wert existiert bereits!', 'error');
+                showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
                 return;
             }
 
@@ -1376,7 +1376,7 @@
                 const discount = availableDiscounts[index];
                 
                 // Verhindere das Löschen des Standard-Rabatts (0%)
-                if (discount.value === 0) {
+                if (discount.value === 0 && discount.label === 'Kein Rabatt') {
                     showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
                     return;
                 }
@@ -1410,6 +1410,7 @@
                 button.type = 'button';
                 button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
                 button.setAttribute('data-discount', discount.value);
+                button.setAttribute('data-label', discount.label);
                 button.innerHTML = `
                     <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
                     <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>

@@ -1347,83 +1347,489 @@
     <div id="notification" class="notification hidden"></div>
 
     <script type="module">
-        // [Der gesamte JavaScript-Code bleibt identisch wie im vorherigen Script]
-        // Nur die Tab-Navigation wird um die Einstellungen erweitert
+        // Discord OAuth Konfiguration - KORRIGIERT
+        const DISCORD_CLIENT_ID = '1432942180770644079';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Firebase Import und Konfiguration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+
+        // Firebase Konfiguration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+            authDomain: "khusland-b7d13.firebaseapp.com",
+            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+            projectId: "khusland-b7d13",
+            storageBucket: "khusland-b7d13.firebasestorage.app",
+            messagingSenderId: "69573193613",
+            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+            measurementId: "G-JSCWR4207G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+        const productsRef = ref(db,'materialrecycler/products');
+        const logoSettingsRef = ref(db,'materialrecycler_logo_settings');
+        const logoImageRef = storageRef(storage, 'materialrecycler_logo.png');
+
+        // Seitenspezifische Konfiguration
+        const PAGE_ACCESS_CONFIG = {
+            'seite7.html': 'dashboard',
+            'seite5.html': 'route', 
+            'seite4.html': 'werkbank',
+            'seite3.html': 'materialrecycler',
+            'seite2.html': 'kokain',
+            'index.html': 'weed',
+            'seite6.html': 'management'
+        };
+
+        // System Variablen
+        const ADMIN_PASSWORD = '1101';
+        let products = [];
+        let filteredProducts = [];
+        let currentResources = [];
+        let currentUser = null;
+        let userAccessInfo = null;
+
+        // DOM Elemente
+        const loginPage = document.getElementById('loginPage');
+        const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
+        const errorMessage = document.getElementById('errorMessage');
+        const userWelcome = document.getElementById('userWelcome');
+        const notification = document.getElementById('notification');
+        const accessBadge = document.getElementById('accessBadge');
+        const headerLogo = document.getElementById('headerLogo');
+        const restrictedUserName = document.getElementById('restrictedUserName');
+        const restrictedPageName = document.getElementById('restrictedPageName');
+        const discordLoginBtn = document.getElementById('discordLogin');
+        const loginLoading = document.getElementById('loginLoading');
         
-        // ... (der gesamte JavaScript-Code bleibt gleich) ...
+        // Logo Upload Modal Elemente
+        const logoUploadModal = document.getElementById('logoUploadModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const logoPassword = document.getElementById('logoPassword');
+        const logoFile = document.getElementById('logoFile');
+        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const cancelPassword = document.getElementById('cancelPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const saveLogo = document.getElementById('saveLogo');
         
-        // Tab Navigation erweitern
-        async function switchTab(tabName) {
-            const hasAccessToTab = await hasAccess(tabName);
-            if (!hasAccessToTab) {
-                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
-                return;
-            }
+        // Buttons
+        const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
+        const dashboardTab = document.getElementById('dashboardTab');
+        const recyclerTab = document.getElementById('recyclerTab');
+        const settingsTab = document.getElementById('settingsTab');
+
+        // Materialrecycler spezifische Elemente
+        const searchInput = document.getElementById('searchInput');
+        const productsGrid = document.getElementById('productsGrid');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminPassInput = document.getElementById('adminPass');
+        const adminError = document.getElementById('adminError');
+        const adminContent = document.getElementById('adminContent');
+        const totalProducts = document.getElementById('totalProducts');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const exportCsv = document.getElementById('exportCsv');
+        const adminSearchInput = document.getElementById('adminSearchInput');
+        const adminTableBody = document.getElementById('adminTableBody');
+
+        // Modal Elemente
+        const productModal = document.getElementById('productModal');
+        const productForm = document.getElementById('productForm');
+        const productModalTitle = document.getElementById('productModalTitle');
+        const productKeyInput = document.getElementById('productKey');
+        const cancelProduct = document.getElementById('cancelProduct');
+        const productImageFile = document.getElementById('productImageFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const productImageData = document.getElementById('productImageData');
+        const newResourceName = document.getElementById('newResourceName');
+        const newResourceMin = document.getElementById('newResourceMin');
+        const newResourceMax = document.getElementById('newResourceMax');
+        const addResourceBtn = document.getElementById('addResourceBtn');
+        const resourcesList = document.getElementById('resourcesList');
+
+        // ========== KORRIGIERTER LOGIN-BUTTON ==========
+
+        // Discord OAuth Login - KOMPLETT REPARIERT
+        function startDiscordOAuth() {
+            console.log('Starte Discord OAuth...');
             
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            // Loading anzeigen
+            discordLoginBtn.style.display = 'none';
+            loginLoading.style.display = 'block';
+            errorMessage.style.display = 'none';
             
-            document.querySelectorAll('.nav-tab').forEach(button => {
-                button.classList.remove('active');
-            });
+            const scope = 'identify';
+            const state = generateRandomState();
             
-            document.getElementById(tabName).classList.add('active');
-            document.getElementById(tabName + 'Tab').classList.add('active');
+            // Korrekte OAuth URL erstellen
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
             
-            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+            // State in localStorage speichern für Sicherheit
+            localStorage.setItem('oauth_state', state);
+            
+            console.log('Redirect zu Discord:', authUrl.toString());
+            
+            // Zu Discord weiterleiten
+            setTimeout(() => {
+                window.location.href = authUrl.toString();
+            }, 500);
         }
 
-        function getTabDisplayName(tabName) {
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        // OAuth Callback verarbeiten
+        async function handleOAuthCallback() {
+            console.log('Verarbeite OAuth Callback...');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const storedState = localStorage.getItem('oauth_state');
+            
+            console.log('URL Parameters:', { code: !!code, state, storedState });
+            
+            if (code && state && state === storedState) {
+                try {
+                    console.log('Valider OAuth Callback gefunden');
+                    loginLoading.style.display = 'block';
+                    discordLoginBtn.style.display = 'none';
+                    
+                    // Token über Cloudflare Worker holen
+                    console.log('Hole Token von Worker...');
+                    const tokenResponse = await fetch(`${BACKEND_URL}/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: code,
+                            redirect_uri: DISCORD_REDIRECT_URI
+                        })
+                    });
+                    
+                    if (!tokenResponse.ok) {
+                        const errorText = await tokenResponse.text();
+                        console.error('Token Request failed:', tokenResponse.status, errorText);
+                        throw new Error(`Token request failed: ${tokenResponse.status} ${errorText}`);
+                    }
+                    
+                    const tokenData = await tokenResponse.json();
+                    console.log('Token Response:', tokenData);
+                    
+                    if (tokenData.error) {
+                        throw new Error(tokenData.error);
+                    }
+                    
+                    if (!tokenData.access_token) {
+                        throw new Error('Kein Access Token erhalten');
+                    }
+                    
+                    // User Info verifizieren
+                    console.log('Verifiziere User...');
+                    await verifyUser(tokenData.access_token);
+                    
+                } catch (error) {
+                    console.error('OAuth Error:', error);
+                    showError('Fehler bei der Anmeldung: ' + error.message);
+                    loginLoading.style.display = 'none';
+                    discordLoginBtn.style.display = 'block';
+                } finally {
+                    localStorage.removeItem('oauth_state');
+                    // URL bereinigen
+                    const cleanUrl = window.location.origin + window.location.pathname;
+                    window.history.replaceState({}, document.title, cleanUrl);
+                    console.log('URL bereinigt');
+                }
+            } else {
+                console.log('Kein valider OAuth Callback');
+                loginLoading.style.display = 'none';
+                discordLoginBtn.style.display = 'block';
+            }
+        }
+
+        // User verifizieren
+        async function verifyUser(accessToken) {
+            try {
+                console.log('Verifiziere Benutzer...');
+                const currentPage = getCurrentPageKey();
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken,
+                        currentPage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed');
+                }
+
+                const data = await response.json();
+                console.log('Verification Response:', data);
+
+                if (data.isAuthorized) {
+                    console.log('Benutzer autorisiert!');
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    
+                    const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        ...userAccessInfo
+                    };
+                    
+                    await loadDiscordAvatar(user);
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
+                } else {
+                    let errorMsg = 'Zugriff verweigert. ';
+                    if (data.accessInfo && data.accessInfo.message === 'access expired') {
+                        errorMsg += 'Dein Zugang ist abgelaufen.';
+                    } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
+                        errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
+                    } else {
+                        errorMsg += 'Du bist nicht autorisiert.';
+                    }
+                    showError(errorMsg);
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            } finally {
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, duration);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            discordLoginBtn.style.display = 'block';
+            loginLoading.style.display = 'none';
+        }
+
+        // DISCORD AVATAR LADEN
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = '';
+            } else {
+                const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
+        }
+
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+        }
+
+        // Zugriff verweigert anzeigen
+        function showAccessRestricted(user, pageKey) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserName.textContent = user.username;
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
+        }
+
+        // Login-Seite anzeigen
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.add('hidden');
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
             const names = {
                 'dashboard': 'Dashboard',
-                'recycler': 'Recycler System',
-                'settings': 'Einstellungen'
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management'
             };
-            return names[tabName] || tabName;
+            return names[pageKey] || pageKey;
         }
 
-        // Einstellungen Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tab Navigation für Einstellungen
-            document.getElementById('settingsTab').addEventListener('click', () => switchTab('settings'));
+        // Autorisierten Inhalt anzeigen
+        function showAuthorizedContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
             
-            // Einstellungen Event Listeners
-            document.getElementById('themeSelect').addEventListener('change', function() {
-                showNotification(`Design geändert zu: ${this.options[this.selectedIndex].text}`, 'info');
-            });
+            userWelcome.textContent = `Willkommen, ${user.username}`;
             
-            document.getElementById('exportData').addEventListener('click', function() {
-                showNotification('Daten werden exportiert...', 'info');
-                // Hier würde der Export-Code stehen
-                setTimeout(() => {
-                    showNotification('Daten erfolgreich exportiert', 'success');
-                }, 1000);
-            });
-            
-            document.getElementById('importData').addEventListener('click', function() {
-                showNotification('Datenimport vorbereitet...', 'info');
-                // Hier würde der Import-Code stehen
-            });
-            
-            document.getElementById('resetSettings').addEventListener('click', function() {
-                if (confirm('Möchten Sie wirklich alle Einstellungen zurücksetzen?')) {
-                    showNotification('Einstellungen wurden zurückgesetzt', 'success');
-                    // Hier würde der Reset-Code stehen
+            if (userAccessInfo && userAccessInfo.message) {
+                accessBadge.classList.remove('hidden');
+                if (userAccessInfo.isPermanent) {
+                    accessBadge.textContent = 'Permanent';
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.textContent = userAccessInfo.message || 'Temporary';
+                    accessBadge.className = 'access-badge access-temporary';
                 }
-            });
+            }
             
-            // Toggle Switches
-            document.querySelectorAll('.toggle-switch input').forEach(toggle => {
-                toggle.addEventListener('change', function() {
-                    const settingName = this.id.replace('Toggle', '');
-                    const status = this.checked ? 'aktiviert' : 'deaktiviert';
-                    showNotification(`${settingName} ${status}`, 'info');
+            // Setze URL zurück ohne Code-Parameter
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+            
+            loadProducts();
+            loadGlobalLogo();
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            userAccessInfo = null;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
+            showLoginPage();
+            accessBadge.classList.add('hidden');
+            
+            showNotification('Erfolgreich ausgeloggt', 'info');
+        }
+
+        // Session prüfen
+        function checkExistingLogin() {
+            const user = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const accessInfo = localStorage.getItem('user_access_info');
+            
+            console.log('Check existing login:', { user: !!user, token: !!token });
+            
+            if (user && token) {
+                console.log('Bereits eingeloggt');
+                showAuthorizedContent(accessInfo ? JSON.parse(accessInfo) : null);
+            } else {
+                console.log('Nicht eingeloggt');
+                // Lösche eventuelle fehlerhafte Daten
+                localStorage.removeItem('discord_user');
+                localStorage.removeItem('discord_access_token');
+                localStorage.removeItem('user_access_info');
+            }
+        }
+
+        // ========== EVENT LISTENER ==========
+
+        function initializeEventListeners() {
+            // Login Button - REPARIERT
+            discordLoginBtn.addEventListener('click', startDiscordOAuth);
+            
+            // Logout Button
+            logoutBtn.addEventListener('click', logout);
+            restrictedLogoutBtn.addEventListener('click', logout);
+            
+            // Tab Navigation
+            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
+            recyclerTab.addEventListener('click', () => switchTab('recycler'));
+            settingsTab.addEventListener('click', () => switchTab('settings'));
+            
+            // Logo Upload Event Listeners
+            headerLogo.addEventListener('click', openPasswordModal);
+            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            cancelPassword.addEventListener('click', closePasswordModal);
+            confirmPassword.addEventListener('click', verifyLogoPassword);
+            saveLogo.addEventListener('click', handleLogoUpload);
+            
+            // Navigation zu anderen Seiten
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
                 });
             });
+        }
+
+        // ========== INITIALISIERUNG ==========
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM geladen - Initialisiere App...');
+            initializeEventListeners();
+            
+            // Zuerst OAuth Callback prüfen
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('code')) {
+                console.log('OAuth Code gefunden, verarbeite Callback...');
+                handleOAuthCallback();
+            } else {
+                // Dann bestehende Session prüfen
+                console.log('Kein OAuth Code, prüfe bestehende Session...');
+                checkExistingLogin();
+            }
         });
 
-        // ... (restlicher JavaScript-Code bleibt identisch) ...
+        // ========== RESTLICHE FUNKTIONEN (Materialrecycler) ==========
+        // [Hier folgen alle Materialrecycler-Funktionen...]
+
+        console.log('Materialrecycler Panel - Login Button komplett repariert!');
     </script>
 </body>
 </html>

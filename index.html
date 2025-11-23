@@ -1204,6 +1204,7 @@
                 discountSettingsContent.classList.add('active');
                 openDiscountSettings.classList.add('hidden');
                 closeDiscountPasswordModal();
+                loadDiscountSettings(); // Rabatte neu laden
                 showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
             } else {
                 showNotification('Falsches Passwort!', 'error');
@@ -1273,7 +1274,15 @@
             onValue(discountsRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    availableDiscounts = Object.values(data);
+                    // Konvertiere Firebase-Daten in Array
+                    availableDiscounts = [];
+                    if (Array.isArray(data)) {
+                        availableDiscounts = data;
+                    } else {
+                        // Falls es ein Objekt ist, in Array umwandeln
+                        availableDiscounts = Object.values(data);
+                    }
+                    
                     renderDiscountButtons();
                     if (discountSettingsUnlocked) {
                         renderDiscountList();
@@ -1287,6 +1296,11 @@
 
         function renderDiscountList() {
             discountList.innerHTML = '';
+            
+            if (availableDiscounts.length === 0) {
+                discountList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte vorhanden</p>';
+                return;
+            }
             
             availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
                 const discountItem = document.createElement('div');
@@ -1336,7 +1350,7 @@
                 label: name
             };
 
-            // Prüfen ob Rabatt bereits existiert
+            // Prüfen ob Rabatt mit gleichem Wert bereits existiert
             const exists = availableDiscounts.some(d => d.value === value);
             if (exists) {
                 showNotification('Ein Rabatt mit diesem Wert existiert bereits!', 'error');
@@ -1347,7 +1361,7 @@
             saveDiscountsToFirebase();
             
             discountValue.value = '0';
-            discountName.value = '';
+            discountName.value = 'Kein Rabatt';
 
             showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
         }
@@ -1360,6 +1374,13 @@
 
             if (index >= 0 && index < availableDiscounts.length) {
                 const discount = availableDiscounts[index];
+                
+                // Verhindere das Löschen des Standard-Rabatts (0%)
+                if (discount.value === 0) {
+                    showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
+                    return;
+                }
+                
                 availableDiscounts.splice(index, 1);
                 saveDiscountsToFirebase();
                 showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');

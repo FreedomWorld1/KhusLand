@@ -666,6 +666,65 @@
             gap: 1rem;
             justify-content: flex-end;
         }
+
+        /* Discount Settings Styles */
+        .discount-settings {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .discount-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .discount-list {
+            margin-top: 1rem;
+        }
+
+        .discount-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .discount-item-info {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .discount-value {
+            font-weight: bold;
+            color: #4299e1;
+        }
+
+        .discount-label {
+            color: #cbd5e0;
+        }
+
+        .delete-discount {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-discount:hover {
+            background: rgba(245, 101, 101, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -719,6 +778,18 @@
                 <div class="modal-buttons">
                     <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
                     <button id="saveLogo" class="btn-primary">Logo speichern</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Modal für Logo -->
+        <div id="passwordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort erforderlich</h3>
+                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
                 </div>
             </div>
         </div>
@@ -825,6 +896,33 @@
 
                 <!-- Weed System Tab -->
                 <div id="weed" class="tab-content">
+                    <!-- Discount Settings -->
+                    <div class="discount-settings">
+                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-percentage"></i> Rabatt Einstellungen
+                        </h3>
+                        
+                        <div class="discount-form">
+                            <div class="form-group">
+                                <label for="discountValue">Rabatt Wert (%)</label>
+                                <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="discountName">Rabatt Name</label>
+                                <input type="text" id="discountName" placeholder="Name des Rabatts" value="Kein Rabatt">
+                            </div>
+                            
+                            <button id="addDiscount" class="btn-primary" style="align-self: end;">
+                                <i class="fas fa-plus"></i> Hinzufügen
+                            </button>
+                        </div>
+                        
+                        <div class="discount-list" id="discountList">
+                            <!-- Discount items will be generated here -->
+                        </div>
+                    </div>
+
                     <div class="system-card">
                         <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
                             <i class="fas fa-cannabis"></i> Weed Ankauf Management
@@ -995,10 +1093,20 @@
         
         // Logo Upload Modal Elemente
         const logoUploadModal = document.getElementById('logoUploadModal');
+        const passwordModal = document.getElementById('passwordModal');
         const adminPassword = document.getElementById('adminPassword');
+        const logoPassword = document.getElementById('logoPassword');
         const logoFile = document.getElementById('logoFile');
         const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const cancelPassword = document.getElementById('cancelPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
         const saveLogo = document.getElementById('saveLogo');
+        
+        // Discount Settings Elemente
+        const discountValue = document.getElementById('discountValue');
+        const discountName = document.getElementById('discountName');
+        const addDiscount = document.getElementById('addDiscount');
+        const discountList = document.getElementById('discountList');
         
         // Buttons
         const logoutBtn = document.getElementById('logoutBtn');
@@ -1009,6 +1117,15 @@
         const weedQuantity = document.getElementById('weedQuantity');
 
         // Logo Upload Funktionen
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
+        }
+
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            logoPassword.value = '';
+        }
+
         function openLogoUploadModal() {
             logoUploadModal.classList.add('active');
         }
@@ -1017,6 +1134,16 @@
             logoUploadModal.classList.remove('active');
             adminPassword.value = '';
             logoFile.value = '';
+        }
+
+        function verifyLogoPassword() {
+            const password = logoPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                closePasswordModal();
+                openLogoUploadModal();
+            } else {
+                showNotification('Falsches Passwort!', 'error');
+            }
         }
 
         async function handleLogoUpload() {
@@ -1071,6 +1198,138 @@
             }
         }
 
+        // Discount Settings Funktionen
+        function loadDiscountSettings() {
+            onValue(discountsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    availableDiscounts = Object.values(data);
+                    renderDiscountButtons();
+                    renderDiscountList();
+                } else {
+                    // Standard-Discounts setzen
+                    set(discountsRef, availableDiscounts);
+                }
+            });
+        }
+
+        function renderDiscountList() {
+            discountList.innerHTML = '';
+            
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+                const discountItem = document.createElement('div');
+                discountItem.className = 'discount-item';
+                discountItem.innerHTML = `
+                    <div class="discount-item-info">
+                        <span class="discount-value">${discount.value}%</span>
+                        <span class="discount-label">${discount.label}</span>
+                    </div>
+                    <button class="delete-discount" data-index="${index}">
+                        <i class="fas fa-trash"></i> Löschen
+                    </button>
+                `;
+                discountList.appendChild(discountItem);
+            });
+
+            // Event Listener für Lösch-Buttons
+            document.querySelectorAll('.delete-discount').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteDiscount(index);
+                });
+            });
+        }
+
+        function addNewDiscount() {
+            const value = parseInt(discountValue.value);
+            const name = discountName.value.trim();
+
+            if (isNaN(value) || value < 0 || value > 100) {
+                showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein!', 'error');
+                return;
+            }
+
+            if (!name) {
+                showNotification('Bitte geben Sie einen Namen für den Rabatt ein!', 'error');
+                return;
+            }
+
+            const newDiscount = {
+                value: value,
+                label: name
+            };
+
+            // Prüfen ob Rabatt bereits existiert
+            const exists = availableDiscounts.some(d => d.value === value);
+            if (exists) {
+                showNotification('Ein Rabatt mit diesem Wert existiert bereits!', 'error');
+                return;
+            }
+
+            availableDiscounts.push(newDiscount);
+            saveDiscountsToFirebase();
+            
+            discountValue.value = '0';
+            discountName.value = '';
+
+            showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
+        }
+
+        function deleteDiscount(index) {
+            if (index >= 0 && index < availableDiscounts.length) {
+                const discount = availableDiscounts[index];
+                availableDiscounts.splice(index, 1);
+                saveDiscountsToFirebase();
+                showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');
+            }
+        }
+
+        function saveDiscountsToFirebase() {
+            set(discountsRef, availableDiscounts)
+                .then(() => {
+                    renderDiscountButtons();
+                    renderDiscountList();
+                })
+                .catch(error => {
+                    console.error('Fehler beim Speichern der Rabatte:', error);
+                    showNotification('Fehler beim Speichern der Rabatte!', 'error');
+                });
+        }
+
+        function renderDiscountButtons() {
+            const container = document.getElementById('discountButtons');
+            container.innerHTML = '';
+            
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
+                button.setAttribute('data-discount', discount.value);
+                button.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
+                `;
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.discount-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    button.classList.add('active');
+                    currentDiscount = discount.value;
+                    
+                    updateWeedPrices();
+                    
+                    if (discount.value > 0) {
+                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
+                    } else {
+                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
+                    }
+                });
+                
+                container.appendChild(button);
+            });
+        }
+
         // Globales Logo laden
         async function loadGlobalLogo() {
             try {
@@ -1082,6 +1341,8 @@
                 console.log('Kein globales Logo gefunden, verwende Standard');
             }
         }
+
+        // [Rest des Codes bleibt gleich - nur die Event Listener wurden angepasst]
 
         // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
         async function hasAccess(pageKey) {
@@ -1541,53 +1802,6 @@
             document.getElementById('buyerShare').textContent = `${buyerShare} €`;
         }
 
-        // Discount System
-        function loadDiscountSettings() {
-            onValue(discountsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    availableDiscounts = Object.values(data);
-                    renderDiscountButtons();
-                } else {
-                    set(discountsRef, availableDiscounts);
-                }
-            });
-        }
-
-        function renderDiscountButtons() {
-            const container = document.getElementById('discountButtons');
-            container.innerHTML = '';
-            
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
-                button.setAttribute('data-discount', discount.value);
-                button.innerHTML = `
-                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
-                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
-                `;
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.discount-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    
-                    button.classList.add('active');
-                    currentDiscount = discount.value;
-                    
-                    updateWeedPrices();
-                    
-                    if (discount.value > 0) {
-                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
-                    } else {
-                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
-                    }
-                });
-                
-                container.appendChild(button);
-            });
-        }
-
         // Handle Weed Form Submission
         async function handleWeedSubmit() {
             const hasAccessToWeed = await hasAccess('weed');
@@ -1723,9 +1937,14 @@
             weedTab.addEventListener('click', () => switchTab('weed'));
             
             // Logo Upload Event Listeners
-            headerLogo.addEventListener('click', openLogoUploadModal);
+            headerLogo.addEventListener('click', openPasswordModal);
             cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            cancelPassword.addEventListener('click', closePasswordModal);
+            confirmPassword.addEventListener('click', verifyLogoPassword);
             saveLogo.addEventListener('click', handleLogoUpload);
+            
+            // Discount Settings Event Listeners
+            addDiscount.addEventListener('click', addNewDiscount);
             
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -1752,7 +1971,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Mit Logo Upload und KhusLand Titel!');
+        console.log('KhusLand Panel - Mit Passwort-geschütztem Logo Upload und Rabatt-Einstellungen!');
     </script>
 </body>
 </html>

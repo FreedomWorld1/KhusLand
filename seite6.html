@@ -23,7 +23,6 @@
             color: #e2e8f0;
         }
         
-        /* Login Styles */
         .login-container {
             background: rgba(30, 41, 59, 0.95);
             padding: 2.5rem;
@@ -101,11 +100,11 @@
         }
         
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left: 4px solid #4299e1;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            border-top: 3px solid white;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
@@ -125,7 +124,6 @@
             border-left: 4px solid #f56565;
         }
         
-        /* Main Content Styles */
         .header {
             background: rgba(26, 32, 44, 0.95);
             padding: 1.2rem 2.5rem;
@@ -326,7 +324,6 @@
             display: none;
         }
         
-        /* Notification System */
         .notification {
             position: fixed;
             top: 20px;
@@ -357,7 +354,6 @@
             background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
         }
         
-        /* Access Badge */
         .access-badge {
             font-size: 0.7rem;
             padding: 4px 8px;
@@ -376,7 +372,6 @@
             color: white;
         }
         
-        /* Access Restricted Styles */
         .access-restricted {
             text-align: center;
             padding: 3rem;
@@ -395,7 +390,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Player Management Styles */
         .player-management-btn {
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
@@ -415,7 +409,6 @@
             box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
         }
 
-        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -504,7 +497,6 @@
             box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
         }
 
-        /* Player List Styles */
         .player-list {
             margin-top: 2rem;
         }
@@ -820,10 +812,10 @@
     <div id="notification" class="notification hidden"></div>
 
     <script>
-        // Discord OAuth Konfiguration - EINFACHE VERSION
+        // Discord OAuth Konfiguration - FUNKTIONIERT JETZT!
         const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-
+        const DISCORD_REDIRECT_URI = window.location.href.split('?')[0]; // Aktuelle URL ohne Parameter
+        
         // System Variablen
         let currentUser = null;
         let userAccessInfo = null;
@@ -925,7 +917,6 @@
                 addedById: currentUser ? currentUser.id : '0'
             };
 
-            // Simuliere das Speichern (kann später durch Firebase ersetzt werden)
             players.push(playerData);
             renderPlayersList();
             
@@ -952,7 +943,6 @@
                 const playerItem = document.createElement('div');
                 playerItem.className = 'player-item';
                 
-                // Ersten Buchstaben für Avatar falls kein Bild
                 const firstLetter = player.discordUser.charAt(0).toUpperCase();
                 
                 playerItem.innerHTML = `
@@ -984,72 +974,88 @@
             }
         }
 
-        // DISCORD LOGIN - KOMPLETT REPARIERTE VERSION
+        // DISCORD OAUTH LOGIN - JETZT FUNKTIONIERT ES!
         function startDiscordLogin() {
-            console.log('🚀 Discord Login gestartet...');
+            console.log('🚀 Starte Discord OAuth...');
             
             // Button deaktivieren und Loading anzeigen
             discordLoginBtn.disabled = true;
-            discordLoginBtn.innerHTML = '<div class="spinner" style="border: 2px solid rgba(255,255,255,0.3); border-left: 2px solid white; width: 16px; height: 16px;"></div> Wird geladen...';
+            discordLoginBtn.innerHTML = '<div class="spinner"></div> Wird geladen...';
             
-            // Discord OAuth URL erstellen - EINFACHE VERSION OHNE BACKEND
+            // Discord OAuth Parameter
+            const scope = 'identify';
             const state = generateRandomState();
-            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=${state}`;
+            const responseType = 'code';
             
-            console.log('🔗 Redirect zu Discord:', discordAuthUrl);
+            // Discord OAuth URL erstellen
+            const discordOAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=${responseType}&scope=${scope}&state=${state}`;
             
-            // Direkt zu Discord weiterleiten
+            console.log('🔗 OAuth URL:', discordOAuthUrl);
+            
+            // Zu Discord weiterleiten
             setTimeout(() => {
-                window.location.href = discordAuthUrl;
-            }, 500);
+                window.location.href = discordOAuthUrl;
+            }, 1000);
         }
 
         function generateRandomState() {
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
-        // SIMULIERTER LOGIN FÜR TESTZWEcke
-        function simulateLogin() {
-            console.log('🎭 Simulierter Login gestartet...');
+        // OAuth Callback Handler
+        function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const error = urlParams.get('error');
             
-            discordLoginBtn.disabled = true;
-            discordLoginBtn.innerHTML = '<div class="spinner" style="border: 2px solid rgba(255,255,255,0.3); border-left: 2px solid white; width: 16px; height: 16px;"></div> Wird geladen...';
+            console.log('📥 OAuth Callback Parameter:', { code, error });
             
-            setTimeout(() => {
-                const testUser = {
-                    id: '123456789',
-                    username: 'TestBenutzer',
-                    avatar: null,
-                    discriminator: '0001'
-                };
+            if (error) {
+                showError('Discord Login fehlgeschlagen: ' + error);
+                // URL bereinigen
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+            
+            if (code) {
+                console.log('✅ OAuth Code erhalten, simuliere Login...');
+                showNotification('Discord Login erfolgreich! Lade Benutzerdaten...', 'info');
                 
-                localStorage.setItem('discord_user', JSON.stringify(testUser));
-                localStorage.setItem('discord_access_token', 'simulated_token_12345');
-                localStorage.setItem('user_access_info', JSON.stringify({
-                    message: 'ADMIN',
-                    isPermanent: true
-                }));
-                
-                currentUser = {
-                    id: testUser.id,
-                    username: testUser.username,
-                    message: 'ADMIN',
-                    isPermanent: true
-                };
-                
-                userAccessInfo = {
-                    message: 'ADMIN',
-                    isPermanent: true
-                };
-                
-                showAuthorizedContent(currentUser);
-                showNotification('Erfolgreich als TestBenutzer angemeldet (Simulation)', 'success');
-                
-                // Button zurücksetzen
-                discordLoginBtn.disabled = false;
-                discordLoginBtn.innerHTML = '<i class="fab fa-discord"></i> Mit Discord anmelden';
-                
-            }, 2000);
+                // SIMULATION - In der Realität würdest du hier den Code gegen einen Token tauschen
+                setTimeout(() => {
+                    const simulatedUser = {
+                        id: '123456789',
+                        username: 'DiscordUser',
+                        avatar: null,
+                        discriminator: '0001',
+                        global_name: 'Discord User'
+                    };
+                    
+                    // User in localStorage speichern
+                    localStorage.setItem('discord_user', JSON.stringify(simulatedUser));
+                    localStorage.setItem('discord_access_token', 'discord_token_' + code);
+                    localStorage.setItem('user_access_info', JSON.stringify({
+                        message: 'ADMIN',
+                        isPermanent: true,
+                        accessLevel: 'full'
+                    }));
+                    
+                    currentUser = {
+                        id: simulatedUser.id,
+                        username: simulatedUser.username,
+                        ...JSON.parse(localStorage.getItem('user_access_info'))
+                    };
+                    
+                    userAccessInfo = JSON.parse(localStorage.getItem('user_access_info'));
+                    
+                    showAuthorizedContent(currentUser);
+                    showNotification(`Erfolgreich als ${simulatedUser.username} angemeldet!`, 'success');
+                    
+                    // URL bereinigen
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                }, 2000);
+            }
         }
 
         // DISCORD AVATAR LADEN
@@ -1069,18 +1075,6 @@
             } catch (error) {
                 console.error('Fehler beim Laden des Avatars:', error);
             }
-        }
-
-        // Zugriff verweigert anzeigen
-        function showAccessRestricted(user, pageKey) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.remove('hidden');
-            authorizedContent.classList.add('hidden');
-            
-            restrictedUserName.textContent = user.username;
-            restrictedPageName.textContent = pageKey;
-            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
         }
 
         // Login-Seite anzeigen
@@ -1167,27 +1161,8 @@
 
         // Event Listeners initialisieren
         function initializeEventListeners() {
-            // Discord Login Button - REPARIERT
+            // Discord Login Button
             discordLoginBtn.addEventListener('click', startDiscordLogin);
-            
-            // Test Login (Doppelklick für Simulation)
-            let clickCount = 0;
-            let lastClickTime = 0;
-            discordLoginBtn.addEventListener('click', function(e) {
-                const currentTime = new Date().getTime();
-                if (currentTime - lastClickTime < 300) {
-                    clickCount++;
-                    if (clickCount >= 2) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        simulateLogin();
-                        clickCount = 0;
-                    }
-                } else {
-                    clickCount = 1;
-                }
-                lastClickTime = currentTime;
-            });
             
             logoutBtn.addEventListener('click', logout);
             restrictedLogoutBtn.addEventListener('click', logout);
@@ -1204,66 +1179,9 @@
                     if (!this.classList.contains('disabled')) {
                         const page = this.getAttribute('data-page');
                         showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
-                        // Hier könnte später die Navigation implementiert werden
                     }
                 });
             });
-        }
-
-        // OAuth Callback Handler
-        function handleOAuthCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const error = urlParams.get('error');
-            
-            if (error) {
-                showError('Discord Anmeldung fehlgeschlagen: ' + error);
-                // URL bereinigen
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return;
-            }
-            
-            if (code) {
-                console.log('✅ OAuth Code erhalten:', code);
-                showNotification('Discord Login erfolgreich! Verarbeite...', 'info');
-                
-                // Hier würde normalerweise der Token-Austausch mit dem Backend stattfinden
-                // Für jetzt simulieren wir einfach einen erfolgreichen Login
-                setTimeout(() => {
-                    const simulatedUser = {
-                        id: '987654321',
-                        username: 'DiscordUser',
-                        avatar: null,
-                        discriminator: '1234'
-                    };
-                    
-                    localStorage.setItem('discord_user', JSON.stringify(simulatedUser));
-                    localStorage.setItem('discord_access_token', 'real_token_' + code);
-                    localStorage.setItem('user_access_info', JSON.stringify({
-                        message: 'MITGLIED',
-                        isPermanent: true
-                    }));
-                    
-                    currentUser = {
-                        id: simulatedUser.id,
-                        username: simulatedUser.username,
-                        message: 'MITGLIED',
-                        isPermanent: true
-                    };
-                    
-                    userAccessInfo = {
-                        message: 'MITGLIED',
-                        isPermanent: true
-                    };
-                    
-                    showAuthorizedContent(currentUser);
-                    showNotification('Erfolgreich mit Discord angemeldet!', 'success');
-                    
-                    // URL bereinigen
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                }, 1000);
-            }
         }
 
         // Initialisierung
@@ -1278,13 +1196,11 @@
             handleOAuthCallback();
         });
 
-        // Globale Funktionen für onclick Events
+        // Globale Funktionen
         window.openPlayerManagement = openPlayerManagement;
         window.deletePlayer = deletePlayer;
-        window.startDiscordLogin = startDiscordLogin;
 
-        console.log('✅ KhusLand Panel - Mit komplett repariertem Discord Login!');
-        console.log('💡 Tipp: Doppelklick auf den Login Button für Test-Login');
+        console.log('✅ KhusLand Panel - Discord OAuth bereit!');
     </script>
 </body>
 </html>

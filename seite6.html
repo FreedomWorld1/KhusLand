@@ -320,8 +320,8 @@
             display: none;
         }
         
-        /* System-spezifische Styles */
-        .system-card {
+        /* User Management Styles */
+        .user-management-card {
             background: rgba(26, 32, 44, 0.8);
             border-radius: 12px;
             padding: 2rem;
@@ -330,7 +330,7 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         
-        .system-form {
+        .user-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
@@ -365,21 +365,6 @@
             outline: none;
             border-color: #4299e1;
             box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
-        }
-        
-        .price-display {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .price-amount {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #48bb78;
         }
         
         .btn-primary {
@@ -515,78 +500,6 @@
             color: white;
         }
         
-        /* Discount System */
-        .discount-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .discount-btn {
-            padding: 0.8rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #cbd5e0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .discount-btn.active {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            border-color: #4299e1;
-            box-shadow: 0 2px 10px rgba(66, 153, 225, 0.3);
-        }
-        
-        .discount-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        .price-breakdown {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.1);
-        }
-        
-        .price-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .price-label {
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-        
-        .price-value {
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-        
-        .seller-share {
-            color: #48bb78;
-        }
-        
-        .buyer-share {
-            color: #4299e1;
-        }
-        
         /* Access Restricted Styles */
         .access-restricted {
             text-align: center;
@@ -606,7 +519,115 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Logo Upload Modal */
+        /* User List Styles */
+        .user-list {
+            margin-top: 2rem;
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .user-item:hover {
+            background: rgba(30, 41, 59, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .user-avatar-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            background-size: cover;
+            background-position: center;
+            background-color: #4299e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.3rem;
+        }
+        
+        .user-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+        
+        .user-date {
+            margin-left: auto;
+            color: #a0aec0;
+            font-size: 0.85rem;
+        }
+        
+        /* Role Badges */
+        .role-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+        
+        .role-admin {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+        
+        .role-moderator {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+        
+        .role-member {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+        }
+        
+        .role-supporter {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        
+        /* User Management Button */
+        .user-management-btn {
+            background: rgba(66, 153, 225, 0.15);
+            color: #90cdf4;
+            border: 1px solid #4299e1;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .user-management-btn:hover {
+            background: rgba(66, 153, 225, 0.25);
+        }
+        
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -629,7 +650,7 @@
             padding: 2rem;
             border-radius: 12px;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             border: 1px solid rgba(101, 119, 149, 0.3);
         }
@@ -639,106 +660,42 @@
             margin-bottom: 1.5rem;
             text-align: center;
         }
-
-        .password-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #e2e8e0;
-            font-size: 1rem;
-        }
-
-        .file-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #e2e8e0;
-        }
-
+        
         .modal-buttons {
             display: flex;
             gap: 1rem;
             justify-content: flex-end;
+            margin-top: 1.5rem;
         }
-
-        /* Discount Settings Styles */
-        .discount-settings {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-
-        .discount-header {
+        
+        .user-selection {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .discount-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 1rem;
+            gap: 0.5rem;
             margin-bottom: 1rem;
-        }
-
-        .discount-list {
-            margin-top: 1rem;
-        }
-
-        .discount-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 0.8rem;
             background: rgba(30, 41, 59, 0.6);
             border-radius: 8px;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(101, 119, 149, 0.2);
         }
-
-        .discount-item-info {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .discount-value {
-            font-weight: bold;
-            color: #4299e1;
-        }
-
-        .discount-label {
+        
+        .user-selection-text {
             color: #cbd5e0;
+            font-size: 0.9rem;
         }
-
-        .delete-discount {
-            background: rgba(245, 101, 101, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
+        
+        .user-mention {
+            color: #4299e1;
+            font-weight: 600;
         }
-
-        .delete-discount:hover {
-            background: rgba(245, 101, 101, 0.3);
-        }
-
-        .discount-settings-content {
-            display: none;
-        }
-
-        .discount-settings-content.active {
-            display: block;
+        
+        .role-selection {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -778,45 +735,38 @@
                     <i class="fas fa-user"></i>
                 </div>
                 
+                <!-- User Management Button -->
+                <button id="userManagementBtn" class="user-management-btn">
+                    <i class="fas fa-users-cog"></i> Spieler einstellen
+                </button>
+                
                 <button id="logoutBtn" class="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </div>
         </div>
 
-        <!-- Logo Upload Modal -->
-        <div id="logoUploadModal" class="modal-overlay">
+        <!-- User Management Modal -->
+        <div id="userManagementModal" class="modal-overlay">
             <div class="modal-content">
-                <h3>Logo ändern</h3>
-                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <input type="file" id="logoFile" class="file-input" accept="image/*">
-                <div class="modal-buttons">
-                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
-                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
+                <h3><i class="fas fa-users-cog"></i> Spieler einstellen</h3>
+                
+                <div class="user-selection">
+                    <span class="user-selection-text">Hiermit wird</span>
+                    <input type="text" id="discordUser" class="form-control" placeholder="@Discord-Benutzername">
+                    <span class="user-selection-text">als</span>
+                    <select id="userRole" class="form-control">
+                        <option value="member">Mitglied</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Administrator</option>
+                        <option value="supporter">Supporter</option>
+                    </select>
+                    <span class="user-selection-text">eingestellt.</span>
                 </div>
-            </div>
-        </div>
-
-        <!-- Password Modal für Logo -->
-        <div id="passwordModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Admin Passwort erforderlich</h3>
-                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                
                 <div class="modal-buttons">
-                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
-                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Password Modal für Discount Settings -->
-        <div id="discountPasswordModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Admin Passwort für Rabatt-Einstellungen</h3>
-                <input type="password" id="discountPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <div class="modal-buttons">
-                    <button id="cancelDiscountPassword" class="logout-btn">Abbrechen</button>
-                    <button id="confirmDiscountPassword" class="btn-primary">Bestätigen</button>
+                    <button id="cancelUserManagement" class="logout-btn">Abbrechen</button>
+                    <button id="saveUserRole" class="btn-primary">Spieler einstellen</button>
                 </div>
             </div>
         </div>
@@ -850,8 +800,8 @@
                     <button id="dashboardTab" class="nav-tab active">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </button>
-                    <button id="weedTab" class="nav-tab">
-                        <i class="fas fa-cannabis"></i> Weed System
+                    <button id="userManagementTab" class="nav-tab">
+                        <i class="fas fa-users"></i> User Management
                     </button>
                 </div>
 
@@ -921,124 +871,58 @@
                     </div>
                 </div>
 
-                <!-- Weed System Tab -->
-                <div id="weed" class="tab-content">
-                    <!-- Discount Settings -->
-                    <div class="discount-settings">
-                        <div class="discount-header">
-                            <h3 style="color: #90cdf4; font-size: 1.5rem;">
-                                <i class="fas fa-percentage"></i> Rabatt Einstellungen
-                            </h3>
-                            <button id="openDiscountSettings" class="btn-primary">
-                                <i class="fas fa-cog"></i> Einstellungen öffnen
-                            </button>
-                        </div>
-                        
-                        <div class="discount-settings-content" id="discountSettingsContent">
-                            <div class="discount-form">
-                                <div class="form-group">
-                                    <label for="discountValue">Rabatt Wert (%)</label>
-                                    <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="discountName">Rabatt Name</label>
-                                    <input type="text" id="discountName" placeholder="Name des Rabatts" value="Kein Rabatt">
-                                </div>
-                                
-                                <button id="addDiscount" class="btn-primary" style="align-self: end;">
-                                    <i class="fas fa-plus"></i> Hinzufügen
-                                </button>
-                            </div>
-                            
-                            <div class="discount-list" id="discountList">
-                                <!-- Discount items will be generated here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="system-card">
+                <!-- User Management Tab -->
+                <div id="userManagement" class="tab-content">
+                    <!-- User List -->
+                    <div class="user-management-card">
                         <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-cannabis"></i> Weed Ankauf Management
+                            <i class="fas fa-users"></i> Eingestellte Spieler
                         </h3>
                         
-                        <!-- Discount Selection -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
-                            <div class="discount-grid" id="discountButtons">
-                                <!-- Discount buttons will be generated here -->
-                            </div>
-                        </div>
-                        
-                        <div class="system-form">
-                            <div class="form-group">
-                                <label for="weedBuyer">Käufer Name</label>
-                                <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="weedSeller">Verkäufer Name</label>
-                                <input type="text" id="weedSeller" required placeholder="Name des Verkäufers">
+                        <div class="user-list" id="userList">
+                            <!-- User items will be generated here -->
+                            <div class="user-item">
+                                <div class="user-avatar-small" style="background-color: #5865F2;">
+                                    <i class="fab fa-discord"></i>
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name">Max Mustermann</div>
+                                    <div class="user-meta">
+                                        <span class="role-badge role-admin">Administrator</span>
+                                        <span>ID: 123456789</span>
+                                    </div>
+                                </div>
+                                <div class="user-date">01.01.2023</div>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="weedQuantity">Menge (Bricks)</label>
-                                <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
+                            <div class="user-item">
+                                <div class="user-avatar-small" style="background-color: #ed8936;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name">Anna Schmidt</div>
+                                    <div class="user-meta">
+                                        <span class="role-badge role-moderator">Moderator</span>
+                                        <span>ID: 987654321</span>
+                                    </div>
+                                </div>
+                                <div class="user-date">15.03.2023</div>
+                            </div>
+                            
+                            <div class="user-item">
+                                <div class="user-avatar-small" style="background-color: #4299e1;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name">Tom Weber</div>
+                                    <div class="user-meta">
+                                        <span class="role-badge role-member">Mitglied</span>
+                                        <span>ID: 456123789</span>
+                                    </div>
+                                </div>
+                                <div class="user-date">22.06.2023</div>
                             </div>
                         </div>
-                        
-                        <!-- Price Breakdown -->
-                        <div class="price-breakdown">
-                            <div class="price-row">
-                                <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
-                                <span class="price-value" id="totalPrice">0 €</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Rabatt:</span>
-                                <span class="price-value" id="discountAmount">0% (0 €)</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Verkäufer Anteil:</span>
-                                <span class="price-value seller-share" id="sellerShare">0 €</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Käufer Anteil:</span>
-                                <span class="price-value buyer-share" id="buyerShare">0 €</span>
-                            </div>
-                        </div>
-                        
-                        <button type="button" id="saveWeedBtn" class="btn-primary">
-                            <i class="fas fa-save"></i> Ankauf speichern
-                        </button>
-                    </div>
-
-                    <!-- Weed Transactions Table -->
-                    <div class="system-card">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-history"></i> Letzte Weed Ankäufe
-                        </h3>
-                        
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Datum</th>
-                                    <th>Käufer</th>
-                                    <th>Verkäufer</th>
-                                    <th>Menge</th>
-                                    <th>Rabatt</th>
-                                    <th>Gesamt</th>
-                                    <th>Verkäufer</th>
-                                    <th>Käufer</th>
-                                </tr>
-                            </thead>
-                            <tbody id="weedTransactions">
-                                <tr>
-                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
-                                        Keine Transaktionen vorhanden
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -1060,9 +944,7 @@
 
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+        import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
         // Firebase Konfiguration
         const firebaseConfig = {
@@ -1077,13 +959,8 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getDatabase(app);
-        const storage = getStorage(app);
-        const entriesRef = ref(db,'weed_entries');
-        const discountsRef = ref(db,'discount_settings');
-        const logoSettingsRef = ref(db,'logo_settings');
-        const logoImageRef = storageRef(storage, 'global_logo.png');
+        const userRolesRef = ref(db, 'user_roles');
 
         // Seitenspezifische Konfiguration
         const PAGE_ACCESS_CONFIG = {
@@ -1097,19 +974,9 @@
         };
 
         // System Variablen
-        const ADMIN_PASSWORD = '1101';
-        let currentDiscount = 0;
-        let entries = [];
-        let availableDiscounts = [
-            { value: 0, label: 'Kein Rabatt' },
-            { value: 10, label: 'Mitarbeiter' },
-            { value: 15, label: 'Einkäufer' },
-            { value: 20, label: 'Normal' }
-        ];
-        let logoText = 'A';
         let currentUser = null;
         let userAccessInfo = null;
-        let discountSettingsUnlocked = false;
+        let userRoles = [];
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -1126,409 +993,151 @@
         const discordLoginBtn = document.getElementById('discordLogin');
         const loginLoading = document.getElementById('loginLoading');
         
-        // Logo Upload Modal Elemente
-        const logoUploadModal = document.getElementById('logoUploadModal');
-        const passwordModal = document.getElementById('passwordModal');
-        const discountPasswordModal = document.getElementById('discountPasswordModal');
-        const adminPassword = document.getElementById('adminPassword');
-        const logoPassword = document.getElementById('logoPassword');
-        const discountPassword = document.getElementById('discountPassword');
-        const logoFile = document.getElementById('logoFile');
-        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
-        const cancelPassword = document.getElementById('cancelPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const cancelDiscountPassword = document.getElementById('cancelDiscountPassword');
-        const confirmDiscountPassword = document.getElementById('confirmDiscountPassword');
-        const saveLogo = document.getElementById('saveLogo');
-        
-        // Discount Settings Elemente
-        const openDiscountSettings = document.getElementById('openDiscountSettings');
-        const discountSettingsContent = document.getElementById('discountSettingsContent');
-        const discountValue = document.getElementById('discountValue');
-        const discountName = document.getElementById('discountName');
-        const addDiscount = document.getElementById('addDiscount');
-        const discountList = document.getElementById('discountList');
+        // User Management Modal Elemente
+        const userManagementModal = document.getElementById('userManagementModal');
+        const userManagementBtn = document.getElementById('userManagementBtn');
+        const cancelUserManagement = document.getElementById('cancelUserManagement');
+        const saveUserRole = document.getElementById('saveUserRole');
+        const discordUser = document.getElementById('discordUser');
+        const userRole = document.getElementById('userRole');
+        const userList = document.getElementById('userList');
         
         // Buttons
         const logoutBtn = document.getElementById('logoutBtn');
         const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const dashboardTab = document.getElementById('dashboardTab');
-        const weedTab = document.getElementById('weedTab');
-        const saveWeedBtn = document.getElementById('saveWeedBtn');
-        const weedQuantity = document.getElementById('weedQuantity');
+        const userManagementTab = document.getElementById('userManagementTab');
 
-        // Logo Upload Funktionen
-        function openPasswordModal() {
-            passwordModal.classList.add('active');
+        // User Management Funktionen
+        function openUserManagementModal() {
+            userManagementModal.classList.add('active');
         }
 
-        function closePasswordModal() {
-            passwordModal.classList.remove('active');
-            logoPassword.value = '';
+        function closeUserManagementModal() {
+            userManagementModal.classList.remove('active');
+            discordUser.value = '';
+            userRole.value = 'member';
         }
 
-        function openLogoUploadModal() {
-            logoUploadModal.classList.add('active');
-        }
+        async function saveUserRoleToFirebase() {
+            const username = discordUser.value.trim();
+            const role = userRole.value;
 
-        function closeLogoUploadModal() {
-            logoUploadModal.classList.remove('active');
-            adminPassword.value = '';
-            logoFile.value = '';
-        }
-
-        function verifyLogoPassword() {
-            const password = logoPassword.value;
-            if (password === ADMIN_PASSWORD) {
-                closePasswordModal();
-                openLogoUploadModal();
-            } else {
-                showNotification('Falsches Passwort!', 'error');
-            }
-        }
-
-        // Discount Settings Funktionen
-        function openDiscountPasswordModal() {
-            discountPasswordModal.classList.add('active');
-        }
-
-        function closeDiscountPasswordModal() {
-            discountPasswordModal.classList.remove('active');
-            discountPassword.value = '';
-        }
-
-        function verifyDiscountPassword() {
-            const password = discountPassword.value;
-            if (password === ADMIN_PASSWORD) {
-                discountSettingsUnlocked = true;
-                discountSettingsContent.classList.add('active');
-                openDiscountSettings.classList.add('hidden');
-                closeDiscountPasswordModal();
-                loadDiscountSettings(); // Rabatte neu laden
-                showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
-            } else {
-                showNotification('Falsches Passwort!', 'error');
-            }
-        }
-
-        function lockDiscountSettings() {
-            discountSettingsUnlocked = false;
-            discountSettingsContent.classList.remove('active');
-            openDiscountSettings.classList.remove('hidden');
-        }
-
-        async function handleLogoUpload() {
-            const password = adminPassword.value;
-            const file = logoFile.files[0];
-
-            if (password !== ADMIN_PASSWORD) {
-                showNotification('Falsches Admin Passwort!', 'error');
+            if (!username) {
+                showNotification('Bitte geben Sie einen Discord-Benutzernamen ein!', 'error');
                 return;
             }
 
-            if (!file) {
-                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
+            if (!username.startsWith('@')) {
+                showNotification('Bitte geben Sie den Benutzernamen mit @ ein (z.B. @username)!', 'error');
                 return;
             }
 
-            if (!file.type.startsWith('image/')) {
-                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
-                return;
-            }
-
-            try {
-                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
-                saveLogo.disabled = true;
-
-                // Bild in Firebase Storage hochladen
-                await uploadBytes(logoImageRef, file);
-                
-                // Download URL holen
-                const downloadURL = await getDownloadURL(logoImageRef);
-                
-                // Logo in der Datenbank speichern
-                await set(logoSettingsRef, {
-                    logoUrl: downloadURL,
-                    uploadedAt: new Date().toISOString(),
-                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
-                });
-
-                // Logo sofort anwenden
-                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
-                headerLogo.innerHTML = '';
-
-                showNotification('Logo erfolgreich hochgeladen!', 'success');
-                closeLogoUploadModal();
-                
-            } catch (error) {
-                console.error('Fehler beim Hochladen des Logos:', error);
-                showNotification('Fehler beim Hochladen des Logos!', 'error');
-            } finally {
-                saveLogo.innerHTML = 'Logo speichern';
-                saveLogo.disabled = false;
-            }
-        }
-
-        // Discount Settings Funktionen
-        function loadDiscountSettings() {
-            onValue(discountsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // Konvertiere Firebase-Daten in Array
-                    availableDiscounts = [];
-                    if (Array.isArray(data)) {
-                        availableDiscounts = data;
-                    } else {
-                        // Falls es ein Objekt ist, in Array umwandeln
-                        availableDiscounts = Object.values(data);
-                    }
-                    
-                    renderDiscountButtons();
-                    if (discountSettingsUnlocked) {
-                        renderDiscountList();
-                    }
-                } else {
-                    // Standard-Discounts setzen
-                    set(discountsRef, availableDiscounts);
-                }
-            });
-        }
-
-        function renderDiscountList() {
-            discountList.innerHTML = '';
-            
-            if (availableDiscounts.length === 0) {
-                discountList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte vorhanden</p>';
-                return;
-            }
-            
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const discountItem = document.createElement('div');
-                discountItem.className = 'discount-item';
-                discountItem.innerHTML = `
-                    <div class="discount-item-info">
-                        <span class="discount-value">${discount.value}%</span>
-                        <span class="discount-label">${discount.label}</span>
-                    </div>
-                    <button class="delete-discount" data-index="${index}">
-                        <i class="fas fa-trash"></i> Löschen
-                    </button>
-                `;
-                discountList.appendChild(discountItem);
-            });
-
-            // Event Listener für Lösch-Buttons
-            document.querySelectorAll('.delete-discount').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    deleteDiscount(index);
-                });
-            });
-        }
-
-        function addNewDiscount() {
-            if (!discountSettingsUnlocked) {
-                showNotification('Bitte zuerst Passwort eingeben!', 'error');
-                return;
-            }
-
-            const value = parseInt(discountValue.value);
-            const name = discountName.value.trim();
-
-            if (isNaN(value) || value < 0 || value > 100) {
-                showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein!', 'error');
-                return;
-            }
-
-            if (!name) {
-                showNotification('Bitte geben Sie einen Namen für den Rabatt ein!', 'error');
-                return;
-            }
-
-            const newDiscount = {
-                value: value,
-                label: name
+            const userData = {
+                username: username,
+                role: role,
+                roleDisplay: getRoleDisplayName(role),
+                date: new Date().toLocaleDateString('de-DE'),
+                timestamp: Date.now(),
+                assignedBy: currentUser ? currentUser.username : 'Unbekannt'
             };
 
-            // Prüfen ob Rabatt mit gleichem Wert UND Namen bereits existiert
-            const exists = availableDiscounts.some(d => d.value === value && d.label === name);
-            if (exists) {
-                showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
-                return;
-            }
-
-            availableDiscounts.push(newDiscount);
-            saveDiscountsToFirebase();
-            
-            discountValue.value = '0';
-            discountName.value = 'Kein Rabatt';
-
-            showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
-        }
-
-        function deleteDiscount(index) {
-            if (!discountSettingsUnlocked) {
-                showNotification('Bitte zuerst Passwort eingeben!', 'error');
-                return;
-            }
-
-            if (index >= 0 && index < availableDiscounts.length) {
-                const discount = availableDiscounts[index];
+            try {
+                saveUserRole.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
+                saveUserRole.disabled = true;
                 
-                // Verhindere das Löschen des Standard-Rabatts (0%)
-                if (discount.value === 0 && discount.label === 'Kein Rabatt') {
-                    showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
-                    return;
-                }
-                
-                availableDiscounts.splice(index, 1);
-                saveDiscountsToFirebase();
-                showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');
-            }
-        }
-
-        function saveDiscountsToFirebase() {
-            set(discountsRef, availableDiscounts)
-                .then(() => {
-                    renderDiscountButtons();
-                    if (discountSettingsUnlocked) {
-                        renderDiscountList();
-                    }
-                })
-                .catch(error => {
-                    console.error('Fehler beim Speichern der Rabatte:', error);
-                    showNotification('Fehler beim Speichern der Rabatte!', 'error');
-                });
-        }
-
-        function renderDiscountButtons() {
-            const container = document.getElementById('discountButtons');
-            container.innerHTML = '';
-            
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
-                button.setAttribute('data-discount', discount.value);
-                button.setAttribute('data-label', discount.label);
-                button.innerHTML = `
-                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
-                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
-                `;
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.discount-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
+                push(userRolesRef, userData).then(() => {
+                    showNotification(`Spieler ${username} als ${getRoleDisplayName(role)} eingestellt!`, 'success');
+                    closeUserManagementModal();
                     
-                    button.classList.add('active');
-                    currentDiscount = discount.value;
-                    
-                    updateWeedPrices();
-                    
-                    if (discount.value > 0) {
-                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
-                    } else {
-                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
-                    }
+                    saveUserRole.innerHTML = 'Spieler einstellen';
+                    saveUserRole.disabled = false;
+                }).catch(error => {
+                    console.error('Fehler beim Speichern:', error);
+                    showNotification('Fehler beim Speichern!', 'error');
+                    saveUserRole.innerHTML = 'Spieler einstellen';
+                    saveUserRole.disabled = false;
                 });
                 
-                container.appendChild(button);
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+                showNotification('Fehler beim Speichern!', 'error');
+                saveUserRole.disabled = false;
+            }
+        }
+
+        function getRoleDisplayName(role) {
+            const roleNames = {
+                'admin': 'Administrator',
+                'moderator': 'Moderator',
+                'member': 'Mitglied',
+                'supporter': 'Supporter'
+            };
+            return roleNames[role] || role;
+        }
+
+        function getRoleBadgeClass(role) {
+            const roleClasses = {
+                'admin': 'role-admin',
+                'moderator': 'role-moderator',
+                'member': 'role-member',
+                'supporter': 'role-supporter'
+            };
+            return roleClasses[role] || 'role-member';
+        }
+
+        function loadUserRoles() {
+            onValue(userRolesRef, (snapshot) => {
+                userRoles = [];
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    data.key = childSnapshot.key;
+                    userRoles.push(data);
+                });
+                
+                userRoles.sort((a, b) => b.timestamp - a.timestamp);
+                renderUserList();
             });
         }
 
-        // Globales Logo laden
-        async function loadGlobalLogo() {
-            try {
-                const downloadURL = await getDownloadURL(logoImageRef);
-                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
-                headerLogo.innerHTML = '';
-            } catch (error) {
-                // Falls kein Logo vorhanden ist, Standard beibehalten
-                console.log('Kein globales Logo gefunden, verwende Standard');
-            }
-        }
-
-        // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
-        async function hasAccess(pageKey) {
-            if (!currentUser) return false;
+        function renderUserList() {
+            userList.innerHTML = '';
             
-            const token = localStorage.getItem('discord_access_token');
-            if (!token) return false;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: token,
-                        currentPage: pageKey
-                    })
-                });
-
-                if (!response.ok) return false;
-
-                const data = await response.json();
-                return data.hasPageAccess;
-                
-            } catch (error) {
-                console.error('Fehler bei Zugriffsprüfung:', error);
-                return false;
+            if (userRoles.length === 0) {
+                userList.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #a0aec0;">
+                        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>Noch keine Spieler eingestellt</p>
+                    </div>
+                `;
+                return;
             }
-        }
-
-        // BENUTZER EXISTENZ PRÜFEN
-        async function checkUserExists() {
-            if (!currentUser) return false;
             
-            const token = localStorage.getItem('discord_access_token');
-            if (!token) return false;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: token
-                    })
-                });
-
-                if (!response.ok) return false;
-
-                const data = await response.json();
-                return data.isAuthorized;
+            userRoles.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
                 
-            } catch (error) {
-                console.error('Fehler bei Benutzerprüfung:', error);
-                return false;
-            }
-        }
-
-        // DISCORD AVATAR LADEN
-        async function loadDiscordAvatar(userData) {
-            if (userData.avatar) {
-                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                // Zufällige Farbe für Avatar-Hintergrund basierend auf Username
+                const colors = ['#5865F2', '#ed8936', '#4299e1', '#48bb78', '#9f7aea', '#f56565'];
+                const colorIndex = Math.abs(user.username.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % colors.length;
+                const avatarColor = colors[colorIndex];
                 
-                // User Avatar (oben rechts)
-                const userAvatar = document.getElementById('userAvatar');
-                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                userAvatar.innerHTML = ''; // Icon entfernen
-            } else {
-                // Fallback: Ersten Buchstaben des Usernamens anzeigen
-                const userAvatar = document.getElementById('userAvatar');
-                const firstLetter = userData.username.charAt(0).toUpperCase();
-                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-            }
-        }
-
-        // Aktuelle Seite identifizieren
-        function getCurrentPageKey() {
-            const pathname = window.location.pathname;
-            const filename = pathname.split('/').pop();
-            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+                userItem.innerHTML = `
+                    <div class="user-avatar-small" style="background-color: ${avatarColor};">
+                        ${user.username.charAt(1).toUpperCase()}
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">${user.username}</div>
+                        <div class="user-meta">
+                            <span class="role-badge ${getRoleBadgeClass(user.role)}">${user.roleDisplay}</span>
+                            <span>Eingestellt von: ${user.assignedBy}</span>
+                        </div>
+                    </div>
+                    <div class="user-date">${user.date}</div>
+                `;
+                
+                userList.appendChild(userItem);
+            });
         }
 
         // Discord OAuth Login
@@ -1639,6 +1248,30 @@
             }
         }
 
+        // Discord Avatar laden
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                // User Avatar (oben rechts)
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = ''; // Icon entfernen
+            } else {
+                // Fallback: Ersten Buchstaben des Usernamens anzeigen
+                const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
+        }
+
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+        }
+
         // Zugriff verweigert anzeigen
         function showAccessRestricted(user, pageKey) {
             loginPage.classList.add('hidden');
@@ -1673,39 +1306,6 @@
             return names[pageKey] || pageKey;
         }
 
-        // Navigation zu anderen Seiten mit Zugriffsprüfung
-        async function navigateToWithAccessCheck(page) {
-            if (!currentUser) {
-                showNotification('Bitte zuerst anmelden', 'error');
-                return;
-            }
-            
-            // Prüfen ob Benutzer noch existiert
-            const userExists = await checkUserExists();
-            if (!userExists) {
-                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
-                logout();
-                return;
-            }
-            
-            const pageKey = PAGE_ACCESS_CONFIG[page];
-            if (!pageKey) {
-                showNotification('Ungültige Seite', 'error');
-                return;
-            }
-            
-            const hasAccessToPage = await hasAccess(pageKey);
-            if (!hasAccessToPage) {
-                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                return;
-            }
-            
-            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
-        }
-
         // Autorisierten Inhalt anzeigen
         function showAuthorizedContent(user) {
             loginPage.classList.add('hidden');
@@ -1727,13 +1327,10 @@
             }
             
             updateCardAccess();
-            updateWeedPrices();
-            loadWeedEntries();
-            loadDiscountSettings();
-            loadGlobalLogo(); // Globales Logo laden
+            loadUserRoles();
         }
 
-        // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
+        // Karten-Zugriffsanzeige aktualisieren
         async function updateCardAccess() {
             if (!currentUser) return;
             
@@ -1769,6 +1366,36 @@
             }
         }
 
+        // Zugriffsprüfung mit Cloudflare Worker
+        async function hasAccess(pageKey) {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token,
+                        currentPage: pageKey
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.hasPageAccess;
+                
+            } catch (error) {
+                console.error('Fehler bei Zugriffsprüfung:', error);
+                return false;
+            }
+        }
+
         // Notification System
         function showNotification(message, type = 'info', duration = 4000) {
             notification.textContent = message;
@@ -1793,7 +1420,6 @@
         function logout() {
             currentUser = null;
             userAccessInfo = null;
-            discountSettingsUnlocked = false;
             localStorage.removeItem('discord_user');
             localStorage.removeItem('discord_access_token');
             localStorage.removeItem('user_access_info');
@@ -1863,13 +1489,7 @@
         }
 
         // Tab Navigation
-        async function switchTab(tabName) {
-            const hasAccessToTab = await hasAccess(tabName);
-            if (!hasAccessToTab) {
-                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
-                return;
-            }
-            
+        function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -1881,161 +1501,15 @@
             document.getElementById(tabName).classList.add('active');
             document.getElementById(tabName + 'Tab').classList.add('active');
             
-            // Rabatt-Einstellungen zurücksetzen beim Tab-Wechsel
-            if (tabName !== 'weed') {
-                lockDiscountSettings();
-            }
-            
             showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
 
         function getTabDisplayName(tabName) {
             const names = {
                 'dashboard': 'Dashboard',
-                'weed': 'Weed System'
+                'userManagement': 'User Management'
             };
             return names[tabName] || tabName;
-        }
-
-        // Weed Price Calculation
-        function updateWeedPrices() {
-            const quantity = parseInt(weedQuantity.value) || 0;
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-
-            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
-            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
-            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
-            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
-        }
-
-        // Handle Weed Form Submission
-        async function handleWeedSubmit() {
-            const hasAccessToWeed = await hasAccess('weed');
-            if (!hasAccessToWeed) {
-                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
-                return;
-            }
-            
-            const buyer = document.getElementById('weedBuyer').value.trim();
-            const seller = document.getElementById('weedSeller').value.trim();
-            const quantity = parseInt(weedQuantity.value);
-            
-            if (!buyer || !seller || !quantity || quantity < 1) {
-                showNotification('Bitte alle Felder korrekt ausfüllen!', 'error');
-                return;
-            }
-            
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-            
-            const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
-            
-            const entry = {
-                buyer: buyer,
-                seller: seller,
-                quantity: quantity,
-                totalPrice: totalPrice,
-                discount: currentDiscount,
-                discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
-                discountAmount: discountValue,
-                sellerShare: sellerShare,
-                buyerShare: buyerShare,
-                date: new Date().toLocaleString('de-DE'),
-                timestamp: Date.now()
-            };
-
-            try {
-                const originalText = saveWeedBtn.innerHTML;
-                saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
-                saveWeedBtn.disabled = true;
-                
-                push(entriesRef, entry).then(() => {
-                    document.getElementById('weedBuyer').value = '';
-                    document.getElementById('weedSeller').value = '';
-                    weedQuantity.value = '1';
-                    updateWeedPrices();
-                    
-                    showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
-                    
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
-                }).catch(error => {
-                    console.error('Fehler beim Speichern:', error);
-                    showNotification('Fehler beim Speichern!', 'error');
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
-                });
-                
-            } catch (error) {
-                console.error('Fehler beim Speichern:', error);
-                showNotification('Fehler beim Speichern!', 'error');
-                saveWeedBtn.disabled = false;
-            }
-        }
-
-        // Load and display entries from Firebase
-        function loadWeedEntries() {
-            onValue(entriesRef, (snapshot) => {
-                entries = [];
-                snapshot.forEach((childSnapshot) => {
-                    const data = childSnapshot.val();
-                    data.key = childSnapshot.key;
-                    entries.push(data);
-                });
-                
-                entries.sort((a, b) => b.timestamp - a.timestamp);
-                renderWeedTransactions();
-            });
-        }
-
-        function renderWeedTransactions() {
-            const tbody = document.getElementById('weedTransactions');
-            tbody.innerHTML = '';
-            
-            if (entries.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; color: #a0aec0;">
-                            Keine Transaktionen vorhanden
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            const recentEntries = entries.slice(0, 10);
-            
-            recentEntries.forEach(entry => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${entry.date}</td>
-                    <td>${entry.buyer}</td>
-                    <td>${entry.seller}</td>
-                    <td>${entry.quantity} Bricks</td>
-                    <td>${entry.discount}% (${entry.discountLabel})</td>
-                    <td>${entry.totalPrice} €</td>
-                    <td style="color: #48bb78;">${entry.sellerShare} €</td>
-                    <td style="color: #4299e1;">${entry.buyerShare} €</td>
-                `;
-            });
-        }
-
-        // Logo Einstellungen
-        function loadLogoSettings() {
-            onValue(logoSettingsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.logoText) {
-                    logoText = data.logoText;
-                    // Überschreiben wir nicht das globale Logo
-                }
-            });
         }
 
         // Event Listeners initialisieren
@@ -2044,20 +1518,12 @@
             logoutBtn.addEventListener('click', logout);
             restrictedLogoutBtn.addEventListener('click', logout);
             dashboardTab.addEventListener('click', () => switchTab('dashboard'));
-            weedTab.addEventListener('click', () => switchTab('weed'));
+            userManagementTab.addEventListener('click', () => switchTab('userManagement'));
             
-            // Logo Upload Event Listeners
-            headerLogo.addEventListener('click', openPasswordModal);
-            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
-            cancelPassword.addEventListener('click', closePasswordModal);
-            confirmPassword.addEventListener('click', verifyLogoPassword);
-            saveLogo.addEventListener('click', handleLogoUpload);
-            
-            // Discount Settings Event Listeners
-            openDiscountSettings.addEventListener('click', openDiscountPasswordModal);
-            cancelDiscountPassword.addEventListener('click', closeDiscountPasswordModal);
-            confirmDiscountPassword.addEventListener('click', verifyDiscountPassword);
-            addDiscount.addEventListener('click', addNewDiscount);
+            // User Management Event Listeners
+            userManagementBtn.addEventListener('click', openUserManagementModal);
+            cancelUserManagement.addEventListener('click', closeUserManagementModal);
+            saveUserRole.addEventListener('click', saveUserRoleToFirebase);
             
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -2067,9 +1533,31 @@
                     }
                 });
             });
+        }
+
+        // Navigation zu anderen Seiten mit Zugriffsprüfung
+        async function navigateToWithAccessCheck(page) {
+            if (!currentUser) {
+                showNotification('Bitte zuerst anmelden', 'error');
+                return;
+            }
             
-            weedQuantity.addEventListener('input', updateWeedPrices);
-            saveWeedBtn.addEventListener('click', handleWeedSubmit);
+            const pageKey = PAGE_ACCESS_CONFIG[page];
+            if (!pageKey) {
+                showNotification('Ungültige Seite', 'error');
+                return;
+            }
+            
+            const hasAccessToPage = await hasAccess(pageKey);
+            if (!hasAccessToPage) {
+                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                return;
+            }
+            
+            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
         }
 
         // Initialisierung
@@ -2084,7 +1572,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
+        console.log('KhusLand Panel - Mit User Management System!');
     </script>
 </body>
 </html>

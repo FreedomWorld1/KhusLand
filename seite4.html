@@ -4,8 +4,11 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Werkbank Manager</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     * {
       margin: 0;
@@ -14,12 +17,12 @@
     }
     
     body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       min-height: 100vh;
       color: #e2e8f0;
     }
-
+    
     /* Login Styles */
     .login-container {
       background: rgba(30, 41, 59, 0.95);
@@ -115,7 +118,7 @@
       display: none;
       border-left: 4px solid #f56565;
     }
-
+    
     /* Main Content Styles */
     .header {
       background: rgba(26, 32, 44, 0.95);
@@ -209,100 +212,6 @@
       border: 1px solid rgba(220, 38, 38, 0.3);
     }
 
-    /* Card Styles */
-    .card { 
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%); 
-      border: 1px solid rgba(220, 38, 38, 0.2); 
-      border-radius: 16px; 
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
-                  0 5px 10px rgba(0, 0, 0, 0.3),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-    
-    .small-muted { 
-      color: #94a3b8; 
-      font-size: 0.85rem; 
-    }
-    
-    .btn { 
-      transition: all 0.2s ease; 
-      font-size: 0.9rem; 
-      font-weight: 500;
-    }
-    
-    .btn:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .hidden { 
-      display: none !important; 
-    }
-    
-    input, select, textarea { 
-      transition: all 0.2s ease; 
-      font-size: 0.95rem; 
-    }
-    
-    input:focus, select:focus, textarea:focus { 
-      outline: none; 
-      border-color: #dc2626; 
-      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); 
-    }
-    
-    .active-link { 
-      background-color: #dc2626 !important; 
-      color: #fff !important; 
-      font-weight: 600; 
-    }
-    
-    .gradient-text {
-      background: linear-gradient(90deg, #dc2626 0%, #ea580c 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(220, 38, 38, 0.1);
-    }
-    
-    .fade-in {
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .pulse-glow {
-      animation: pulseGlow 2s infinite;
-    }
-    
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
-      50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.8); }
-      100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.5); }
-    }
-    
-    .scrollbar-custom::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 10px;
-    }
-    
-    .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #dc2626;
-      border-radius: 10px;
-    }
-
     /* Navigation Tabs */
     .nav-tabs {
       display: flex;
@@ -342,114 +251,138 @@
       display: block;
     }
 
+    /* Card Styles */
+    .card {
+      background: rgba(26, 32, 44, 0.8);
+      border-radius: 16px;
+      padding: 2.2rem;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      border-color: #dc2626;
+    }
+
     /* Product Grid */
     .workbench-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 2rem;
     }
     
     .product-card {
-      background: rgba(30, 41, 59, 0.7);
+      background: rgba(26, 32, 44, 0.8);
       border: 1px solid rgba(220, 38, 38, 0.3);
       border-radius: 12px;
-      padding: 16px;
+      padding: 1.5rem;
       transition: all 0.3s ease;
       cursor: pointer;
+      position: relative;
     }
     
     .product-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);
-      border-color: rgba(220, 38, 38, 0.5);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      border-color: #dc2626;
+      background: rgba(30, 38, 54, 0.9);
     }
     
     .product-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 10px;
+      margin-bottom: 1rem;
     }
     
     .product-name {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       font-weight: 600;
       color: #f8fafc;
       line-height: 1.2;
     }
     
     .product-time {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #dc2626;
       background: rgba(220, 38, 38, 0.1);
-      padding: 4px 8px;
+      padding: 6px 12px;
       border-radius: 8px;
       white-space: nowrap;
+      font-weight: 600;
     }
     
     .product-category {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #94a3b8;
-      margin-bottom: 10px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
     
     .product-resource-box {
       background: rgba(30, 41, 59, 0.8);
       border: 1px solid rgba(220, 38, 38, 0.2);
       border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
     }
     
     .product-resource-title {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #dc2626;
-      margin-bottom: 6px;
+      margin-bottom: 0.8rem;
       text-align: center;
     }
     
     .product-resource-item {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
-      margin-bottom: 4px;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+      padding: 0.3rem 0;
     }
     
     .product-output-box {
       background: rgba(30, 41, 59, 0.8);
       border: 1px solid rgba(34, 197, 94, 0.2);
       border-radius: 8px;
-      padding: 10px;
+      padding: 1rem;
     }
     
     .product-output-title {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #22c55e;
-      margin-bottom: 6px;
+      margin-bottom: 0.8rem;
       text-align: center;
     }
     
     .product-output-item {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
-      margin-bottom: 4px;
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+      padding: 0.3rem 0;
     }
     
     .product-quantity-controls {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin: 12px 0;
+      gap: 1rem;
+      margin: 1.5rem 0;
     }
     
     .product-quantity-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       background: rgba(220, 38, 38, 0.2);
       border: 1px solid rgba(220, 38, 38, 0.3);
       color: #dc2626;
@@ -458,32 +391,32 @@
       justify-content: center;
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: bold;
     }
     
     .product-quantity-btn:hover {
       background: rgba(220, 38, 38, 0.3);
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
     
     .product-quantity-display {
-      font-size: 1rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: #dc2626;
-      min-width: 50px;
+      min-width: 60px;
       text-align: center;
     }
     
     .product-time-display {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #dc2626;
       font-weight: 600;
       text-align: center;
-      margin-top: 6px;
+      margin-top: 1rem;
       background: rgba(220, 38, 38, 0.1);
-      padding: 6px 10px;
-      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
     }
 
     /* Search and Categories */
@@ -491,8 +424,8 @@
       background: rgba(30, 41, 59, 0.6);
       border: 1px solid rgba(220, 38, 38, 0.2);
       border-radius: 10px;
-      padding: 10px 15px;
-      margin-bottom: 15px;
+      padding: 12px 16px;
+      margin-bottom: 1.5rem;
     }
     
     .search-box input {
@@ -500,7 +433,7 @@
       border: none;
       width: 100%;
       color: white;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
     
     .search-box input::placeholder {
@@ -514,18 +447,98 @@
     
     .category-btn {
       transition: all 0.3s ease;
-      padding: 8px 16px;
+      padding: 10px 20px;
       background: rgba(30, 41, 59, 0.6);
       border: 1px solid rgba(220, 38, 38, 0.2);
       border-radius: 8px;
       color: #cbd5e0;
       cursor: pointer;
+      font-weight: 500;
     }
     
     .category-btn.active {
-      background-color: #dc2626;
+      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
       color: white;
       border-color: #dc2626;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    }
+
+    /* Admin Table */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(101, 119, 149, 0.2);
+    }
+    
+    .admin-table th {
+      background: rgba(26, 32, 44, 0.8);
+      font-weight: 600;
+      color: #fca5a5;
+    }
+    
+    .admin-table td {
+      color: #cbd5e0;
+    }
+
+    /* Form Styles */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      color: #fca5a5;
+      font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group select {
+      padding: 0.9rem;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #e2e8f0;
+      transition: all 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #dc2626;
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+    }
+
+    /* Button Styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
     }
 
     /* Modal Styles */
@@ -541,7 +554,6 @@
       justify-content: center;
       z-index: 1000;
       padding: 20px;
-      overflow-y: auto;
     }
     
     .scrollable-modal {
@@ -564,10 +576,6 @@
     .modal-scrollbar::-webkit-scrollbar-thumb {
       background: #dc2626;
       border-radius: 10px;
-    }
-    
-    .modal-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: #b91c1c;
     }
 
     /* Notification System */
@@ -620,62 +628,6 @@
       color: white;
     }
 
-    /* Admin Table */
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5rem;
-      background: rgba(30, 41, 59, 0.6);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .admin-table th,
-    .admin-table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid rgba(101, 119, 149, 0.2);
-    }
-    
-    .admin-table th {
-      background: rgba(26, 32, 44, 0.8);
-      font-weight: 600;
-      color: #fca5a5;
-    }
-    
-    .admin-table td {
-      color: #cbd5e0;
-    }
-
-    /* Resource Input Styles */
-    .resource-input-group {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    
-    .resource-input-column {
-      flex: 1;
-    }
-    
-    .resource-input-column label {
-      display: block;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      margin-bottom: 4px;
-    }
-    
-    .resource-tag {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(220, 38, 38, 0.2);
-      color: #dc2626;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      margin: 2px;
-    }
-
     /* Footer */
     .footer {
       text-align: center;
@@ -703,6 +655,80 @@
     .access-restricted p {
       color: #a0aec0;
       margin-bottom: 1.5rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Status Indicators */
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    .status-online {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+
+    /* Image Preview */
+    .image-preview-small {
+      max-width: 50px;
+      max-height: 50px;
+      border-radius: 6px;
+      margin-right: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    /* Resource Tags */
+    .resource-tag {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(220, 38, 38, 0.2);
+      color: #dc2626;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      margin: 4px;
+      font-weight: 500;
+    }
+
+    /* Time Input Container */
+    .time-input-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .time-input {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .time-input label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Scrollbar */
+    .scrollbar-custom::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .scrollbar-custom::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 10px;
+    }
+    
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+      background: #dc2626;
+      border-radius: 10px;
     }
   </style>
 </head>
@@ -737,7 +763,6 @@
         <span id="userWelcome">Willkommen, Benutzer</span>
         <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
         
-        <!-- User Avatar -->
         <div class="user-avatar" id="userAvatar">
           <i class="fas fa-user"></i>
         </div>
@@ -750,7 +775,7 @@
 
     <!-- Main Content -->
     <div class="main-container">
-      <!-- Access Restricted Message (Initially Hidden) -->
+      <!-- Access Restricted Message -->
       <div id="accessRestricted" class="access-restricted hidden">
         <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
         <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
@@ -761,7 +786,7 @@
         </button>
       </div>
 
-      <!-- Authorized Content (Initially Hidden) -->
+      <!-- Authorized Content -->
       <div id="authorizedContent" class="hidden">
         <div class="page-header">
           <h1 style="color: #fca5a5; font-size: 2rem;">Werkbank Manager</h1>
@@ -784,10 +809,9 @@
 
         <!-- Products Tab -->
         <div id="products" class="tab-content active">
-          <div class="card p-6">
-            <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-              <i class="fas fa-boxes"></i>
-              Meine Produkte
+          <div class="card">
+            <h2 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.5rem;">
+              <i class="fas fa-boxes"></i> Meine Produkte
             </h2>
             
             <!-- Suchfeld -->
@@ -797,8 +821,8 @@
             
             <!-- Kategorien Filter -->
             <div class="flex flex-wrap gap-2 mb-6" id="categoriesContainer">
-              <button class="category-btn px-4 py-2 active" data-category="all">
-                <i class="fas fa-layer-group mr-1"></i> Alle
+              <button class="category-btn active" data-category="all">
+                <i class="fas fa-layer-group"></i> Alle
               </button>
               <!-- Kategorien werden hier dynamisch geladen -->
             </div>
@@ -812,48 +836,45 @@
 
         <!-- Admin Tab -->
         <div id="admin" class="tab-content">
-          <div class="card p-6">
-            <h2 class="text-xl font-semibold mb-4 text-blue-400 flex items-center gap-2">
-              <i class="fas fa-cog"></i>
-              Adminbereich
+          <div class="card">
+            <h2 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.5rem;">
+              <i class="fas fa-cog"></i> Adminbereich
             </h2>
             
             <div id="adminLoginSection">
-              <div class="mb-4">
-                <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
-                  <i class="fas fa-key mr-1"></i> Admin-Passwort
+              <div class="form-group">
+                <label for="adminPass">
+                  <i class="fas fa-key"></i> Admin-Passwort
                 </label>
-                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
+                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein">
               </div>
-              <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <i class="fas fa-sign-in-alt"></i>
-                Einloggen
+              <button id="adminLoginBtn" class="btn-primary" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> Einloggen
               </button>
-              <span id="adminError" class="text-red-400 mt-3 block hidden text-center text-sm py-2 bg-red-900/20 rounded-lg">
-                <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
-              </span>
+              <div id="adminError" class="error-message hidden">
+                <i class="fas fa-exclamation-triangle"></i> Falsches Passwort
+              </div>
             </div>
             
             <div id="adminContent" class="hidden">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-                <div class="small-muted">Produkte: <span id="totalWorkbenches" class="font-bold text-white">0</span></div>
-                <div class="flex gap-2">
-                  <button id="addWorkbenchBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-plus mr-1"></i>
-                    Produkt
+              <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
+                <div style="color: #94a3b8;">
+                  Produkte: <span id="totalWorkbenches" style="font-weight: bold; color: white;">0</span>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button id="addWorkbenchBtn" class="btn-primary" style="padding: 0.5rem 1rem;">
+                    <i class="fas fa-plus"></i> Produkt
                   </button>
-                  <button id="manageCategoriesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-tags mr-1"></i>
-                    Kategorien
+                  <button id="manageCategoriesBtn" class="btn-primary" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <i class="fas fa-tags"></i> Kategorien
                   </button>
-                  <button id="exportCsv" class="px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-file-export mr-1"></i>
-                    CSV Export
+                  <button id="exportCsv" class="btn-primary" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                    <i class="fas fa-file-export"></i> CSV Export
                   </button>
                 </div>
               </div>
               
-              <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
+              <div style="overflow: auto; max-height: 50vh; border-radius: 8px; border: 1px solid rgba(220, 38, 38, 0.3);">
                 <table class="admin-table">
                   <thead>
                     <tr>
@@ -882,58 +903,52 @@
   <!-- Modals -->
   <div id="workbenchModal" class="modal-overlay hidden">
     <div class="scrollable-modal modal-scrollbar">
-      <div class="card p-6">
-        <h3 class="text-lg font-semibold mb-4 text-red-400" id="workbenchModalTitle">
-          <i class="fas fa-plus mr-2"></i> Produkt hinzufügen
+      <div class="card">
+        <h3 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.3rem;" id="workbenchModalTitle">
+          <i class="fas fa-plus"></i> Produkt hinzufügen
         </h3>
-        <form id="workbenchForm" class="space-y-4">
+        <form id="workbenchForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
           <input type="hidden" id="workbenchKey">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-tag mr-1"></i> Name
-            </label>
-            <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
+          
+          <div class="form-group">
+            <label><i class="fas fa-tag"></i> Name</label>
+            <input type="text" id="workbenchName" required>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-folder mr-1"></i> Kategorie
-            </label>
-            <select id="workbenchCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+          
+          <div class="form-group">
+            <label><i class="fas fa-folder"></i> Kategorie</label>
+            <select id="workbenchCategory" required>
               <!-- Kategorien werden dynamisch geladen -->
             </select>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-clock mr-1"></i> Herstellungszeit
-            </label>
+          
+          <div class="form-group">
+            <label><i class="fas fa-clock"></i> Herstellungszeit</label>
             <div class="time-input-container">
               <div class="time-input">
                 <label>Minuten</label>
-                <input type="number" id="workbenchTimeMinutes" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0"/>
+                <input type="number" id="workbenchTimeMinutes" placeholder="0" min="0">
               </div>
               <div class="time-input">
                 <label>Sekunden</label>
-                <input type="number" id="workbenchTimeSeconds" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0" max="59"/>
+                <input type="number" id="workbenchTimeSeconds" placeholder="0" min="0" max="59">
               </div>
               <div class="time-input">
                 <label>Millisekunden</label>
-                <input type="number" id="workbenchTimeMilliseconds" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0" max="999"/>
+                <input type="number" id="workbenchTimeMilliseconds" placeholder="0" min="0" max="999">
               </div>
             </div>
-            <div class="text-xs text-gray-400 mt-1">
+            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem;">
               Format: Minuten Sekunden Millisekunden (z.B. 2 30 500 für 2 Minuten, 30 Sekunden, 500ms)
             </div>
           </div>
           
-          <!-- Weitere Modal-Inhalte... -->
-          <div class="flex gap-3 pt-2">
-            <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-save"></i>
-              Speichern
+          <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn-primary" style="flex: 1;">
+              <i class="fas fa-save"></i> Speichern
             </button>
-            <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-times"></i>
-              Abbrechen
+            <button type="button" id="cancelWorkbench" class="logout-btn">
+              <i class="fas fa-times"></i> Abbrechen
             </button>
           </div>
         </form>
@@ -944,39 +959,34 @@
   <!-- Categories Modal -->
   <div id="categoriesModal" class="modal-overlay hidden">
     <div class="scrollable-modal modal-scrollbar">
-      <div class="card p-6">
-        <h3 class="text-lg font-semibold mb-4 text-purple-400">
-          <i class="fas fa-tags mr-2"></i> Kategorien verwalten
+      <div class="card">
+        <h3 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.3rem;">
+          <i class="fas fa-tags"></i> Kategorien verwalten
         </h3>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-plus mr-1"></i> Neue Kategorie
-            </label>
-            <div class="flex gap-2">
-              <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
-              <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <i class="fas fa-plus"></i>
-                Hinzufügen
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="form-group">
+            <label><i class="fas fa-plus"></i> Neue Kategorie</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="text" id="newCategoryName" placeholder="Kategorie Name" style="flex: 1;">
+              <button id="addCategoryBtn" class="btn-primary">
+                <i class="fas fa-plus"></i> Hinzufügen
               </button>
             </div>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-list mr-1"></i> Vorhandene Kategorien
-            </label>
-            <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
+          
+          <div class="form-group">
+            <label><i class="fas fa-list"></i> Vorhandene Kategorien</label>
+            <div id="categoriesList" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem;">
               <!-- Kategorien werden hier dynamisch geladen -->
             </div>
           </div>
-          <div class="flex gap-3 pt-2">
-            <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-save"></i>
-              Speichern
+          
+          <div style="display: flex; gap: 1rem;">
+            <button id="saveCategories" class="btn-primary" style="flex: 1;">
+              <i class="fas fa-save"></i> Speichern
             </button>
-            <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
-              <i class="fas fa-times"></i>
-              Abbrechen
+            <button id="cancelCategories" class="logout-btn">
+              <i class="fas fa-times"></i> Abbrechen
             </button>
           </div>
         </div>
@@ -1419,12 +1429,10 @@
     // Utility
     function show(el) { 
       el.classList.remove('hidden'); 
-      el.classList.add('fade-in');
     }
     
     function hide(el) { 
       el.classList.add('hidden'); 
-      el.classList.remove('fade-in');
     }
 
     // KORRIGIERTE Zeit in Sekunden umrechnen (inklusive Millisekunden)
@@ -1535,14 +1543,14 @@
     function renderCategories() {
       const categoriesContainer = document.getElementById('categoriesContainer');
       // Behalte den "Alle" Button
-      categoriesContainer.innerHTML = '<button class="category-btn px-4 py-2 active" data-category="all"><i class="fas fa-layer-group mr-1"></i> Alle</button>';
+      categoriesContainer.innerHTML = '<button class="category-btn active" data-category="all"><i class="fas fa-layer-group"></i> Alle</button>';
       
       // Füge alle Kategorien hinzu
       categories.forEach(category => {
         const btn = document.createElement('button');
-        btn.className = 'category-btn px-4 py-2';
+        btn.className = 'category-btn';
         btn.setAttribute('data-category', category);
-        btn.innerHTML = `<i class="fas fa-folder mr-1"></i> ${category}`;
+        btn.innerHTML = `<i class="fas fa-folder"></i> ${category}`;
         categoriesContainer.appendChild(btn);
       });
       
@@ -1593,10 +1601,10 @@
       
       if (filteredWorkbenches.length === 0) {
         workbenchesGrid.innerHTML = `
-          <div class="col-span-full text-center py-8 text-gray-400">
-            <i class="fas fa-boxes text-4xl mb-4 text-gray-600"></i>
-            <p class="text-lg">Keine Produkte gefunden.</p>
-            <p class="text-sm mt-2">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
+          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #94a3b8;">
+            <i class="fas fa-boxes" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">Keine Produkte gefunden.</p>
+            <p style="font-size: 0.9rem;">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
           </div>
         `;
         return;
@@ -1608,7 +1616,7 @@
         
         // Bild anzeigen falls vorhanden
         const imageHtml = workbench.imageUrl ? 
-          `<div class="flex justify-center mb-3">
+          `<div style="display: flex; justify-content: center; margin-bottom: 1rem;">
              <img src="${workbench.imageUrl}" class="image-preview-small" alt="${workbench.name}">
            </div>` : '';
         
@@ -1667,7 +1675,7 @@
             <div class="product-time">${formatTime(workbench.time || 0)}</div>
           </div>
           <div class="product-category">
-            <i class="fas fa-folder mr-1"></i>${workbench.category}
+            <i class="fas fa-folder"></i>${workbench.category}
           </div>
           ${quantityControls}
           ${inputResourcesHtml}
@@ -1839,20 +1847,19 @@
         // Werkbänke in Admin-Tabelle
         workbenches.forEach(workbench => {
           const tr = document.createElement('tr');
-          tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
+          tr.style.borderBottom = '1px solid rgba(101, 119, 149, 0.2)';
+          tr.style.transition = 'background-color 0.3s';
           tr.innerHTML = `
-            <td class="p-3">${workbench.name}</td>
-            <td class="p-3">${workbench.category}</td>
-            <td class="p-3">${formatTime(workbench.time || 0)}</td>
-            <td class="p-3">
-              <div class="flex gap-2">
-                <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-workbench" data-key="${workbench.key}">
-                  <i class="fas fa-edit mr-1"></i>
-                  Bearbeiten
+            <td style="padding: 1rem;">${workbench.name}</td>
+            <td style="padding: 1rem;">${workbench.category}</td>
+            <td style="padding: 1rem;">${formatTime(workbench.time || 0)}</td>
+            <td style="padding: 1rem;">
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-primary edit-workbench" data-key="${workbench.key}" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                  <i class="fas fa-edit"></i> Bearbeiten
                 </button>
-                <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-workbench" data-key="${workbench.key}">
-                  <i class="fas fa-trash mr-1"></i>
-                  Löschen
+                <button class="btn-primary delete-workbench" data-key="${workbench.key}" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                  <i class="fas fa-trash"></i> Löschen
                 </button>
               </div>
             </td>`;
@@ -1899,26 +1906,8 @@
         
         workbenchKeyInput.value = key;
         
-        // Ressourcen setzen
-        currentResources = workbench.resources ? [...workbench.resources] : [];
-        renderResourcesList();
-        renderRequiredResourcesDisplay();
-        
-        // Output-Ressourcen setzen
-        currentOutputResources = workbench.outputResources ? [...workbench.outputResources] : [];
-        renderOutputResourcesList();
-        renderOutputResourcesDisplay();
-        
-        // Bild setzen falls vorhanden
-        if (workbench.imageUrl) {
-          previewImage.src = workbench.imageUrl;
-          imagePreview.classList.remove('hidden');
-        } else {
-          imagePreview.classList.add('hidden');
-        }
-        
         // Modal-Titel ändern
-        workbenchModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Produkt bearbeiten';
+        workbenchModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
         
         // Modal anzeigen
         show(workbenchModal);
@@ -1929,16 +1918,9 @@
         // Formular zurücksetzen
         workbenchForm.reset();
         workbenchKeyInput.value = '';
-        currentResources = [];
-        currentOutputResources = [];
-        renderResourcesList();
-        renderOutputResourcesList();
-        renderRequiredResourcesDisplay();
-        renderOutputResourcesDisplay();
-        imagePreview.classList.add('hidden');
         
         // Modal-Titel ändern
-        workbenchModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Produkt hinzufügen';
+        workbenchModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
         
         loadCategoriesToDropdown();
         show(workbenchModal);
@@ -1947,13 +1929,6 @@
       cancelWorkbench.addEventListener('click', () => {
         hide(workbenchModal);
         workbenchForm.reset();
-        currentResources = [];
-        currentOutputResources = [];
-        renderResourcesList();
-        renderOutputResourcesList();
-        renderRequiredResourcesDisplay();
-        renderOutputResourcesDisplay();
-        imagePreview.classList.add('hidden');
       });
 
       // Modal für Kategorien verwalten
@@ -1973,12 +1948,13 @@
         categoriesList.innerHTML = '';
         tempCategories.forEach((category, index) => {
           const div = document.createElement('div');
-          div.className = 'category-input';
+          div.style.display = 'flex';
+          div.style.gap = '0.5rem';
+          div.style.marginBottom = '0.5rem';
           div.innerHTML = `
-            <input type="text" value="${category}" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 category-edit" data-index="${index}">
-            <button type="button" class="px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn remove-category flex items-center gap-2" data-index="${index}">
-              <i class="fas fa-trash"></i>
-              Löschen
+            <input type="text" value="${category}" style="flex: 1; padding: 0.8rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 8px; color: #e2e8f0;" class="category-edit" data-index="${index}">
+            <button type="button" class="btn-primary remove-category" data-index="${index}" style="padding: 0.8rem; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+              <i class="fas fa-trash"></i> Löschen
             </button>
           `;
           categoriesList.appendChild(div);
@@ -2000,8 +1976,9 @@
 
       // Kategorie entfernen
       categoriesList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-category')) {
-          const index = parseInt(e.target.getAttribute('data-index'));
+        if (e.target.classList.contains('remove-category') || e.target.closest('.remove-category')) {
+          const button = e.target.classList.contains('remove-category') ? e.target : e.target.closest('.remove-category');
+          const index = parseInt(button.getAttribute('data-index'));
           // Überprüfen ob Kategorie in Verwendung ist
           const categoryInUse = workbenches.some(wb => wb.category === tempCategories[index]);
           if (categoryInUse) {
@@ -2054,13 +2031,6 @@
             hide(modal);
             if (modal === workbenchModal) {
               workbenchForm.reset();
-              currentResources = [];
-              currentOutputResources = [];
-              renderResourcesList();
-              renderOutputResourcesList();
-              renderRequiredResourcesDisplay();
-              renderOutputResourcesDisplay();
-              imagePreview.classList.add('hidden');
             }
             if (modal === categoriesModal) newCategoryName.value = '';
           }
@@ -2072,7 +2042,7 @@
         
         const submitBtn = e.target.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<div class="loading mr-2"></div> Speichere...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Speichere...';
         submitBtn.disabled = true;
         
         const name = document.getElementById('workbenchName').value;
@@ -2086,21 +2056,12 @@
         
         const key = workbenchKeyInput.value;
         
-        // Bild als Base64 speichern (für Demo-Zwecke)
-        let imageUrl = '';
-        if (previewImage.src) {
-          imageUrl = previewImage.src; // In einer echten App würden Sie das Bild hochladen
-        }
-        
         // Werkbank-Objekt erstellen
         const workbenchData = {
           name,
           category,
           time: totalTime,
-          timeDisplay: `${minutes} ${seconds} ${milliseconds}`, // Für spätere Anzeige
-          resources: [...currentResources],
-          outputResources: [...currentOutputResources],
-          imageUrl: imageUrl,
+          timeDisplay: `${minutes} ${seconds} ${milliseconds}`,
           date: new Date().toISOString(),
           timestamp: Date.now()
         };
@@ -2117,13 +2078,6 @@
         if (success) {
           hide(workbenchModal);
           workbenchForm.reset();
-          currentResources = [];
-          currentOutputResources = [];
-          renderResourcesList();
-          renderOutputResourcesList();
-          renderRequiredResourcesDisplay();
-          renderOutputResourcesDisplay();
-          imagePreview.classList.add('hidden');
           showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
         } else {
           showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
@@ -2152,22 +2106,12 @@
           return;
         }
         
-        const header = ['Name', 'Kategorie', 'Herstellungszeit (Sekunden)', 'Benötigte Ressourcen', 'Erhaltene Ressourcen'];
+        const header = ['Name', 'Kategorie', 'Herstellungszeit (Sekunden)'];
         const rows = workbenches.map(wb => {
-          const inputResourcesText = wb.resources && wb.resources.length > 0 
-            ? wb.resources.map(r => `${r.name}: ${r.amount}`).join('; ')
-            : 'Keine benötigten Ressourcen';
-          
-          const outputResourcesText = wb.outputResources && wb.outputResources.length > 0 
-            ? wb.outputResources.map(r => `${r.name}: ${r.amount}`).join('; ')
-            : 'Keine erhaltenen Ressourcen';
-          
           return [
             `"${wb.name}"`,
             `"${wb.category}"`,
-            `"${wb.time || 0}"`,
-            `"${inputResourcesText.replace(/"/g, '""')}"`,
-            `"${outputResourcesText.replace(/"/g, '""')}"`
+            `"${wb.time || 0}"`
           ].join(';');
         });
         
@@ -2189,27 +2133,6 @@
         
         showNotification('CSV erfolgreich exportiert', 'success');
       });
-    }
-
-    // Ressourcen Management Funktionen (vereinfacht)
-    function renderResourcesList() {
-      // Vereinfachte Implementierung
-      console.log('Ressourcen Liste gerendert');
-    }
-
-    function renderOutputResourcesList() {
-      // Vereinfachte Implementierung
-      console.log('Output Ressourcen Liste gerendert');
-    }
-
-    function renderRequiredResourcesDisplay() {
-      // Vereinfachte Implementierung
-      console.log('Benötigte Ressourcen angezeigt');
-    }
-
-    function renderOutputResourcesDisplay() {
-      // Vereinfachte Implementierung
-      console.log('Erhaltene Ressourcen angezeigt');
     }
 
     // Haupt-Initialisierungsfunktion für Werkbank
@@ -2242,7 +2165,7 @@
       }
     });
 
-    console.log('Werkbank Manager - Modernisiert mit KhusLand Panel Design!');
+    console.log('Werkbank Manager - Mit exaktem KhusLand Panel Design!');
   </script>
 </body>
 </html>

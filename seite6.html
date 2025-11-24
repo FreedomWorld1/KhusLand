@@ -1,789 +1,2090 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Spieler Einstellungen</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KhusLand Panel</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root {
-            --discord-dark: #36393f;
-            --discord-darker: #2f3136;
-            --discord-darkest: #202225;
-            --discord-text: #dcddde;
-            --discord-blurple: #5865f2;
-            --discord-green: #57f287;
-            --discord-red: #ed4245;
-            --discord-yellow: #fee75c;
-            --discord-gray: #72767d;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
         
         body {
-            background-color: var(--discord-dark);
-            color: var(--discord-text);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
-            padding: 20px;
+            color: #e2e8f0;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: var(--discord-darker);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
-        }
-        
-        header {
-            background-color: var(--discord-darkest);
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        /* Login Styles */
+        .login-container {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            background-color: var(--discord-blurple);
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
             color: white;
+            font-weight: bold;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.4);
         }
         
-        .logo-text {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
+        h1 {
+            color: #90cdf4;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            font-weight: 600;
         }
         
-        .settings-btn {
-            background-color: var(--discord-blurple);
+        .login-container p {
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+        
+        .discord-login-btn {
+            background: #5865F2;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-        
-        .settings-btn:hover {
-            background-color: #4752c4;
-        }
-        
-        .content {
-            display: flex;
-            min-height: 600px;
-        }
-        
-        .sidebar {
-            width: 240px;
-            background-color: var(--discord-darkest);
-            padding: 16px 0;
-            border-right: 1px solid rgba(0, 0, 0, 0.2);
-        }
-        
-        .sidebar-item {
-            padding: 8px 16px;
-            margin: 0 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            color: var(--discord-text);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .sidebar-item:hover {
-            background-color: rgba(79, 84, 92, 0.4);
-        }
-        
-        .sidebar-item.active {
-            background-color: rgba(79, 84, 92, 0.6);
-        }
-        
-        .sidebar-icon {
-            width: 20px;
-            text-align: center;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .section {
-            margin-bottom: 24px;
-        }
-        
-        .section-title {
-            font-size: 16px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 16px;
-            color: white;
-        }
-        
-        .input-group {
-            margin-bottom: 16px;
-        }
-        
-        .input-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #b9bbbe;
-        }
-        
-        .user-selector {
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 1.5rem;
             display: flex;
-            gap: 10px;
             align-items: center;
-            margin-bottom: 16px;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .discord-login-btn:hover {
+            background: #4752c4;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 1.5rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #4299e1;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(254, 178, 178, 0.1);
+            color: #fc8181;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            display: none;
+            border-left: 4px solid #f56565;
+        }
+        
+        /* Main Content Styles */
+        .header {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #4299e1;
+        }
+        
+        .logo-small {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .logo-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #cbd5e0;
         }
         
         .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: var(--discord-blurple);
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
             color: white;
-            flex-shrink: 0;
-        }
-        
-        .user-select {
-            flex: 1;
-            background-color: var(--discord-dark);
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
-            padding: 8px 12px;
-            color: var(--discord-text);
-            font-size: 14px;
-        }
-        
-        .role-select {
-            background-color: var(--discord-dark);
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
-            padding: 8px 12px;
-            color: var(--discord-text);
-            font-size: 14px;
-            width: 100%;
-        }
-        
-        .text-display {
-            background-color: var(--discord-dark);
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
-            padding: 12px;
-            margin-top: 16px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .highlight {
             font-weight: bold;
-            color: var(--discord-blurple);
+            background-size: cover;
+            background-position: center;
         }
         
-        .player-list {
-            margin-top: 24px;
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .player-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s;
-        }
-        
-        .player-item:hover {
-            background-color: rgba(79, 84, 92, 0.2);
-        }
-        
-        .player-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--discord-blurple);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-        
-        .player-info {
-            flex: 1;
-        }
-        
-        .player-name {
+        .logout-btn {
+            background: rgba(66, 153, 225, 0.15);
+            color: #90cdf4;
+            border: 1px solid #4299e1;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
             font-weight: 500;
-            margin-bottom: 4px;
-            color: white;
         }
         
-        .player-details {
+        .logout-btn:hover {
+            background: rgba(66, 153, 225, 0.25);
+        }
+        
+        .main-container {
+            max-width: 1300px;
+            margin: 2.5rem auto;
+            padding: 0 2.5rem;
+        }
+        
+        .page-header {
             display: flex;
-            font-size: 12px;
-            color: #b9bbbe;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: rgba(26, 32, 44, 0.9);
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
-        .player-rank {
-            margin-right: 12px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background-color: rgba(114, 118, 125, 0.3);
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
         }
         
-        .player-id {
-            color: var(--discord-gray);
+        .card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 16px;
+            padding: 2.2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
         }
         
-        .player-date {
-            font-size: 12px;
-            color: var(--discord-gray);
-            flex-shrink: 0;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: #4299e1;
+            background: rgba(30, 38, 54, 0.9);
         }
         
-        .add-player-btn {
-            background-color: var(--discord-green);
+        .card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: rgba(101, 119, 149, 0.3);
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: #90cdf4;
+        }
+        
+        .card p {
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+        
+        .access-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .access-allowed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+        
+        .access-denied {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(101, 119, 149, 0.3);
+            color: #a0aec0;
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* System-spezifische Styles */
+        .system-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .system-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #90cdf4;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 0.9rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+        
+        .price-display {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .price-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #48bb78;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
             border: none;
-            padding: 10px 16px;
-            border-radius: 4px;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .table th {
+            background: rgba(26, 32, 44, 0.8);
+            font-weight: 600;
+            color: #90cdf4;
+        }
+        
+        .table td {
+            color: #cbd5e0;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            background: none;
+            border: none;
             cursor: pointer;
             font-weight: 500;
-            margin-top: 16px;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #a0aec0;
+            font-size: 0.9rem;
         }
         
-        .add-player-btn:hover {
-            background-color: #48c774;
+        .nav-tab.active {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
         }
         
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--discord-gray);
+        .tab-content {
+            display: none;
         }
         
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
+        .tab-content.active {
+            display: block;
         }
         
-        .role-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-        
-        .role-admin {
-            background-color: rgba(237, 66, 69, 0.2);
-            color: var(--discord-red);
-        }
-        
-        .role-moderator {
-            background-color: rgba(88, 101, 242, 0.2);
-            color: var(--discord-blurple);
-        }
-        
-        .role-member {
-            background-color: rgba(87, 242, 135, 0.2);
-            color: var(--discord-green);
-        }
-        
-        .role-guest {
-            background-color: rgba(254, 231, 92, 0.2);
-            color: var(--discord-yellow);
-        }
-        
+        /* Notification System */
         .notification {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            padding: 12px 20px;
-            background-color: var(--discord-green);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
             color: white;
-            border-radius: 4px;
             font-weight: 500;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s, opacity 0.3s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
         }
         
         .notification.show {
-            transform: translateY(0);
-            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
         }
         
         .notification.error {
-            background-color: var(--discord-red);
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
         }
         
-        .player-actions {
-            display: flex;
-            gap: 8px;
-            margin-left: 12px;
+        .notification.info {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
         }
         
-        .player-action-btn {
-            background: none;
-            border: none;
-            color: var(--discord-gray);
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            transition: color 0.2s, background-color 0.2s;
+        /* Access Badge */
+        .access-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
         }
         
-        .player-action-btn:hover {
-            color: var(--discord-text);
-            background-color: rgba(79, 84, 92, 0.4);
+        .access-permanent {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
         }
         
-        .discord-users {
+        .access-temporary {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+        
+        /* Discount System */
+        .discount-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
         
-        .discord-user {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            background-color: var(--discord-dark);
-            border-radius: 4px;
+        .discount-btn {
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #cbd5e0;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 0.9rem;
         }
         
-        .discord-user:hover {
-            background-color: rgba(79, 84, 92, 0.4);
+        .discount-btn.active {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            border-color: #4299e1;
+            box-shadow: 0 2px 10px rgba(66, 153, 225, 0.3);
         }
         
-        .discord-user.selected {
-            background-color: rgba(88, 101, 242, 0.2);
-            border: 1px solid var(--discord-blurple);
+        .discount-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
-        .discord-user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--discord-blurple);
+        .price-breakdown {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .price-row {
             display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.1);
+        }
+        
+        .price-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .price-label {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .price-value {
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        
+        .seller-share {
+            color: #48bb78;
+        }
+        
+        .buyer-share {
+            color: #4299e1;
+        }
+        
+        /* Access Restricted Styles */
+        .access-restricted {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+
+        .access-restricted h2 {
+            color: #fc8181;
+            margin-bottom: 1rem;
+        }
+
+        .access-restricted p {
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Logo Upload Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
             align-items: center;
             justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .modal-content h3 {
+            color: #90cdf4;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+            font-size: 1rem;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Discount Settings Styles */
+        .discount-settings {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+
+        .discount-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .discount-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .discount-list {
+            margin-top: 1rem;
+        }
+
+        .discount-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+
+        .discount-item-info {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .discount-value {
             font-weight: bold;
-            color: white;
-            margin-right: 10px;
-            flex-shrink: 0;
+            color: #4299e1;
         }
-        
-        .discord-user-info {
-            flex: 1;
+
+        .discount-label {
+            color: #cbd5e0;
         }
-        
-        .discord-user-name {
-            font-weight: 500;
-            font-size: 14px;
+
+        .delete-discount {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
-        
-        .discord-user-tag {
-            font-size: 12px;
-            color: var(--discord-gray);
+
+        .delete-discount:hover {
+            background: rgba(245, 101, 101, 0.3);
+        }
+
+        .discount-settings-content {
+            display: none;
+        }
+
+        .discount-settings-content.active {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <div class="logo-icon">KL</div>
-                <div class="logo-text">KhusLand Spieler Einstellungen</div>
-            </div>
-            <button class="settings-btn">Spieler Einstellungen</button>
-        </header>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="logo">KL</div>
+        <h1>KhusLand Panel Login</h1>
+        <p>Bitte mit Discord anmelden um fortzufahren</p>
         
-        <div class="content">
-            <div class="sidebar">
-                <div class="sidebar-item active">
-                    <div class="sidebar-icon">👥</div>
-                    <div>Spieler Verwaltung</div>
-                </div>
-                <div class="sidebar-item">
-                    <div class="sidebar-icon">🎮</div>
-                    <div>Rollen System</div>
-                </div>
-                <div class="sidebar-item">
-                    <div class="sidebar-icon">🔗</div>
-                    <div>Discord Integration</div>
-                </div>
-                <div class="sidebar-item">
-                    <div class="sidebar-icon">⚙️</div>
-                    <div>Einstellungen</div>
-                </div>
+        <div class="error-message" id="errorMessage"></div>
+        
+        <button id="discordLogin" class="discord-login-btn">
+            <i class="fab fa-discord"></i> Mit Discord anmelden
+        </button>
+        
+        <div class="loading" id="loginLoading">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Anmeldung läuft...</p>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden until login) -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-small">
+                <div class="logo-icon" id="headerLogo">A</div>
+                <h2>KhusLand Management Panel</h2>
             </div>
-            
-            <div class="main-content">
-                <div class="section">
-                    <h2 class="section-title">Spieler Einstellungen</h2>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Discord Benutzer auswählen</label>
-                        <div class="discord-users" id="discord-users">
-                            <!-- Discord users will be populated by JavaScript -->
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Rolle auswählen</label>
-                        <select class="role-select" id="role-select">
-                            <option value="">Rolle auswählen...</option>
-                            <option value="admin">Admin</option>
-                            <option value="moderator">Moderator</option>
-                            <option value="member">Mitglied</option>
-                            <option value="guest">Gast</option>
-                        </select>
-                    </div>
-                    
-                    <div class="text-display">
-                        Hiermit wird <span id="selected-user" class="highlight">@hier soll user gepingt werden</span> als <span id="selected-role" class="highlight">@hier die role eingestellt</span>.
-                    </div>
-                    
-                    <button class="add-player-btn" id="add-player-btn">
-                        <span>+</span> Spieler hinzufügen
-                    </button>
+            <div class="user-info">
+                <span id="userWelcome">Willkommen, Benutzer</span>
+                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+                
+                <!-- User Avatar -->
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
                 </div>
                 
-                <div class="section">
-                    <h2 class="section-title">Eingestellte Spieler</h2>
-                    
-                    <div class="player-list" id="player-list">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">👥</div>
-                            <p>Noch keine Spieler eingestellt</p>
-                            <p style="font-size: 12px; margin-top: 8px;">Fügen Sie einen Spieler hinzu, um ihn hier zu sehen</p>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Logo Upload Modal -->
+        <div id="logoUploadModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Logo ändern</h3>
+                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <input type="file" id="logoFile" class="file-input" accept="image/*">
+                <div class="modal-buttons">
+                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
+                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Modal für Logo -->
+        <div id="passwordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort erforderlich</h3>
+                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Modal für Discount Settings -->
+        <div id="discountPasswordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort für Rabatt-Einstellungen</h3>
+                <input type="password" id="discountPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelDiscountPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmDiscountPassword" class="btn-primary">Bestätigen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Access Restricted Message (Initially Hidden) -->
+            <div id="accessRestricted" class="access-restricted hidden">
+                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
+                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
+                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Abmelden
+                </button>
+            </div>
+
+            <!-- Authorized Content (Initially Hidden) -->
+            <div id="authorizedContent" class="hidden">
+                <div class="page-header">
+                    <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand</h1>
+                    <div class="status-indicators">
+                        <span style="color: #48bb78;">
+                            <i class="fas fa-circle"></i> Alle Systeme Online
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <button id="dashboardTab" class="nav-tab active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button id="weedTab" class="nav-tab">
+                        <i class="fas fa-cannabis"></i> Weed System
+                    </button>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <!-- System Cards -->
+                    <div class="grid-container">
+                        <div class="card" data-page="index.html">
+                            <div class="card-icon">🌿</div>
+                            <h3>Weed Ankauf</h3>
+                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
                         </div>
+
+                        <div class="card" data-page="seite2.html">
+                            <div class="card-icon">💊</div>
+                            <h3>Kokain Ankauf</h3>
+                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite3.html">
+                            <div class="card-icon">♻️</div>
+                            <h3>Materialrecycler - Produkte</h3>
+                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite4.html">
+                            <div class="card-icon">🔧</div>
+                            <h3>Werkbank Manager</h3>
+                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite5.html">
+                            <div class="card-icon">🛣️</div>
+                            <h3>Drogenrouten</h3>
+                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite6.html">
+                            <div class="card-icon">🏞️</div>
+                            <h3>KhusLand Management</h3>
+                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weed System Tab -->
+                <div id="weed" class="tab-content">
+                    <!-- Discount Settings -->
+                    <div class="discount-settings">
+                        <div class="discount-header">
+                            <h3 style="color: #90cdf4; font-size: 1.5rem;">
+                                <i class="fas fa-percentage"></i> Rabatt Einstellungen
+                            </h3>
+                            <button id="openDiscountSettings" class="btn-primary">
+                                <i class="fas fa-cog"></i> Einstellungen öffnen
+                            </button>
+                        </div>
+                        
+                        <div class="discount-settings-content" id="discountSettingsContent">
+                            <div class="discount-form">
+                                <div class="form-group">
+                                    <label for="discountValue">Rabatt Wert (%)</label>
+                                    <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="discountName">Rabatt Name</label>
+                                    <input type="text" id="discountName" placeholder="Name des Rabatts" value="Kein Rabatt">
+                                </div>
+                                
+                                <button id="addDiscount" class="btn-primary" style="align-self: end;">
+                                    <i class="fas fa-plus"></i> Hinzufügen
+                                </button>
+                            </div>
+                            
+                            <div class="discount-list" id="discountList">
+                                <!-- Discount items will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="system-card">
+                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-cannabis"></i> Weed Ankauf Management
+                        </h3>
+                        
+                        <!-- Discount Selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
+                            <div class="discount-grid" id="discountButtons">
+                                <!-- Discount buttons will be generated here -->
+                            </div>
+                        </div>
+                        
+                        <div class="system-form">
+                            <div class="form-group">
+                                <label for="weedBuyer">Käufer Name</label>
+                                <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="weedSeller">Verkäufer Name</label>
+                                <input type="text" id="weedSeller" required placeholder="Name des Verkäufers">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="weedQuantity">Menge (Bricks)</label>
+                                <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
+                            </div>
+                        </div>
+                        
+                        <!-- Price Breakdown -->
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
+                                <span class="price-value" id="totalPrice">0 €</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Rabatt:</span>
+                                <span class="price-value" id="discountAmount">0% (0 €)</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Verkäufer Anteil:</span>
+                                <span class="price-value seller-share" id="sellerShare">0 €</span>
+                            </div>
+                            <div class="price-row">
+                                <span class="price-label">Käufer Anteil:</span>
+                                <span class="price-value buyer-share" id="buyerShare">0 €</span>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="saveWeedBtn" class="btn-primary">
+                            <i class="fas fa-save"></i> Ankauf speichern
+                        </button>
+                    </div>
+
+                    <!-- Weed Transactions Table -->
+                    <div class="system-card">
+                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-history"></i> Letzte Weed Ankäufe
+                        </h3>
+                        
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Käufer</th>
+                                    <th>Verkäufer</th>
+                                    <th>Menge</th>
+                                    <th>Rabatt</th>
+                                    <th>Gesamt</th>
+                                    <th>Verkäufer</th>
+                                    <th>Käufer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weedTransactions">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
+                                        Keine Transaktionen vorhanden
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="footer">
+            <p>KhusLand Management System © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
+        </div>
     </div>
 
-    <div class="notification" id="notification"></div>
+    <!-- Notification Container -->
+    <div id="notification" class="notification hidden"></div>
 
-    <script>
-        // Beispiel-Daten für Discord-Benutzer
-        const discordUsers = [
-            { id: 1, name: "MaxMustermann", tag: "MaxMustermann#1234", avatar: "MM" },
-            { id: 2, name: "AnnaSchmidt", tag: "AnnaSchmidt#5678", avatar: "AS" },
-            { id: 3, name: "TomWeber", tag: "TomWeber#9012", avatar: "TW" },
-            { id: 4, name: "LisaMüller", tag: "LisaMüller#3456", avatar: "LM" },
-            { id: 5, name: "DavidFischer", tag: "DavidFischer#7890", avatar: "DF" },
-            { id: 6, name: "SarahKoch", tag: "SarahKoch#2345", avatar: "SK" }
+    <script type="module">
+        // Discord OAuth Konfiguration
+        const DISCORD_CLIENT_ID = '1432942180770644079';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Firebase Import und Konfiguration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+
+        // Firebase Konfiguration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+            authDomain: "khusland-b7d13.firebaseapp.com",
+            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+            projectId: "khusland-b7d13",
+            storageBucket: "khusland-b7d13.firebasestorage.app",
+            messagingSenderId: "69573193613",
+            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+            measurementId: "G-JSCWR4207G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+        const entriesRef = ref(db,'weed_entries');
+        const discountsRef = ref(db,'discount_settings');
+        const logoSettingsRef = ref(db,'logo_settings');
+        const logoImageRef = storageRef(storage, 'global_logo.png');
+
+        // Seitenspezifische Konfiguration
+        const PAGE_ACCESS_CONFIG = {
+            'seite7.html': 'dashboard',
+            'seite5.html': 'route', 
+            'seite4.html': 'werkbank',
+            'seite3.html': 'materialrecycler',
+            'seite2.html': 'kokain',
+            'index.html': 'weed',
+            'seite6.html': 'management'
+        };
+
+        // System Variablen
+        const ADMIN_PASSWORD = '1101';
+        let currentDiscount = 0;
+        let entries = [];
+        let availableDiscounts = [
+            { value: 0, label: 'Kein Rabatt' },
+            { value: 10, label: 'Mitarbeiter' },
+            { value: 15, label: 'Einkäufer' },
+            { value: 20, label: 'Normal' }
         ];
+        let logoText = 'A';
+        let currentUser = null;
+        let userAccessInfo = null;
+        let discountSettingsUnlocked = false;
 
-        // Beispiel-Daten für Spieler
-        const samplePlayers = [
-            {
-                id: 1,
-                name: "MaxMustermann",
-                tag: "MaxMustermann#1234",
-                avatar: "MM",
-                role: "admin",
-                rank: "Admin",
-                discordId: "123456789012345678",
-                date: "15.10.2023"
-            },
-            {
-                id: 2,
-                name: "AnnaSchmidt",
-                tag: "AnnaSchmidt#5678",
-                avatar: "AS",
-                role: "moderator",
-                rank: "Moderator",
-                discordId: "987654321098765432",
-                date: "10.10.2023"
-            }
-        ];
-
-        // DOM-Elemente
-        const discordUsersContainer = document.getElementById('discord-users');
-        const roleSelect = document.getElementById('role-select');
-        const selectedUserSpan = document.getElementById('selected-user');
-        const selectedRoleSpan = document.getElementById('selected-role');
-        const playerList = document.getElementById('player-list');
-        const addPlayerBtn = document.getElementById('add-player-btn');
+        // DOM Elemente
+        const loginPage = document.getElementById('loginPage');
+        const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
+        const errorMessage = document.getElementById('errorMessage');
+        const userWelcome = document.getElementById('userWelcome');
         const notification = document.getElementById('notification');
+        const accessBadge = document.getElementById('accessBadge');
+        const headerLogo = document.getElementById('headerLogo');
+        const restrictedUserName = document.getElementById('restrictedUserName');
+        const restrictedPageName = document.getElementById('restrictedPageName');
+        const discordLoginBtn = document.getElementById('discordLogin');
+        const loginLoading = document.getElementById('loginLoading');
+        
+        // Logo Upload Modal Elemente
+        const logoUploadModal = document.getElementById('logoUploadModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const discountPasswordModal = document.getElementById('discountPasswordModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const logoPassword = document.getElementById('logoPassword');
+        const discountPassword = document.getElementById('discountPassword');
+        const logoFile = document.getElementById('logoFile');
+        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const cancelPassword = document.getElementById('cancelPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const cancelDiscountPassword = document.getElementById('cancelDiscountPassword');
+        const confirmDiscountPassword = document.getElementById('confirmDiscountPassword');
+        const saveLogo = document.getElementById('saveLogo');
+        
+        // Discount Settings Elemente
+        const openDiscountSettings = document.getElementById('openDiscountSettings');
+        const discountSettingsContent = document.getElementById('discountSettingsContent');
+        const discountValue = document.getElementById('discountValue');
+        const discountName = document.getElementById('discountName');
+        const addDiscount = document.getElementById('addDiscount');
+        const discountList = document.getElementById('discountList');
+        
+        // Buttons
+        const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
+        const dashboardTab = document.getElementById('dashboardTab');
+        const weedTab = document.getElementById('weedTab');
+        const saveWeedBtn = document.getElementById('saveWeedBtn');
+        const weedQuantity = document.getElementById('weedQuantity');
 
-        // Zustandsvariablen
-        let selectedUser = null;
-        let players = [...samplePlayers];
+        // Logo Upload Funktionen
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
+        }
 
-        // Discord-Benutzer anzeigen
-        function renderDiscordUsers() {
-            discordUsersContainer.innerHTML = '';
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            logoPassword.value = '';
+        }
+
+        function openLogoUploadModal() {
+            logoUploadModal.classList.add('active');
+        }
+
+        function closeLogoUploadModal() {
+            logoUploadModal.classList.remove('active');
+            adminPassword.value = '';
+            logoFile.value = '';
+        }
+
+        function verifyLogoPassword() {
+            const password = logoPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                closePasswordModal();
+                openLogoUploadModal();
+            } else {
+                showNotification('Falsches Passwort!', 'error');
+            }
+        }
+
+        // Discount Settings Funktionen
+        function openDiscountPasswordModal() {
+            discountPasswordModal.classList.add('active');
+        }
+
+        function closeDiscountPasswordModal() {
+            discountPasswordModal.classList.remove('active');
+            discountPassword.value = '';
+        }
+
+        function verifyDiscountPassword() {
+            const password = discountPassword.value;
+            if (password === ADMIN_PASSWORD) {
+                discountSettingsUnlocked = true;
+                discountSettingsContent.classList.add('active');
+                openDiscountSettings.classList.add('hidden');
+                closeDiscountPasswordModal();
+                loadDiscountSettings(); // Rabatte neu laden
+                showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
+            } else {
+                showNotification('Falsches Passwort!', 'error');
+            }
+        }
+
+        function lockDiscountSettings() {
+            discountSettingsUnlocked = false;
+            discountSettingsContent.classList.remove('active');
+            openDiscountSettings.classList.remove('hidden');
+        }
+
+        async function handleLogoUpload() {
+            const password = adminPassword.value;
+            const file = logoFile.files[0];
+
+            if (password !== ADMIN_PASSWORD) {
+                showNotification('Falsches Admin Passwort!', 'error');
+                return;
+            }
+
+            if (!file) {
+                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
+                return;
+            }
+
+            try {
+                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
+                saveLogo.disabled = true;
+
+                // Bild in Firebase Storage hochladen
+                await uploadBytes(logoImageRef, file);
+                
+                // Download URL holen
+                const downloadURL = await getDownloadURL(logoImageRef);
+                
+                // Logo in der Datenbank speichern
+                await set(logoSettingsRef, {
+                    logoUrl: downloadURL,
+                    uploadedAt: new Date().toISOString(),
+                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
+                });
+
+                // Logo sofort anwenden
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+
+                showNotification('Logo erfolgreich hochgeladen!', 'success');
+                closeLogoUploadModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Hochladen des Logos:', error);
+                showNotification('Fehler beim Hochladen des Logos!', 'error');
+            } finally {
+                saveLogo.innerHTML = 'Logo speichern';
+                saveLogo.disabled = false;
+            }
+        }
+
+        // Discount Settings Funktionen
+        function loadDiscountSettings() {
+            onValue(discountsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Konvertiere Firebase-Daten in Array
+                    availableDiscounts = [];
+                    if (Array.isArray(data)) {
+                        availableDiscounts = data;
+                    } else {
+                        // Falls es ein Objekt ist, in Array umwandeln
+                        availableDiscounts = Object.values(data);
+                    }
+                    
+                    renderDiscountButtons();
+                    if (discountSettingsUnlocked) {
+                        renderDiscountList();
+                    }
+                } else {
+                    // Standard-Discounts setzen
+                    set(discountsRef, availableDiscounts);
+                }
+            });
+        }
+
+        function renderDiscountList() {
+            discountList.innerHTML = '';
             
-            discordUsers.forEach(user => {
-                const userElement = document.createElement('div');
-                userElement.className = 'discord-user';
-                if (selectedUser && selectedUser.id === user.id) {
-                    userElement.classList.add('selected');
+            if (availableDiscounts.length === 0) {
+                discountList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte vorhanden</p>';
+                return;
+            }
+            
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+                const discountItem = document.createElement('div');
+                discountItem.className = 'discount-item';
+                discountItem.innerHTML = `
+                    <div class="discount-item-info">
+                        <span class="discount-value">${discount.value}%</span>
+                        <span class="discount-label">${discount.label}</span>
+                    </div>
+                    <button class="delete-discount" data-index="${index}">
+                        <i class="fas fa-trash"></i> Löschen
+                    </button>
+                `;
+                discountList.appendChild(discountItem);
+            });
+
+            // Event Listener für Lösch-Buttons
+            document.querySelectorAll('.delete-discount').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    deleteDiscount(index);
+                });
+            });
+        }
+
+        function addNewDiscount() {
+            if (!discountSettingsUnlocked) {
+                showNotification('Bitte zuerst Passwort eingeben!', 'error');
+                return;
+            }
+
+            const value = parseInt(discountValue.value);
+            const name = discountName.value.trim();
+
+            if (isNaN(value) || value < 0 || value > 100) {
+                showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein!', 'error');
+                return;
+            }
+
+            if (!name) {
+                showNotification('Bitte geben Sie einen Namen für den Rabatt ein!', 'error');
+                return;
+            }
+
+            const newDiscount = {
+                value: value,
+                label: name
+            };
+
+            // Prüfen ob Rabatt mit gleichem Wert UND Namen bereits existiert
+            const exists = availableDiscounts.some(d => d.value === value && d.label === name);
+            if (exists) {
+                showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
+                return;
+            }
+
+            availableDiscounts.push(newDiscount);
+            saveDiscountsToFirebase();
+            
+            discountValue.value = '0';
+            discountName.value = 'Kein Rabatt';
+
+            showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
+        }
+
+        function deleteDiscount(index) {
+            if (!discountSettingsUnlocked) {
+                showNotification('Bitte zuerst Passwort eingeben!', 'error');
+                return;
+            }
+
+            if (index >= 0 && index < availableDiscounts.length) {
+                const discount = availableDiscounts[index];
+                
+                // Verhindere das Löschen des Standard-Rabatts (0%)
+                if (discount.value === 0 && discount.label === 'Kein Rabatt') {
+                    showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
+                    return;
                 }
                 
-                userElement.innerHTML = `
-                    <div class="discord-user-avatar">${user.avatar}</div>
-                    <div class="discord-user-info">
-                        <div class="discord-user-name">${user.name}</div>
-                        <div class="discord-user-tag">${user.tag}</div>
-                    </div>
-                `;
-                
-                userElement.addEventListener('click', () => {
-                    selectUser(user);
+                availableDiscounts.splice(index, 1);
+                saveDiscountsToFirebase();
+                showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');
+            }
+        }
+
+        function saveDiscountsToFirebase() {
+            set(discountsRef, availableDiscounts)
+                .then(() => {
+                    renderDiscountButtons();
+                    if (discountSettingsUnlocked) {
+                        renderDiscountList();
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler beim Speichern der Rabatte:', error);
+                    showNotification('Fehler beim Speichern der Rabatte!', 'error');
                 });
-                
-                discordUsersContainer.appendChild(userElement);
-            });
         }
 
-        // Benutzer auswählen
-        function selectUser(user) {
-            selectedUser = user;
-            selectedUserSpan.textContent = `@${user.name}`;
-            renderDiscordUsers();
-        }
-
-        // Rollenauswahl verarbeiten
-        roleSelect.addEventListener('change', function() {
-            if (this.value) {
-                const roleText = this.options[this.selectedIndex].text;
-                selectedRoleSpan.textContent = `@${roleText}`;
-                
-                // Rollen-Badge-Stil anwenden
-                selectedRoleSpan.className = 'highlight';
-                selectedRoleSpan.classList.add(`role-${this.value}`);
-            } else {
-                selectedRoleSpan.textContent = '@hier die role eingestellt';
-                selectedRoleSpan.className = 'highlight';
-            }
-        });
-
-        // Spieler zur Liste hinzufügen
-        addPlayerBtn.addEventListener('click', function() {
-            if (!selectedUser) {
-                showNotification('Bitte wählen Sie einen Benutzer aus!', 'error');
-                return;
-            }
+        function renderDiscountButtons() {
+            const container = document.getElementById('discountButtons');
+            container.innerHTML = '';
             
-            if (!roleSelect.value) {
-                showNotification('Bitte wählen Sie eine Rolle aus!', 'error');
-                return;
-            }
-            
-            // Prüfen, ob der Benutzer bereits in der Liste ist
-            const existingPlayer = players.find(player => player.id === selectedUser.id);
-            if (existingPlayer) {
-                showNotification('Dieser Benutzer ist bereits in der Liste!', 'error');
-                return;
-            }
-            
-            // Neuen Spieler erstellen
-            const roleText = roleSelect.options[roleSelect.selectedIndex].text;
-            const newPlayer = {
-                id: selectedUser.id,
-                name: selectedUser.name,
-                tag: selectedUser.tag,
-                avatar: selectedUser.avatar,
-                role: roleSelect.value,
-                rank: roleText,
-                discordId: generateDiscordId(),
-                date: new Date().toLocaleDateString('de-DE')
-            };
-            
-            // Spieler zur Liste hinzufügen
-            players.push(newPlayer);
-            renderPlayerList();
-            
-            // Auswahl zurücksetzen
-            selectedUser = null;
-            roleSelect.value = '';
-            selectedUserSpan.textContent = '@hier soll user gepingt werden';
-            selectedRoleSpan.textContent = '@hier die role eingestellt';
-            selectedRoleSpan.className = 'highlight';
-            renderDiscordUsers();
-            
-            showNotification(`Spieler ${newPlayer.name} erfolgreich hinzugefügt!`);
-        });
-
-        // Spielerliste rendern
-        function renderPlayerList() {
-            playerList.innerHTML = '';
-            
-            if (players.length === 0) {
-                playerList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">👥</div>
-                        <p>Noch keine Spieler eingestellt</p>
-                        <p style="font-size: 12px; margin-top: 8px;">Fügen Sie einen Spieler hinzu, um ihn hier zu sehen</p>
-                    </div>
+            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
+                button.setAttribute('data-discount', discount.value);
+                button.setAttribute('data-label', discount.label);
+                button.innerHTML = `
+                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
                 `;
-                return;
-            }
-            
-            players.forEach(player => {
-                const playerItem = document.createElement('div');
-                playerItem.className = 'player-item';
-                playerItem.innerHTML = `
-                    <div class="player-avatar">${player.avatar}</div>
-                    <div class="player-info">
-                        <div class="player-name">
-                            ${player.name}
-                            <span class="role-badge role-${player.role}">${player.rank}</span>
-                        </div>
-                        <div class="player-details">
-                            <div class="player-rank">${player.rank}</div>
-                            <div class="player-id">Discord ID: ${player.discordId}</div>
-                        </div>
-                    </div>
-                    <div class="player-date">${player.date}</div>
-                    <div class="player-actions">
-                        <button class="player-action-btn" data-id="${player.id}" title="Spieler bearbeiten">✏️</button>
-                        <button class="player-action-btn" data-id="${player.id}" title="Spieler entfernen">🗑️</button>
-                    </div>
-                `;
-                
-                playerList.appendChild(playerItem);
-            });
-            
-            // Event-Listener für Aktionen hinzufügen
-            document.querySelectorAll('.player-action-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const playerId = parseInt(this.getAttribute('data-id'));
-                    if (this.textContent === '🗑️') {
-                        removePlayer(playerId);
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.discount-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    button.classList.add('active');
+                    currentDiscount = discount.value;
+                    
+                    updateWeedPrices();
+                    
+                    if (discount.value > 0) {
+                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
                     } else {
-                        editPlayer(playerId);
+                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
                     }
                 });
+                
+                container.appendChild(button);
             });
         }
 
-        // Spieler entfernen
-        function removePlayer(playerId) {
-            players = players.filter(player => player.id !== playerId);
-            renderPlayerList();
-            showNotification('Spieler erfolgreich entfernt!');
-        }
-
-        // Spieler bearbeiten
-        function editPlayer(playerId) {
-            const player = players.find(p => p.id === playerId);
-            if (player) {
-                // Für dieses Beispiel wählen wir einfach den Benutzer und die Rolle aus
-                selectedUser = {
-                    id: player.id,
-                    name: player.name,
-                    tag: player.tag,
-                    avatar: player.avatar
-                };
-                
-                roleSelect.value = player.role;
-                
-                selectedUserSpan.textContent = `@${player.name}`;
-                selectedRoleSpan.textContent = `@${player.rank}`;
-                selectedRoleSpan.className = 'highlight';
-                selectedRoleSpan.classList.add(`role-${player.role}`);
-                
-                renderDiscordUsers();
-                
-                // Nach dem Bearbeiten entfernen wir den Spieler
-                removePlayer(playerId);
-                
-                showNotification(`Spieler ${player.name} kann nun bearbeitet werden`);
+        // Globales Logo laden
+        async function loadGlobalLogo() {
+            try {
+                const downloadURL = await getDownloadURL(logoImageRef);
+                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                headerLogo.innerHTML = '';
+            } catch (error) {
+                // Falls kein Logo vorhanden ist, Standard beibehalten
+                console.log('Kein globales Logo gefunden, verwende Standard');
             }
         }
 
-        // Zufällige Discord-ID generieren (für Demo-Zwecke)
-        function generateDiscordId() {
-            return Math.floor(Math.random() * 1000000000000000000).toString();
+        // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
+        async function hasAccess(pageKey) {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token,
+                        currentPage: pageKey
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.hasPageAccess;
+                
+            } catch (error) {
+                console.error('Fehler bei Zugriffsprüfung:', error);
+                return false;
+            }
         }
 
-        // Benachrichtigung anzeigen
-        function showNotification(message, type = 'success') {
+        // BENUTZER EXISTENZ PRÜFEN
+        async function checkUserExists() {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.isAuthorized;
+                
+            } catch (error) {
+                console.error('Fehler bei Benutzerprüfung:', error);
+                return false;
+            }
+        }
+
+        // DISCORD AVATAR LADEN
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                // User Avatar (oben rechts)
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = ''; // Icon entfernen
+            } else {
+                // Fallback: Ersten Buchstaben des Usernamens anzeigen
+                const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
+        }
+
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
+        }
+
+        // Discord OAuth Login
+        function startDiscordOAuth() {
+            const scope = 'identify';
+            const state = generateRandomState();
+            
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
+            
+            window.location.href = authUrl.toString();
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        async function exchangeCodeForToken(code) {
+            try {
+                loginLoading.style.display = 'block';
+                
+                const response = await fetch(`${BACKEND_URL}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        code, 
+                        redirect_uri: DISCORD_REDIRECT_URI
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Worker responded with status ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.access_token) {
+                    await verifyUser(data.access_token);
+                } else {
+                    throw new Error('Kein Access Token erhalten');
+                }
+            } catch (error) {
+                console.error('Fehler beim Token-Austausch:', error);
+                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        async function verifyUser(accessToken) {
+            try {
+                const currentPage = getCurrentPageKey();
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken,
+                        currentPage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed');
+                }
+
+                const data = await response.json();
+
+                if (data.isAuthorized) {
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    
+                    const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        ...userAccessInfo
+                    };
+                    
+                    // Discord Avatar laden (nur für User Avatar)
+                    await loadDiscordAvatar(user);
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
+                } else {
+                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            } finally {
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        // Zugriff verweigert anzeigen
+        function showAccessRestricted(user, pageKey) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserName.textContent = user.username;
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
+        }
+
+        // Login-Seite anzeigen
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.add('hidden');
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management'
+            };
+            return names[pageKey] || pageKey;
+        }
+
+        // Navigation zu anderen Seiten mit Zugriffsprüfung
+        async function navigateToWithAccessCheck(page) {
+            if (!currentUser) {
+                showNotification('Bitte zuerst anmelden', 'error');
+                return;
+            }
+            
+            // Prüfen ob Benutzer noch existiert
+            const userExists = await checkUserExists();
+            if (!userExists) {
+                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
+                logout();
+                return;
+            }
+            
+            const pageKey = PAGE_ACCESS_CONFIG[page];
+            if (!pageKey) {
+                showNotification('Ungültige Seite', 'error');
+                return;
+            }
+            
+            const hasAccessToPage = await hasAccess(pageKey);
+            if (!hasAccessToPage) {
+                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                return;
+            }
+            
+            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
+        }
+
+        // Autorisierten Inhalt anzeigen
+        function showAuthorizedContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
+            
+            userWelcome.textContent = `Willkommen, ${user.username}`;
+            
+            if (userAccessInfo && userAccessInfo.message) {
+                accessBadge.textContent = userAccessInfo.message;
+                accessBadge.classList.remove('hidden');
+                
+                if (userAccessInfo.isPermanent) {
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
+            updateCardAccess();
+            updateWeedPrices();
+            loadWeedEntries();
+            loadDiscountSettings();
+            loadGlobalLogo(); // Globales Logo laden
+        }
+
+        // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
+        async function updateCardAccess() {
+            if (!currentUser) return;
+            
+            const cards = document.querySelectorAll('.card');
+            
+            for (const card of cards) {
+                const page = card.getAttribute('data-page');
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                
+                if (pageKey) {
+                    const hasAccessToPage = await hasAccess(pageKey);
+                    
+                    // Entferne bestehende Status-Badges
+                    const existingStatus = card.querySelector('.access-status');
+                    if (existingStatus) {
+                        existingStatus.remove();
+                    }
+                    
+                    if (hasAccessToPage) {
+                        card.classList.remove('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-allowed';
+                        statusBadge.textContent = '✓ Zugriff';
+                        card.appendChild(statusBadge);
+                    } else {
+                        card.classList.add('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-denied';
+                        statusBadge.textContent = '✗ Kein Zugriff';
+                        card.appendChild(statusBadge);
+                    }
+                }
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
             notification.textContent = message;
-            notification.className = 'notification';
-            
-            if (type === 'error') {
-                notification.classList.add('error');
-            }
-            
+            notification.className = `notification ${type}`;
+            notification.classList.remove('hidden');
             notification.classList.add('show');
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, duration);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            userAccessInfo = null;
+            discountSettingsUnlocked = false;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            // User Avatar zurücksetzen
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
+            showLoginPage();
+            accessBadge.classList.add('hidden');
+            
+            showNotification('Erfolgreich ausgeloggt', 'info');
+        }
+
+        // Session prüfen
+        async function checkExistingLogin() {
+            const userData = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const storedAccessInfo = localStorage.getItem('user_access_info');
+            
+            if (userData && token) {
+                try {
+                    const user = JSON.parse(userData);
+                    userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
+                    
+                    const currentPage = getCurrentPageKey();
+                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            accessToken: token,
+                            currentPage
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.isAuthorized) {
+                            currentUser = {
+                                id: user.id,
+                                username: user.username,
+                                ...userAccessInfo
+                            };
+                            
+                            // Discord Avatar laden (nur für User Avatar)
+                            await loadDiscordAvatar(user);
+                            
+                            if (data.hasPageAccess) {
+                                showAuthorizedContent(currentUser);
+                                showNotification(`Willkommen zurück, ${user.username}`, 'info');
+                            } else {
+                                showAccessRestricted(currentUser, currentPage);
+                            }
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Fehler beim Laden der Benutzerdaten:', e);
+                }
+            }
+            
+            showLoginPage();
+        }
+
+        // Tab Navigation
+        async function switchTab(tabName) {
+            const hasAccessToTab = await hasAccess(tabName);
+            if (!hasAccessToTab) {
+                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
+                return;
+            }
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-tab').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Rabatt-Einstellungen zurücksetzen beim Tab-Wechsel
+            if (tabName !== 'weed') {
+                lockDiscountSettings();
+            }
+            
+            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
+        }
+
+        function getTabDisplayName(tabName) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'weed': 'Weed System'
+            };
+            return names[tabName] || tabName;
+        }
+
+        // Weed Price Calculation
+        function updateWeedPrices() {
+            const quantity = parseInt(weedQuantity.value) || 0;
+            const pricePerBrick = 2500;
+            const totalPrice = quantity * pricePerBrick;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
+
+            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
+            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
+            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
+            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
+        }
+
+        // Handle Weed Form Submission
+        async function handleWeedSubmit() {
+            const hasAccessToWeed = await hasAccess('weed');
+            if (!hasAccessToWeed) {
+                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
+                return;
+            }
+            
+            const buyer = document.getElementById('weedBuyer').value.trim();
+            const seller = document.getElementById('weedSeller').value.trim();
+            const quantity = parseInt(weedQuantity.value);
+            
+            if (!buyer || !seller || !quantity || quantity < 1) {
+                showNotification('Bitte alle Felder korrekt ausfüllen!', 'error');
+                return;
+            }
+            
+            const pricePerBrick = 2500;
+            const totalPrice = quantity * pricePerBrick;
+            const discountValue = (totalPrice * currentDiscount) / 100;
+            const sellerShare = totalPrice - discountValue;
+            const buyerShare = discountValue;
+            
+            const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
+            
+            const entry = {
+                buyer: buyer,
+                seller: seller,
+                quantity: quantity,
+                totalPrice: totalPrice,
+                discount: currentDiscount,
+                discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
+                discountAmount: discountValue,
+                sellerShare: sellerShare,
+                buyerShare: buyerShare,
+                date: new Date().toLocaleString('de-DE'),
+                timestamp: Date.now()
+            };
+
+            try {
+                const originalText = saveWeedBtn.innerHTML;
+                saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
+                saveWeedBtn.disabled = true;
+                
+                push(entriesRef, entry).then(() => {
+                    document.getElementById('weedBuyer').value = '';
+                    document.getElementById('weedSeller').value = '';
+                    weedQuantity.value = '1';
+                    updateWeedPrices();
+                    
+                    showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
+                    
+                    saveWeedBtn.innerHTML = originalText;
+                    saveWeedBtn.disabled = false;
+                }).catch(error => {
+                    console.error('Fehler beim Speichern:', error);
+                    showNotification('Fehler beim Speichern!', 'error');
+                    saveWeedBtn.innerHTML = originalText;
+                    saveWeedBtn.disabled = false;
+                });
+                
+            } catch (error) {
+                console.error('Fehler beim Speichern:', error);
+                showNotification('Fehler beim Speichern!', 'error');
+                saveWeedBtn.disabled = false;
+            }
+        }
+
+        // Load and display entries from Firebase
+        function loadWeedEntries() {
+            onValue(entriesRef, (snapshot) => {
+                entries = [];
+                snapshot.forEach((childSnapshot) => {
+                    const data = childSnapshot.val();
+                    data.key = childSnapshot.key;
+                    entries.push(data);
+                });
+                
+                entries.sort((a, b) => b.timestamp - a.timestamp);
+                renderWeedTransactions();
+            });
+        }
+
+        function renderWeedTransactions() {
+            const tbody = document.getElementById('weedTransactions');
+            tbody.innerHTML = '';
+            
+            if (entries.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #a0aec0;">
+                            Keine Transaktionen vorhanden
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            const recentEntries = entries.slice(0, 10);
+            
+            recentEntries.forEach(entry => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${entry.date}</td>
+                    <td>${entry.buyer}</td>
+                    <td>${entry.seller}</td>
+                    <td>${entry.quantity} Bricks</td>
+                    <td>${entry.discount}% (${entry.discountLabel})</td>
+                    <td>${entry.totalPrice} €</td>
+                    <td style="color: #48bb78;">${entry.sellerShare} €</td>
+                    <td style="color: #4299e1;">${entry.buyerShare} €</td>
+                `;
+            });
+        }
+
+        // Logo Einstellungen
+        function loadLogoSettings() {
+            onValue(logoSettingsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.logoText) {
+                    logoText = data.logoText;
+                    // Überschreiben wir nicht das globale Logo
+                }
+            });
+        }
+
+        // Event Listeners initialisieren
+        function initializeEventListeners() {
+            discordLoginBtn.addEventListener('click', startDiscordOAuth);
+            logoutBtn.addEventListener('click', logout);
+            restrictedLogoutBtn.addEventListener('click', logout);
+            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
+            weedTab.addEventListener('click', () => switchTab('weed'));
+            
+            // Logo Upload Event Listeners
+            headerLogo.addEventListener('click', openPasswordModal);
+            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            cancelPassword.addEventListener('click', closePasswordModal);
+            confirmPassword.addEventListener('click', verifyLogoPassword);
+            saveLogo.addEventListener('click', handleLogoUpload);
+            
+            // Discount Settings Event Listeners
+            openDiscountSettings.addEventListener('click', openDiscountPasswordModal);
+            cancelDiscountPassword.addEventListener('click', closeDiscountPasswordModal);
+            confirmDiscountPassword.addEventListener('click', verifyDiscountPassword);
+            addDiscount.addEventListener('click', addNewDiscount);
+            
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
+                });
+            });
+            
+            weedQuantity.addEventListener('input', updateWeedPrices);
+            saveWeedBtn.addEventListener('click', handleWeedSubmit);
         }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
-            renderDiscordUsers();
-            renderPlayerList();
+            initializeEventListeners();
+            checkExistingLogin();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                exchangeCodeForToken(code);
+            }
         });
 
-        // Sidebar-Navigation
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-item').forEach(i => {
-                    i.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // Hier könnte man den Inhalt basierend auf der Auswahl ändern
-                showNotification(`Geöffnet: ${this.textContent.trim()}`, 'info');
-            });
-        });
+        console.log('KhusLand Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
     </script>
 </body>
 </html>

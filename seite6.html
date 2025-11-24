@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Spieler Einstellungspanel</title>
+    <title>Team Management Panel</title>
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
@@ -658,8 +658,8 @@
 <body>
     <!-- Login Page -->
     <div id="loginPage" class="login-container">
-        <div class="logo">HR</div>
-        <h1>HR Management Panel</h1>
+        <div class="logo">TM</div>
+        <h1>Team Management Panel</h1>
         <p>Bitte mit Discord anmelden um fortzufahren</p>
         
         <div class="error-message" id="errorMessage"></div>
@@ -679,12 +679,12 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon" id="headerLogo">HR</div>
-                <h2>HR Management Panel</h2>
+                <div class="logo-icon" id="headerLogo">TM</div>
+                <h2>Team Management Panel</h2>
             </div>
             <div class="user-info">
                 <span id="userWelcome">Willkommen, Benutzer</span>
-                <span id="accessBadge" class="access-badge access-permanent hidden">HR MANAGER</span>
+                <span id="accessBadge" class="access-badge access-permanent hidden">MANAGER</span>
                 
                 <!-- User Avatar -->
                 <div class="user-avatar" id="userAvatar">
@@ -725,7 +725,7 @@
             <!-- Authorized Content (Initially Hidden) -->
             <div id="authorizedContent" class="hidden">
                 <div class="page-header">
-                    <h1 style="color: #90cdf4; font-size: 2rem;">HR Management System</h1>
+                    <h1 style="color: #90cdf4; font-size: 2rem;">Team Management System</h1>
                     <div class="status-indicators">
                         <span style="color: #48bb78;">
                             <i class="fas fa-circle"></i> System Online
@@ -739,7 +739,7 @@
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </button>
                     <button id="recruitmentTab" class="nav-tab">
-                        <i class="fas fa-user-plus"></i> Spieler Einstellen
+                        <i class="fas fa-user-plus"></i> Mitglieder Einstellen
                     </button>
                     <button id="settingsTab" class="nav-tab">
                         <i class="fas fa-cog"></i> Einstellungen
@@ -752,8 +752,8 @@
                     <div class="grid-container">
                         <div class="card" data-page="recruitment">
                             <div class="card-icon">👤</div>
-                            <h3>Spieler Einstellen</h3>
-                            <p>Neue Spieler einstellen und Discord-Benachrichtigungen senden.</p>
+                            <h3>Mitglieder Einstellen</h3>
+                            <p>Neue Mitglieder einstellen und Discord-Benachrichtigungen senden.</p>
                             <div class="status">
                                 <span class="status-indicator status-online"></span>
                                 System online
@@ -786,18 +786,18 @@
                 <div id="recruitment" class="tab-content">
                     <div class="system-card">
                         <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-user-plus"></i> Neuen Spieler Einstellen
+                            <i class="fas fa-user-plus"></i> Neues Mitglied Einstellen
                         </h3>
                         
                         <div class="system-form">
                             <div class="form-group">
-                                <label for="playerName">Spieler Name</label>
-                                <input type="text" id="playerName" required placeholder="Name des Spielers">
+                                <label for="playerName">Mitglied Name</label>
+                                <input type="text" id="playerName" required placeholder="Name des Mitglieds">
                             </div>
                             
                             <div class="form-group">
-                                <label for="playerId">Spieler ID</label>
-                                <input type="text" id="playerId" required placeholder="Spieler ID">
+                                <label for="playerId">Mitglied ID</label>
+                                <input type="text" id="playerId" required placeholder="Mitglied ID">
                             </div>
                             
                             <div class="form-group">
@@ -842,7 +842,7 @@
                             <label for="webhookSelect">Discord Channel für Benachrichtigung</label>
                             <select id="webhookSelect" required>
                                 <option value="">Channel wählen</option>
-                                <option value="hr-announcements">HR Announcements</option>
+                                <option value="announcements">Allgemeine Ankündigungen</option>
                                 <option value="team-updates">Team Updates</option>
                                 <option value="management-chat">Management Chat</option>
                             </select>
@@ -858,8 +858,8 @@
                         <div class="webhook-preview">
                             <h4><i class="fas fa-eye"></i> Vorschau der Discord-Benachrichtigung</h4>
                             <div class="preview-content" id="discordPreview">
-                                <strong>🎉 Neue Einstellung!</strong><br>
-                                <strong>Spieler:</strong> [Name]<br>
+                                <strong>🎉 Neues Teammitglied!</strong><br>
+                                <strong>Name:</strong> [Name]<br>
                                 <strong>ID:</strong> [ID]<br>
                                 <strong>Rolle:</strong> [Rolle]<br>
                                 <strong>Abteilung:</strong> [Abteilung]<br>
@@ -869,7 +869,7 @@
                         </div>
                         
                         <button type="button" id="saveRecruitmentBtn" class="btn-primary">
-                            <i class="fas fa-paper-plane"></i> Spieler einstellen & Benachrichtigung senden
+                            <i class="fas fa-paper-plane"></i> Mitglied einstellen & Benachrichtigung senden
                         </button>
                     </div>
 
@@ -883,7 +883,7 @@
                             <thead>
                                 <tr>
                                     <th>Datum</th>
-                                    <th>Spieler</th>
+                                    <th>Mitglied</th>
                                     <th>ID</th>
                                     <th>Rolle</th>
                                     <th>Abteilung</th>
@@ -921,7 +921,7 @@
                                 
                                 <div class="form-group">
                                     <label for="botName">Bot Name</label>
-                                    <input type="text" id="botName" placeholder="HR Bot" value="HR Management">
+                                    <input type="text" id="botName" placeholder="Team Bot" value="Team Management">
                                 </div>
                                 
                                 <div class="form-group">
@@ -942,8 +942,8 @@
                                 <div class="form-group">
                                     <label for="announcementTemplate">Ankündigung Template</label>
                                     <textarea id="announcementTemplate" placeholder="Ankündigung Template...">
-🎊 **NEUE EINSTELLUNG** 🎊
-👤 **Spieler:** {player}
+🎊 **NEUES TEAMMITGLIED** 🎊
+👤 **Name:** {player}
 🆔 **ID:** {id}
 🎯 **Rolle:** {role}
 🏢 **Abteilung:** {department}
@@ -1008,7 +1008,7 @@
         </div>
 
         <div class="footer">
-            <p>HR Management System © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
+            <p>Team Management System © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
         </div>
     </div>
 
@@ -1026,10 +1026,10 @@
         let selectedRole = 'mitarbeiter';
         let systemSettings = {
             webhookUrl: '',
-            botName: 'HR Management',
+            botName: 'Team Management',
             welcomeMessage: '🎉 Willkommen im Team, {player}! 🎉',
-            announcementTemplate: `🎊 **NEUE EINSTELLUNG** 🎊
-👤 **Spieler:** {player}
+            announcementTemplate: `🎊 **NEUES TEAMMITGLIED** 🎊
+👤 **Name:** {player}
 🆔 **ID:** {id}
 🎯 **Rolle:** {role}
 🏢 **Abteilung:** {department}
@@ -1070,33 +1070,20 @@
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
-        // Vereinfachte Benutzerverifikation (ohne Backend)
-        async function verifyUserDirectly(accessToken) {
-            try {
-                const response = await fetch('https://discord.com/api/users/@me', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
+        // Demo Login für Testing
+        function handleDemoLogin() {
+            const demoUser = {
+                id: '123456789',
+                username: 'DemoManager',
+                avatar: null,
+                discriminator: '0001',
+                email: 'demo@team-management.de'
+            };
 
-                if (response.ok) {
-                    const user = await response.json();
-                    return {
-                        isAuthorized: true,
-                        user: user,
-                        hasPageAccess: true,
-                        accessInfo: {
-                            message: 'HR MANAGER',
-                            isPermanent: true
-                        }
-                    };
-                } else {
-                    throw new Error('Failed to fetch user data');
-                }
-            } catch (error) {
-                console.error('Error verifying user:', error);
-                return { isAuthorized: false };
-            }
+            handleSuccessfulLogin(demoUser, {
+                message: 'MANAGER',
+                isPermanent: true
+            });
         }
 
         // Token Austausch (vereinfacht)
@@ -1105,8 +1092,6 @@
                 loginLoading.style.display = 'block';
                 showError(''); // Clear previous errors
 
-                // In einer echten Implementierung würde hier der Backend-Call stehen
-                // Für Demo-Zwecke simulieren wir einen erfolgreichen Login
                 console.log('Received authorization code:', code);
                 
                 // Simuliere eine Verzögerung für das Loading
@@ -1115,14 +1100,14 @@
                 // Für Demo: Erstelle einen simulierten Benutzer
                 const demoUser = {
                     id: '123456789',
-                    username: 'DemoUser',
+                    username: 'TeamManager',
                     avatar: null,
                     discriminator: '0001',
-                    email: 'demo@example.com'
+                    email: 'manager@team-management.de'
                 };
 
                 handleSuccessfulLogin(demoUser, {
-                    message: 'HR MANAGER',
+                    message: 'MANAGER',
                     isPermanent: true
                 });
 
@@ -1298,7 +1283,7 @@
             }
 
             const testData = {
-                playerName: 'Test Spieler',
+                playerName: 'Test Mitglied',
                 playerId: 'TEST123',
                 role: 'Mitarbeiter',
                 department: 'Test Abteilung',
@@ -1404,7 +1389,7 @@
                     document.getElementById('customMessage').value = '';
                     updateDiscordPreview();
                     
-                    showNotification(`Spieler ${playerName} erfolgreich eingestellt!`, 'success');
+                    showNotification(`Mitglied ${playerName} erfolgreich eingestellt!`, 'success');
                 }
 
                 saveRecruitmentBtn.innerHTML = originalText;
@@ -1474,7 +1459,13 @@
             // Recruitment Funktionen
             document.getElementById('saveRecruitmentBtn').addEventListener('click', handleRecruitmentSubmit);
             document.getElementById('saveSettingsBtn').addEventListener('click', () => {
-                // Einstellungen speichern Logik hier
+                // Einstellungen speichern
+                systemSettings.webhookUrl = document.getElementById('webhookUrl').value;
+                systemSettings.botName = document.getElementById('botName').value;
+                systemSettings.welcomeMessage = document.getElementById('welcomeMessage').value;
+                systemSettings.announcementTemplate = document.getElementById('announcementTemplate').value;
+                
+                localStorage.setItem('team_settings', JSON.stringify(systemSettings));
                 showNotification('Einstellungen gespeichert!', 'success');
             });
             document.getElementById('testWebhookBtn').addEventListener('click', testWebhook);
@@ -1483,6 +1474,16 @@
             initializeRoleSelection();
             initializeFormListeners();
             updateDiscordPreview();
+
+            // Lade gespeicherte Einstellungen
+            const savedSettings = localStorage.getItem('team_settings');
+            if (savedSettings) {
+                systemSettings = { ...systemSettings, ...JSON.parse(savedSettings) };
+                document.getElementById('webhookUrl').value = systemSettings.webhookUrl;
+                document.getElementById('botName').value = systemSettings.botName;
+                document.getElementById('welcomeMessage').value = systemSettings.welcomeMessage;
+                document.getElementById('announcementTemplate').value = systemSettings.announcementTemplate;
+            }
 
             // Prüfe URL Parameter für OAuth Code
             const urlParams = new URLSearchParams(window.location.search);
@@ -1496,7 +1497,7 @@
             }
         });
 
-        console.log('HR Management System - Spieler Einstellungspanel geladen!');
+        console.log('Team Management System - Mitglieder Einstellungspanel geladen!');
     </script>
 </body>
 </html>

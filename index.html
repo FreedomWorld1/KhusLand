@@ -766,7 +766,7 @@
         <!-- Header -->
         <div class="header">
             <div class="logo-small">
-                <div class="logo-icon" id="headerLogo">KL</div>
+                <div class="logo-icon" id="headerLogo">A</div>
                 <h2>KhusLand Management Panel</h2>
             </div>
             <div class="user-info">
@@ -837,7 +837,7 @@
             <!-- Authorized Content (Initially Hidden) -->
             <div id="authorizedContent" class="hidden">
                 <div class="page-header">
-                    <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand Management</h1>
+                    <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand</h1>
                     <div class="status-indicators">
                         <span style="color: #48bb78;">
                             <i class="fas fa-circle"></i> Alle Systeme Online
@@ -1106,6 +1106,7 @@
             { value: 15, label: 'Einkäufer' },
             { value: 20, label: 'Normal' }
         ];
+        let logoText = 'A';
         let currentUser = null;
         let userAccessInfo = null;
         let discountSettingsUnlocked = false;
@@ -1156,27 +1157,7 @@
         const saveWeedBtn = document.getElementById('saveWeedBtn');
         const weedQuantity = document.getElementById('weedQuantity');
 
-        // Notification System
-        function showNotification(message, type = 'info', duration = 4000) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.remove('hidden');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.classList.add('hidden');
-                }, 300);
-            }, duration);
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        // Modal System
+        // Logo Upload Funktionen
         function openPasswordModal() {
             passwordModal.classList.add('active');
         }
@@ -1196,15 +1177,6 @@
             logoFile.value = '';
         }
 
-        function openDiscountPasswordModal() {
-            discountPasswordModal.classList.add('active');
-        }
-
-        function closeDiscountPasswordModal() {
-            discountPasswordModal.classList.remove('active');
-            discountPassword.value = '';
-        }
-
         function verifyLogoPassword() {
             const password = logoPassword.value;
             if (password === ADMIN_PASSWORD) {
@@ -1215,6 +1187,16 @@
             }
         }
 
+        // Discount Settings Funktionen
+        function openDiscountPasswordModal() {
+            discountPasswordModal.classList.add('active');
+        }
+
+        function closeDiscountPasswordModal() {
+            discountPasswordModal.classList.remove('active');
+            discountPassword.value = '';
+        }
+
         function verifyDiscountPassword() {
             const password = discountPassword.value;
             if (password === ADMIN_PASSWORD) {
@@ -1222,7 +1204,7 @@
                 discountSettingsContent.classList.add('active');
                 openDiscountSettings.classList.add('hidden');
                 closeDiscountPasswordModal();
-                loadDiscountSettings();
+                loadDiscountSettings(); // Rabatte neu laden
                 showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
             } else {
                 showNotification('Falsches Passwort!', 'error');
@@ -1258,15 +1240,20 @@
                 saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
                 saveLogo.disabled = true;
 
+                // Bild in Firebase Storage hochladen
                 await uploadBytes(logoImageRef, file);
+                
+                // Download URL holen
                 const downloadURL = await getDownloadURL(logoImageRef);
                 
+                // Logo in der Datenbank speichern
                 await set(logoSettingsRef, {
                     logoUrl: downloadURL,
                     uploadedAt: new Date().toISOString(),
                     uploadedBy: currentUser ? currentUser.username : 'Unknown'
                 });
 
+                // Logo sofort anwenden
                 headerLogo.style.backgroundImage = `url('${downloadURL}')`;
                 headerLogo.innerHTML = '';
 
@@ -1287,10 +1274,12 @@
             onValue(discountsRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
+                    // Konvertiere Firebase-Daten in Array
                     availableDiscounts = [];
                     if (Array.isArray(data)) {
                         availableDiscounts = data;
                     } else {
+                        // Falls es ein Objekt ist, in Array umwandeln
                         availableDiscounts = Object.values(data);
                     }
                     
@@ -1299,6 +1288,7 @@
                         renderDiscountList();
                     }
                 } else {
+                    // Standard-Discounts setzen
                     set(discountsRef, availableDiscounts);
                 }
             });
@@ -1327,6 +1317,7 @@
                 discountList.appendChild(discountItem);
             });
 
+            // Event Listener für Lösch-Buttons
             document.querySelectorAll('.delete-discount').forEach(button => {
                 button.addEventListener('click', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -1359,6 +1350,7 @@
                 label: name
             };
 
+            // Prüfen ob Rabatt mit gleichem Wert UND Namen bereits existiert
             const exists = availableDiscounts.some(d => d.value === value && d.label === name);
             if (exists) {
                 showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
@@ -1383,6 +1375,7 @@
             if (index >= 0 && index < availableDiscounts.length) {
                 const discount = availableDiscounts[index];
                 
+                // Verhindere das Löschen des Standard-Rabatts (0%)
                 if (discount.value === 0 && discount.label === 'Kein Rabatt') {
                     showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
                     return;
@@ -1450,6 +1443,7 @@
                 headerLogo.style.backgroundImage = `url('${downloadURL}')`;
                 headerLogo.innerHTML = '';
             } catch (error) {
+                // Falls kein Logo vorhanden ist, Standard beibehalten
                 console.log('Kein globales Logo gefunden, verwende Standard');
             }
         }
@@ -1518,10 +1512,12 @@
             if (userData.avatar) {
                 const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
                 
+                // User Avatar (oben rechts)
                 const userAvatar = document.getElementById('userAvatar');
                 userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                userAvatar.innerHTML = '';
+                userAvatar.innerHTML = ''; // Icon entfernen
             } else {
+                // Fallback: Ersten Buchstaben des Usernamens anzeigen
                 const userAvatar = document.getElementById('userAvatar');
                 const firstLetter = userData.username.charAt(0).toUpperCase();
                 userAvatar.innerHTML = `<span>${firstLetter}</span>`;
@@ -1623,6 +1619,7 @@
                         ...userAccessInfo
                     };
                     
+                    // Discord Avatar laden (nur für User Avatar)
                     await loadDiscordAvatar(user);
                     
                     if (data.hasPageAccess) {
@@ -1683,6 +1680,7 @@
                 return;
             }
             
+            // Prüfen ob Benutzer noch existiert
             const userExists = await checkUserExists();
             if (!userExists) {
                 showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
@@ -1732,10 +1730,10 @@
             updateWeedPrices();
             loadWeedEntries();
             loadDiscountSettings();
-            loadGlobalLogo();
+            loadGlobalLogo(); // Globales Logo laden
         }
 
-        // Karten-Zugriffsanzeige aktualisieren
+        // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
         async function updateCardAccess() {
             if (!currentUser) return;
             
@@ -1748,6 +1746,7 @@
                 if (pageKey) {
                     const hasAccessToPage = await hasAccess(pageKey);
                     
+                    // Entferne bestehende Status-Badges
                     const existingStatus = card.querySelector('.access-status');
                     if (existingStatus) {
                         existingStatus.remove();
@@ -1770,6 +1769,26 @@
             }
         }
 
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, duration);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
         // Logout
         function logout() {
             currentUser = null;
@@ -1779,6 +1798,7 @@
             localStorage.removeItem('discord_access_token');
             localStorage.removeItem('user_access_info');
             
+            // User Avatar zurücksetzen
             const userAvatar = document.getElementById('userAvatar');
             userAvatar.style.backgroundImage = '';
             userAvatar.innerHTML = '<i class="fas fa-user"></i>';
@@ -1822,6 +1842,7 @@
                                 ...userAccessInfo
                             };
                             
+                            // Discord Avatar laden (nur für User Avatar)
                             await loadDiscordAvatar(user);
                             
                             if (data.hasPageAccess) {
@@ -1860,6 +1881,7 @@
             document.getElementById(tabName).classList.add('active');
             document.getElementById(tabName + 'Tab').classList.add('active');
             
+            // Rabatt-Einstellungen zurücksetzen beim Tab-Wechsel
             if (tabName !== 'weed') {
                 lockDiscountSettings();
             }
@@ -2005,6 +2027,17 @@
             });
         }
 
+        // Logo Einstellungen
+        function loadLogoSettings() {
+            onValue(logoSettingsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.logoText) {
+                    logoText = data.logoText;
+                    // Überschreiben wir nicht das globale Logo
+                }
+            });
+        }
+
         // Event Listeners initialisieren
         function initializeEventListeners() {
             discordLoginBtn.addEventListener('click', startDiscordOAuth);
@@ -2051,7 +2084,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Bereinigte Version ohne Army-Daten!');
+        console.log('KhusLand Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
     </script>
 </body>
 </html>

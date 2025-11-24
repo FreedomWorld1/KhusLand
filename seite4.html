@@ -1,2171 +1,2205 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Werkbank Manager</title>
-  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
-  <link rel="preconnect" href="https://fonts.bunny.net">
-  <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weed Ankauf - KhusLand</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      min-height: 100vh;
-      color: #e2e8f0;
-    }
-    
-    /* Login Styles */
-    .login-container {
-      background: rgba(30, 41, 59, 0.95);
-      padding: 2.5rem;
-      border-radius: 15px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(220, 38, 38, 0.3);
-    }
-    
-    .logo {
-      width: 90px;
-      height: 90px;
-      margin: 0 auto 1.5rem;
-      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 2rem;
-      box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
-    }
-    
-    h1 {
-      color: #fca5a5;
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-    
-    .login-container p {
-      color: #a0aec0;
-      margin-bottom: 1rem;
-    }
-    
-    .discord-login-btn {
-      background: #5865F2;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      width: 100%;
-      margin-top: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    
-    .discord-login-btn:hover {
-      background: #4752c4;
-      transform: translateY(-2px);
-    }
-    
-    .loading {
-      display: none;
-      margin-top: 1.5rem;
-    }
-    
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top: 4px solid #dc2626;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    .error-message {
-      background: rgba(254, 178, 178, 0.1);
-      color: #fc8181;
-      padding: 12px;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-      display: none;
-      border-left: 4px solid #f56565;
-    }
-    
-    /* Main Content Styles */
-    .header {
-      background: rgba(26, 32, 44, 0.95);
-      padding: 1.2rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      border-bottom: 2px solid #dc2626;
-    }
-    
-    .logo-small {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-    
-    .logo-icon {
-      width: 45px;
-      height: 45px;
-      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s;
-      background-size: cover;
-      background-position: center;
-    }
-    
-    .logo-icon:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
-    }
-    
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      color: #cbd5e0;
-    }
-    
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: bold;
-      background-size: cover;
-      background-position: center;
-    }
-    
-    .logout-btn {
-      background: rgba(220, 38, 38, 0.15);
-      color: #fca5a5;
-      border: 1px solid #dc2626;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-weight: 500;
-    }
-    
-    .logout-btn:hover {
-      background: rgba(220, 38, 38, 0.25);
-    }
-    
-    .main-container {
-      max-width: 1400px;
-      margin: 2.5rem auto;
-      padding: 0 2.5rem;
-    }
-    
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2.5rem;
-      background: rgba(26, 32, 44, 0.9);
-      padding: 1.8rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-      border: 1px solid rgba(220, 38, 38, 0.3);
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+        
+        /* Login Styles */
+        .login-container {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
+        }
+        
+        h1 {
+            color: #4ade80;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .login-container p {
+            color: #a0aec0;
+            margin-bottom: 1rem;
+        }
+        
+        .discord-login-btn {
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .discord-login-btn:hover {
+            background: #4752c4;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 1.5rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #16a34a;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(254, 178, 178, 0.1);
+            color: #fc8181;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            display: none;
+            border-left: 4px solid #f56565;
+        }
+        
+        /* Main Content Styles */
+        .header {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-bottom: 2px solid #16a34a;
+        }
+        
+        .logo-small {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .logo-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #cbd5e0;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .logout-btn {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid #16a34a;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(34, 197, 94, 0.25);
+        }
+        
+        .main-container {
+            max-width: 1300px;
+            margin: 2.5rem auto;
+            padding: 0 2.5rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: rgba(26, 32, 44, 0.9);
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+        
+        .card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 16px;
+            padding: 2.2rem;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: #16a34a;
+            background: rgba(30, 38, 54, 0.9);
+        }
+        
+        .card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .card.disabled:hover {
+            transform: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            border-color: rgba(101, 119, 149, 0.3);
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: #4ade80;
+        }
+        
+        .card p {
+            color: #cbd5e0;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
+            background: #48bb78;
+            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+        
+        .access-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .access-allowed {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+        }
+        
+        .access-denied {
+            background: rgba(245, 101, 101, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2.5rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(101, 119, 149, 0.3);
+            color: #a0aec0;
+            background: rgba(26, 32, 44, 0.8);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* System-spezifische Styles */
+        .system-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .system-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #4ade80;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 0.9rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+        }
+        
+        .price-display {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .price-amount {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #48bb78;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table th,
+        .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .table th {
+            background: rgba(26, 32, 44, 0.8);
+            font-weight: 600;
+            color: #4ade80;
+        }
+        
+        .table td {
+            color: #cbd5e0;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        
+        /* Access Badge */
+        .access-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+        
+        .access-permanent {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+        }
+        
+        .access-temporary {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: white;
+        }
+        
+        /* Access Restricted Styles */
+        .access-restricted {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(245, 101, 101, 0.3);
+        }
 
-    /* Navigation Tabs */
-    .nav-tabs {
-      display: flex;
-      background: rgba(26, 32, 44, 0.8);
-      border-radius: 12px;
-      padding: 0.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      border: 1px solid rgba(220, 38, 38, 0.3);
-    }
-    
-    .nav-tab {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      text-align: center;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-weight: 500;
-      border-radius: 8px;
-      transition: all 0.3s;
-      color: #a0aec0;
-      font-size: 0.9rem;
-    }
-    
-    .nav-tab.active {
-      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-      color: white;
-      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-    }
+        .access-restricted h2 {
+            color: #fc8181;
+            margin-bottom: 1rem;
+        }
 
-    /* Card Styles */
-    .card {
-      background: rgba(26, 32, 44, 0.8);
-      border-radius: 16px;
-      padding: 2.2rem;
-      border: 1px solid rgba(220, 38, 38, 0.3);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      transition: all 0.3s;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-      border-color: #dc2626;
-    }
+        .access-restricted p {
+            color: #a0aec0;
+            margin-bottom: 1.5rem;
+        }
 
-    /* Product Grid */
-    .workbench-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-      gap: 2rem;
-    }
-    
-    .product-card {
-      background: rgba(26, 32, 44, 0.8);
-      border: 1px solid rgba(220, 38, 38, 0.3);
-      border-radius: 12px;
-      padding: 1.5rem;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-    }
-    
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-      border-color: #dc2626;
-      background: rgba(30, 38, 54, 0.9);
-    }
-    
-    .product-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-    
-    .product-name {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #f8fafc;
-      line-height: 1.2;
-    }
-    
-    .product-time {
-      font-size: 0.9rem;
-      color: #dc2626;
-      background: rgba(220, 38, 38, 0.1);
-      padding: 6px 12px;
-      border-radius: 8px;
-      white-space: nowrap;
-      font-weight: 600;
-    }
-    
-    .product-category {
-      font-size: 0.9rem;
-      color: #94a3b8;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .product-resource-box {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-    }
-    
-    .product-resource-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #dc2626;
-      margin-bottom: 0.8rem;
-      text-align: center;
-    }
-    
-    .product-resource-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
-      padding: 0.3rem 0;
-    }
-    
-    .product-output-box {
-      background: rgba(30, 41, 59, 0.8);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      border-radius: 8px;
-      padding: 1rem;
-    }
-    
-    .product-output-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #22c55e;
-      margin-bottom: 0.8rem;
-      text-align: center;
-    }
-    
-    .product-output-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
-      padding: 0.3rem 0;
-    }
-    
-    .product-quantity-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-    
-    .product-quantity-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: rgba(220, 38, 38, 0.2);
-      border: 1px solid rgba(220, 38, 38, 0.3);
-      color: #dc2626;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-    
-    .product-quantity-btn:hover {
-      background: rgba(220, 38, 38, 0.3);
-      transform: scale(1.1);
-    }
-    
-    .product-quantity-display {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #dc2626;
-      min-width: 60px;
-      text-align: center;
-    }
-    
-    .product-time-display {
-      font-size: 1rem;
-      color: #dc2626;
-      font-weight: 600;
-      text-align: center;
-      margin-top: 1rem;
-      background: rgba(220, 38, 38, 0.1);
-      padding: 0.8rem 1rem;
-      border-radius: 8px;
-    }
+        /* Logo Upload Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
 
-    /* Search and Categories */
-    .search-box {
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 1.5rem;
-    }
-    
-    .search-box input {
-      background: transparent;
-      border: none;
-      width: 100%;
-      color: white;
-      font-size: 1rem;
-    }
-    
-    .search-box input::placeholder {
-      color: #94a3b8;
-    }
-    
-    .search-box input:focus {
-      outline: none;
-      box-shadow: none;
-    }
-    
-    .category-btn {
-      transition: all 0.3s ease;
-      padding: 10px 20px;
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(220, 38, 38, 0.2);
-      border-radius: 8px;
-      color: #cbd5e0;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    
-    .category-btn.active {
-      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-      color: white;
-      border-color: #dc2626;
-      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-    }
+        .modal-overlay.active {
+            display: flex;
+        }
 
-    /* Admin Table */
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5rem;
-      background: rgba(30, 41, 59, 0.6);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .admin-table th,
-    .admin-table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid rgba(101, 119, 149, 0.2);
-    }
-    
-    .admin-table th {
-      background: rgba(26, 32, 44, 0.8);
-      font-weight: 600;
-      color: #fca5a5;
-    }
-    
-    .admin-table td {
-      color: #cbd5e0;
-    }
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
 
-    /* Form Styles */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 1.5rem;
-    }
-    
-    .form-group label {
-      font-weight: 600;
-      margin-bottom: 0.8rem;
-      color: #fca5a5;
-      font-size: 0.9rem;
-    }
-    
-    .form-group input,
-    .form-group select {
-      padding: 0.9rem;
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid rgba(220, 38, 38, 0.3);
-      border-radius: 8px;
-      font-size: 1rem;
-      color: #e2e8f0;
-      transition: all 0.3s;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: #dc2626;
-      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
-    }
+        .modal-content h3 {
+            color: #4ade80;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
 
-    /* Button Styles */
-    .btn-primary {
-      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s;
-      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
-    }
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+            font-size: 1rem;
+        }
 
-    /* Modal Styles */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-    
-    .scrollable-modal {
-      max-height: 90vh;
-      overflow-y: auto;
-      width: 100%;
-      max-width: 600px;
-    }
-    
-    .modal-scrollbar::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    .modal-scrollbar::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 10px;
-      margin: 5px;
-    }
-    
-    .modal-scrollbar::-webkit-scrollbar-thumb {
-      background: #dc2626;
-      border-radius: 10px;
-    }
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            color: #e2e8e0;
+        }
 
-    /* Notification System */
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      color: white;
-      font-weight: 500;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      z-index: 1000;
-      transform: translateX(150%);
-      transition: transform 0.3s ease;
-    }
-    
-    .notification.show {
-      transform: translateX(0);
-    }
-    
-    .notification.success {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    }
-    
-    .notification.error {
-      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    }
-    
-    .notification.info {
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    }
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
 
-    /* Access Badge */
-    .access-badge {
-      font-size: 0.7rem;
-      padding: 4px 8px;
-      border-radius: 12px;
-      margin-left: 8px;
-      font-weight: 600;
-    }
-    
-    .access-permanent {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      color: white;
-    }
-    
-    .access-temporary {
-      background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-      color: white;
-    }
+        /* Weed Ankauf spezifische Styles */
+        .search-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+        }
 
-    /* Footer */
-    .footer {
-      text-align: center;
-      padding: 2.5rem;
-      margin-top: 4rem;
-      border-top: 1px solid rgba(101, 119, 149, 0.3);
-      color: #a0aec0;
-      background: rgba(26, 32, 44, 0.8);
-    }
+        .search-box input {
+            background: transparent;
+            border: none;
+            width: 100%;
+            color: white;
+            font-size: 0.9rem;
+        }
 
-    /* Access Restricted Styles */
-    .access-restricted {
-      text-align: center;
-      padding: 3rem;
-      background: rgba(26, 32, 44, 0.8);
-      border-radius: 12px;
-      border: 1px solid rgba(245, 101, 101, 0.3);
-    }
+        .search-box input::placeholder {
+            color: #94a3b8;
+        }
 
-    .access-restricted h2 {
-      color: #fc8181;
-      margin-bottom: 1rem;
-    }
+        .search-box input:focus {
+            outline: none;
+            box-shadow: none;
+        }
 
-    .access-restricted p {
-      color: #a0aec0;
-      margin-bottom: 1.5rem;
-    }
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
 
-    .hidden {
-      display: none !important;
-    }
+        @media (min-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
-    /* Status Indicators */
-    .status-indicator {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    
-    .status-online {
-      background: #22c55e;
-      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
-    }
+        .product-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            transition: all 0.3s;
+        }
 
-    /* Image Preview */
-    .image-preview-small {
-      max-width: 50px;
-      max-height: 50px;
-      border-radius: 6px;
-      margin-right: 8px;
-      border: 1px solid rgba(220, 38, 38, 0.3);
-    }
+        .product-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
 
-    /* Resource Tags */
-    .resource-tag {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(220, 38, 38, 0.2);
-      color: #dc2626;
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      margin: 4px;
-      font-weight: 500;
-    }
+        .product-card {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
 
-    /* Time Input Container */
-    .time-input-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    
-    .time-input {
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .time-input label {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin-bottom: 0.5rem;
-    }
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+        }
 
-    /* Scrollbar */
-    .scrollbar-custom::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    .scrollbar-custom::-webkit-scrollbar-track {
-      background: rgba(30, 41, 59, 0.5);
-      border-radius: 10px;
-    }
-    
-    .scrollbar-custom::-webkit-scrollbar-thumb {
-      background: #dc2626;
-      border-radius: 10px;
-    }
-  </style>
+        .quality-tag {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
+
+        .quality-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .calculator-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .calculator-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background: rgba(34, 197, 94, 0.3);
+            transform: scale(1.05);
+        }
+
+        .quantity-input {
+            width: 80px;
+            text-align: center;
+            padding: 6px 8px;
+            border-radius: 6px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .result-price {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .admin-table-container {
+            overflow: auto;
+            max-height: 50vh;
+            border-radius: 8px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .quality-input-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <!-- Login Page -->
-  <div id="loginPage" class="login-container">
-    <div class="logo">⚒️</div>
-    <h1>Werkbank Manager Login</h1>
-    <p>Bitte mit Discord anmelden um fortzufahren</p>
-    
-    <div class="error-message" id="errorMessage"></div>
-    
-    <button id="discordLogin" class="discord-login-btn">
-      <i class="fab fa-discord"></i> Mit Discord anmelden
-    </button>
-    
-    <div class="loading" id="loginLoading">
-      <div class="spinner"></div>
-      <p style="margin-top: 1rem;">Anmeldung läuft...</p>
-    </div>
-  </div>
-
-  <!-- Main Content (Hidden until login) -->
-  <div id="mainContent" class="hidden">
-    <!-- Header -->
-    <div class="header">
-      <div class="logo-small">
-        <div class="logo-icon" id="headerLogo">⚒️</div>
-        <h2>Werkbank Manager</h2>
-      </div>
-      <div class="user-info">
-        <span id="userWelcome">Willkommen, Benutzer</span>
-        <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="logo">🌿</div>
+        <h1>Weed Ankauf Login</h1>
+        <p>Bitte mit Discord anmelden um fortzufahren</p>
         
-        <div class="user-avatar" id="userAvatar">
-          <i class="fas fa-user"></i>
-        </div>
+        <div class="error-message" id="errorMessage"></div>
         
-        <button id="logoutBtn" class="logout-btn">
-          <i class="fas fa-sign-out-alt"></i> Logout
+        <button id="discordLogin" class="discord-login-btn">
+            <i class="fab fa-discord"></i> Mit Discord anmelden
         </button>
-      </div>
+        
+        <div class="loading" id="loginLoading">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Anmeldung läuft...</p>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-container">
-      <!-- Access Restricted Message -->
-      <div id="accessRestricted" class="access-restricted hidden">
-        <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
-        <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
-        <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
-        <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
-        <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
-          <i class="fas fa-sign-out-alt"></i> Abmelden
-        </button>
-      </div>
-
-      <!-- Authorized Content -->
-      <div id="authorizedContent" class="hidden">
-        <div class="page-header">
-          <h1 style="color: #fca5a5; font-size: 2rem;">Werkbank Manager</h1>
-          <div class="status-indicators">
-            <span style="color: #22c55e;">
-              <i class="fas fa-circle"></i> System Online
-            </span>
-          </div>
-        </div>
-
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-          <button id="productsTab" class="nav-tab active">
-            <i class="fas fa-boxes"></i> Produkte
-          </button>
-          <button id="adminTab" class="nav-tab">
-            <i class="fas fa-cog"></i> Admin
-          </button>
-        </div>
-
-        <!-- Products Tab -->
-        <div id="products" class="tab-content active">
-          <div class="card">
-            <h2 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.5rem;">
-              <i class="fas fa-boxes"></i> Meine Produkte
-            </h2>
-            
-            <!-- Suchfeld -->
-            <div class="search-box">
-              <input type="text" id="searchInput" placeholder="Nach Produkt oder Kategorie suchen...">
+    <!-- Main Content (Hidden until login) -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-small">
+                <div class="logo-icon" id="headerLogo">🌿</div>
+                <h2>Weed Ankauf Management</h2>
             </div>
-            
-            <!-- Kategorien Filter -->
-            <div class="flex flex-wrap gap-2 mb-6" id="categoriesContainer">
-              <button class="category-btn active" data-category="all">
-                <i class="fas fa-layer-group"></i> Alle
-              </button>
-              <!-- Kategorien werden hier dynamisch geladen -->
-            </div>
-            
-            <!-- Products Grid -->
-            <div id="workbenchesGrid" class="workbench-grid">
-              <!-- Produkte werden hier dynamisch geladen -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Admin Tab -->
-        <div id="admin" class="tab-content">
-          <div class="card">
-            <h2 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.5rem;">
-              <i class="fas fa-cog"></i> Adminbereich
-            </h2>
-            
-            <div id="adminLoginSection">
-              <div class="form-group">
-                <label for="adminPass">
-                  <i class="fas fa-key"></i> Admin-Passwort
-                </label>
-                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein">
-              </div>
-              <button id="adminLoginBtn" class="btn-primary" style="width: 100%;">
-                <i class="fas fa-sign-in-alt"></i> Einloggen
-              </button>
-              <div id="adminError" class="error-message hidden">
-                <i class="fas fa-exclamation-triangle"></i> Falsches Passwort
-              </div>
-            </div>
-            
-            <div id="adminContent" class="hidden">
-              <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
-                <div style="color: #94a3b8;">
-                  Produkte: <span id="totalWorkbenches" style="font-weight: bold; color: white;">0</span>
+            <div class="user-info">
+                <span id="userWelcome">Willkommen, Benutzer</span>
+                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
+                
+                <!-- User Avatar -->
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
                 </div>
-                <div style="display: flex; gap: 0.5rem;">
-                  <button id="addWorkbenchBtn" class="btn-primary" style="padding: 0.5rem 1rem;">
-                    <i class="fas fa-plus"></i> Produkt
-                  </button>
-                  <button id="manageCategoriesBtn" class="btn-primary" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
-                    <i class="fas fa-tags"></i> Kategorien
-                  </button>
-                  <button id="exportCsv" class="btn-primary" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
-                    <i class="fas fa-file-export"></i> CSV Export
-                  </button>
+                
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Logo Upload Modal -->
+        <div id="logoUploadModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Logo ändern</h3>
+                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <input type="file" id="logoFile" class="file-input" accept="image/*">
+                <div class="modal-buttons">
+                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
+                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
                 </div>
-              </div>
-              
-              <div style="overflow: auto; max-height: 50vh; border-radius: 8px; border: 1px solid rgba(220, 38, 38, 0.3);">
-                <table class="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Kategorie</th>
-                      <th>Herstellungszeit</th>
-                      <th>Aktion</th>
-                    </tr>
-                  </thead>
-                  <tbody id="adminTableBody">
-                    <!-- Admin table content will be loaded here -->
-                  </tbody>
-                </table>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="footer">
-      <p>Werkbank Manager © 2025 | Alle Rechte vorbehalten</p>
-    </div>
-  </div>
-
-  <!-- Modals -->
-  <div id="workbenchModal" class="modal-overlay hidden">
-    <div class="scrollable-modal modal-scrollbar">
-      <div class="card">
-        <h3 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.3rem;" id="workbenchModalTitle">
-          <i class="fas fa-plus"></i> Produkt hinzufügen
-        </h3>
-        <form id="workbenchForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <input type="hidden" id="workbenchKey">
-          
-          <div class="form-group">
-            <label><i class="fas fa-tag"></i> Name</label>
-            <input type="text" id="workbenchName" required>
-          </div>
-          
-          <div class="form-group">
-            <label><i class="fas fa-folder"></i> Kategorie</label>
-            <select id="workbenchCategory" required>
-              <!-- Kategorien werden dynamisch geladen -->
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label><i class="fas fa-clock"></i> Herstellungszeit</label>
-            <div class="time-input-container">
-              <div class="time-input">
-                <label>Minuten</label>
-                <input type="number" id="workbenchTimeMinutes" placeholder="0" min="0">
-              </div>
-              <div class="time-input">
-                <label>Sekunden</label>
-                <input type="number" id="workbenchTimeSeconds" placeholder="0" min="0" max="59">
-              </div>
-              <div class="time-input">
-                <label>Millisekunden</label>
-                <input type="number" id="workbenchTimeMilliseconds" placeholder="0" min="0" max="999">
-              </div>
+        <!-- Password Modal für Logo -->
+        <div id="passwordModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Admin Passwort erforderlich</h3>
+                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
+                <div class="modal-buttons">
+                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
+                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
+                </div>
             </div>
-            <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.5rem;">
-              Format: Minuten Sekunden Millisekunden (z.B. 2 30 500 für 2 Minuten, 30 Sekunden, 500ms)
-            </div>
-          </div>
-          
-          <div style="display: flex; gap: 1rem;">
-            <button type="submit" class="btn-primary" style="flex: 1;">
-              <i class="fas fa-save"></i> Speichern
-            </button>
-            <button type="button" id="cancelWorkbench" class="logout-btn">
-              <i class="fas fa-times"></i> Abbrechen
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Categories Modal -->
-  <div id="categoriesModal" class="modal-overlay hidden">
-    <div class="scrollable-modal modal-scrollbar">
-      <div class="card">
-        <h3 style="color: #fca5a5; margin-bottom: 1.5rem; font-size: 1.3rem;">
-          <i class="fas fa-tags"></i> Kategorien verwalten
-        </h3>
-        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-          <div class="form-group">
-            <label><i class="fas fa-plus"></i> Neue Kategorie</label>
-            <div style="display: flex; gap: 0.5rem;">
-              <input type="text" id="newCategoryName" placeholder="Kategorie Name" style="flex: 1;">
-              <button id="addCategoryBtn" class="btn-primary">
-                <i class="fas fa-plus"></i> Hinzufügen
-              </button>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label><i class="fas fa-list"></i> Vorhandene Kategorien</label>
-            <div id="categoriesList" style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem;">
-              <!-- Kategorien werden hier dynamisch geladen -->
-            </div>
-          </div>
-          
-          <div style="display: flex; gap: 1rem;">
-            <button id="saveCategories" class="btn-primary" style="flex: 1;">
-              <i class="fas fa-save"></i> Speichern
-            </button>
-            <button id="cancelCategories" class="logout-btn">
-              <i class="fas fa-times"></i> Abbrechen
-            </button>
-          </div>
         </div>
-      </div>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <!-- Access Restricted Message (Initially Hidden) -->
+            <div id="accessRestricted" class="access-restricted hidden">
+                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
+                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
+                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
+                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Abmelden
+                </button>
+            </div>
+
+            <!-- Authorized Content (Initially Hidden) -->
+            <div id="authorizedContent" class="hidden">
+                <div class="page-header">
+                    <h1 style="color: #4ade80; font-size: 2rem;">Weed Ankauf System</h1>
+                    <div class="status-indicators">
+                        <span style="color: #48bb78;">
+                            <i class="fas fa-circle"></i> Alle Systeme Online
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <div class="nav-tabs">
+                    <button id="dashboardTab" class="nav-tab active">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </button>
+                    <button id="weedTab" class="nav-tab">
+                        <i class="fas fa-cannabis"></i> Weed Sorten
+                    </button>
+                </div>
+
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <!-- System Cards -->
+                    <div class="grid-container">
+                        <div class="card" data-page="index.html">
+                            <div class="card-icon">🌿</div>
+                            <h3>Weed Ankauf</h3>
+                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite2.html">
+                            <div class="card-icon">💊</div>
+                            <h3>Kokain Ankauf</h3>
+                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite3.html">
+                            <div class="card-icon">♻️</div>
+                            <h3>Materialrecycler - Produkte</h3>
+                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite4.html">
+                            <div class="card-icon">🔧</div>
+                            <h3>Werkbank Manager</h3>
+                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite5.html">
+                            <div class="card-icon">🛣️</div>
+                            <h3>Drogenrouten</h3>
+                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+
+                        <div class="card" data-page="seite6.html">
+                            <div class="card-icon">🏞️</div>
+                            <h3>KhusLand Management</h3>
+                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
+                            <div class="status">
+                                <span class="status-indicator status-online"></span>
+                                System online
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weed Sorten Tab -->
+                <div id="weed" class="tab-content">
+                    <!-- Suchleiste -->
+                    <div class="system-card">
+                        <div class="search-box">
+                            <i class="fas fa-search text-gray-400 mr-2"></i>
+                            <input type="text" id="searchInput" placeholder="Weed Sorten suchen...">
+                        </div>
+                    </div>
+
+                    <!-- Sorten Grid -->
+                    <div class="system-card">
+                        <h3 style="color: #4ade80; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-cannabis"></i> Weed Sorten
+                        </h3>
+                        
+                        <div id="strainsGrid" class="product-grid">
+                            <!-- Weed Sorten werden hier dynamisch geladen -->
+                        </div>
+                    </div>
+
+                    <!-- Admin Panel -->
+                    <div class="system-card">
+                        <h3 style="color: #4ade80; margin-bottom: 1.5rem; font-size: 1.5rem;">
+                            <i class="fas fa-cog"></i> Adminbereich
+                        </h3>
+                        
+                        <div id="adminLoginSection">
+                            <div class="form-group">
+                                <label for="adminPass">Admin-Passwort</label>
+                                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein">
+                            </div>
+                            <button id="adminLoginBtn" class="btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> Einloggen
+                            </button>
+                            <span id="adminError" class="error-message hidden" style="margin-top: 1rem;">
+                                <i class="fas fa-exclamation-triangle"></i> Falsches Passwort
+                            </span>
+                        </div>
+                        
+                        <div id="adminContent" class="hidden">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: rgba(30, 41, 59, 0.6); border-radius: 8px;">
+                                <div style="color: #a0aec0; font-size: 0.9rem;">
+                                    Sorten: <span id="totalStrains" style="font-weight: bold; color: white;">0</span>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button id="addStrainBtn" class="btn-primary">
+                                        <i class="fas fa-plus"></i> Sorte
+                                    </button>
+                                    <button id="exportCsv" class="btn-primary">
+                                        <i class="fas fa-file-export"></i> CSV Export
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Admin-Suchleiste -->
+                            <div class="search-box mb-4">
+                                <i class="fas fa-search text-gray-400 mr-2"></i>
+                                <input type="text" id="adminSearchInput" placeholder="Sorte in Adminbereich suchen...">
+                            </div>
+                            
+                            <div class="admin-table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Qualitäten & Preise</th>
+                                            <th>Aktion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminTableBody">
+                                        <!-- Admin Table wird hier dynamisch geladen -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>KhusLand Weed Ankauf © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
+        </div>
     </div>
-  </div>
 
-  <!-- Notification Container -->
-  <div id="notification" class="notification hidden"></div>
-
-  <script type="module">
-    // Discord OAuth Konfiguration
-    const DISCORD_CLIENT_ID = '1432942180770644079';
-    const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-    const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
-    // Firebase Import und Konfiguration
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-    import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-      authDomain: "khusland-b7d13.firebaseapp.com",
-      databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-      projectId: "khusland-b7d13",
-      storageBucket: "khusland-b7d13.firebasestorage.app",
-      messagingSenderId: "69573193613",
-      appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-      measurementId: "G-JSCWR4207G"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getDatabase(app);
-    
-    // Firebase Referenzen
-    const workbenchesRef = ref(db, 'werkbank_manager/workbenches');
-    const categoriesRef = ref(db, 'werkbank_manager/categories');
-
-    // Seitenspezifische Konfiguration
-    const PAGE_ACCESS_CONFIG = {
-      'index.html': 'werkbank'
-    };
-
-    // System Variablen
-    const ADMIN_PASSWORD = '1101';
-    let categories = ["Grundlegend", "Metall", "Alchemie", "Rüstung", "Waffen", "Magie", "Kochen"];
-    let workbenches = [];
-    let filteredWorkbenches = [];
-    let currentUser = null;
-    let userAccessInfo = null;
-
-    // DOM Elemente
-    const loginPage = document.getElementById('loginPage');
-    const mainContent = document.getElementById('mainContent');
-    const authorizedContent = document.getElementById('authorizedContent');
-    const accessRestricted = document.getElementById('accessRestricted');
-    const errorMessage = document.getElementById('errorMessage');
-    const userWelcome = document.getElementById('userWelcome');
-    const notification = document.getElementById('notification');
-    const accessBadge = document.getElementById('accessBadge');
-    const headerLogo = document.getElementById('headerLogo');
-    const restrictedUserName = document.getElementById('restrictedUserName');
-    const restrictedPageName = document.getElementById('restrictedPageName');
-    const discordLoginBtn = document.getElementById('discordLogin');
-    const loginLoading = document.getElementById('loginLoading');
-    
-    // Buttons
-    const logoutBtn = document.getElementById('logoutBtn');
-    const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
-    const productsTab = document.getElementById('productsTab');
-    const adminTab = document.getElementById('adminTab');
-
-    // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
-    async function hasAccess(pageKey) {
-      if (!currentUser) return false;
-      
-      const token = localStorage.getItem('discord_access_token');
-      if (!token) return false;
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken: token,
-            currentPage: pageKey
-          })
-        });
-
-        if (!response.ok) return false;
-
-        const data = await response.json();
-        return data.hasPageAccess;
-        
-      } catch (error) {
-        console.error('Fehler bei Zugriffsprüfung:', error);
-        return false;
-      }
-    }
-
-    // BENUTZER EXISTENZ PRÜFEN
-    async function checkUserExists() {
-      if (!currentUser) return false;
-      
-      const token = localStorage.getItem('discord_access_token');
-      if (!token) return false;
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken: token
-          })
-        });
-
-        if (!response.ok) return false;
-
-        const data = await response.json();
-        return data.isAuthorized;
-        
-      } catch (error) {
-        console.error('Fehler bei Benutzerprüfung:', error);
-        return false;
-      }
-    }
-
-    // DISCORD AVATAR LADEN
-    async function loadDiscordAvatar(userData) {
-      if (userData.avatar) {
-        const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
-        
-        // User Avatar (oben rechts)
-        const userAvatar = document.getElementById('userAvatar');
-        userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-        userAvatar.innerHTML = ''; // Icon entfernen
-      } else {
-        // Fallback: Ersten Buchstaben des Usernamens anzeigen
-        const userAvatar = document.getElementById('userAvatar');
-        const firstLetter = userData.username.charAt(0).toUpperCase();
-        userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-      }
-    }
-
-    // Aktuelle Seite identifizieren
-    function getCurrentPageKey() {
-      const pathname = window.location.pathname;
-      const filename = pathname.split('/').pop();
-      return PAGE_ACCESS_CONFIG[filename] || 'werkbank';
-    }
-
-    // Discord OAuth Login
-    function startDiscordOAuth() {
-      const scope = 'identify';
-      const state = generateRandomState();
-      
-      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-      authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', scope);
-      authUrl.searchParams.set('state', state);
-      
-      window.location.href = authUrl.toString();
-    }
-
-    function generateRandomState() {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
-
-    async function exchangeCodeForToken(code) {
-      try {
-        loginLoading.style.display = 'block';
-        
-        const response = await fetch(`${BACKEND_URL}/token`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            code, 
-            redirect_uri: DISCORD_REDIRECT_URI
-          })
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Worker responded with status ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.access_token) {
-          await verifyUser(data.access_token);
-        } else {
-          throw new Error('Kein Access Token erhalten');
-        }
-      } catch (error) {
-        console.error('Fehler beim Token-Austausch:', error);
-        showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-        loginLoading.style.display = 'none';
-      }
-    }
-
-    async function verifyUser(accessToken) {
-      try {
-        const currentPage = getCurrentPageKey();
-        
-        const response = await fetch(`${BACKEND_URL}/verify-user`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            accessToken,
-            currentPage
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('Verification failed');
-        }
-
-        const data = await response.json();
-
-        if (data.isAuthorized) {
-          localStorage.setItem('discord_user', JSON.stringify(data.user));
-          localStorage.setItem('discord_access_token', accessToken);
-          localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-          
-          const user = data.user;
-          userAccessInfo = data.accessInfo;
-          
-          currentUser = {
-            id: user.id,
-            username: user.username,
-            ...userAccessInfo
-          };
-          
-          // Discord Avatar laden (nur für User Avatar)
-          await loadDiscordAvatar(user);
-          
-          if (data.hasPageAccess) {
-            showAuthorizedContent(currentUser);
-            showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-          } else {
-            showAccessRestricted(currentUser, currentPage);
-          }
-        } else {
-          showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
-        }
-      } catch (error) {
-        console.error('Fehler bei der Benutzerüberprüfung:', error);
-        showError('Fehler bei der Berechtigungsprüfung');
-      } finally {
-        loginLoading.style.display = 'none';
-      }
-    }
-
-    // Zugriff verweigert anzeigen
-    function showAccessRestricted(user, pageKey) {
-      loginPage.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-      accessRestricted.classList.remove('hidden');
-      authorizedContent.classList.add('hidden');
-      
-      restrictedUserName.textContent = user.username;
-      restrictedPageName.textContent = getPageDisplayName(pageKey);
-      showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
-    }
-
-    // Login-Seite anzeigen
-    function showLoginPage() {
-      loginPage.classList.remove('hidden');
-      mainContent.classList.add('hidden');
-      accessRestricted.classList.add('hidden');
-      authorizedContent.classList.add('hidden');
-    }
-
-    // Seiten-Namen für Anzeige
-    function getPageDisplayName(pageKey) {
-      const names = {
-        'werkbank': 'Werkbank Manager'
-      };
-      return names[pageKey] || pageKey;
-    }
-
-    // Autorisierten Inhalt anzeigen
-    function showAuthorizedContent(user) {
-      loginPage.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-      accessRestricted.classList.add('hidden');
-      authorizedContent.classList.remove('hidden');
-      
-      userWelcome.textContent = `Willkommen, ${user.username}`;
-      
-      if (userAccessInfo && userAccessInfo.message) {
-        accessBadge.textContent = userAccessInfo.message;
-        accessBadge.classList.remove('hidden');
-        
-        if (userAccessInfo.isPermanent) {
-          accessBadge.className = 'access-badge access-permanent';
-        } else {
-          accessBadge.className = 'access-badge access-temporary';
-        }
-      }
-      
-      // Initialisiere Werkbank-Funktionen
-      initializeWorkbenchFunctions();
-    }
-
-    // Notification System
-    function showNotification(message, type = 'info', duration = 4000) {
-      notification.textContent = message;
-      notification.className = `notification ${type}`;
-      notification.classList.remove('hidden');
-      notification.classList.add('show');
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          notification.classList.add('hidden');
-        }, 300);
-      }, duration);
-    }
-
-    function showError(message) {
-      errorMessage.textContent = message;
-      errorMessage.style.display = 'block';
-    }
-
-    // Logout
-    function logout() {
-      currentUser = null;
-      userAccessInfo = null;
-      localStorage.removeItem('discord_user');
-      localStorage.removeItem('discord_access_token');
-      localStorage.removeItem('user_access_info');
-      
-      // User Avatar zurücksetzen
-      const userAvatar = document.getElementById('userAvatar');
-      userAvatar.style.backgroundImage = '';
-      userAvatar.innerHTML = '<i class="fas fa-user"></i>';
-      
-      showLoginPage();
-      accessBadge.classList.add('hidden');
-      
-      showNotification('Erfolgreich ausgeloggt', 'info');
-    }
-
-    // Session prüfen
-    async function checkExistingLogin() {
-      const userData = localStorage.getItem('discord_user');
-      const token = localStorage.getItem('discord_access_token');
-      const storedAccessInfo = localStorage.getItem('user_access_info');
-      
-      if (userData && token) {
-        try {
-          const user = JSON.parse(userData);
-          userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
-          
-          const currentPage = getCurrentPageKey();
-          const response = await fetch(`${BACKEND_URL}/verify-user`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              accessToken: token,
-              currentPage
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            
-            if (data.isAuthorized) {
-              currentUser = {
-                id: user.id,
-                username: user.username,
-                ...userAccessInfo
-              };
-              
-              // Discord Avatar laden (nur für User Avatar)
-              await loadDiscordAvatar(user);
-              
-              if (data.hasPageAccess) {
-                showAuthorizedContent(currentUser);
-                showNotification(`Willkommen zurück, ${user.username}`, 'info');
-              } else {
-                showAccessRestricted(currentUser, currentPage);
-              }
-              return;
-            }
-          }
-        } catch (e) {
-          console.error('Fehler beim Laden der Benutzerdaten:', e);
-        }
-      }
-      
-      showLoginPage();
-    }
-
-    // Tab Navigation
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      document.querySelectorAll('.nav-tab').forEach(button => {
-        button.classList.remove('active');
-      });
-      
-      document.getElementById(tabName).classList.add('active');
-      document.getElementById(tabName + 'Tab').classList.add('active');
-      
-      showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
-    }
-
-    function getTabDisplayName(tabName) {
-      const names = {
-        'products': 'Produkte',
-        'admin': 'Admin Bereich'
-      };
-      return names[tabName] || tabName;
-    }
-
-    // ==================== WERKBANK FUNKTIONEN ====================
-
-    let tempCategories = [];
-    let currentResources = [];
-    let currentOutputResources = [];
-
-    // Utility
-    function show(el) { 
-      el.classList.remove('hidden'); 
-    }
-    
-    function hide(el) { 
-      el.classList.add('hidden'); 
-    }
-
-    // KORRIGIERTE Zeit in Sekunden umrechnen (inklusive Millisekunden)
-    function convertTimeToSeconds(minutes, seconds, milliseconds) {
-      const mins = parseInt(minutes) || 0;
-      const secs = parseInt(seconds) || 0;
-      const ms = parseInt(milliseconds) || 0;
-      
-      // Korrekte Berechnung mit Millisekunden
-      return (mins * 60) + secs + (ms / 1000);
-    }
-
-    // KORRIGIERTE Zeit formatieren für Anzeige (inklusive Millisekunden)
-    function formatTime(totalSeconds) {
-      if (totalSeconds === 0) return "0s";
-      
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = Math.floor(totalSeconds % 60);
-      const milliseconds = Math.round((totalSeconds % 1) * 1000);
-      
-      let parts = [];
-      
-      if (hours > 0) parts.push(`${hours}h`);
-      if (minutes > 0) parts.push(`${minutes}m`);
-      if (seconds > 0 || (minutes === 0 && hours === 0)) {
-        parts.push(`${seconds}s`);
-      }
-      if (milliseconds > 0 && totalSeconds < 10) {
-        parts.push(`${milliseconds}ms`);
-      }
-      
-      return parts.join(' ') || '0s';
-    }
-
-    // Firebase Funktionen
-    async function saveWorkbench(workbench) {
-      try {
-        await push(workbenchesRef, workbench);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Speichern der Werkbank:', error);
-        return false;
-      }
-    }
-
-    async function updateWorkbench(key, workbench) {
-      try {
-        await update(ref(db, `werkbank_manager/workbenches/${key}`), workbench);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Aktualisieren der Werkbank:', error);
-        return false;
-      }
-    }
-
-    async function deleteWorkbenchFromFirebase(key) {
-      try {
-        await remove(ref(db, `werkbank_manager/workbenches/${key}`));
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Löschen der Werkbank:', error);
-        return false;
-      }
-    }
-
-    async function saveCategoriesToFirebase() {
-      try {
-        await set(categoriesRef, categories);
-        return true;
-      } catch (error) {
-        console.error('Fehler beim Speichern der Kategorien:', error);
-        return false;
-      }
-    }
-
-    // Firebase Listener
-    function initializeFirebaseListeners() {
-      onValue(workbenchesRef, (snapshot) => {
-        workbenches = [];
-        snapshot.forEach((childSnap) => {
-          const data = childSnap.val();
-          data.key = childSnap.key;
-          
-          // Stelle sicher, dass time als Zahl gespeichert ist
-          if (typeof data.time === 'string') {
-            data.time = parseFloat(data.time);
-          }
-          
-          workbenches.push(data);
-        });
-        filteredWorkbenches = [...workbenches];
-        renderWorkbenches();
-        renderAdminTable();
-      });
-
-      onValue(categoriesRef, (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          categories = data;
-          renderCategories();
-          loadCategoriesToDropdown();
-        }
-      });
-    }
-
-    // Kategorien Filter rendern
-    function renderCategories() {
-      const categoriesContainer = document.getElementById('categoriesContainer');
-      // Behalte den "Alle" Button
-      categoriesContainer.innerHTML = '<button class="category-btn active" data-category="all"><i class="fas fa-layer-group"></i> Alle</button>';
-      
-      // Füge alle Kategorien hinzu
-      categories.forEach(category => {
-        const btn = document.createElement('button');
-        btn.className = 'category-btn';
-        btn.setAttribute('data-category', category);
-        btn.innerHTML = `<i class="fas fa-folder"></i> ${category}`;
-        categoriesContainer.appendChild(btn);
-      });
-      
-      // Setup Event Listener
-      setupCategoryFilters();
-    }
-
-    // Kategorien in Dropdown laden
-    function loadCategoriesToDropdown() {
-      const categorySelect = document.getElementById('workbenchCategory');
-      categorySelect.innerHTML = '';
-      categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
-        categorySelect.appendChild(option);
-      });
-    }
-
-    // Event Listener für Kategorie Buttons
-    function setupCategoryFilters() {
-      document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('category-btn')) {
-          // Active state setzen
-          document.querySelectorAll('#categoriesContainer .category-btn').forEach(b => b.classList.remove('active'));
-          e.target.classList.add('active');
-          
-          // Werkbänke filtern
-          const category = e.target.getAttribute('data-category');
-          filterWorkbenches(category);
-        }
-      });
-    }
-
-    function filterWorkbenches(category) {
-      if (category === 'all') {
-        filteredWorkbenches = [...workbenches];
-      } else {
-        filteredWorkbenches = workbenches.filter(w => w.category === category);
-      }
-      renderWorkbenches();
-    }
-
-    // VERBESSERTE Produkte rendern
-    function renderWorkbenches() {
-      const workbenchesGrid = document.getElementById('workbenchesGrid');
-      workbenchesGrid.innerHTML = '';
-      
-      if (filteredWorkbenches.length === 0) {
-        workbenchesGrid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #94a3b8;">
-            <i class="fas fa-boxes" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-            <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">Keine Produkte gefunden.</p>
-            <p style="font-size: 0.9rem;">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      filteredWorkbenches.forEach(workbench => {
-        const el = document.createElement('div');
-        el.className = 'product-card';
-        
-        // Bild anzeigen falls vorhanden
-        const imageHtml = workbench.imageUrl ? 
-          `<div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-             <img src="${workbench.imageUrl}" class="image-preview-small" alt="${workbench.name}">
-           </div>` : '';
-        
-        // Mengen-Steuerung für jede Karte mit Zeit-Berechnung
-        const quantityControls = `
-          <div class="product-quantity-controls">
-            <button class="product-quantity-btn decrease-btn" data-key="${workbench.key}">
-              <i class="fas fa-minus"></i>
-            </button>
-            <div class="product-quantity-display" id="quantity-${workbench.key}">1x</div>
-            <button class="product-quantity-btn increase-btn" data-key="${workbench.key}">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-          <div class="product-time-display" id="time-${workbench.key}">
-            Gesamtzeit: ${formatTime(workbench.time || 0)}
-          </div>
-        `;
-        
-        // Input-Ressourcen (mit Multiplikator)
-        let inputResourcesHtml = '';
-        if (workbench.resources && workbench.resources.length > 0) {
-          inputResourcesHtml = `
-            <div class="product-resource-box">
-              <div class="product-resource-title">Benötigt</div>
-              ${workbench.resources.map(resource => 
-                `<div class="product-resource-item">
-                   <span>${resource.name}</span>
-                   <span id="input-${workbench.key}-${resource.name.replace(/\s+/g, '-')}">${resource.amount}</span>
-                 </div>`
-              ).join('')}
-            </div>
-          `;
-        }
-        
-        // Output-Ressourcen (mit Multiplikator)
-        let outputResourcesHtml = '';
-        if (workbench.outputResources && workbench.outputResources.length > 0) {
-          outputResourcesHtml = `
-            <div class="product-output-box">
-              <div class="product-output-title">Erhalt</div>
-              ${workbench.outputResources.map(resource => 
-                `<div class="product-output-item">
-                   <span>${resource.name}</span>
-                   <span id="output-${workbench.key}-${resource.name.replace(/\s+/g, '-')}">${resource.amount}</span>
-                 </div>`
-              ).join('')}
-            </div>
-          `;
-        }
-        
-        el.innerHTML = `
-          ${imageHtml}
-          <div class="product-header">
-            <div class="product-name">${workbench.name}</div>
-            <div class="product-time">${formatTime(workbench.time || 0)}</div>
-          </div>
-          <div class="product-category">
-            <i class="fas fa-folder"></i>${workbench.category}
-          </div>
-          ${quantityControls}
-          ${inputResourcesHtml}
-          ${outputResourcesHtml}
-        `;
-        workbenchesGrid.appendChild(el);
-      });
-      
-      // Event Listener für Mengen-Buttons hinzufügen
-      setupQuantityControls();
-    }
-
-    // Mengen-Steuerung für Produkte einrichten
-    function setupQuantityControls() {
-      // Plus-Buttons
-      document.querySelectorAll('.increase-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const key = this.getAttribute('data-key');
-          increaseQuantity(key);
-        });
-      });
-      
-      // Minus-Buttons
-      document.querySelectorAll('.decrease-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const key = this.getAttribute('data-key');
-          decreaseQuantity(key);
-        });
-      });
-    }
-
-    // Menge erhöhen und Zeit berechnen
-    function increaseQuantity(key) {
-      const quantityDisplay = document.getElementById(`quantity-${key}`);
-      let currentQuantity = parseInt(quantityDisplay.textContent.replace('x', '')) || 1;
-      currentQuantity++;
-      quantityDisplay.textContent = `${currentQuantity}x`;
-      
-      // Zeit entsprechend der Menge berechnen
-      updateTimeForQuantity(key, currentQuantity);
-      updateResourceQuantities(key, currentQuantity);
-    }
-
-    // Menge verringern und Zeit berechnen
-    function decreaseQuantity(key) {
-      const quantityDisplay = document.getElementById(`quantity-${key}`);
-      let currentQuantity = parseInt(quantityDisplay.textContent.replace('x', '')) || 1;
-      if (currentQuantity > 1) {
-        currentQuantity--;
-        quantityDisplay.textContent = `${currentQuantity}x`;
-        
-        // Zeit entsprechend der Menge berechnen
-        updateTimeForQuantity(key, currentQuantity);
-        updateResourceQuantities(key, currentQuantity);
-      }
-    }
-
-    // Zeit basierend auf Menge aktualisieren
-    function updateTimeForQuantity(key, multiplier) {
-      const workbench = workbenches.find(w => w.key === key);
-      if (!workbench) return;
-      
-      const timeDisplay = document.getElementById(`time-${key}`);
-      const baseTime = workbench.time || 0;
-      const totalTime = baseTime * multiplier;
-      
-      timeDisplay.textContent = `Gesamtzeit: ${formatTime(totalTime)}`;
-    }
-
-    // Ressourcen-Mengen aktualisieren
-    function updateResourceQuantities(key, multiplier) {
-      const workbench = workbenches.find(w => w.key === key);
-      if (!workbench) return;
-      
-      // Input-Ressourcen aktualisieren
-      if (workbench.resources) {
-        workbench.resources.forEach(resource => {
-          const elementId = `input-${key}-${resource.name.replace(/\s+/g, '-')}`;
-          const element = document.getElementById(elementId);
-          if (element) {
-            const baseAmount = resource.amount;
-            element.textContent = baseAmount * multiplier;
-          }
-        });
-      }
-      
-      // Output-Ressourcen aktualisieren
-      if (workbench.outputResources) {
-        workbench.outputResources.forEach(resource => {
-          const elementId = `output-${key}-${resource.name.replace(/\s+/g, '-')}`;
-          const element = document.getElementById(elementId);
-          if (element) {
-            const baseAmount = resource.amount;
-            element.textContent = baseAmount * multiplier;
-          }
-        });
-      }
-    }
-
-    // Suchfunktion
-    function setupSearch() {
-      document.getElementById('searchInput').addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        
-        if (searchTerm.trim() === '') {
-          filteredWorkbenches = [...workbenches];
-        } else {
-          filteredWorkbenches = workbenches.filter(workbench => 
-            workbench.name.toLowerCase().includes(searchTerm) || 
-            workbench.category.toLowerCase().includes(searchTerm) ||
-            workbench.description?.toLowerCase().includes(searchTerm)
-          );
-        }
-        
-        renderWorkbenches();
-      });
-    }
-
-    // Admin Bereich Funktionen
-    function initializeAdminFunctions() {
-      const adminLoginBtn = document.getElementById('adminLoginBtn');
-      const adminPassInput = document.getElementById('adminPass');
-      const adminError = document.getElementById('adminError');
-      const adminTableBody = document.getElementById('adminTableBody');
-      const totalWorkbenches = document.getElementById('totalWorkbenches');
-      const addWorkbenchBtn = document.getElementById('addWorkbenchBtn');
-      const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
-      const exportCsv = document.getElementById('exportCsv');
-
-      // Modal Elemente
-      const workbenchModal = document.getElementById('workbenchModal');
-      const workbenchForm = document.getElementById('workbenchForm');
-      const workbenchModalTitle = document.getElementById('workbenchModalTitle');
-      const workbenchKeyInput = document.getElementById('workbenchKey');
-      const cancelWorkbench = document.getElementById('cancelWorkbench');
-
-      const categoriesModal = document.getElementById('categoriesModal');
-      const newCategoryName = document.getElementById('newCategoryName');
-      const addCategoryBtn = document.getElementById('addCategoryBtn');
-      const categoriesList = document.getElementById('categoriesList');
-      const saveCategories = document.getElementById('saveCategories');
-      const cancelCategories = document.getElementById('cancelCategories');
-
-      adminLoginBtn.addEventListener('click', () => {
-        if (adminPassInput.value === ADMIN_PASSWORD) { 
-          adminError.classList.add('hidden'); 
-          show(document.getElementById('adminContent')); 
-          renderAdminTable(); 
-          adminPassInput.value = '';
-          showNotification('Admin-Bereich erfolgreich betreten', 'success');
-        } else {
-          adminError.classList.remove('hidden');
-          adminPassInput.value = '';
-          adminPassInput.focus();
-          showNotification('Falsches Admin-Passwort', 'error');
-        }
-      });
-
-      // Allow login with Enter key
-      adminPassInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          adminLoginBtn.click();
-        }
-      });
-
-      function renderAdminTable() {
-        adminTableBody.innerHTML = '';
-        
-        // Werkbänke in Admin-Tabelle
-        workbenches.forEach(workbench => {
-          const tr = document.createElement('tr');
-          tr.style.borderBottom = '1px solid rgba(101, 119, 149, 0.2)';
-          tr.style.transition = 'background-color 0.3s';
-          tr.innerHTML = `
-            <td style="padding: 1rem;">${workbench.name}</td>
-            <td style="padding: 1rem;">${workbench.category}</td>
-            <td style="padding: 1rem;">${formatTime(workbench.time || 0)}</td>
-            <td style="padding: 1rem;">
-              <div style="display: flex; gap: 0.5rem;">
-                <button class="btn-primary edit-workbench" data-key="${workbench.key}" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
-                  <i class="fas fa-edit"></i> Bearbeiten
-                </button>
-                <button class="btn-primary delete-workbench" data-key="${workbench.key}" style="padding: 0.5rem 1rem; font-size: 0.8rem; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
-                  <i class="fas fa-trash"></i> Löschen
-                </button>
-              </div>
-            </td>`;
-          adminTableBody.appendChild(tr);
-        });
-        
-        // Event Listener für Bearbeiten-Buttons
-        document.querySelectorAll('.edit-workbench').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const key = this.getAttribute('data-key');
-            editWorkbench(key);
-          });
-        });
-        
-        // Event Listener für Löschen-Buttons
-        document.querySelectorAll('.delete-workbench').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const key = this.getAttribute('data-key');
-            deleteWorkbench(key);
-          });
-        });
-        
-        totalWorkbenches.innerText = workbenches.length;
-      }
-
-      // Werkbank bearbeiten
-      function editWorkbench(key) {
-        const workbench = workbenches.find(w => w.key === key);
-        if (!workbench) return;
-        
-        // Formular mit Werkbank-Daten füllen
-        document.getElementById('workbenchName').value = workbench.name;
-        document.getElementById('workbenchCategory').value = workbench.category;
-        
-        // Zeit zerlegen (KORRIGIERT für Millisekunden)
-        const totalSeconds = workbench.time || 0;
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = Math.floor(totalSeconds % 60);
-        const milliseconds = Math.round((totalSeconds % 1) * 1000);
-        
-        document.getElementById('workbenchTimeMinutes').value = minutes;
-        document.getElementById('workbenchTimeSeconds').value = seconds;
-        document.getElementById('workbenchTimeMilliseconds').value = milliseconds;
-        
-        workbenchKeyInput.value = key;
-        
-        // Modal-Titel ändern
-        workbenchModalTitle.innerHTML = '<i class="fas fa-edit"></i> Produkt bearbeiten';
-        
-        // Modal anzeigen
-        show(workbenchModal);
-      }
-
-      // Modal für Produkt hinzufügen
-      addWorkbenchBtn.addEventListener('click', async () => {
-        // Formular zurücksetzen
-        workbenchForm.reset();
-        workbenchKeyInput.value = '';
-        
-        // Modal-Titel ändern
-        workbenchModalTitle.innerHTML = '<i class="fas fa-plus"></i> Produkt hinzufügen';
-        
-        loadCategoriesToDropdown();
-        show(workbenchModal);
-      });
-
-      cancelWorkbench.addEventListener('click', () => {
-        hide(workbenchModal);
-        workbenchForm.reset();
-      });
-
-      // Modal für Kategorien verwalten
-      manageCategoriesBtn.addEventListener('click', async () => {
-        tempCategories = [...categories];
-        renderCategoriesList();
-        show(categoriesModal);
-      });
-
-      cancelCategories.addEventListener('click', () => {
-        hide(categoriesModal);
-        newCategoryName.value = '';
-      });
-
-      // Kategorien Liste rendern
-      function renderCategoriesList() {
-        categoriesList.innerHTML = '';
-        tempCategories.forEach((category, index) => {
-          const div = document.createElement('div');
-          div.style.display = 'flex';
-          div.style.gap = '0.5rem';
-          div.style.marginBottom = '0.5rem';
-          div.innerHTML = `
-            <input type="text" value="${category}" style="flex: 1; padding: 0.8rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 8px; color: #e2e8f0;" class="category-edit" data-index="${index}">
-            <button type="button" class="btn-primary remove-category" data-index="${index}" style="padding: 0.8rem; background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
-              <i class="fas fa-trash"></i> Löschen
-            </button>
-          `;
-          categoriesList.appendChild(div);
-        });
-      }
-
-      // Neue Kategorie hinzufügen
-      addCategoryBtn.addEventListener('click', () => {
-        const categoryName = newCategoryName.value.trim();
-        if (categoryName && !tempCategories.includes(categoryName)) {
-          tempCategories.push(categoryName);
-          renderCategoriesList();
-          newCategoryName.value = '';
-          showNotification('Kategorie hinzugefügt', 'success');
-        } else if (tempCategories.includes(categoryName)) {
-          showNotification('Kategorie existiert bereits', 'error');
-        }
-      });
-
-      // Kategorie entfernen
-      categoriesList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-category') || e.target.closest('.remove-category')) {
-          const button = e.target.classList.contains('remove-category') ? e.target : e.target.closest('.remove-category');
-          const index = parseInt(button.getAttribute('data-index'));
-          // Überprüfen ob Kategorie in Verwendung ist
-          const categoryInUse = workbenches.some(wb => wb.category === tempCategories[index]);
-          if (categoryInUse) {
-            showNotification('Diese Kategorie wird noch von Produkten verwendet und kann nicht gelöscht werden!', 'error');
-            return;
-          }
-          tempCategories.splice(index, 1);
-          renderCategoriesList();
-          showNotification('Kategorie entfernt', 'info');
-        }
-      });
-
-      // Kategorien speichern
-      saveCategories.addEventListener('click', async () => {
-        // Aktualisiere Kategorie-Namen
-        const categoryInputs = categoriesList.querySelectorAll('.category-edit');
-        categoryInputs.forEach(input => {
-          const index = parseInt(input.getAttribute('data-index'));
-          const newName = input.value.trim();
-          if (newName && newName !== tempCategories[index]) {
-            // Aktualisiere Kategorie in Werkbänken
-            workbenches.forEach(wb => {
-              if (wb.category === tempCategories[index]) {
-                wb.category = newName;
-                // Update in Firebase
-                updateWorkbench(wb.key, { category: newName });
-              }
-            });
-            tempCategories[index] = newName;
-          }
-        });
-        
-        categories = [...tempCategories];
-        const success = await saveCategoriesToFirebase();
-        if (success) {
-          renderCategories();
-          renderWorkbenches();
-          renderAdminTable();
-          hide(categoriesModal);
-          showNotification('Kategorien erfolgreich gespeichert', 'success');
-        } else {
-          showNotification('Fehler beim Speichern der Kategorien!', 'error');
-        }
-      });
-
-      // Modal schließen, wenn außerhalb geklickt wird
-      document.querySelectorAll('.modal-overlay').forEach(modal => {
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            hide(modal);
-            if (modal === workbenchModal) {
-              workbenchForm.reset();
-            }
-            if (modal === categoriesModal) newCategoryName.value = '';
-          }
-        });
-      });
-
-      workbenchForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const submitBtn = e.target.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Speichere...';
-        submitBtn.disabled = true;
-        
-        const name = document.getElementById('workbenchName').value;
-        const category = document.getElementById('workbenchCategory').value;
-        const minutes = document.getElementById('workbenchTimeMinutes').value || 0;
-        const seconds = document.getElementById('workbenchTimeSeconds').value || 0;
-        const milliseconds = document.getElementById('workbenchTimeMilliseconds').value || 0;
-        
-        // KORRIGIERTE Zeitberechnung mit Millisekunden
-        const totalTime = convertTimeToSeconds(minutes, seconds, milliseconds);
-        
-        const key = workbenchKeyInput.value;
-        
-        // Werkbank-Objekt erstellen
-        const workbenchData = {
-          name,
-          category,
-          time: totalTime,
-          timeDisplay: `${minutes} ${seconds} ${milliseconds}`,
-          date: new Date().toISOString(),
-          timestamp: Date.now()
+    <!-- Modal für Sorte hinzufügen -->
+    <div id="strainModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3 id="strainModalTitle">
+                <i class="fas fa-plus"></i> Sorte hinzufügen
+            </h3>
+            <form id="strainForm" class="space-y-4">
+                <input type="hidden" id="strainKey">
+                <div class="form-group">
+                    <label for="strainName">Name</label>
+                    <input type="text" id="strainName" placeholder="z.B.: Amnesia Haze" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Qualitäten & Preise</label>
+                    <div class="quality-input-container">
+                        <input type="text" id="newQualityName" placeholder="Qualität" style="flex: 1;">
+                        <input type="number" id="newQualityPrice" placeholder="Preis" min="1" style="width: 100px;">
+                        <button type="button" id="addQualityBtn" class="btn-primary" style="padding: 0.5rem;">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div id="qualitiesList" class="quality-list">
+                        <!-- Qualitäten werden hier dynamisch hinzugefügt -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Bild hochladen</label>
+                    <div class="file-input-wrapper">
+                        <button type="button" class="logout-btn" style="width: 100%; padding: 0.8rem;">
+                            <i class="fas fa-upload"></i> Bild auswählen
+                        </button>
+                        <input type="file" id="strainImageFile" accept="image/*" class="file-input">
+                    </div>
+                    <div style="color: #a0aec0; font-size: 0.8rem; margin-top: 0.5rem;">
+                        Unterstützte Formate: JPG, PNG, GIF (max. 5MB)
+                    </div>
+                    <img id="imagePreview" class="image-preview" alt="Vorschau">
+                    <input type="hidden" id="strainImageData">
+                </div>
+                
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Speichern
+                    </button>
+                    <button type="button" id="cancelStrain" class="logout-btn">
+                        <i class="fas fa-times"></i> Abbrechen
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification hidden"></div>
+
+    <script type="module">
+        // Discord OAuth Konfiguration
+        const DISCORD_CLIENT_ID = '1432942180770644079';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Firebase Import und Konfiguration
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+
+        // Firebase Konfiguration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
+            authDomain: "khusland-b7d13.firebaseapp.com",
+            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
+            projectId: "khusland-b7d13",
+            storageBucket: "khusland-b7d13.firebasestorage.app",
+            messagingSenderId: "69573193613",
+            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
+            measurementId: "G-JSCWR4207G"
         };
-        
-        let success;
-        if (key) {
-          // Bestehende Werkbank aktualisieren
-          success = await updateWorkbench(key, workbenchData);
-        } else {
-          // Neue Werkbank erstellen
-          success = await saveWorkbench(workbenchData);
-        }
-        
-        if (success) {
-          hide(workbenchModal);
-          workbenchForm.reset();
-          showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
-        } else {
-          showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
-        }
-        
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-      });
 
-      // Löschfunktion
-      window.deleteWorkbench = async function(key) { 
-        if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
-          const success = await deleteWorkbenchFromFirebase(key);
-          if (success) {
-            showNotification('Produkt erfolgreich gelöscht', 'success');
-          } else {
-            showNotification('Fehler beim Löschen des Produkts!', 'error');
-          }
-        }
-      }
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+        const strainsRef = ref(db,'weed_ankauf/strains');
+        const logoSettingsRef = ref(db,'weed_ankauf_logo_settings');
+        const logoImageRef = storageRef(storage, 'weed_ankauf_logo.png');
 
-      // CSV Export
-      exportCsv.addEventListener('click', () => {
-        if (workbenches.length === 0) {
-          showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
-          return;
-        }
+        // Seitenspezifische Konfiguration
+        const PAGE_ACCESS_CONFIG = {
+            'index.html': 'weed',
+            'seite2.html': 'kokain',
+            'seite3.html': 'materialrecycler',
+            'seite4.html': 'werkbank',
+            'seite5.html': 'route',
+            'seite6.html': 'management'
+        };
+
+        // System Variablen
+        const ADMIN_PASSWORD = '1101';
+        let strains = [];
+        let filteredStrains = [];
+        let currentQualities = [];
+        let currentUser = null;
+        let userAccessInfo = null;
+
+        // DOM Elemente
+        const loginPage = document.getElementById('loginPage');
+        const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
+        const errorMessage = document.getElementById('errorMessage');
+        const userWelcome = document.getElementById('userWelcome');
+        const notification = document.getElementById('notification');
+        const accessBadge = document.getElementById('accessBadge');
+        const headerLogo = document.getElementById('headerLogo');
+        const restrictedUserName = document.getElementById('restrictedUserName');
+        const restrictedPageName = document.getElementById('restrictedPageName');
+        const discordLoginBtn = document.getElementById('discordLogin');
+        const loginLoading = document.getElementById('loginLoading');
         
-        const header = ['Name', 'Kategorie', 'Herstellungszeit (Sekunden)'];
-        const rows = workbenches.map(wb => {
-          return [
-            `"${wb.name}"`,
-            `"${wb.category}"`,
-            `"${wb.time || 0}"`
-          ].join(';');
+        // Logo Upload Modal Elemente
+        const logoUploadModal = document.getElementById('logoUploadModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const adminPassword = document.getElementById('adminPassword');
+        const logoPassword = document.getElementById('logoPassword');
+        const logoFile = document.getElementById('logoFile');
+        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
+        const cancelPassword = document.getElementById('cancelPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const saveLogo = document.getElementById('saveLogo');
+        
+        // Buttons
+        const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
+        const dashboardTab = document.getElementById('dashboardTab');
+        const weedTab = document.getElementById('weedTab');
+
+        // Weed Ankauf spezifische Elemente
+        const searchInput = document.getElementById('searchInput');
+        const strainsGrid = document.getElementById('strainsGrid');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminPassInput = document.getElementById('adminPass');
+        const adminError = document.getElementById('adminError');
+        const adminContent = document.getElementById('adminContent');
+        const totalStrains = document.getElementById('totalStrains');
+        const addStrainBtn = document.getElementById('addStrainBtn');
+        const exportCsv = document.getElementById('exportCsv');
+        const adminSearchInput = document.getElementById('adminSearchInput');
+        const adminTableBody = document.getElementById('adminTableBody');
+
+        // Modal Elemente
+        const strainModal = document.getElementById('strainModal');
+        const strainForm = document.getElementById('strainForm');
+        const strainModalTitle = document.getElementById('strainModalTitle');
+        const strainKeyInput = document.getElementById('strainKey');
+        const cancelStrain = document.getElementById('cancelStrain');
+        const strainImageFile = document.getElementById('strainImageFile');
+        const imagePreview = document.getElementById('imagePreview');
+        const strainImageData = document.getElementById('strainImageData');
+        const newQualityName = document.getElementById('newQualityName');
+        const newQualityPrice = document.getElementById('newQualityPrice');
+        const addQualityBtn = document.getElementById('addQualityBtn');
+        const qualitiesList = document.getElementById('qualitiesList');
+
+        // ========== ZUGRIFFSKONTROLLE ==========
+
+        // Zugriff auf Seite prüfen
+        async function hasAccess(pageKey) {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token,
+                        currentPage: pageKey
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.hasPageAccess;
+                
+            } catch (error) {
+                console.error('Fehler bei Zugriffsprüfung:', error);
+                return false;
+            }
+        }
+
+        // Benutzer existenz prüfen
+        async function checkUserExists() {
+            if (!currentUser) return false;
+            
+            const token = localStorage.getItem('discord_access_token');
+            if (!token) return false;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken: token
+                    })
+                });
+
+                if (!response.ok) return false;
+
+                const data = await response.json();
+                return data.isAuthorized;
+                
+            } catch (error) {
+                console.error('Fehler bei Benutzerprüfung:', error);
+                return false;
+            }
+        }
+
+        // Karten-Zugriffsanzeige aktualisieren
+        async function updateCardAccess() {
+            if (!currentUser) return;
+            
+            const cards = document.querySelectorAll('.card');
+            
+            for (const card of cards) {
+                const page = card.getAttribute('data-page');
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                
+                if (pageKey) {
+                    const hasAccessToPage = await hasAccess(pageKey);
+                    
+                    // Entferne bestehende Status-Badges
+                    const existingStatus = card.querySelector('.access-status');
+                    if (existingStatus) {
+                        existingStatus.remove();
+                    }
+                    
+                    if (hasAccessToPage) {
+                        card.classList.remove('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-allowed';
+                        statusBadge.textContent = '✓ Zugriff';
+                        card.appendChild(statusBadge);
+                    } else {
+                        card.classList.add('disabled');
+                        const statusBadge = document.createElement('span');
+                        statusBadge.className = 'access-status access-denied';
+                        statusBadge.textContent = '✗ Kein Zugriff';
+                        card.appendChild(statusBadge);
+                    }
+                }
+            }
+        }
+
+        // Navigation zu anderen Seiten mit Zugriffsprüfung
+        async function navigateToWithAccessCheck(page) {
+            if (!currentUser) {
+                showNotification('Bitte zuerst anmelden', 'error');
+                return;
+            }
+            
+            // Prüfen ob Benutzer noch existiert
+            const userExists = await checkUserExists();
+            if (!userExists) {
+                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
+                logout();
+                return;
+            }
+            
+            const pageKey = PAGE_ACCESS_CONFIG[page];
+            if (!pageKey) {
+                showNotification('Ungültige Seite', 'error');
+                return;
+            }
+            
+            const hasAccessToPage = await hasAccess(pageKey);
+            if (!hasAccessToPage) {
+                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                return;
+            }
+            
+            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+            setTimeout(() => {
+                window.location.href = page;
+            }, 1500);
+        }
+
+        // ========== LOGIN & AUTHENTIFIZIERUNG ==========
+
+        // Discord OAuth Login
+        function startDiscordOAuth() {
+            console.log('Starte Discord OAuth...');
+            
+            discordLoginBtn.style.display = 'none';
+            loginLoading.style.display = 'block';
+            errorMessage.style.display = 'none';
+            
+            const scope = 'identify';
+            const state = generateRandomState();
+            
+            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', scope);
+            authUrl.searchParams.set('state', state);
+            
+            localStorage.setItem('oauth_state', state);
+            
+            setTimeout(() => {
+                window.location.href = authUrl.toString();
+            }, 500);
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        function resetLoginUI() {
+            loginLoading.style.display = 'none';
+            discordLoginBtn.style.display = 'flex';
+            errorMessage.style.display = 'block';
+        }
+
+        // OAuth Callback verarbeiten
+        async function handleOAuthCallback() {
+            console.log('Verarbeite OAuth Callback...');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const storedState = localStorage.getItem('oauth_state');
+            const error = urlParams.get('error');
+            
+            console.log('URL Parameters:', { code: !!code, state, storedState, error });
+            
+            if (error) {
+                console.error('Discord OAuth Error:', error);
+                resetLoginUI();
+                showError('Anmeldung abgebrochen: ' + error);
+                return;
+            }
+            
+            if (code && state && state === storedState) {
+                try {
+                    console.log('Valider OAuth Callback gefunden');
+                    loginLoading.style.display = 'block';
+                    discordLoginBtn.style.display = 'none';
+                    
+                    const tokenResponse = await fetch(`${BACKEND_URL}/token`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            code: code,
+                            redirect_uri: DISCORD_REDIRECT_URI
+                        })
+                    });
+                    
+                    if (!tokenResponse.ok) {
+                        const errorText = await tokenResponse.text();
+                        console.error('Token Request failed:', tokenResponse.status, errorText);
+                        throw new Error(`Token request failed: ${tokenResponse.status}`);
+                    }
+                    
+                    const tokenData = await tokenResponse.json();
+                    console.log('Token Response:', tokenData);
+                    
+                    if (tokenData.error) {
+                        throw new Error(tokenData.error);
+                    }
+                    
+                    if (!tokenData.access_token) {
+                        throw new Error('Kein Access Token erhalten');
+                    }
+                    
+                    await verifyUser(tokenData.access_token);
+                    
+                } catch (error) {
+                    console.error('OAuth Error:', error);
+                    resetLoginUI();
+                    showError('Fehler bei der Anmeldung: ' + error.message);
+                } finally {
+                    localStorage.removeItem('oauth_state');
+                    const cleanUrl = window.location.origin + window.location.pathname;
+                    window.history.replaceState({}, document.title, cleanUrl);
+                    console.log('URL bereinigt');
+                }
+            } else {
+                console.log('Kein valider OAuth Callback');
+                resetLoginUI();
+                
+                if (state && state !== storedState) {
+                    showError('Sicherheitsfehler: State-Parameter stimmt nicht überein');
+                }
+            }
+        }
+
+        // User verifizieren
+        async function verifyUser(accessToken) {
+            try {
+                console.log('Verifiziere Benutzer...');
+                const currentPage = getCurrentPageKey();
+                
+                const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        accessToken,
+                        currentPage
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Verification failed with status: ' + response.status);
+                }
+
+                const data = await response.json();
+                console.log('Verification Response:', data);
+
+                if (data.isAuthorized) {
+                    console.log('Benutzer autorisiert!');
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+                    
+                    const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        ...userAccessInfo
+                    };
+                    
+                    await loadDiscordAvatar(user);
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
+                } else {
+                    let errorMsg = 'Zugriff verweigert. ';
+                    if (data.accessInfo && data.accessInfo.message === 'access expired') {
+                        errorMsg += 'Dein Zugang ist abgelaufen.';
+                    } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
+                        errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
+                    } else {
+                        errorMsg += 'Du bist nicht autorisiert.';
+                    }
+                    resetLoginUI();
+                    showError(errorMsg);
+                }
+            } catch (error) {
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                resetLoginUI();
+                showError('Fehler bei der Berechtigungsprüfung: ' + error.message);
+            }
+        }
+
+        // Discord Avatar laden
+        async function loadDiscordAvatar(userData) {
+            if (userData.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                
+                const userAvatar = document.getElementById('userAvatar');
+                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                userAvatar.innerHTML = '';
+            } else {
+                const userAvatar = document.getElementById('userAvatar');
+                const firstLetter = userData.username.charAt(0).toUpperCase();
+                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+            }
+        }
+
+        // Aktuelle Seite identifizieren
+        function getCurrentPageKey() {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop();
+            return PAGE_ACCESS_CONFIG[filename] || 'weed';
+        }
+
+        // Zugriff verweigert anzeigen
+        function showAccessRestricted(user, pageKey) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserName.textContent = user.username;
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
+        }
+
+        // Login-Seite anzeigen
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.add('hidden');
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'weed': 'Weed Ankauf',
+                'kokain': 'Kokain',
+                'materialrecycler': 'Materialrecycler',
+                'werkbank': 'Werkbank',
+                'route': 'Route',
+                'management': 'Management'
+            };
+            return names[pageKey] || pageKey;
+        }
+
+        // Autorisierten Inhalt anzeigen
+        function showAuthorizedContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
+            
+            userWelcome.textContent = `Willkommen, ${user.username}`;
+            
+            if (userAccessInfo && userAccessInfo.message) {
+                accessBadge.classList.remove('hidden');
+                if (userAccessInfo.isPermanent) {
+                    accessBadge.textContent = 'Permanent';
+                    accessBadge.className = 'access-badge access-permanent';
+                } else {
+                    accessBadge.textContent = userAccessInfo.message || 'Temporary';
+                    accessBadge.className = 'access-badge access-temporary';
+                }
+            }
+            
+            // Setze URL zurück ohne Code-Parameter
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+            
+            updateCardAccess();
+            loadStrains();
+            loadGlobalLogo();
+        }
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            userAccessInfo = null;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
+            showLoginPage();
+            accessBadge.classList.add('hidden');
+            
+            showNotification('Erfolgreich ausgeloggt', 'info');
+        }
+
+        // Session prüfen
+        async function checkExistingLogin() {
+            const user = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const accessInfo = localStorage.getItem('user_access_info');
+            
+            console.log('Check existing login:', { user: !!user, token: !!token });
+            
+            if (user && token) {
+                try {
+                    console.log('Bereits eingeloggt');
+                    const userData = JSON.parse(user);
+                    userAccessInfo = accessInfo ? JSON.parse(accessInfo) : null;
+                    
+                    const currentPage = getCurrentPageKey();
+                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            accessToken: token,
+                            currentPage
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.isAuthorized) {
+                            currentUser = {
+                                id: userData.id,
+                                username: userData.username,
+                                ...userAccessInfo
+                            };
+                            
+                            await loadDiscordAvatar(userData);
+                            
+                            if (data.hasPageAccess) {
+                                showAuthorizedContent(currentUser);
+                                showNotification(`Willkommen zurück, ${userData.username}`, 'info');
+                            } else {
+                                showAccessRestricted(currentUser, currentPage);
+                            }
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Fehler beim Laden der Benutzerdaten:', e);
+                }
+            }
+            
+            showLoginPage();
+        }
+
+        // ========== EVENT LISTENER ==========
+
+        function initializeEventListeners() {
+            // Login Button
+            discordLoginBtn.addEventListener('click', startDiscordOAuth);
+            
+            // Logout Button
+            logoutBtn.addEventListener('click', logout);
+            restrictedLogoutBtn.addEventListener('click', logout);
+            
+            // Tab Navigation
+            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
+            weedTab.addEventListener('click', () => switchTab('weed'));
+            
+            // Logo Upload Event Listeners
+            headerLogo.addEventListener('click', openPasswordModal);
+            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
+            cancelPassword.addEventListener('click', closePasswordModal);
+            confirmPassword.addEventListener('click', verifyLogoPassword);
+            saveLogo.addEventListener('click', handleLogoUpload);
+            
+            // Navigation zu anderen Seiten
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
+                });
+            });
+
+            // Weed Ankauf Event Listeners
+            initializeWeedListeners();
+        }
+
+        // ========== WEED ANKAUF FUNKTIONEN ==========
+
+        function initializeWeedListeners() {
+            // Admin Login
+            if (adminLoginBtn) {
+                adminLoginBtn.addEventListener('click', function() {
+                    const password = adminPassInput.value;
+                    if (password === ADMIN_PASSWORD) {
+                        adminContent.classList.remove('hidden');
+                        adminLoginSection.classList.add('hidden');
+                        showNotification('Admin-Bereich erfolgreich betreten', 'success');
+                    } else {
+                        adminError.classList.remove('hidden');
+                    }
+                });
+            }
+
+            // Sorte hinzufügen Button
+            if (addStrainBtn) {
+                addStrainBtn.addEventListener('click', function() {
+                    openStrainModal();
+                });
+            }
+
+            // Qualität hinzufügen
+            if (addQualityBtn) {
+                addQualityBtn.addEventListener('click', function() {
+                    addQuality();
+                });
+            }
+
+            // Sorte Formular
+            if (strainForm) {
+                strainForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveStrain();
+                });
+            }
+
+            // Sorte Bild Upload
+            if (strainImageFile) {
+                strainImageFile.addEventListener('change', function(e) {
+                    handleImageUpload(e);
+                });
+            }
+
+            // Modal schließen
+            if (cancelStrain) {
+                cancelStrain.addEventListener('click', function() {
+                    strainModal.classList.remove('active');
+                });
+            }
+
+            // Suche
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    filterStrains(e.target.value);
+                });
+            }
+
+            if (adminSearchInput) {
+                adminSearchInput.addEventListener('input', function(e) {
+                    filterAdminStrains(e.target.value);
+                });
+            }
+        }
+
+        // Tab wechseln Funktion
+        function switchTab(tabName) {
+            // Tabs deaktivieren
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Gewählten Tab aktivieren
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Sorten laden
+        function loadStrains() {
+            onValue(strainsRef, (snapshot) => {
+                strains = [];
+                snapshot.forEach((childSnapshot) => {
+                    const strain = childSnapshot.val();
+                    strain.key = childSnapshot.key;
+                    strains.push(strain);
+                });
+                filteredStrains = [...strains];
+                renderStrains();
+                renderAdminTable();
+            });
+        }
+
+        // Sorten rendern
+        function renderStrains() {
+            if (!strainsGrid) return;
+            
+            strainsGrid.innerHTML = '';
+            
+            filteredStrains.forEach(strain => {
+                const strainElement = createStrainElement(strain);
+                strainsGrid.appendChild(strainElement);
+            });
+        }
+
+        // Sorte-Element erstellen
+        function createStrainElement(strain) {
+            const div = document.createElement('div');
+            div.className = 'product-item';
+            div.innerHTML = `
+                <div class="product-card">
+                    ${strain.image ? 
+                        `<img src="${strain.image}" alt="${strain.name}" class="product-image">` : 
+                        `<div style="width: 100px; height: 100px; background: rgba(34, 197, 94, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #16a34a;">
+                            <i class="fas fa-cannabis" style="font-size: 2rem;"></i>
+                        </div>`
+                    }
+                    <div>
+                        <h4 style="color: #4ade80; margin-bottom: 0.5rem; font-size: 1.2rem;">${strain.name}</h4>
+                        <div class="quality-list">
+                            ${strain.qualities ? Object.entries(strain.qualities).map(([name, price]) => 
+                                `<span class="quality-tag">${name}: $${price}</span>`
+                            ).join('') : ''}
+                        </div>
+                        <div class="calculator-section">
+                            <div class="calculator-title">
+                                <i class="fas fa-calculator"></i> Preis Rechner
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" onchange="calculatePrice(this, '${strain.key}')">
+                                <button class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>
+                            </div>
+                            <div id="results-${strain.key}" class="results-container">
+                                <!-- Ergebnisse werden hier dynamisch eingefügt -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        // Admin-Tabelle rendern
+        function renderAdminTable() {
+            if (!adminTableBody) return;
+            
+            adminTableBody.innerHTML = '';
+            totalStrains.textContent = strains.length;
+            
+            filteredStrains.forEach(strain => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${strain.name}</td>
+                    <td>
+                        ${strain.qualities ? Object.entries(strain.qualities).map(([name, price]) => 
+                            `${name}: $${price}`
+                        ).join(', ') : 'Keine Qualitäten'}
+                    </td>
+                    <td>
+                        <button onclick="editStrain('${strain.key}')" class="btn-primary" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteStrain('${strain.key}')" class="logout-btn" style="padding: 0.5rem 1rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                adminTableBody.appendChild(row);
+            });
+        }
+
+        // Globales Logo laden
+        function loadGlobalLogo() {
+            getDownloadURL(logoImageRef)
+                .then((url) => {
+                    headerLogo.style.backgroundImage = `url('${url}')`;
+                    headerLogo.innerHTML = '';
+                })
+                .catch((error) => {
+                    console.log('Kein custom Logo gefunden, verwende Standard-Logo');
+                });
+        }
+
+        // Sorte Modal öffnen
+        function openStrainModal() {
+            strainKeyInput.value = '';
+            strainName.value = '';
+            strainImageData.value = '';
+            imagePreview.style.display = 'none';
+            currentQualities = [];
+            qualitiesList.innerHTML = '';
+            strainModalTitle.innerHTML = '<i class="fas fa-plus"></i> Sorte hinzufügen';
+            strainModal.classList.add('active');
+        }
+
+        // Qualität hinzufügen
+        function addQuality() {
+            const name = newQualityName.value.trim();
+            const price = parseInt(newQualityPrice.value);
+            
+            if (name && price && price > 0) {
+                currentQualities.push({ name, price });
+                renderQualitiesList();
+                newQualityName.value = '';
+                newQualityPrice.value = '';
+            }
+        }
+
+        // Qualitäten Liste rendern
+        function renderQualitiesList() {
+            qualitiesList.innerHTML = '';
+            currentQualities.forEach((quality, index) => {
+                const qualityElement = document.createElement('div');
+                qualityElement.className = 'quality-tag';
+                qualityElement.innerHTML = `
+                    ${quality.name}: $${quality.price}
+                    <button type="button" onclick="removeQuality(${index})" style="background: none; border: none; color: #f56565; margin-left: 5px; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                qualitiesList.appendChild(qualityElement);
+            });
+        }
+
+        // Qualität entfernen
+        function removeQuality(index) {
+            currentQualities.splice(index, 1);
+            renderQualitiesList();
+        }
+
+        // Bild Upload behandeln
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    strainImageData.value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Sorte speichern
+        function saveStrain() {
+            const strainData = {
+                name: strainName.value,
+                qualities: {},
+                image: strainImageData.value
+            };
+            
+            currentQualities.forEach(quality => {
+                strainData.qualities[quality.name] = quality.price;
+            });
+            
+            const strainKey = strainKeyInput.value;
+            
+            if (strainKey) {
+                // Sorte aktualisieren
+                const strainRef = ref(db, `weed_ankauf/strains/${strainKey}`);
+                update(strainRef, strainData)
+                    .then(() => {
+                        showNotification('Sorte erfolgreich aktualisiert', 'success');
+                        strainModal.classList.remove('active');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Aktualisieren der Sorte', 'error');
+                    });
+            } else {
+                // Neue Sorte hinzufügen
+                push(strainsRef, strainData)
+                    .then(() => {
+                        showNotification('Sorte erfolgreich hinzugefügt', 'success');
+                        strainModal.classList.remove('active');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Hinzufügen der Sorte', 'error');
+                    });
+            }
+        }
+
+        // Sorte bearbeiten
+        function editStrain(strainKey) {
+            const strain = strains.find(s => s.key === strainKey);
+            if (!strain) return;
+            
+            strainKeyInput.value = strainKey;
+            strainName.value = strain.name;
+            strainImageData.value = strain.image || '';
+            
+            // Bild-Vorschau
+            if (strain.image) {
+                imagePreview.src = strain.image;
+                imagePreview.style.display = 'block';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+            
+            // Qualitäten zurücksetzen und neu laden
+            currentQualities = [];
+            qualitiesList.innerHTML = '';
+            
+            if (strain.qualities) {
+                Object.entries(strain.qualities).forEach(([name, price]) => {
+                    currentQualities.push({ name, price });
+                });
+                renderQualitiesList();
+            }
+            
+            strainModalTitle.innerHTML = '<i class="fas fa-edit"></i> Sorte bearbeiten';
+            strainModal.classList.add('active');
+        }
+
+        // Sorte löschen
+        function deleteStrain(strainKey) {
+            if (confirm('Sind Sie sicher, dass Sie diese Sorte löschen möchten?')) {
+                const strainRef = ref(db, `weed_ankauf/strains/${strainKey}`);
+                remove(strainRef)
+                    .then(() => {
+                        showNotification('Sorte erfolgreich gelöscht', 'success');
+                    })
+                    .catch((error) => {
+                        showNotification('Fehler beim Löschen der Sorte', 'error');
+                    });
+            }
+        }
+
+        // Sorten filtern
+        function filterStrains(searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            filteredStrains = strains.filter(strain => 
+                strain.name.toLowerCase().includes(searchTerm) ||
+                (strain.qualities && Object.keys(strain.qualities).some(quality => 
+                    quality.toLowerCase().includes(searchTerm)
+                ))
+            );
+            renderStrains();
+        }
+
+        // Admin Sorten filtern
+        function filterAdminStrains(searchTerm) {
+            searchTerm = searchTerm.toLowerCase();
+            filteredStrains = strains.filter(strain => 
+                strain.name.toLowerCase().includes(searchTerm) ||
+                (strain.qualities && Object.keys(strain.qualities).some(quality => 
+                    quality.toLowerCase().includes(searchTerm)
+                ))
+            );
+            renderAdminTable();
+        }
+
+        // Rechner Funktionen
+        function changeQuantity(button, change) {
+            const input = button.parentElement.querySelector('.quantity-input');
+            let value = parseInt(input.value) + change;
+            if (value < 1) value = 1;
+            input.value = value;
+            
+            const strainKey = input.getAttribute('onchange').split("'")[1];
+            calculatePrice(input, strainKey);
+        }
+
+        function calculatePrice(input, strainKey) {
+            const quantity = parseInt(input.value);
+            const strain = strains.find(s => s.key === strainKey);
+            if (!strain || !strain.qualities) return;
+            
+            const resultsContainer = document.getElementById(`results-${strainKey}`);
+            resultsContainer.innerHTML = '';
+            
+            Object.entries(strain.qualities).forEach(([qualityName, price]) => {
+                const totalPrice = price * quantity;
+                
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `
+                    <span>${qualityName}</span>
+                    <span class="result-price">$${totalPrice}</span>
+                `;
+                resultsContainer.appendChild(resultItem);
+            });
+        }
+
+        // Logo Upload Funktionen
+        function openPasswordModal() {
+            passwordModal.classList.add('active');
+        }
+
+        function closePasswordModal() {
+            passwordModal.classList.remove('active');
+            logoPassword.value = '';
+        }
+
+        function closeLogoUploadModal() {
+            logoUploadModal.classList.remove('active');
+            adminPassword.value = '';
+            logoFile.value = '';
+        }
+
+        function verifyLogoPassword() {
+            if (logoPassword.value === ADMIN_PASSWORD) {
+                passwordModal.classList.remove('active');
+                logoUploadModal.classList.add('active');
+                logoPassword.value = '';
+            } else {
+                alert('Falsches Passwort!');
+            }
+        }
+
+        function handleLogoUpload() {
+            if (adminPassword.value !== ADMIN_PASSWORD) {
+                alert('Falsches Admin-Passwort!');
+                return;
+            }
+
+            const file = logoFile.files[0];
+            if (!file) {
+                alert('Bitte wählen Sie eine Bilddatei aus!');
+                return;
+            }
+
+            // Bild in Firebase Storage hochladen
+            uploadBytes(logoImageRef, file)
+                .then((snapshot) => {
+                    return getDownloadURL(snapshot.ref);
+                })
+                .then((downloadURL) => {
+                    // Logo in der UI aktualisieren
+                    headerLogo.style.backgroundImage = `url('${downloadURL}')`;
+                    headerLogo.innerHTML = '';
+                    
+                    // Modal schließen
+                    closeLogoUploadModal();
+                    showNotification('Logo erfolgreich aktualisiert', 'success');
+                })
+                .catch((error) => {
+                    console.error('Error uploading logo:', error);
+                    showNotification('Fehler beim Hochladen des Logos', 'error');
+                });
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 4000) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.remove('hidden');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 300);
+            }, duration);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // ========== INITIALISIERUNG ==========
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM geladen - Initialisiere App...');
+            initializeEventListeners();
+            
+            // Zuerst OAuth Callback prüfen
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('code') || urlParams.get('error')) {
+                console.log('OAuth Callback gefunden, verarbeite...');
+                handleOAuthCallback();
+            } else {
+                // Dann bestehende Session prüfen
+                console.log('Kein OAuth Callback, prüfe bestehende Session...');
+                checkExistingLogin();
+            }
         });
-        
-        const csv = [header.join(';'), ...rows].join('\n');
-        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        
-        // Generate filename with current date
-        const now = new Date();
-        const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
-        a.download = `werkbank_produkte_${dateStr}.csv`;
-        
-        document.body.appendChild(a);
-        a.click();
-        URL.revokeObjectURL(url);
-        a.remove();
-        
-        showNotification('CSV erfolgreich exportiert', 'success');
-      });
-    }
 
-    // Haupt-Initialisierungsfunktion für Werkbank
-    function initializeWorkbenchFunctions() {
-      initializeFirebaseListeners();
-      setupSearch();
-      initializeAdminFunctions();
-      renderCategories();
-      renderWorkbenches();
-    }
+        // Globale Funktionen für onclick Events
+        window.changeQuantity = changeQuantity;
+        window.calculatePrice = calculatePrice;
+        window.editStrain = editStrain;
+        window.deleteStrain = deleteStrain;
+        window.removeQuality = removeQuality;
 
-    // Event Listeners initialisieren
-    function initializeEventListeners() {
-      discordLoginBtn.addEventListener('click', startDiscordOAuth);
-      logoutBtn.addEventListener('click', logout);
-      restrictedLogoutBtn.addEventListener('click', logout);
-      productsTab.addEventListener('click', () => switchTab('products'));
-      adminTab.addEventListener('click', () => switchTab('admin'));
-    }
-
-    // Initialisierung
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeEventListeners();
-      checkExistingLogin();
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      if (code) {
-        exchangeCodeForToken(code);
-      }
-    });
-
-    console.log('Werkbank Manager - Mit exaktem KhusLand Panel Design!');
-  </script>
+        console.log('Weed Ankauf Panel - Mit vollständiger Zugriffskontrolle!');
+    </script>
 </body>
 </html>

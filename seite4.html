@@ -1582,6 +1582,23 @@
         const saveCategories = document.getElementById('saveCategories');
         const cancelCategories = document.getElementById('cancelCategories');
 
+        // ========== BASIS-URL FUNKTION ==========
+
+        // Basis-URL für GitHub Pages ermitteln
+        function getBaseUrl() {
+            // Wenn wir auf GitHub Pages sind
+            if (window.location.hostname.includes('github.io')) {
+                const pathParts = window.location.pathname.split('/');
+                // Repository name extrahieren (normalerweise der zweite Teil)
+                if (pathParts.length > 1 && pathParts[1]) {
+                    const repoName = pathParts[1];
+                    return `${window.location.origin}/${repoName}`;
+                }
+            }
+            // Für lokale Entwicklung
+            return window.location.origin;
+        }
+
         // ========== ECHTZEIT-ZUGRIFFSKONTROLLE ==========
 
         // Zugriff auf Seite prüfen (Echtzeit)
@@ -1738,35 +1755,83 @@
             }
         }
 
+        // ========== NAVIGATION FUNKTIONEN ==========
+
         // Navigation zu anderen Seiten mit Echtzeit-Zugriffsprüfung
         async function navigateToWithAccessCheck(page) {
-            // Sofortige Zugriffsprüfung
-            const hasAccess = await validateAccess();
-            if (!hasAccess) {
-                return;
+            try {
+                // Sofortige Zugriffsprüfung
+                const hasAccess = await validateAccess();
+                if (!hasAccess) return;
+                
+                if (!currentUser) {
+                    showNotification('Bitte zuerst anmelden', 'error');
+                    return;
+                }
+                
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                if (!pageKey) {
+                    showNotification('Ungültige Seite', 'error');
+                    return;
+                }
+                
+                const hasAccessToPage = await hasAccess(pageKey);
+                if (!hasAccessToPage) {
+                    showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                    return;
+                }
+                
+                showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+                
+                // Korrekte URL für GitHub Pages konstruieren
+                const baseUrl = getBaseUrl();
+                let targetUrl;
+                
+                if (page === 'index.html') {
+                    targetUrl = baseUrl + '/';
+                } else {
+                    targetUrl = baseUrl + '/' + page;
+                }
+                
+                console.log('Navigating to:', targetUrl);
+                
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Navigation error:', error);
+                showNotification('Fehler bei der Navigation', 'error');
             }
-            
-            if (!currentUser) {
-                showNotification('Bitte zuerst anmelden', 'error');
-                return;
-            }
-            
-            const pageKey = PAGE_ACCESS_CONFIG[page];
-            if (!pageKey) {
-                showNotification('Ungültige Seite', 'error');
-                return;
-            }
-            
-            const hasAccessToPage = await hasAccess(pageKey);
-            if (!hasAccessToPage) {
-                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                return;
-            }
-            
-            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
+        }
+
+        // Card Navigation initialisieren
+        function initializeCardNavigation() {
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', async function() {
+                    const hasAccess = await validateAccess();
+                    if (!hasAccess) return;
+                    
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        navigateToWithAccessCheck(page);
+                    }
+                });
+            });
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management'
+            };
+            return names[pageKey] || pageKey;
         }
 
         // ========== LOGIN & AUTHENTIFIZIERUNG ==========
@@ -1998,20 +2063,6 @@
             }
         }
 
-        // Seiten-Namen für Anzeige
-        function getPageDisplayName(pageKey) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'route': 'Route',
-                'werkbank': 'Werkbank', 
-                'materialrecycler': 'Materialrecycler',
-                'kokain': 'Kokain',
-                'weed': 'Weed',
-                'management': 'Management'
-            };
-            return names[pageKey] || pageKey;
-        }
-
         // Autorisierten Inhalt anzeigen
         function showAuthorizedContent(user) {
             loginPage.classList.add('hidden');
@@ -2039,6 +2090,9 @@
             updateCardAccess();
             loadWorkbenches();
             loadCategories();
+            
+            // Card Navigation initialisieren
+            initializeCardNavigation();
         }
 
         // Logout
@@ -2153,18 +2207,8 @@
             confirmPassword.addEventListener('click', verifyLogoPassword);
             saveLogo.addEventListener('click', handleLogoUpload);
             
-            // Navigation zu anderen Seiten
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', async function() {
-                    const hasAccess = await validateAccess();
-                    if (!hasAccess) return;
-                    
-                    if (!this.classList.contains('disabled')) {
-                        const page = this.getAttribute('data-page');
-                        navigateToWithAccessCheck(page);
-                    }
-                });
-            });
+            // Card Navigation initialisieren
+            initializeCardNavigation();
 
             // Werkbank Event Listeners
             initializeWorkbenchListeners();
@@ -2370,6 +2414,8 @@
 
         // Kategorien rendern
         function renderCategories() {
+            if (!categoriesContainer) return;
+            
             categoriesContainer.innerHTML = '';
             
             // "Alle" Button
@@ -2408,6 +2454,8 @@
         // Kategorien in Dropdown laden
         function loadCategoriesToDropdown() {
             const categorySelect = document.getElementById('workbenchCategory');
+            if (!categorySelect) return;
+            
             categorySelect.innerHTML = '';
             categories.forEach(category => {
                 const option = document.createElement('option');
@@ -2517,19 +2565,23 @@
             const increaseBtn = div.querySelector('.increase-btn');
             const decreaseBtn = div.querySelector('.decrease-btn');
             
-            increaseBtn.addEventListener('click', async function() {
-                const hasAccess = await validateAccess();
-                if (hasAccess) {
-                    increaseQuantity(workbench.key);
-                }
-            });
+            if (increaseBtn) {
+                increaseBtn.addEventListener('click', async function() {
+                    const hasAccess = await validateAccess();
+                    if (hasAccess) {
+                        increaseQuantity(workbench.key);
+                    }
+                });
+            }
             
-            decreaseBtn.addEventListener('click', async function() {
-                const hasAccess = await validateAccess();
-                if (hasAccess) {
-                    decreaseQuantity(workbench.key);
-                }
-            });
+            if (decreaseBtn) {
+                decreaseBtn.addEventListener('click', async function() {
+                    const hasAccess = await validateAccess();
+                    if (hasAccess) {
+                        decreaseQuantity(workbench.key);
+                    }
+                });
+            }
             
             return div;
         }
@@ -2539,7 +2591,9 @@
             if (!adminTableBody) return;
             
             adminTableBody.innerHTML = '';
-            totalWorkbenches.textContent = workbenches.length;
+            if (totalWorkbenches) {
+                totalWorkbenches.textContent = workbenches.length;
+            }
             
             filteredWorkbenches.forEach(workbench => {
                 const row = document.createElement('tr');
@@ -2783,7 +2837,7 @@
                 const workbenchRef = ref(db, `werkbank_manager/workbenches/${workbenchKey}`);
                 update(workbenchRef, workbenchData)
                     .then(() => {
-                        showNotification('Produkt erfolgreich aktualisiert', 'success');
+                        showNotification('Produkt erfolgreicht aktualisiert', 'success');
                         workbenchModal.classList.remove('active');
                     })
                     .catch((error) => {
@@ -3096,6 +3150,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM geladen - Initialisiere App...');
+            console.log('Base URL:', getBaseUrl());
             initializeEventListeners();
             
             // Zuerst OAuth Callback prüfen
@@ -3117,7 +3172,7 @@
         window.removeOutputResource = removeOutputResource;
         window.removeCategory = removeCategory;
 
-        console.log('Werkbank Manager - Mit Echtzeit-Zugriffskontrolle!');
+        console.log('Werkbank Manager - Mit korrigierter Navigation für GitHub Pages!');
     </script>
 </body>
 </html>

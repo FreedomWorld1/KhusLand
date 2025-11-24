@@ -1,13 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Materialrecycler - KhusLand</title>
+  <title>Werkbank Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* ALLE CSS-STYLES VON DER WERKBANK-MANAGER SEITE */
+    /* ALLE BISHERIGEN CSS-STYLES BLEIBEN GLEICH */
     body { 
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
@@ -126,6 +126,11 @@
       padding: 20px;
       overflow-y: auto;
     }
+    .category-input {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
     .notification {
       position: fixed;
       top: 20px;
@@ -183,6 +188,28 @@
     .search-box input:focus {
       outline: none;
       box-shadow: none;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid rgba(220, 38, 38, 0.1);
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+    .stat-label {
+      font-size: 0.85rem;
+      color: #94a3b8;
     }
     .access-badge {
       font-size: 0.75rem;
@@ -242,6 +269,19 @@
       flex-wrap: wrap;
       gap: 4px;
       margin-top: 8px;
+    }
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 8px;
+      background: rgba(220, 38, 38, 0.1);
+      border-radius: 8px;
+    }
+    .resource-range {
+      color: #dc2626;
+      font-weight: 600;
     }
     .quantity-controls {
       display: flex;
@@ -304,6 +344,71 @@
       align-items: center;
       gap: 6px;
     }
+    .total-time-display {
+      background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+    .workbench-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .workbench-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .workbench-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .workbench-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .conversion-rates {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+    .conversion-title {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 5px;
+    }
+    .conversion-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+    .time-input-container {
+      display: flex;
+      gap: 8px;
+    }
+    .time-input {
+      flex: 1;
+    }
+    .time-input label {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+    .image-upload-container {
+      margin-top: 12px;
+    }
     .image-preview {
       max-width: 100px;
       max-height: 100px;
@@ -311,73 +416,256 @@
       margin-top: 8px;
       border: 1px solid rgba(220, 38, 38, 0.3);
     }
+    .image-preview-small {
+      max-width: 50px;
+      max-height: 50px;
+      border-radius: 6px;
+      margin-right: 8px;
+      border: 1px solid rgba(220, 38, 38, 0.3);
+    }
+    .global-quantity-input {
+      width: 120px;
+      text-align: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .global-quantity-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      border: 1px solid rgba(220, 38, 38, 0.2);
+    }
+    .global-quantity-label {
+      font-weight: 600;
+      color: #dc2626;
+      font-size: 1.1rem;
+    }
+    .resource-conversion {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .resource-conversion-title {
+      font-size: 0.8rem;
+      color: #22c55e;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .resource-conversion-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+    .total-resources-display {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 15px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+    .output-resources {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .output-resources-title {
+      font-size: 0.8rem;
+      color: #3b82f6;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .output-resources-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 3px;
+    }
+    .resource-input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .resource-input-column {
+      flex: 1;
+    }
+    .resource-input-column label {
+      display: block;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    /* VERBESSERTE STYLES FÜR GRÖSSERE PRODUKT-KARTEN */
+    .product-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);
+      border-color: rgba(220, 38, 38, 0.5);
+    }
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .product-name {
+      font-size: 1.1rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #f8fafc;
+      line-height: 1.2;
+    }
+    .product-time {
+      font-size: 0.85rem; /* Größer gemacht */
+      color: #dc2626;
+      background: rgba(220, 38, 38, 0.1);
+      padding: 4px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .product-category {
+      font-size: 0.85rem; /* Größer gemacht */
+      color: #94a3b8;
+      margin-bottom: 10px;
+    }
+    .product-resource-box {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+    }
+    .product-resource-title {
+      font-size: 0.85rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #dc2626;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .product-resource-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem; /* Größer gemacht */
+      margin-bottom: 4px;
+    }
+    .product-output-box {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .product-output-title {
+      font-size: 0.85rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #22c55e;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .product-output-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem; /* Größer gemacht */
+      margin-bottom: 4px;
+    }
+    
+    /* STYLES FÜR MENGEN-STEUERUNG IN PRODUKT-KARTEN */
+    .product-quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .product-quantity-btn {
+      width: 32px; /* Größer gemacht */
+      height: 32px; /* Größer gemacht */
+      border-radius: 6px;
+      background: rgba(220, 38, 38, 0.2);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem; /* Größer gemacht */
+      font-weight: bold;
+    }
+    .product-quantity-btn:hover {
+      background: rgba(220, 38, 38, 0.3);
+      transform: scale(1.05);
+    }
+    .product-quantity-display {
+      font-size: 1rem; /* Größer gemacht */
+      font-weight: 600;
+      color: #dc2626;
+      min-width: 50px; /* Größer gemacht */
+      text-align: center;
+    }
+    
+    /* STYLES FÜR ZEIT-ANZEIGE */
+    .product-time-display {
+      font-size: 0.9rem; /* Größer gemacht */
+      color: #dc2626;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 6px;
+      background: rgba(220, 38, 38, 0.1);
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+
+    /* NEUE STYLES FÜR SCROLLBARE MODALS */
     .scrollable-modal {
       max-height: 90vh;
       overflow-y: auto;
       width: 100%;
       max-width: 600px;
     }
+    
+    .scrollable-modal-content {
+      padding: 0;
+    }
+
+    /* Custom Scrollbar für Modals */
     .modal-scrollbar::-webkit-scrollbar {
       width: 8px;
     }
+    
     .modal-scrollbar::-webkit-scrollbar-track {
       background: rgba(30, 41, 59, 0.5);
       border-radius: 10px;
       margin: 5px;
     }
+    
     .modal-scrollbar::-webkit-scrollbar-thumb {
       background: #dc2626;
       border-radius: 10px;
     }
+    
     .modal-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #b91c1c;
-    }
-
-    /* Materialrecycler spezifische Styles */
-    .product-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    @media (min-width: 768px) {
-      .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    .product-item {
-      background: rgba(30, 41, 59, 0.6);
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid rgba(220, 38, 38, 0.2);
-      transition: all 0.3s;
-    }
-    .product-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
-    .product-card {
-      display: grid;
-      grid-template-columns: 100px 1fr;
-      gap: 1rem;
-      align-items: start;
-    }
-    .product-image {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 2px solid rgba(220, 38, 38, 0.3);
-    }
-    
-    /* Loading Animation */
-    .loading-spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #dc2626;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto;
     }
   </style>
 </head>
@@ -395,9 +683,9 @@
   <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
     <div class="card p-8 shadow-soft max-w-md w-full text-center">
       <div class="w-20 h-20 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center mx-auto mb-6">
-        <span class="text-white text-2xl">♻️</span>
+        <span class="text-white text-2xl">⚒️</span>
       </div>
-      <h1 class="text-3xl font-bold gradient-text mb-2">Materialrecycler</h1>
+      <h1 class="text-3xl font-bold gradient-text mb-2">Werkbank Manager</h1>
       <p class="text-gray-400 mb-6">Bitte mit Discord einloggen um fortzufahren</p>
       
       <button id="discordLogin" class="w-full py-3 bg-[#5865F2] hover:bg-[#4752c4] rounded-lg btn font-medium flex items-center justify-center gap-3 transition-all duration-200">
@@ -405,46 +693,13 @@
         Mit Discord anmelden
       </button>
       
-      <!-- Loading Indicator -->
-      <div id="loginLoading" class="mt-4 hidden">
-        <div class="loading-spinner"></div>
-        <p class="text-gray-400 mt-2">Anmeldung läuft...</p>
-      </div>
-      
       <div id="loginError" class="mt-4 p-3 bg-red-900/20 border border-red-700 rounded-lg text-red-400 hidden">
         <p id="errorMessage">Zugriff verweigert. Du bist nicht autorisiert.</p>
       </div>
 
-      <!-- Debug Info -->
       <div id="debugInfo" class="mt-4 p-3 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-400 text-xs hidden">
         <p id="debugMessage"></p>
       </div>
-      
-      <!-- Manueller Login Fallback -->
-      <div id="manualLogin" class="mt-4 p-4 bg-gray-800/30 rounded-lg border border-gray-700 hidden">
-        <h3 class="text-lg font-semibold text-white mb-2">Manuelle Anmeldung</h3>
-        <p class="text-gray-400 text-sm mb-3">Falls Discord Login nicht funktioniert:</p>
-        <input type="text" id="manualUsername" placeholder="Benutzername" class="w-full p-2 rounded bg-gray-700 border border-gray-600 mb-2">
-        <button onclick="manualLogin()" class="w-full py-2 bg-green-600 hover:bg-green-500 rounded btn">
-          Manuell anmelden
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ACCESS RESTRICTED SCREEN -->
-  <div id="accessRestricted" class="min-h-screen flex items-center justify-center p-4 hidden">
-    <div class="card p-8 shadow-soft max-w-md w-full text-center">
-      <div class="w-20 h-20 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center mx-auto mb-6">
-        <i class="fas fa-ban text-white text-2xl"></i>
-      </div>
-      <h1 class="text-3xl font-bold gradient-text mb-2">Zugriff verweigert</h1>
-      <p class="text-gray-400 mb-4">Hallo <span id="restrictedUserName" class="text-white">Benutzer</span>,</p>
-      <p class="text-gray-400 mb-6">Du hast keinen Zugriff auf das <span id="restrictedPageName" class="text-white">Materialrecycler System</span>.</p>
-      <button onclick="logout()" class="w-full py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">
-        <i class="fas fa-sign-out-alt mr-2"></i>
-        Abmelden
-      </button>
     </div>
   </div>
 
@@ -455,11 +710,11 @@
       <!-- HEADER -->
       <header class="glass-effect rounded-2xl shadow-soft mb-6 p-4 md:p-6 flex justify-between items-center relative z-10">
         <div class="flex items-center gap-3">
-          <div id="headerLogo" class="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center">
-            <span class="text-white font-bold">♻️</span>
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center">
+            <span class="text-white font-bold">⚒️</span>
           </div>
           <div>
-            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Materialrecycler</h1>
+            <h1 class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Werkbank Manager</h1>
             <p id="userInfo" class="text-sm text-gray-400">
               Eingeloggt als: <span id="username">Unbekannt</span>
               <span id="accessBadge" class="access-badge access-permanent hidden">Permanent</span>
@@ -467,11 +722,11 @@
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <button id="btnDashboard" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">
-            <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+          <button id="btnWorkbenches" class="btn px-3 py-2 bg-red-600 hover:bg-red-500 rounded-lg shadow-sm pulse-glow">
+            <i class="fas fa-tools mr-1"></i> Produkte
           </button>
-          <button id="btnRecycler" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
-            <i class="fas fa-recycle mr-1"></i> Recycler
+          <button id="btnAdmin" class="btn px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm">
+            <i class="fas fa-cog mr-1"></i> Admin
           </button>
           <div class="hamburger-container">
             <button id="hamburgerBtn" class="p-2 flex flex-col justify-between h-6 w-8 focus:outline-none ml-1 rounded-md bg-gray-800 hover:bg-gray-700">
@@ -480,14 +735,11 @@
               <span class="block h-0.5 bg-gray-100 rounded-full"></span>
             </button>
             <div id="hamburgerMenu" class="hamburger-menu hidden absolute right-0 mt-2 w-44 glass-effect border border-gray-700 rounded-lg shadow-lg overflow-hidden">
-              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
-                <i class="fas fa-cannabis mr-2"></i> Weed System
+              <a href="index.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
+                <i class="fas fa-industry mr-2"></i> Herstellung
               </a>
-              <a href="seite1.html" class="block px-4 py-3 hover:bg-gray-700 active-link transition-colors">
+              <a href="seite1.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
                 <i class="fas fa-recycle mr-2"></i> Materialrecycler
-              </a>
-              <a href="seite4.html" class="block px-4 py-3 hover:bg-gray-700 transition-colors">
-                <i class="fas fa-tools mr-2"></i> Werkbank Manager
               </a>
             </div>
           </div>
@@ -499,138 +751,84 @@
 
       <div id="mainContainer" class="space-y-6 relative z-0">
 
-        <!-- DASHBOARD TAB -->
-        <div id="dashboardSection" class="card p-6 shadow-soft fade-in">
+        <!-- PRODUKTE -->
+        <div id="workbenchesSection" class="card p-6 shadow-soft fade-in">
           <h2 class="text-xl font-semibold mb-4 text-red-400 flex items-center gap-2">
-            <i class="fas fa-tachometer-alt"></i>
-            System Dashboard
+            <i class="fas fa-boxes"></i>
+            Meine Produkte
           </h2>
           
-          <!-- System Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="card p-6 text-center hover:transform hover:scale-105 transition-all duration-200 cursor-pointer" data-page="index.html">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-600 to-emerald-500 flex items-center justify-center mx-auto mb-4">
-                <span class="text-white text-2xl">🌿</span>
-              </div>
-              <h3 class="text-lg font-semibold text-white mb-2">Weed Ankauf</h3>
-              <p class="text-gray-400 text-sm mb-4">Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-              <div class="flex items-center justify-center text-green-400 text-sm">
-                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                System online
-              </div>
-            </div>
-
-            <div class="card p-6 text-center hover:transform hover:scale-105 transition-all duration-200 cursor-pointer" data-page="seite2.html">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 flex items-center justify-center mx-auto mb-4">
-                <span class="text-white text-2xl">💊</span>
-              </div>
-              <h3 class="text-lg font-semibold text-white mb-2">Kokain Ankauf</h3>
-              <p class="text-gray-400 text-sm mb-4">Kontrollieren Sie Kokain-Operationen und Lieferungen.</p>
-              <div class="flex items-center justify-center text-green-400 text-sm">
-                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                System online
-              </div>
-            </div>
-
-            <div class="card p-6 text-center hover:transform hover:scale-105 transition-all duration-200 cursor-pointer" data-page="seite4.html">
-              <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 flex items-center justify-center mx-auto mb-4">
-                <span class="text-white text-2xl">🔧</span>
-              </div>
-              <h3 class="text-lg font-semibold text-white mb-2">Werkbank Manager</h3>
-              <p class="text-gray-400 text-sm mb-4">Überwachen Sie Werkstattaktivitäten und Produktionsaufträge.</p>
-              <div class="flex items-center justify-center text-green-400 text-sm">
-                <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                System online
-              </div>
-            </div>
+          <!-- Suchfeld -->
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Nach Produkt oder Kategorie suchen...">
+          </div>
+          
+          <!-- Kategorien Filter -->
+          <div class="flex flex-wrap gap-2 mb-6" id="categoriesContainer">
+            <button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all">
+              <i class="fas fa-layer-group mr-1"></i> Alle
+            </button>
+            <!-- Kategorien werden hier dynamisch geladen -->
+          </div>
+          
+          <!-- Products Grid -->
+          <div id="workbenchesGrid" class="workbench-grid">
+            <!-- Produkte werden hier dynamisch geladen -->
           </div>
         </div>
 
-        <!-- RECYCLER SYSTEM TAB -->
-        <div id="recyclerSection" class="card p-6 shadow-soft hidden fade-in">
-          <h2 class="text-xl font-semibold mb-4 text-blue-400 flex items-center gap-2">
-            <i class="fas fa-recycle"></i>
-            Recycler System
+        <!-- ADMIN -->
+        <div id="adminPanel" class="card p-5 shadow-soft hidden fade-in">
+          <h2 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
+            <i class="fas fa-cog"></i>
+            Adminbereich
           </h2>
-          
-          <!-- Suchleiste -->
-          <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Ressourcen suchen...">
+          <div id="adminLoginSection">
+            <div class="mb-4">
+              <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
+                <i class="fas fa-key mr-1"></i> Admin-Passwort
+              </label>
+              <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
+            </div>
+            <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-sign-in-alt"></i>
+              Einloggen
+            </button>
+            <span id="adminError" class="text-red-400 mt-3 block hidden text-center text-sm py-2 bg-red-900/20 rounded-lg">
+              <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
+            </span>
           </div>
-
-          <!-- Produkte Grid -->
-          <div class="mb-6">
-            <h3 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-              <i class="fas fa-box"></i> Produkte
-            </h3>
-            
-            <div id="productsGrid" class="product-grid">
-              <!-- Produkte werden hier dynamisch geladen -->
-              <div class="text-center py-8 text-gray-500">
-                <i class="fas fa-box-open text-4xl mb-2"></i>
-                <p>Keine Produkte gefunden</p>
+          <div id="adminContent" class="hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
+              <div class="small-muted">Produkte: <span id="totalWorkbenches" class="font-bold text-white">0</span></div>
+              <div class="flex gap-2">
+                <button id="addWorkbenchBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <i class="fas fa-plus mr-1"></i>
+                  Produkt
+                </button>
+                <button id="manageCategoriesBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <i class="fas fa-tags mr-1"></i>
+                  Kategorien
+                </button>
+                <button id="exportCsv" class="px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                  <i class="fas fa-file-export mr-1"></i>
+                  CSV Export
+                </button>
               </div>
             </div>
-          </div>
-
-          <!-- Admin Panel -->
-          <div class="card p-5 shadow-soft">
-            <h3 class="text-lg font-semibold mb-4 text-blue-400 flex items-center gap-2">
-              <i class="fas fa-cog"></i> Adminbereich
-            </h3>
             
-            <div id="adminLoginSection">
-              <div class="mb-4">
-                <label for="adminPass" class="block text-sm font-medium text-gray-300 mb-1">
-                  <i class="fas fa-key mr-1"></i> Admin-Passwort
-                </label>
-                <input id="adminPass" type="password" placeholder="Geben Sie das Passwort ein" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-blue-500"/>
-              </div>
-              <button id="adminLoginBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                <i class="fas fa-sign-in-alt"></i>
-                Einloggen
-              </button>
-              <span id="adminError" class="text-red-400 mt-3 block hidden text-center text-sm py-2 bg-red-900/20 rounded-lg">
-                <i class="fas fa-exclamation-triangle mr-1"></i> Falsches Passwort
-              </span>
-            </div>
-            
-            <div id="adminContent" class="hidden">
-              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 p-3 rounded-lg bg-gray-800/30">
-                <div class="small-muted">Produkte: <span id="totalProducts" class="font-bold text-white">0</span></div>
-                <div class="flex gap-2">
-                  <button id="addProductBtn" class="px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-plus mr-1"></i>
-                    Produkt
-                  </button>
-                  <button id="exportCsv" class="px-4 py-3 bg-blue-600 hover:bg-blue-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
-                    <i class="fas fa-file-export mr-1"></i>
-                    CSV Export
-                  </button>
-                </div>
-              </div>
-              
-              <!-- Admin-Suchleiste -->
-              <div class="search-box mb-4">
-                <input type="text" id="adminSearchInput" placeholder="Produkt in Adminbereich suchen...">
-              </div>
-              
-              <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
-                <table class="w-full text-left text-sm">
-                  <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
-                    <tr>
-                      <th class="p-3 font-medium">Name</th>
-                      <th class="p-3 font-medium">Ressourcen</th>
-                      <th class="p-3 font-medium">Aktion</th>
-                    </tr>
-                  </thead>
-                  <tbody id="adminTableBody" class="divide-y divide-gray-800">
-                    <tr>
-                      <td colspan="3" class="p-4 text-center text-gray-500">Keine Produkte vorhanden</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="overflow-auto max-h-[50vh] rounded-lg border border-gray-800 scrollbar-custom">
+              <table class="w-full text-left text-sm">
+                <thead class="text-gray-400 bg-gray-800/70 sticky top-0">
+                  <tr>
+                    <th class="p-3 font-medium">Name</th>
+                    <th class="p-3 font-medium">Kategorie</th>
+                    <th class="p-3 font-medium">Herstellungszeit</th>
+                    <th class="p-3 font-medium">Aktion</th>
+                  </tr>
+                </thead>
+                <tbody id="adminTableBody" class="divide-y divide-gray-800"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -639,64 +837,194 @@
     </div>
   </div>
 
-  <!-- Modal für Produkt hinzufügen -->
-  <div id="productModal" class="modal-overlay hidden">
+  <!-- Modal für Produkt hinzufügen - JETZT SCROLLBAR -->
+  <div id="workbenchModal" class="modal-overlay hidden">
     <div class="scrollable-modal modal-scrollbar">
       <div class="card p-6 shadow-soft">
-        <h3 class="text-lg font-semibold mb-4 text-red-400" id="productModalTitle">
+        <h3 class="text-lg font-semibold mb-4 text-red-400" id="workbenchModalTitle">
           <i class="fas fa-plus mr-2"></i> Produkt hinzufügen
         </h3>
-        <form id="productForm" class="space-y-4">
-          <input type="hidden" id="productKey">
+        <form id="workbenchForm" class="space-y-4">
+          <input type="hidden" id="workbenchKey">
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">
               <i class="fas fa-tag mr-1"></i> Name
             </label>
-            <input type="text" id="productName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="z.B.: Aluminium-Dose" required/>
+            <input type="text" id="workbenchName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required/>
           </div>
-          
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-boxes mr-1"></i> Ressourcen
+              <i class="fas fa-folder mr-1"></i> Kategorie
             </label>
-            <div class="resource-input-container">
-              <input type="text" id="newResourceName" placeholder="Ressourcenname" style="flex: 1;" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500">
-              <input type="number" id="newResourceMin" placeholder="Min" min="1" style="width: 80px;" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500">
-              <input type="number" id="newResourceMax" placeholder="Max" min="1" style="width: 80px;" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500">
-              <button type="button" id="addResourceBtn" class="px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-            <div id="resourcesList" class="resource-list">
-              <!-- Ressourcen werden hier dynamisch hinzugefügt -->
-            </div>
+            <select id="workbenchCategory" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" required>
+              <!-- Kategorien werden dynamisch geladen -->
+            </select>
           </div>
-          
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-1">
-              <i class="fas fa-image mr-1"></i> Bild hochladen
+              <i class="fas fa-clock mr-1"></i> Herstellungszeit
             </label>
-            <div class="flex gap-2">
-              <input type="file" id="productImageFile" accept="image/*" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500">
+            <div class="time-input-container">
+              <div class="time-input">
+                <label>Minuten</label>
+                <input type="number" id="workbenchTimeMinutes" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0"/>
+              </div>
+              <div class="time-input">
+                <label>Sekunden</label>
+                <input type="number" id="workbenchTimeSeconds" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0" max="59"/>
+              </div>
+              <div class="time-input">
+                <label>Millisekunden</label>
+                <input type="number" id="workbenchTimeMilliseconds" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="0" min="0" max="999"/>
+              </div>
             </div>
             <div class="text-xs text-gray-400 mt-1">
-              Unterstützte Formate: JPG, PNG, GIF (max. 5MB)
+              Format: Minuten Sekunden Millisekunden (z.B. 2 30 500 für 2 Minuten, 30 Sekunden, 500ms)
             </div>
-            <img id="imagePreview" class="image-preview" alt="Vorschau">
-            <input type="hidden" id="productImageData">
           </div>
           
+          <!-- Kiste für Input-Ressourcen -->
+          <div class="border border-gray-600 rounded-lg p-4">
+            <div class="text-center mb-3">
+              <div class="text-lg font-bold text-red-400">Benötigte Ressourcen</div>
+              <div class="text-sm text-gray-400" id="timeDisplay">Zeit: 0s</div>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-300">Ressourcen hinzufügen</span>
+              </div>
+              <div class="resource-input-group">
+                <div class="resource-input-column">
+                  <label>Ressourcenname</label>
+                  <input type="text" id="newResourceName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="Ressourcenname"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>Anzahl</label>
+                  <input type="number" id="newResourceAmount" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-red-500" placeholder="Anzahl" min="1"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>&nbsp;</label>
+                  <button type="button" id="addResourceBtn" class="w-full px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium">
+                    <i class="fas fa-plus"></i> Hinzufügen
+                  </button>
+                </div>
+              </div>
+              <div id="resourcesList" class="resource-list">
+                <!-- Benötigte Ressourcen werden hier dynamisch hinzugefügt -->
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-3">
+              <div class="text-sm font-medium text-gray-300 mb-2">Benötigte Ressourcen:</div>
+              <div id="requiredResourcesDisplay" class="space-y-1">
+                <!-- Hier werden die benötigten Ressourcen angezeigt -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Kiste für Output-Ressourcen -->
+          <div class="border border-gray-600 rounded-lg p-4">
+            <div class="text-center mb-3">
+              <div class="text-lg font-bold text-green-400">Erhaltene Ressourcen</div>
+            </div>
+            
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-300">Ressourcen hinzufügen</span>
+              </div>
+              <div class="resource-input-group">
+                <div class="resource-input-column">
+                  <label>Ressourcenname</label>
+                  <input type="text" id="newOutputResourceName" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="Ressourcenname"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>Anzahl</label>
+                  <input type="number" id="newOutputResourceAmount" class="p-3 rounded-lg bg-gray-800/50 border border-gray-700 w-full focus:border-green-500" placeholder="Anzahl" min="1"/>
+                </div>
+                <div class="resource-input-column">
+                  <label>&nbsp;</label>
+                  <button type="button" id="addOutputResourceBtn" class="w-full px-4 py-3 bg-green-600 hover:bg-green-500 rounded-lg btn font-medium">
+                    <i class="fas fa-plus"></i> Hinzufügen
+                  </button>
+                </div>
+              </div>
+              <div id="outputResourcesList" class="resource-list">
+                <!-- Erhaltene Ressourcen werden hier dynamisch hinzugefügt -->
+              </div>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-3">
+              <div class="text-sm font-medium text-gray-300 mb-2">Erhaltene Ressourcen:</div>
+              <div id="outputResourcesDisplay" class="space-y-1">
+                <!-- Hier werden die erhaltenen Ressourcen angezeigt -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="image-upload-container">
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-image mr-1"></i> Bild hochladen (optional)
+            </label>
+            <input type="file" id="workbenchImage" accept="image/*" class="w-full p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-red-500"/>
+            <div id="imagePreview" class="hidden">
+              <img id="previewImage" class="image-preview" src="" alt="Vorschau">
+            </div>
+          </div>
           <div class="flex gap-3 pt-2">
             <button type="submit" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
               <i class="fas fa-save"></i>
               Speichern
             </button>
-            <button type="button" id="cancelProduct" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+            <button type="button" id="cancelWorkbench" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
               <i class="fas fa-times"></i>
               Abbrechen
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal für Kategorien verwalten - JETZT SCROLLBAR -->
+  <div id="categoriesModal" class="modal-overlay hidden">
+    <div class="scrollable-modal modal-scrollbar">
+      <div class="card p-6 shadow-soft">
+        <h3 class="text-lg font-semibold mb-4 text-purple-400">
+          <i class="fas fa-tags mr-2"></i> Kategorien verwalten
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-plus mr-1"></i> Neue Kategorie
+            </label>
+            <div class="flex gap-2">
+              <input type="text" id="newCategoryName" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500" placeholder="Kategorie Name"/>
+              <button id="addCategoryBtn" class="px-4 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+                <i class="fas fa-plus"></i>
+                Hinzufügen
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-1">
+              <i class="fas fa-list mr-1"></i> Vorhandene Kategorien
+            </label>
+            <div id="categoriesList" class="space-y-2 max-h-40 overflow-y-auto">
+              <!-- Kategorien werden hier dynamisch geladen -->
+            </div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="button" id="saveCategories" class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i>
+              Speichern
+            </button>
+            <button type="button" id="cancelCategories" class="px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg btn font-medium flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
+              Abbrechen
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -711,7 +1039,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
     import { getDatabase, ref, push, onValue, remove, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
@@ -727,17 +1054,14 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getDatabase(app);
-    const storage = getStorage(app);
     
     // Firebase Referenzen
-    const productsRef = ref(db, 'materialrecycler/products');
-    const logoSettingsRef = ref(db, 'materialrecycler_logo_settings');
-    const logoImageRef = storageRef(storage, 'materialrecycler_logo.png');
+    const workbenchesRef = ref(db, 'werkbank_manager/workbenches');
+    const categoriesRef = ref(db, 'werkbank_manager/categories');
 
     // DOM Elemente
     const loginScreen = document.getElementById('loginScreen');
     const mainContent = document.getElementById('mainContent');
-    const accessRestricted = document.getElementById('accessRestricted');
     const discordLoginBtn = document.getElementById('discordLogin');
     const loginError = document.getElementById('loginError');
     const errorMessage = document.getElementById('errorMessage');
@@ -748,18 +1072,6 @@
     const notification = document.getElementById('notification');
     const accessBadge = document.getElementById('accessBadge');
     const forceCheckBtn = document.getElementById('forceCheckBtn');
-    const loginLoading = document.getElementById('loginLoading');
-    const manualLoginSection = document.getElementById('manualLogin');
-
-    // System Variablen
-    const ADMIN_PASSWORD = '1101';
-    let products = [];
-    let filteredProducts = [];
-    let currentResources = [];
-    let currentUser = null;
-    let userAccessInfo = null;
-
-    // ========== HELPER FUNCTIONS ==========
 
     // Notification System
     function showNotification(message, type = 'info', duration = 5000) {
@@ -782,69 +1094,123 @@
       debugInfo.classList.remove('hidden');
     }
 
-    // Manueller Login Fallback
-    function manualLogin() {
-      const username = document.getElementById('manualUsername').value.trim();
-      if (username) {
-        currentUser = {
-          id: 'manual_' + Date.now(),
-          username: username,
-          isManual: true
-        };
+    // Discord OAuth Login
+    function startDiscordOAuth() {
+      const scope = 'identify';
+      const state = generateRandomState();
+      
+      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
+      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
+      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
+      authUrl.searchParams.set('response_type', 'code');
+      authUrl.searchParams.set('scope', scope);
+      authUrl.searchParams.set('state', state);
+      
+      showDebugInfo('Starte OAuth Flow...');
+      window.location.href = authUrl.toString();
+    }
+
+    // Generiere random state für OAuth
+    function generateRandomState() {
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
+    // Token Austausch
+    async function exchangeCodeForToken(code) {
+      try {
+        showDebugInfo('Tausche Code gegen Token...');
         
-        localStorage.setItem('manual_user', JSON.stringify(currentUser));
-        showAuthorizedContent(currentUser);
-        showNotification(`Manuell angemeldet als ${username}`, 'success');
-      } else {
-        showNotification('Bitte Benutzername eingeben', 'error');
+        const response = await fetch(`${BACKEND_URL}/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            code, 
+            redirect_uri: DISCORD_REDIRECT_URI
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          showDebugInfo(`Worker Response Error: ${response.status} - ${errorText}`);
+          throw new Error(`Worker responded with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        showDebugInfo(`Token Response: ${JSON.stringify(data)}`);
+
+        if (data.access_token) {
+          showDebugInfo('Access Token erhalten, überprüfe Benutzer...');
+          await verifyUser(data.access_token);
+        } else {
+          showDebugInfo(`Kein Access Token: ${JSON.stringify(data)}`);
+          throw new Error('Kein Access Token erhalten');
+        }
+      } catch (error) {
+        console.error('Fehler beim Token-Austausch:', error);
+        showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
+        showDebugInfo(`Fehler: ${error.message}`);
       }
     }
 
-    // ========== ZUGRIFFSKONTROLLE ==========
-
-    // Zugriff auf Seite prüfen
-    async function hasAccess(pageKey) {
-      if (!currentUser) return false;
-      
-      // Für manuelle Benutzer immer Zugriff gewähren
-      if (currentUser.isManual) return true;
-      
-      const token = localStorage.getItem('discord_access_token');
-      if (!token) return false;
-
+    // Benutzer überprüfen mit Lifetime-Check
+    async function verifyUser(accessToken) {
       try {
+        showDebugInfo('Überprüfe Benutzer mit Lifetime-Check...');
+        
         const response = await fetch(`${BACKEND_URL}/verify-user`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            accessToken: token,
-            currentPage: pageKey
+            accessToken
           })
         });
 
-        if (!response.ok) return false;
+        if (!response.ok) {
+          throw new Error('Verification failed');
+        }
 
         const data = await response.json();
-        return data.hasPageAccess;
-        
+        showDebugInfo(`Verification Response: ${JSON.stringify(data)}`);
+
+        if (data.isAuthorized) {
+          showDebugInfo('Benutzer autorisiert!');
+          localStorage.setItem('discord_user', JSON.stringify(data.user));
+          localStorage.setItem('discord_access_token', accessToken);
+          localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
+          showMainContent(data.accessInfo || {});
+          showNotification(`Erfolgreich eingeloggt als ${data.user.username}`, 'success');
+        } else {
+          let errorMsg = 'Zugriff verweigert. ';
+          if (data.accessInfo && data.accessInfo.message === 'access expired') {
+            errorMsg += 'Dein Zugang ist abgelaufen.';
+          } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
+            errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
+          } else {
+            errorMsg += 'Du bist nicht autorisiert.';
+          }
+          showError(errorMsg);
+          showDebugInfo('Benutzer nicht autorisiert: ' + (data.accessInfo?.message || 'unknown reason'));
+        }
       } catch (error) {
-        console.error('Fehler bei Zugriffsprüfung:', error);
-        return false;
+        console.error('Fehler bei der Benutzerüberprüfung:', error);
+        showError('Fehler bei der Berechtigungsprüfung');
+        showDebugInfo(`Verification Error: ${error.message}`);
       }
     }
 
-    // Benutzer existenz prüfen
-    async function checkUserExists() {
-      if (!currentUser) return false;
-      
-      // Für manuelle Benutzer immer true zurückgeben
-      if (currentUser.isManual) return true;
-      
+    // Regelmäßige Überprüfung ob User noch autorisiert ist
+    async function checkUserAuthorization() {
       const token = localStorage.getItem('discord_access_token');
-      if (!token) return false;
-
+      const user = localStorage.getItem('discord_user');
+      
+      if (!token || !user) {
+        return { isAuthorized: false, reason: 'No token or user' };
+      }
+      
       try {
         const response = await fetch(`${BACKEND_URL}/verify-user`, {
           method: 'POST',
@@ -856,418 +1222,110 @@
           })
         });
 
-        if (!response.ok) return false;
+        if (!response.ok) {
+          // Token ist ungültig - lösche lokal
+          localStorage.removeItem('discord_access_token');
+          localStorage.removeItem('discord_user');
+          localStorage.removeItem('user_access_info');
+          return { isAuthorized: false, reason: 'Token invalid' };
+        }
 
         const data = await response.json();
-        return data.isAuthorized;
+        
+        // SOFORTIGE Reaktion wenn nicht autorisiert
+        if (!data.isAuthorized) {
+          // Lösche lokale Daten
+          localStorage.removeItem('discord_access_token');
+          localStorage.removeItem('discord_user');
+          localStorage.removeItem('user_access_info');
+        }
+        
+        return data;
         
       } catch (error) {
-        console.error('Fehler bei Benutzerprüfung:', error);
-        return false;
+        console.error('Fehler bei der Autorisierungsprüfung:', error);
+        return { isAuthorized: false, reason: error.message };
       }
     }
 
-    // Navigation zu anderen Seiten mit Zugriffsprüfung
-    async function navigateToWithAccessCheck(page) {
-      if (!currentUser) {
-        showNotification('Bitte zuerst anmelden', 'error');
-        return;
-      }
+    // Sofortige erzwungene Überprüfung
+    async function forceImmediateCheck() {
+      const token = localStorage.getItem('discord_access_token');
+      if (!token) return;
       
-      // Für manuelle Benutzer Navigation erlauben
-      if (currentUser.isManual) {
-        window.location.href = page;
-        return;
-      }
-      
-      // Prüfen ob Benutzer noch existiert
-      const userExists = await checkUserExists();
-      if (!userExists) {
-        showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
-        logout();
-        return;
-      }
-      
-      const pageKey = getPageKeyFromUrl(page);
-      if (!pageKey) {
-        showNotification('Ungültige Seite', 'error');
-        return;
-      }
-      
-      const hasAccessToPage = await hasAccess(pageKey);
-      if (!hasAccessToPage) {
-        showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-        return;
-      }
-      
-      showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-      setTimeout(() => {
-        window.location.href = page;
-      }, 1500);
-    }
-
-    function getPageKeyFromUrl(page) {
-      const pageMap = {
-        'index.html': 'weed',
-        'seite2.html': 'kokain', 
-        'seite4.html': 'werkbank',
-        'seite1.html': 'materialrecycler'
-      };
-      return pageMap[page] || page;
-    }
-
-    function getPageDisplayName(pageKey) {
-      const names = {
-        'weed': 'Weed System',
-        'kokain': 'Kokain System', 
-        'werkbank': 'Werkbank Manager',
-        'materialrecycler': 'Materialrecycler'
-      };
-      return names[pageKey] || pageKey;
-    }
-
-    // ========== LOGIN & AUTHENTIFIZIERUNG ==========
-
-    // Discord OAuth Login
-    function startDiscordOAuth() {
-      console.log('Starte Discord OAuth...');
-      
-      discordLoginBtn.style.display = 'none';
-      loginLoading.classList.remove('hidden');
-      loginError.classList.add('hidden');
-      manualLoginSection.classList.add('hidden');
-      
-      const scope = 'identify';
-      const state = generateRandomState();
-      
-      const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-      authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-      authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-      authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', scope);
-      authUrl.searchParams.set('state', state);
-      
-      localStorage.setItem('oauth_state', state);
-      
-      setTimeout(() => {
-        window.location.href = authUrl.toString();
-      }, 500);
-    }
-
-    function generateRandomState() {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
-
-    function resetLoginUI() {
-      loginLoading.classList.add('hidden');
-      discordLoginBtn.style.display = 'flex';
-      manualLoginSection.classList.remove('hidden');
-    }
-
-    // OAuth Callback verarbeiten
-    async function handleOAuthCallback() {
-      console.log('Verarbeite OAuth Callback...');
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      const state = urlParams.get('state');
-      const storedState = localStorage.getItem('oauth_state');
-      const error = urlParams.get('error');
-      
-      console.log('URL Parameters:', { code: !!code, state, storedState, error });
-      
-      if (error) {
-        console.error('Discord OAuth Error:', error);
-        resetLoginUI();
-        showError('Anmeldung abgebrochen: ' + error);
-        return;
-      }
-      
-      if (code && state && state === storedState) {
-        try {
-          console.log('Valider OAuth Callback gefunden');
-          loginLoading.classList.remove('hidden');
-          discordLoginBtn.style.display = 'none';
-          
-          const tokenResponse = await fetch(`${BACKEND_URL}/token`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              code: code,
-              redirect_uri: DISCORD_REDIRECT_URI
-            })
-          });
-          
-          if (!tokenResponse.ok) {
-            const errorText = await tokenResponse.text();
-            console.error('Token Request failed:', tokenResponse.status, errorText);
-            throw new Error(`Token request failed: ${tokenResponse.status}`);
-          }
-          
-          const tokenData = await tokenResponse.json();
-          console.log('Token Response:', tokenData);
-          
-          if (tokenData.error) {
-            throw new Error(tokenData.error);
-          }
-          
-          if (!tokenData.access_token) {
-            throw new Error('Kein Access Token erhalten');
-          }
-          
-          await verifyUser(tokenData.access_token);
-          
-        } catch (error) {
-          console.error('OAuth Error:', error);
-          resetLoginUI();
-          showError('Fehler bei der Anmeldung: ' + error.message);
-        } finally {
-          localStorage.removeItem('oauth_state');
-          const cleanUrl = window.location.origin + window.location.pathname;
-          window.history.replaceState({}, document.title, cleanUrl);
-          console.log('URL bereinigt');
-        }
-      } else {
-        console.log('Kein valider OAuth Callback');
-        resetLoginUI();
-        
-        if (state && state !== storedState) {
-          showError('Sicherheitsfehler: State-Parameter stimmt nicht überein');
-        }
-      }
-    }
-
-    // User verifizieren
-    async function verifyUser(accessToken) {
       try {
-        console.log('Verifiziere Benutzer...');
-        const currentPage = 'materialrecycler';
-        
+        showNotification('Überprüfe Zugriff...', 'info', 2000);
         const response = await fetch(`${BACKEND_URL}/verify-user`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            accessToken,
-            currentPage
+            accessToken: token
           })
         });
-
-        if (!response.ok) {
-          throw new Error('Verification failed with status: ' + response.status);
-        }
-
+        
         const data = await response.json();
-        console.log('Verification Response:', data);
-
-        if (data.isAuthorized) {
-          console.log('Benutzer autorisiert!');
-          localStorage.setItem('discord_user', JSON.stringify(data.user));
-          localStorage.setItem('discord_access_token', accessToken);
-          localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-          
-          const user = data.user;
-          userAccessInfo = data.accessInfo;
-          
-          currentUser = {
-            id: user.id,
-            username: user.username,
-            ...userAccessInfo
-          };
-          
-          await loadDiscordAvatar(user);
-          
-          if (data.hasPageAccess) {
-            showAuthorizedContent(currentUser);
-            showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-          } else {
-            showAccessRestricted(currentUser, currentPage);
-          }
+        
+        if (!data.isAuthorized) {
+          showNotification('Zugriff wurde entzogen!', 'error');
+          setTimeout(logout, 1000);
         } else {
-          let errorMsg = 'Zugriff verweigert. ';
-          if (data.accessInfo && data.accessInfo.message === 'access expired') {
-            errorMsg += 'Dein Zugang ist abgelaufen.';
-          } else if (data.accessInfo && data.accessInfo.message === 'not in authorized list') {
-            errorMsg += 'Du bist nicht in der Liste der autorisierten Benutzer.';
-          } else {
-            errorMsg += 'Du bist nicht autorisiert.';
-          }
-          resetLoginUI();
-          showError(errorMsg);
+          showNotification('Zugriff ist weiterhin aktiv ✓', 'success', 3000);
         }
       } catch (error) {
-        console.error('Fehler bei der Benutzerüberprüfung:', error);
-        resetLoginUI();
-        showError('Fehler bei der Berechtigungsprüfung: ' + error.message);
-        
-        // Fallback: Manuellen Login anbieten
-        manualLoginSection.classList.remove('hidden');
+        console.error('Sofort-Überprüfung fehlgeschlagen:', error);
+        showNotification('Überprüfung fehlgeschlagen', 'error');
       }
     }
 
-    // Discord Avatar laden
-    async function loadDiscordAvatar(userData) {
-      if (userData.avatar) {
-        const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
-        
-        const userAvatar = document.getElementById('userAvatar');
-        if (userAvatar) {
-          userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-          userAvatar.innerHTML = '';
-        }
-      } else {
-        const userAvatar = document.getElementById('userAvatar');
-        if (userAvatar) {
-          const firstLetter = userData.username.charAt(0).toUpperCase();
-          userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-        }
-      }
-    }
-
-    // Zugriff verweigert anzeigen
-    function showAccessRestricted(user, pageKey) {
-      loginScreen.classList.add('hidden');
-      mainContent.classList.add('hidden');
-      accessRestricted.classList.remove('hidden');
-      
-      document.getElementById('restrictedUserName').textContent = user.username;
-      document.getElementById('restrictedPageName').textContent = getPageDisplayName(pageKey);
-      showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
-    }
-
-    // Login-Seite anzeigen
-    function showLoginPage() {
-      loginScreen.classList.remove('hidden');
-      mainContent.classList.add('hidden');
-      accessRestricted.classList.add('hidden');
-    }
-
-    // Autorisierten Inhalt anzeigen
-    function showAuthorizedContent(user) {
-      loginScreen.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-      accessRestricted.classList.add('hidden');
-      
-      usernameElement.textContent = user.username;
-      
-      if (userAccessInfo && userAccessInfo.message && !user.isManual) {
-        accessBadge.classList.remove('hidden');
-        if (userAccessInfo.isPermanent) {
-          accessBadge.textContent = 'Permanent';
-          accessBadge.className = 'access-badge access-permanent';
-        } else {
-          accessBadge.textContent = userAccessInfo.message || 'Temporary';
-          accessBadge.className = 'access-badge access-temporary';
-        }
-      } else if (user.isManual) {
-        accessBadge.classList.remove('hidden');
-        accessBadge.textContent = 'Manuell';
-        accessBadge.className = 'access-badge access-temporary';
-      } else {
-        accessBadge.classList.add('hidden');
-      }
-      
-      // Setze URL zurück ohne Code-Parameter
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, document.title, cleanUrl);
-      
-      loadProducts();
-      loadGlobalLogo();
-    }
-
-    // Logout
-    function logout() {
-      currentUser = null;
-      userAccessInfo = null;
-      localStorage.removeItem('discord_user');
-      localStorage.removeItem('discord_access_token');
-      localStorage.removeItem('user_access_info');
-      localStorage.removeItem('manual_user');
-      
-      const userAvatar = document.getElementById('userAvatar');
-      if (userAvatar) {
-        userAvatar.style.backgroundImage = '';
-        userAvatar.innerHTML = '<i class="fas fa-user"></i>';
-      }
-      
-      showLoginPage();
-      accessBadge.classList.add('hidden');
-      
-      showNotification('Erfolgreich ausgeloggt', 'info');
-    }
-
-    // Session prüfen
-    async function checkExistingLogin() {
-      // Zuerst manuellen Benutzer prüfen
-      const manualUser = localStorage.getItem('manual_user');
-      if (manualUser) {
-        try {
-          const userData = JSON.parse(manualUser);
-          currentUser = userData;
-          showAuthorizedContent(currentUser);
-          showNotification(`Willkommen zurück, ${userData.username}`, 'info');
-          return;
-        } catch (e) {
-          console.error('Fehler beim Laden manueller Benutzerdaten:', e);
-        }
-      }
-      
-      // Dann Discord Benutzer prüfen
-      const user = localStorage.getItem('discord_user');
-      const token = localStorage.getItem('discord_access_token');
-      const accessInfo = localStorage.getItem('user_access_info');
-      
-      console.log('Check existing login:', { user: !!user, token: !!token });
-      
-      if (user && token) {
-        try {
-          console.log('Bereits eingeloggt');
-          const userData = JSON.parse(user);
-          userAccessInfo = accessInfo ? JSON.parse(accessInfo) : null;
-          
-          const currentPage = 'materialrecycler';
-          const response = await fetch(`${BACKEND_URL}/verify-user`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              accessToken: token,
-              currentPage
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            
-            if (data.isAuthorized) {
-              currentUser = {
-                id: userData.id,
-                username: userData.username,
-                ...userAccessInfo
-              };
-              
-              await loadDiscordAvatar(userData);
-              
-              if (data.hasPageAccess) {
-                showAuthorizedContent(currentUser);
-                showNotification(`Willkommen zurück, ${userData.username}`, 'info');
-              } else {
-                showAccessRestricted(currentUser, currentPage);
-              }
-              return;
-            }
+    // Alle 30 Sekunden überprüfen ob User noch berechtigt ist
+    setInterval(async () => {
+      if (localStorage.getItem('discord_user')) {
+        const authResult = await checkUserAuthorization();
+        if (!authResult.isAuthorized) {
+          let message = 'Deine Berechtigung wurde widerrufen';
+          if (authResult.accessInfo?.message === 'access expired') {
+            message = 'Dein Zugang ist abgelaufen';
           }
-        } catch (e) {
-          console.error('Fehler beim Laden der Discord Benutzerdaten:', e);
+          showNotification(message, 'error');
+          setTimeout(() => {
+            logout();
+          }, 3000);
         }
       }
-      
-      showLoginPage();
-      manualLoginSection.classList.remove('hidden');
+    }, 30000); // 30 Sekunden
+
+    // Auch beim Seitenwechsel überprüfen
+    document.addEventListener('visibilitychange', async () => {
+      if (!document.hidden && localStorage.getItem('discord_user')) {
+        const authResult = await checkUserAuthorization();
+        if (!authResult.isAuthorized) {
+          let message = 'Deine Berechtigung wurde widerrufen';
+          if (authResult.accessInfo?.message === 'access expired') {
+            message = 'Dein Zugang ist abgelaufen';
+          }
+          showNotification(message, 'error');
+          setTimeout(() => {
+            logout();
+          }, 2000);
+        }
+      }
+    });
+
+    // Überprüfung bei wichtigen Aktionen
+    async function validateAccess() {
+      const authResult = await checkUserAuthorization();
+      if (!authResult.isAuthorized && localStorage.getItem('discord_user')) {
+        let message = 'Zugriff wurde entzogen';
+        if (authResult.accessInfo?.message === 'access expired') {
+          message = 'Dein Zugang ist abgelaufen';
+        }
+        showNotification(message, 'error');
+        setTimeout(logout, 2000);
+        return false;
+      }
+      return true;
     }
 
     function showError(message) {
@@ -1275,584 +1333,1139 @@
       loginError.classList.remove('hidden');
     }
 
-    // ========== EVENT LISTENER ==========
-
-    function initializeEventListeners() {
-      // Login Button
-      discordLoginBtn.addEventListener('click', startDiscordOAuth);
+    function showMainContent(accessInfo) {
+      console.log('Zeige Main Content an...');
       
-      // Logout Button
-      logoutBtn.addEventListener('click', logout);
+      // WICHTIG: Korrekte Klassen verwenden - nur 'hidden'
+      loginScreen.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+      debugInfo.classList.add('hidden');
+      forceCheckBtn.classList.remove('hidden');
       
-      // Tab Navigation
-      document.getElementById('btnDashboard').addEventListener('click', () => switchTab('dashboard'));
-      document.getElementById('btnRecycler').addEventListener('click', () => switchTab('recycler'));
+      // Benutzerinformationen anzeigen
+      const user = JSON.parse(localStorage.getItem('discord_user'));
+      if (user) {
+        usernameElement.textContent = user.username;
+      }
       
-      // Hamburger Menu
-      document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        document.getElementById('hamburgerMenu').classList.toggle('hidden');
-      });
-
-      // Close hamburger menu when clicking outside
-      document.addEventListener('click', (e) => {
-        const hamburgerMenu = document.getElementById('hamburgerMenu');
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        
-        if (hamburgerMenu && hamburgerBtn && !hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-          hamburgerMenu.classList.add('hidden');
+      // Access Badge anzeigen
+      if (accessInfo) {
+        accessBadge.classList.remove('hidden');
+        if (accessInfo.isPermanent) {
+          accessBadge.textContent = 'Permanent';
+          accessBadge.className = 'access-badge access-permanent';
+        } else {
+          accessBadge.textContent = accessInfo.message || 'Temporary';
+          accessBadge.className = 'access-badge access-temporary';
         }
-      });
-
-      // Navigation zu anderen Seiten
-      document.querySelectorAll('.card[data-page]').forEach(card => {
-        card.addEventListener('click', function() {
-          const page = this.getAttribute('data-page');
-          navigateToWithAccessCheck(page);
-        });
-      });
-
-      // Materialrecycler Event Listeners
-      initializeRecyclerListeners();
+      }
+      
+      // Setze URL zurück ohne Code-Parameter
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
+      
+      console.log('Main Content sollte jetzt sichtbar sein');
     }
 
-    // Tab wechseln Funktion
-    function switchTab(tabName) {
-      // Tabs deaktivieren
-      document.querySelectorAll('[id$="Section"]').forEach(tab => {
-        tab.classList.add('hidden');
-      });
+    function logout() {
+      console.log('Logout durchgeführt');
       
-      // Gewählten Tab aktivieren
-      document.getElementById(`${tabName}Section`).classList.remove('hidden');
+      // Alle gespeicherten Daten löschen
+      localStorage.removeItem('discord_user');
+      localStorage.removeItem('discord_access_token');
+      localStorage.removeItem('user_access_info');
       
-      // Button States aktualisieren
-      updateButtonStates(tabName);
+      // UI zurücksetzen - nur 'hidden' verwenden
+      mainContent.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
+      loginError.classList.add('hidden');
+      debugInfo.classList.add('hidden');
+      accessBadge.classList.add('hidden');
+      forceCheckBtn.classList.add('hidden');
+      
+      showNotification('Erfolgreich ausgeloggt', 'info');
     }
+
+    // Überprüfe gespeicherten Login beim Laden
+    function checkExistingLogin() {
+      const user = localStorage.getItem('discord_user');
+      const token = localStorage.getItem('discord_access_token');
+      const accessInfo = localStorage.getItem('user_access_info');
+      
+      console.log('Check existing login:', { user: !!user, token: !!token });
+      
+      if (user && token) {
+        showDebugInfo('Bereits eingeloggt');
+        showMainContent(accessInfo ? JSON.parse(accessInfo) : null);
+        
+        // Zusätzliche Überprüfung ob wirklich autorisiert
+        setTimeout(async () => {
+          const authResult = await checkUserAuthorization();
+          if (!authResult.isAuthorized) {
+            showNotification('Deine Sitzung ist abgelaufen', 'error');
+            setTimeout(logout, 2000);
+          }
+        }, 1000);
+        
+      } else {
+        showDebugInfo('Nicht eingeloggt');
+        // Lösche eventuelle fehlerhafte Daten
+        localStorage.removeItem('discord_user');
+        localStorage.removeItem('discord_access_token');
+        localStorage.removeItem('user_access_info');
+      }
+    }
+
+    // Event Listeners
+    discordLoginBtn.addEventListener('click', startDiscordOAuth);
+    logoutBtn.addEventListener('click', logout);
+    forceCheckBtn.addEventListener('click', forceImmediateCheck);
+
+    // Initialisierung
+    checkExistingLogin();
+
+    // URL Parameters überprüfen
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      console.log('OAuth Code gefunden:', code);
+      exchangeCodeForToken(code);
+    }
+
+    // Globale Variablen
+    let categories = ["Grundlegend", "Metall", "Alchemie", "Rüstung", "Waffen", "Magie", "Kochen"];
+    let workbenches = [];
+    let filteredWorkbenches = [];
+    let tempCategories = [];
+    let currentResources = [];
+    let currentOutputResources = [];
+    const ADMIN_PASSWORD = '1101';
+
+    // Utility
+    function show(el) { 
+      el.classList.remove('hidden'); 
+      el.classList.add('fade-in');
+    }
+    function hide(el) { 
+      el.classList.add('hidden'); 
+      el.classList.remove('fade-in');
+    }
+
+    // KORRIGIERTE Zeit in Sekunden umrechnen (inklusive Millisekunden)
+    function convertTimeToSeconds(minutes, seconds, milliseconds) {
+      const mins = parseInt(minutes) || 0;
+      const secs = parseInt(seconds) || 0;
+      const ms = parseInt(milliseconds) || 0;
+      
+      // Korrekte Berechnung mit Millisekunden
+      return (mins * 60) + secs + (ms / 1000);
+    }
+
+    // KORRIGIERTE Zeit formatieren für Anzeige (inklusive Millisekunden)
+    function formatTime(totalSeconds) {
+      if (totalSeconds === 0) return "0s";
+      
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      const milliseconds = Math.round((totalSeconds % 1) * 1000);
+      
+      let parts = [];
+      
+      if (hours > 0) parts.push(`${hours}h`);
+      if (minutes > 0) parts.push(`${minutes}m`);
+      if (seconds > 0 || (minutes === 0 && hours === 0)) {
+        parts.push(`${seconds}s`);
+      }
+      if (milliseconds > 0 && totalSeconds < 10) {
+        parts.push(`${milliseconds}ms`);
+      }
+      
+      return parts.join(' ') || '0s';
+    }
+
+    // Firebase Funktionen
+    async function saveWorkbench(workbench) {
+      try {
+        await push(workbenchesRef, workbench);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Speichern der Werkbank:', error);
+        return false;
+      }
+    }
+
+    async function updateWorkbench(key, workbench) {
+      try {
+        await update(ref(db, `werkbank_manager/workbenches/${key}`), workbench);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Aktualisieren der Werkbank:', error);
+        return false;
+      }
+    }
+
+    async function deleteWorkbenchFromFirebase(key) {
+      try {
+        await remove(ref(db, `werkbank_manager/workbenches/${key}`));
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Löschen der Werkbank:', error);
+        return false;
+      }
+    }
+
+    async function saveCategoriesToFirebase() {
+      try {
+        await set(categoriesRef, categories);
+        return true;
+      } catch (error) {
+        console.error('Fehler beim Speichern der Kategorien:', error);
+        return false;
+      }
+    }
+
+    // Firebase Listener
+    onValue(workbenchesRef, (snapshot) => {
+      workbenches = [];
+      snapshot.forEach((childSnap) => {
+        const data = childSnap.val();
+        data.key = childSnap.key;
+        
+        // Stelle sicher, dass time als Zahl gespeichert ist
+        if (typeof data.time === 'string') {
+          data.time = parseFloat(data.time);
+        }
+        
+        workbenches.push(data);
+      });
+      filteredWorkbenches = [...workbenches];
+      renderWorkbenches();
+      renderAdminTable();
+    });
+
+    onValue(categoriesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        categories = data;
+        renderCategories();
+        loadCategoriesToDropdown();
+      }
+    });
+
+    // Hamburger Menu
+    document.getElementById('hamburgerBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('hamburgerMenu').classList.toggle('hidden');
+    });
+
+    // Close hamburger menu when clicking outside
+    document.addEventListener('click', (e) => {
+      const hamburgerMenu = document.getElementById('hamburgerMenu');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      
+      if (!hamburgerMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        hamburgerMenu.classList.add('hidden');
+      }
+    });
+
+    // Tabs Navigation
+    document.getElementById('btnWorkbenches').addEventListener('click', async () => {
+      await validateAccess();
+      show(document.getElementById('workbenchesSection')); 
+      hide(document.getElementById('adminPanel'));
+      updateButtonStates('workbenches');
+    });
+    
+    document.getElementById('btnAdmin').addEventListener('click', async () => {
+      await validateAccess();
+      hide(document.getElementById('workbenchesSection')); 
+      show(document.getElementById('adminPanel'));
+      updateButtonStates('admin');
+    });
 
     function updateButtonStates(activeButton) {
       const buttons = {
-        dashboard: document.getElementById('btnDashboard'),
-        recycler: document.getElementById('btnRecycler')
+        workbenches: document.getElementById('btnWorkbenches'),
+        admin: document.getElementById('btnAdmin')
       };
       
       Object.values(buttons).forEach(btn => {
-        if (btn) {
-          btn.classList.remove('pulse-glow', 'bg-red-600', 'bg-blue-600');
-          btn.classList.add('bg-gray-700');
-        }
+        btn.classList.remove('pulse-glow', 'bg-red-600', 'bg-blue-600');
+        btn.classList.add('bg-gray-700');
       });
       
       if (buttons[activeButton]) {
         buttons[activeButton].classList.remove('bg-gray-700');
-        if (activeButton === 'dashboard') {
+        if (activeButton === 'workbenches') {
           buttons[activeButton].classList.add('bg-red-600', 'pulse-glow');
-        } else if (activeButton === 'recycler') {
+        } else if (activeButton === 'admin') {
           buttons[activeButton].classList.add('bg-blue-600');
         }
       }
     }
 
-    // ========== RECYCLER FUNKTIONEN ==========
-
-    function initializeRecyclerListeners() {
-      // Admin Login
-      const adminLoginBtn = document.getElementById('adminLoginBtn');
-      const adminPassInput = document.getElementById('adminPass');
-      const adminError = document.getElementById('adminError');
+    // Suchfunktion
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
       
-      if (adminLoginBtn) {
-        adminLoginBtn.addEventListener('click', function() {
-          const password = adminPassInput.value;
-          if (password === ADMIN_PASSWORD) {
-            document.getElementById('adminContent').classList.remove('hidden');
-            document.getElementById('adminLoginSection').classList.add('hidden');
-            showNotification('Admin-Bereich erfolgreich betreten', 'success');
-          } else {
-            adminError.classList.remove('hidden');
-          }
-        });
+      if (searchTerm.trim() === '') {
+        filteredWorkbenches = [...workbenches];
+      } else {
+        filteredWorkbenches = workbenches.filter(workbench => 
+          workbench.name.toLowerCase().includes(searchTerm) || 
+          workbench.category.toLowerCase().includes(searchTerm) ||
+          workbench.description?.toLowerCase().includes(searchTerm)
+        );
       }
+      
+      renderWorkbenches();
+    });
 
-      // Produkt hinzufügen Button
-      const addProductBtn = document.getElementById('addProductBtn');
-      if (addProductBtn) {
-        addProductBtn.addEventListener('click', function() {
-          openProductModal();
-        });
-      }
-
-      // Ressource hinzufügen
-      const addResourceBtn = document.getElementById('addResourceBtn');
-      if (addResourceBtn) {
-        addResourceBtn.addEventListener('click', function() {
-          addResource();
-        });
-      }
-
-      // Produkt Formular
-      const productForm = document.getElementById('productForm');
-      if (productForm) {
-        productForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          saveProduct();
-        });
-      }
-
-      // Produkt Bild Upload
-      const productImageFile = document.getElementById('productImageFile');
-      if (productImageFile) {
-        productImageFile.addEventListener('change', function(e) {
-          handleImageUpload(e);
-        });
-      }
-
-      // Modal schließen
-      const cancelProduct = document.getElementById('cancelProduct');
-      if (cancelProduct) {
-        cancelProduct.addEventListener('click', function() {
-          document.getElementById('productModal').classList.add('hidden');
-        });
-      }
-
-      // Suche
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-          filterProducts(e.target.value);
-        });
-      }
-
-      const adminSearchInput = document.getElementById('adminSearchInput');
-      if (adminSearchInput) {
-        adminSearchInput.addEventListener('input', function(e) {
-          filterAdminProducts(e.target.value);
-        });
-      }
-    }
-
-    // Produkte laden
-    function loadProducts() {
-      onValue(productsRef, (snapshot) => {
-        products = [];
-        snapshot.forEach((childSnapshot) => {
-          const product = childSnapshot.val();
-          product.key = childSnapshot.key;
-          products.push(product);
-        });
-        filteredProducts = [...products];
-        renderProducts();
-        renderAdminTable();
+    // Event Listener für Kategorie Buttons
+    function setupCategoryFilters() {
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('category-btn')) {
+          // Active state setzen
+          document.querySelectorAll('#categoriesContainer .category-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          
+          // Werkbänke filtern
+          const category = e.target.getAttribute('data-category');
+          filterWorkbenches(category);
+        }
       });
     }
 
-    // Produkte rendern
-    function renderProducts() {
-      const productsGrid = document.getElementById('productsGrid');
-      if (!productsGrid) return;
+    // Kategorien Filter rendern
+    function renderCategories() {
+      const categoriesContainer = document.getElementById('categoriesContainer');
+      // Behalte den "Alle" Button
+      categoriesContainer.innerHTML = '<button class="category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg active" data-category="all"><i class="fas fa-layer-group mr-1"></i> Alle</button>';
       
-      productsGrid.innerHTML = '';
+      // Füge alle Kategorien hinzu
+      categories.forEach(category => {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg';
+        btn.setAttribute('data-category', category);
+        btn.innerHTML = `<i class="fas fa-folder mr-1"></i> ${category}`;
+        categoriesContainer.appendChild(btn);
+      });
       
-      if (filteredProducts.length === 0) {
-        productsGrid.innerHTML = `
-          <div class="text-center py-8 text-gray-500 col-span-full">
-            <i class="fas fa-box-open text-4xl mb-2"></i>
-            <p>Keine Produkte gefunden</p>
+      // Setup Event Listener
+      setupCategoryFilters();
+    }
+
+    // Kategorien in Dropdown laden
+    function loadCategoriesToDropdown() {
+      const categorySelect = document.getElementById('workbenchCategory');
+      categorySelect.innerHTML = '';
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+    }
+
+    // VERBESSERTE Produkte rendern mit größerem Text
+    function renderWorkbenches() {
+      const workbenchesGrid = document.getElementById('workbenchesGrid');
+      workbenchesGrid.innerHTML = '';
+      
+      if (filteredWorkbenches.length === 0) {
+        workbenchesGrid.innerHTML = `
+          <div class="col-span-full text-center py-8 text-gray-400">
+            <i class="fas fa-boxes text-4xl mb-4 text-gray-600"></i>
+            <p class="text-lg">Keine Produkte gefunden.</p>
+            <p class="text-sm mt-2">Fügen Sie Produkte im Admin-Bereich hinzu oder ändern Sie Ihre Suchkriterien.</p>
           </div>
         `;
         return;
       }
       
-      filteredProducts.forEach(product => {
-        const productElement = createProductElement(product);
-        productsGrid.appendChild(productElement);
+      filteredWorkbenches.forEach(workbench => {
+        const el = document.createElement('div');
+        el.className = 'product-card';
+        
+        // Bild anzeigen falls vorhanden
+        const imageHtml = workbench.imageUrl ? 
+          `<div class="flex justify-center mb-3">
+             <img src="${workbench.imageUrl}" class="image-preview-small" alt="${workbench.name}">
+           </div>` : '';
+        
+        // Mengen-Steuerung für jede Karte mit Zeit-Berechnung
+        const quantityControls = `
+          <div class="product-quantity-controls">
+            <button class="product-quantity-btn decrease-btn" data-key="${workbench.key}">
+              <i class="fas fa-minus"></i>
+            </button>
+            <div class="product-quantity-display" id="quantity-${workbench.key}">1x</div>
+            <button class="product-quantity-btn increase-btn" data-key="${workbench.key}">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          <div class="product-time-display" id="time-${workbench.key}">
+            Gesamtzeit: ${formatTime(workbench.time || 0)}
+          </div>
+        `;
+        
+        // Input-Ressourcen (mit Multiplikator)
+        let inputResourcesHtml = '';
+        if (workbench.resources && workbench.resources.length > 0) {
+          inputResourcesHtml = `
+            <div class="product-resource-box">
+              <div class="product-resource-title">Benötigt</div>
+              ${workbench.resources.map(resource => 
+                `<div class="product-resource-item">
+                   <span>${resource.name}</span>
+                   <span id="input-${workbench.key}-${resource.name.replace(/\s+/g, '-')}">${resource.amount}</span>
+                 </div>`
+              ).join('')}
+            </div>
+          `;
+        }
+        
+        // Output-Ressourcen (mit Multiplikator)
+        let outputResourcesHtml = '';
+        if (workbench.outputResources && workbench.outputResources.length > 0) {
+          outputResourcesHtml = `
+            <div class="product-output-box">
+              <div class="product-output-title">Erhalt</div>
+              ${workbench.outputResources.map(resource => 
+                `<div class="product-output-item">
+                   <span>${resource.name}</span>
+                   <span id="output-${workbench.key}-${resource.name.replace(/\s+/g, '-')}">${resource.amount}</span>
+                 </div>`
+              ).join('')}
+            </div>
+          `;
+        }
+        
+        el.innerHTML = `
+          ${imageHtml}
+          <div class="product-header">
+            <div class="product-name">${workbench.name}</div>
+            <div class="product-time">${formatTime(workbench.time || 0)}</div>
+          </div>
+          <div class="product-category">
+            <i class="fas fa-folder mr-1"></i>${workbench.category}
+          </div>
+          ${quantityControls}
+          ${inputResourcesHtml}
+          ${outputResourcesHtml}
+        `;
+        workbenchesGrid.appendChild(el);
+      });
+      
+      // Event Listener für Mengen-Buttons hinzufügen
+      setupQuantityControls();
+    }
+
+    // Mengen-Steuerung für Produkte einrichten
+    function setupQuantityControls() {
+      // Plus-Buttons
+      document.querySelectorAll('.increase-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key = this.getAttribute('data-key');
+          increaseQuantity(key);
+        });
+      });
+      
+      // Minus-Buttons
+      document.querySelectorAll('.decrease-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key = this.getAttribute('data-key');
+          decreaseQuantity(key);
+        });
       });
     }
 
-    // Produkt-Element erstellen
-    function createProductElement(product) {
-      const div = document.createElement('div');
-      div.className = 'product-item';
-      div.innerHTML = `
-        <div class="product-card">
-          ${product.image ? 
-            `<img src="${product.image}" alt="${product.name}" class="product-image">` : 
-            `<div style="width: 100px; height: 100px; background: rgba(220, 38, 38, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #dc2626;">
-              <i class="fas fa-box" style="font-size: 2rem;"></i>
-            </div>`
-          }
-          <div>
-            <h4 style="color: #fbbf24; margin-bottom: 0.5rem; font-size: 1.2rem;">${product.name}</h4>
-            <div class="resource-list">
-              ${product.resources ? Object.entries(product.resources).map(([name, range]) => 
-                `<span class="resource-tag">${name}: ${range.min}-${range.max}</span>`
-              ).join('') : ''}
-            </div>
-            <div class="calculator-section">
-              <div class="calculator-title">
-                <i class="fas fa-calculator"></i> Rechner
-              </div>
-              <div class="quantity-controls">
-                <button class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>
-                <input type="number" class="quantity-input" value="1" min="1" onchange="calculateResources(this, '${product.key}')">
-                <button class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>
-              </div>
-              <div id="results-${product.key}" class="results-container">
-                <!-- Ergebnisse werden hier dynamisch eingefügt -->
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-      return div;
+    // Menge erhöhen und Zeit berechnen
+    function increaseQuantity(key) {
+      const quantityDisplay = document.getElementById(`quantity-${key}`);
+      let currentQuantity = parseInt(quantityDisplay.textContent.replace('x', '')) || 1;
+      currentQuantity++;
+      quantityDisplay.textContent = `${currentQuantity}x`;
+      
+      // Zeit entsprechend der Menge berechnen
+      updateTimeForQuantity(key, currentQuantity);
+      updateResourceQuantities(key, currentQuantity);
     }
 
-    // Admin-Tabelle rendern
+    // Menge verringern und Zeit berechnen
+    function decreaseQuantity(key) {
+      const quantityDisplay = document.getElementById(`quantity-${key}`);
+      let currentQuantity = parseInt(quantityDisplay.textContent.replace('x', '')) || 1;
+      if (currentQuantity > 1) {
+        currentQuantity--;
+        quantityDisplay.textContent = `${currentQuantity}x`;
+        
+        // Zeit entsprechend der Menge berechnen
+        updateTimeForQuantity(key, currentQuantity);
+        updateResourceQuantities(key, currentQuantity);
+      }
+    }
+
+    // Zeit basierend auf Menge aktualisieren
+    function updateTimeForQuantity(key, multiplier) {
+      const workbench = workbenches.find(w => w.key === key);
+      if (!workbench) return;
+      
+      const timeDisplay = document.getElementById(`time-${key}`);
+      const baseTime = workbench.time || 0;
+      const totalTime = baseTime * multiplier;
+      
+      timeDisplay.textContent = `Gesamtzeit: ${formatTime(totalTime)}`;
+    }
+
+    // Ressourcen-Mengen aktualisieren
+    function updateResourceQuantities(key, multiplier) {
+      const workbench = workbenches.find(w => w.key === key);
+      if (!workbench) return;
+      
+      // Input-Ressourcen aktualisieren
+      if (workbench.resources) {
+        workbench.resources.forEach(resource => {
+          const elementId = `input-${key}-${resource.name.replace(/\s+/g, '-')}`;
+          const element = document.getElementById(elementId);
+          if (element) {
+            const baseAmount = resource.amount;
+            element.textContent = baseAmount * multiplier;
+          }
+        });
+      }
+      
+      // Output-Ressourcen aktualisieren
+      if (workbench.outputResources) {
+        workbench.outputResources.forEach(resource => {
+          const elementId = `output-${key}-${resource.name.replace(/\s+/g, '-')}`;
+          const element = document.getElementById(elementId);
+          if (element) {
+            const baseAmount = resource.amount;
+            element.textContent = baseAmount * multiplier;
+          }
+        });
+      }
+    }
+
+    function filterWorkbenches(category) {
+      if (category === 'all') {
+        filteredWorkbenches = [...workbenches];
+      } else {
+        filteredWorkbenches = workbenches.filter(w => w.category === category);
+      }
+      renderWorkbenches();
+    }
+
+    // Adminbereich
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminPassInput = document.getElementById('adminPass');
+    const adminError = document.getElementById('adminError');
+    const adminTableBody = document.getElementById('adminTableBody');
+    const totalWorkbenches = document.getElementById('totalWorkbenches');
+    const addWorkbenchBtn = document.getElementById('addWorkbenchBtn');
+    const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
+    const exportCsv = document.getElementById('exportCsv');
+    
+    // Modal Elemente
+    const workbenchModal = document.getElementById('workbenchModal');
+    const workbenchForm = document.getElementById('workbenchForm');
+    const workbenchModalTitle = document.getElementById('workbenchModalTitle');
+    const workbenchKeyInput = document.getElementById('workbenchKey');
+    const cancelWorkbench = document.getElementById('cancelWorkbench');
+    const timeDisplay = document.getElementById('timeDisplay');
+    
+    const categoriesModal = document.getElementById('categoriesModal');
+    const newCategoryName = document.getElementById('newCategoryName');
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    const categoriesList = document.getElementById('categoriesList');
+    const saveCategories = document.getElementById('saveCategories');
+    const cancelCategories = document.getElementById('cancelCategories');
+
+    // Ressourcen Elemente
+    const newResourceName = document.getElementById('newResourceName');
+    const newResourceAmount = document.getElementById('newResourceAmount');
+    const addResourceBtn = document.getElementById('addResourceBtn');
+    const resourcesList = document.getElementById('resourcesList');
+    const requiredResourcesDisplay = document.getElementById('requiredResourcesDisplay');
+
+    // Output Ressourcen Elemente
+    const newOutputResourceName = document.getElementById('newOutputResourceName');
+    const newOutputResourceAmount = document.getElementById('newOutputResourceAmount');
+    const addOutputResourceBtn = document.getElementById('addOutputResourceBtn');
+    const outputResourcesList = document.getElementById('outputResourcesList');
+    const outputResourcesDisplay = document.getElementById('outputResourcesDisplay');
+
+    // Bild Upload
+    const workbenchImage = document.getElementById('workbenchImage');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+
+    // Zeit-Inputs überwachen für Live-Anzeige
+    const timeInputs = ['workbenchTimeMinutes', 'workbenchTimeSeconds', 'workbenchTimeMilliseconds'];
+    timeInputs.forEach(inputId => {
+      document.getElementById(inputId).addEventListener('input', updateTimeDisplay);
+    });
+
+    function updateTimeDisplay() {
+      const minutes = document.getElementById('workbenchTimeMinutes').value || 0;
+      const seconds = document.getElementById('workbenchTimeSeconds').value || 0;
+      const milliseconds = document.getElementById('workbenchTimeMilliseconds').value || 0;
+      
+      const totalSeconds = convertTimeToSeconds(minutes, seconds, milliseconds);
+      timeDisplay.textContent = `Zeit: ${formatTime(totalSeconds)}`;
+    }
+
+    // Bild Vorschau
+    workbenchImage.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImage.src = e.target.result;
+          imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.classList.add('hidden');
+      }
+    });
+
+    // Input-Ressource hinzufügen
+    addResourceBtn.addEventListener('click', () => {
+      const resourceName = newResourceName.value.trim();
+      const resourceAmount = parseInt(newResourceAmount.value);
+      
+      if (resourceName && resourceAmount && resourceAmount > 0) {
+        currentResources.push({
+          name: resourceName,
+          amount: resourceAmount
+        });
+        renderResourcesList();
+        renderRequiredResourcesDisplay();
+        newResourceName.value = '';
+        newResourceAmount.value = '';
+        newResourceName.focus();
+        showNotification('Benötigte Ressource hinzugefügt', 'success');
+      } else {
+        showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
+      }
+    });
+
+    // Output-Ressource hinzufügen
+    addOutputResourceBtn.addEventListener('click', () => {
+      const resourceName = newOutputResourceName.value.trim();
+      const resourceAmount = parseInt(newOutputResourceAmount.value);
+      
+      if (resourceName && resourceAmount && resourceAmount > 0) {
+        currentOutputResources.push({
+          name: resourceName,
+          amount: resourceAmount
+        });
+        renderOutputResourcesList();
+        renderOutputResourcesDisplay();
+        newOutputResourceName.value = '';
+        newOutputResourceAmount.value = '';
+        newOutputResourceName.focus();
+        showNotification('Erhaltene Ressource hinzugefügt', 'success');
+      } else {
+        showNotification('Bitte füllen Sie alle Felder korrekt aus', 'error');
+      }
+    });
+
+    // Input-Ressourcen Liste rendern
+    function renderResourcesList() {
+      resourcesList.innerHTML = '';
+      currentResources.forEach((resource, index) => {
+        const span = document.createElement('span');
+        span.className = 'resource-tag flex items-center';
+        span.style.background = 'rgba(220, 38, 38, 0.2)';
+        span.style.color = '#dc2626';
+        span.innerHTML = `
+          ${resource.name}: ${resource.amount}
+          <button type="button" class="ml-1 text-red-400 hover:text-red-300 remove-resource" data-index="${index}">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        resourcesList.appendChild(span);
+      });
+      
+      // Event Listener für Löschen-Buttons
+      document.querySelectorAll('.remove-resource').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          currentResources.splice(index, 1);
+          renderResourcesList();
+          renderRequiredResourcesDisplay();
+          showNotification('Benötigte Ressource entfernt', 'info');
+        });
+      });
+    }
+
+    // Output-Ressourcen Liste rendern
+    function renderOutputResourcesList() {
+      outputResourcesList.innerHTML = '';
+      currentOutputResources.forEach((resource, index) => {
+        const span = document.createElement('span');
+        span.className = 'resource-tag flex items-center';
+        span.style.background = 'rgba(34, 197, 94, 0.2)';
+        span.style.color = '#16a34a';
+        span.innerHTML = `
+          ${resource.name}: ${resource.amount}
+          <button type="button" class="ml-1 text-green-400 hover:text-green-300 remove-output-resource" data-index="${index}">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        outputResourcesList.appendChild(span);
+      });
+      
+      // Event Listener für Löschen-Buttons
+      document.querySelectorAll('.remove-output-resource').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = parseInt(this.getAttribute('data-index'));
+          currentOutputResources.splice(index, 1);
+          renderOutputResourcesList();
+          renderOutputResourcesDisplay();
+          showNotification('Erhaltene Ressource entfernt', 'info');
+        });
+      });
+    }
+
+    // Benötigte Ressourcen anzeigen
+    function renderRequiredResourcesDisplay() {
+      requiredResourcesDisplay.innerHTML = '';
+      currentResources.forEach(resource => {
+        const div = document.createElement('div');
+        div.className = 'flex justify-between text-sm';
+        div.innerHTML = `
+          <span>${resource.name}:</span>
+          <span>${resource.amount}</span>
+        `;
+        requiredResourcesDisplay.appendChild(div);
+      });
+    }
+
+    // Erhaltene Ressourcen anzeigen
+    function renderOutputResourcesDisplay() {
+      outputResourcesDisplay.innerHTML = '';
+      currentOutputResources.forEach(resource => {
+        const div = document.createElement('div');
+        div.className = 'flex justify-between text-sm';
+        div.innerHTML = `
+          <span>${resource.name}:</span>
+          <span>${resource.amount}</span>
+        `;
+        outputResourcesDisplay.appendChild(div);
+      });
+    }
+
+    adminLoginBtn.addEventListener('click', () => {
+      if (adminPassInput.value === ADMIN_PASSWORD) { 
+        adminError.classList.add('hidden'); 
+        show(document.getElementById('adminContent')); 
+        renderAdminTable(); 
+        adminPassInput.value = '';
+        showNotification('Admin-Bereich erfolgreich betreten', 'success');
+      } else {
+        adminError.classList.remove('hidden');
+        adminPassInput.value = '';
+        adminPassInput.focus();
+        showNotification('Falsches Admin-Passwort', 'error');
+      }
+    });
+
+    // Allow login with Enter key
+    adminPassInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        adminLoginBtn.click();
+      }
+    });
+
     function renderAdminTable() {
-      const adminTableBody = document.getElementById('adminTableBody');
-      const totalProducts = document.getElementById('totalProducts');
-      
-      if (!adminTableBody) return;
-      
       adminTableBody.innerHTML = '';
-      if (totalProducts) {
-        totalProducts.textContent = products.length;
-      }
       
-      if (filteredProducts.length === 0) {
-        adminTableBody.innerHTML = `
-          <tr>
-            <td colspan="3" class="p-4 text-center text-gray-500">Keine Produkte vorhanden</td>
-          </tr>
-        `;
-        return;
-      }
-      
-      filteredProducts.forEach(product => {
-        const row = document.createElement('tr');
-        row.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
-        row.innerHTML = `
-          <td class="p-3">${product.name}</td>
-          <td class="p-3">
-            ${product.resources ? Object.entries(product.resources).map(([name, range]) => 
-              `${name}: ${range.min}-${range.max}`
-            ).join(', ') : 'Keine Ressourcen'}
-          </td>
+      // Werkbänke in Admin-Tabelle
+      workbenches.forEach(workbench => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-gray-800 hover:bg-gray-800/30 transition-colors';
+        tr.innerHTML = `
+          <td class="p-3">${workbench.name}</td>
+          <td class="p-3">${workbench.category}</td>
+          <td class="p-3">${formatTime(workbench.time || 0)}</td>
           <td class="p-3">
             <div class="flex gap-2">
-              <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-product" data-key="${product.key}">
+              <button class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm rounded-lg btn flex items-center gap-1 edit-workbench" data-key="${workbench.key}">
                 <i class="fas fa-edit mr-1"></i>
                 Bearbeiten
               </button>
-              <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-product" data-key="${product.key}">
+              <button class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-sm rounded-lg btn flex items-center gap-1 delete-workbench" data-key="${workbench.key}">
                 <i class="fas fa-trash mr-1"></i>
                 Löschen
               </button>
             </div>
           </td>`;
-        adminTableBody.appendChild(row);
+        adminTableBody.appendChild(tr);
       });
       
       // Event Listener für Bearbeiten-Buttons
-      document.querySelectorAll('.edit-product').forEach(btn => {
+      document.querySelectorAll('.edit-workbench').forEach(btn => {
         btn.addEventListener('click', function() {
           const key = this.getAttribute('data-key');
-          editProduct(key);
+          editWorkbench(key);
         });
       });
       
       // Event Listener für Löschen-Buttons
-      document.querySelectorAll('.delete-product').forEach(btn => {
+      document.querySelectorAll('.delete-workbench').forEach(btn => {
         btn.addEventListener('click', function() {
           const key = this.getAttribute('data-key');
-          deleteProduct(key);
+          deleteWorkbench(key);
         });
       });
+      
+      totalWorkbenches.innerText = workbenches.length;
     }
 
-    // Globales Logo laden
-    function loadGlobalLogo() {
-      getDownloadURL(logoImageRef)
-        .then((url) => {
-          const headerLogo = document.getElementById('headerLogo');
-          if (headerLogo) {
-            headerLogo.style.backgroundImage = `url('${url}')`;
-            headerLogo.innerHTML = '';
-          }
-        })
-        .catch((error) => {
-          console.log('Kein custom Logo gefunden, verwende Standard-Logo');
-        });
+    // Werkbank bearbeiten
+    function editWorkbench(key) {
+      const workbench = workbenches.find(w => w.key === key);
+      if (!workbench) return;
+      
+      // Formular mit Werkbank-Daten füllen
+      document.getElementById('workbenchName').value = workbench.name;
+      document.getElementById('workbenchCategory').value = workbench.category;
+      
+      // Zeit zerlegen (KORRIGIERT für Millisekunden)
+      const totalSeconds = workbench.time || 0;
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      const milliseconds = Math.round((totalSeconds % 1) * 1000);
+      
+      document.getElementById('workbenchTimeMinutes').value = minutes;
+      document.getElementById('workbenchTimeSeconds').value = seconds;
+      document.getElementById('workbenchTimeMilliseconds').value = milliseconds;
+      
+      workbenchKeyInput.value = key;
+      
+      // Ressourcen setzen
+      currentResources = workbench.resources ? [...workbench.resources] : [];
+      renderResourcesList();
+      renderRequiredResourcesDisplay();
+      
+      // Output-Ressourcen setzen
+      currentOutputResources = workbench.outputResources ? [...workbench.outputResources] : [];
+      renderOutputResourcesList();
+      renderOutputResourcesDisplay();
+      
+      // Bild setzen falls vorhanden
+      if (workbench.imageUrl) {
+        previewImage.src = workbench.imageUrl;
+        imagePreview.classList.remove('hidden');
+      } else {
+        imagePreview.classList.add('hidden');
+      }
+      
+      // Zeit-Anzeige aktualisieren
+      updateTimeDisplay();
+      
+      // Modal-Titel ändern
+      workbenchModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Produkt bearbeiten';
+      
+      // Modal anzeigen
+      show(workbenchModal);
     }
 
-    // Produkt Modal öffnen
-    function openProductModal() {
-      const productKeyInput = document.getElementById('productKey');
-      const productName = document.getElementById('productName');
-      const productImageData = document.getElementById('productImageData');
-      const imagePreview = document.getElementById('imagePreview');
-      const resourcesList = document.getElementById('resourcesList');
-      const productModalTitle = document.getElementById('productModalTitle');
+    // Modal für Produkt hinzufügen
+    addWorkbenchBtn.addEventListener('click', async () => {
+      const hasAccess = await validateAccess();
+      if (!hasAccess) return;
       
-      if (productKeyInput) productKeyInput.value = '';
-      if (productName) productName.value = '';
-      if (productImageData) productImageData.value = '';
-      if (imagePreview) imagePreview.style.display = 'none';
-      
+      // Formular zurücksetzen
+      workbenchForm.reset();
+      workbenchKeyInput.value = '';
       currentResources = [];
-      if (resourcesList) resourcesList.innerHTML = '';
+      currentOutputResources = [];
+      renderResourcesList();
+      renderOutputResourcesList();
+      renderRequiredResourcesDisplay();
+      renderOutputResourcesDisplay();
+      imagePreview.classList.add('hidden');
+      updateTimeDisplay();
       
-      if (productModalTitle) {
-        productModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Produkt hinzufügen';
-      }
+      // Modal-Titel ändern
+      workbenchModalTitle.innerHTML = '<i class="fas fa-plus mr-2"></i> Produkt hinzufügen';
       
-      document.getElementById('productModal').classList.remove('hidden');
-    }
+      loadCategoriesToDropdown();
+      show(workbenchModal);
+    });
 
-    // Ressource hinzufügen
-    function addResource() {
-      const newResourceName = document.getElementById('newResourceName');
-      const newResourceMin = document.getElementById('newResourceMin');
-      const newResourceMax = document.getElementById('newResourceMax');
-      
-      if (!newResourceName || !newResourceMin || !newResourceMax) return;
-      
-      const name = newResourceName.value.trim();
-      const min = parseInt(newResourceMin.value);
-      const max = parseInt(newResourceMax.value);
-      
-      if (name && min && max && min > 0 && max >= min) {
-        currentResources.push({ name, min, max });
-        renderResourcesList();
-        newResourceName.value = '';
-        newResourceMin.value = '';
-        newResourceMax.value = '';
-      }
-    }
+    cancelWorkbench.addEventListener('click', () => {
+      hide(workbenchModal);
+      workbenchForm.reset();
+      currentResources = [];
+      currentOutputResources = [];
+      renderResourcesList();
+      renderOutputResourcesList();
+      renderRequiredResourcesDisplay();
+      renderOutputResourcesDisplay();
+      imagePreview.classList.add('hidden');
+    });
 
-    // Ressourcen Liste rendern
-    function renderResourcesList() {
-      const resourcesList = document.getElementById('resourcesList');
-      if (!resourcesList) return;
+    // Modal für Kategorien verwalten
+    manageCategoriesBtn.addEventListener('click', async () => {
+      const hasAccess = await validateAccess();
+      if (!hasAccess) return;
       
-      resourcesList.innerHTML = '';
-      currentResources.forEach((resource, index) => {
-        const resourceElement = document.createElement('div');
-        resourceElement.className = 'resource-tag';
-        resourceElement.innerHTML = `
-          ${resource.name}: ${resource.min}-${resource.max}
-          <button type="button" onclick="removeResource(${index})" style="background: none; border: none; color: #f56565; margin-left: 5px; cursor: pointer;">
-            <i class="fas fa-times"></i>
+      tempCategories = [...categories];
+      renderCategoriesList();
+      show(categoriesModal);
+    });
+
+    cancelCategories.addEventListener('click', () => {
+      hide(categoriesModal);
+      newCategoryName.value = '';
+    });
+
+    // Kategorien Liste rendern
+    function renderCategoriesList() {
+      categoriesList.innerHTML = '';
+      tempCategories.forEach((category, index) => {
+        const div = document.createElement('div');
+        div.className = 'category-input';
+        div.innerHTML = `
+          <input type="text" value="${category}" class="flex-1 p-3 rounded-lg bg-gray-800/50 border border-gray-700 focus:border-purple-500 category-edit" data-index="${index}">
+          <button type="button" class="px-4 py-3 bg-red-600 hover:bg-red-500 rounded-lg btn remove-category flex items-center gap-2" data-index="${index}">
+            <i class="fas fa-trash"></i>
+            Löschen
           </button>
         `;
-        resourcesList.appendChild(resourceElement);
+        categoriesList.appendChild(div);
       });
     }
 
-    // Ressource entfernen
-    function removeResource(index) {
-      currentResources.splice(index, 1);
-      renderResourcesList();
-    }
-
-    // Bild Upload behandeln
-    function handleImageUpload(e) {
-      const file = e.target.files[0];
-      const imagePreview = document.getElementById('imagePreview');
-      const productImageData = document.getElementById('productImageData');
-      
-      if (!file || !imagePreview || !productImageData) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        imagePreview.src = e.target.result;
-        imagePreview.style.display = 'block';
-        productImageData.value = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // Produkt speichern
-    async function saveProduct() {
-      const productName = document.getElementById('productName');
-      const productKeyInput = document.getElementById('productKey');
-      const productImageData = document.getElementById('productImageData');
-      
-      if (!productName || !productKeyInput) return;
-      
-      const productData = {
-        name: productName.value,
-        resources: {},
-        image: productImageData ? productImageData.value : ''
-      };
-      
-      currentResources.forEach(resource => {
-        productData.resources[resource.name] = {
-          min: resource.min,
-          max: resource.max
-        };
-      });
-      
-      const productKey = productKeyInput.value;
-      
-      try {
-        if (productKey) {
-          // Produkt aktualisieren
-          const productRef = ref(db, `materialrecycler/products/${productKey}`);
-          await update(productRef, productData);
-        } else {
-          // Neues Produkt hinzufügen
-          await push(productsRef, productData);
-        }
-        
-        document.getElementById('productModal').classList.add('hidden');
-        showNotification(`Produkt erfolgreich ${productKey ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
-      } catch (error) {
-        console.error('Fehler beim Speichern:', error);
-        showNotification(`Fehler beim ${productKey ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
-      }
-    }
-
-    // Produkt bearbeiten
-    function editProduct(productKey) {
-      const product = products.find(p => p.key === productKey);
-      if (!product) return;
-      
-      const productKeyInput = document.getElementById('productKey');
-      const productName = document.getElementById('productName');
-      const productImageData = document.getElementById('productImageData');
-      const imagePreview = document.getElementById('imagePreview');
-      
-      if (productKeyInput) productKeyInput.value = productKey;
-      if (productName) productName.value = product.name;
-      if (productImageData) productImageData.value = product.image || '';
-      
-      // Bild-Vorschau
-      if (product.image && imagePreview) {
-        imagePreview.src = product.image;
-        imagePreview.style.display = 'block';
-      } else if (imagePreview) {
-        imagePreview.style.display = 'none';
-      }
-      
-      // Ressourcen zurücksetzen und neu laden
-      currentResources = [];
-      if (product.resources) {
-        Object.entries(product.resources).forEach(([name, range]) => {
-          currentResources.push({ name, min: range.min, max: range.max });
-        });
-      }
-      renderResourcesList();
-      
-      const productModalTitle = document.getElementById('productModalTitle');
-      if (productModalTitle) {
-        productModalTitle.innerHTML = '<i class="fas fa-edit mr-2"></i> Produkt bearbeiten';
-      }
-      
-      document.getElementById('productModal').classList.remove('hidden');
-    }
-
-    // Produkt löschen
-    async function deleteProduct(productKey) {
-      if (confirm('Sind Sie sicher, dass Sie dieses Produkt löschen möchten?')) {
-        try {
-          const productRef = ref(db, `materialrecycler/products/${productKey}`);
-          await remove(productRef);
-          showNotification('Produkt erfolgreich gelöscht', 'success');
-        } catch (error) {
-          console.error('Fehler beim Löschen:', error);
-          showNotification('Fehler beim Löschen des Produkts', 'error');
-        }
-      }
-    }
-
-    // Produkte filtern
-    function filterProducts(searchTerm) {
-      searchTerm = searchTerm.toLowerCase();
-      filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm) ||
-        (product.resources && Object.keys(product.resources).some(resource => 
-          resource.toLowerCase().includes(searchTerm)
-        ))
-      );
-      renderProducts();
-    }
-
-    // Admin Produkte filtern
-    function filterAdminProducts(searchTerm) {
-      searchTerm = searchTerm.toLowerCase();
-      filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(searchTerm) ||
-        (product.resources && Object.keys(product.resources).some(resource => 
-          resource.toLowerCase().includes(searchTerm)
-        ))
-      );
-      renderAdminTable();
-    }
-
-    // Rechner Funktionen
-    function changeQuantity(button, change) {
-      const input = button.parentElement.querySelector('.quantity-input');
-      let value = parseInt(input.value) + change;
-      if (value < 1) value = 1;
-      input.value = value;
-      
-      const productKey = input.getAttribute('onchange').split("'")[1];
-      calculateResources(input, productKey);
-    }
-
-    function calculateResources(input, productKey) {
-      const quantity = parseInt(input.value);
-      const product = products.find(p => p.key === productKey);
-      if (!product || !product.resources) return;
-      
-      const resultsContainer = document.getElementById(`results-${productKey}`);
-      if (!resultsContainer) return;
-      
-      resultsContainer.innerHTML = '';
-      
-      Object.entries(product.resources).forEach(([resourceName, range]) => {
-        const minTotal = range.min * quantity;
-        const maxTotal = range.max * quantity;
-        
-        const resultItem = document.createElement('div');
-        resultItem.className = 'result-item';
-        resultItem.innerHTML = `
-          <span>${resourceName}</span>
-          <span class="result-range">${minTotal} - ${maxTotal}</span>
-        `;
-        resultsContainer.appendChild(resultItem);
-      });
-    }
-
-    // ========== INITIALISIERUNG ==========
-
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM geladen - Initialisiere App...');
-      initializeEventListeners();
-      
-      // Zuerst OAuth Callback prüfen
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('code') || urlParams.get('error')) {
-        console.log('OAuth Callback gefunden, verarbeite...');
-        handleOAuthCallback();
-      } else {
-        // Dann bestehende Session prüfen
-        console.log('Kein OAuth Callback, prüfe bestehende Session...');
-        checkExistingLogin();
+    // Neue Kategorie hinzufügen
+    addCategoryBtn.addEventListener('click', () => {
+      const categoryName = newCategoryName.value.trim();
+      if (categoryName && !tempCategories.includes(categoryName)) {
+        tempCategories.push(categoryName);
+        renderCategoriesList();
+        newCategoryName.value = '';
+        showNotification('Kategorie hinzugefügt', 'success');
+      } else if (tempCategories.includes(categoryName)) {
+        showNotification('Kategorie existiert bereits', 'error');
       }
     });
 
-    // Globale Funktionen für onclick Events
-    window.changeQuantity = changeQuantity;
-    window.calculateResources = calculateResources;
-    window.editProduct = editProduct;
-    window.deleteProduct = deleteProduct;
-    window.removeResource = removeResource;
-    window.manualLogin = manualLogin;
-    window.logout = logout;
+    // Kategorie entfernen
+    categoriesList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-category')) {
+        const index = parseInt(e.target.getAttribute('data-index'));
+        // Überprüfen ob Kategorie in Verwendung ist
+        const categoryInUse = workbenches.some(wb => wb.category === tempCategories[index]);
+        if (categoryInUse) {
+          showNotification('Diese Kategorie wird noch von Produkten verwendet und kann nicht gelöscht werden!', 'error');
+          return;
+        }
+        tempCategories.splice(index, 1);
+        renderCategoriesList();
+        showNotification('Kategorie entfernt', 'info');
+      }
+    });
 
-    console.log('Materialrecycler Panel - Mit verbessertem Login-System!');
+    // Kategorien speichern
+    saveCategories.addEventListener('click', async () => {
+      // Aktualisiere Kategorie-Namen
+      const categoryInputs = categoriesList.querySelectorAll('.category-edit');
+      categoryInputs.forEach(input => {
+        const index = parseInt(input.getAttribute('data-index'));
+        const newName = input.value.trim();
+        if (newName && newName !== tempCategories[index]) {
+          // Aktualisiere Kategorie in Werkbänken
+          workbenches.forEach(wb => {
+            if (wb.category === tempCategories[index]) {
+              wb.category = newName;
+              // Update in Firebase
+              updateWorkbench(wb.key, { category: newName });
+            }
+          });
+          tempCategories[index] = newName;
+        }
+      });
+      
+      categories = [...tempCategories];
+      const success = await saveCategoriesToFirebase();
+      if (success) {
+        renderCategories();
+        renderWorkbenches();
+        renderAdminTable();
+        hide(categoriesModal);
+        showNotification('Kategorien erfolgreich gespeichert', 'success');
+      } else {
+        showNotification('Fehler beim Speichern der Kategorien!', 'error');
+      }
+    });
+
+    // Modal schließen, wenn außerhalb geklickt wird
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          hide(modal);
+          if (modal === workbenchModal) {
+            workbenchForm.reset();
+            currentResources = [];
+            currentOutputResources = [];
+            renderResourcesList();
+            renderOutputResourcesList();
+            renderRequiredResourcesDisplay();
+            renderOutputResourcesDisplay();
+            imagePreview.classList.add('hidden');
+          }
+          if (modal === categoriesModal) newCategoryName.value = '';
+        }
+      });
+    });
+
+    workbenchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const hasAccess = await validateAccess();
+      if (!hasAccess) {
+        e.preventDefault();
+        return;
+      }
+      
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<div class="loading mr-2"></div> Speichere...';
+      submitBtn.disabled = true;
+      
+      const name = document.getElementById('workbenchName').value;
+      const category = document.getElementById('workbenchCategory').value;
+      const minutes = document.getElementById('workbenchTimeMinutes').value || 0;
+      const seconds = document.getElementById('workbenchTimeSeconds').value || 0;
+      const milliseconds = document.getElementById('workbenchTimeMilliseconds').value || 0;
+      
+      // KORRIGIERTE Zeitberechnung mit Millisekunden
+      const totalTime = convertTimeToSeconds(minutes, seconds, milliseconds);
+      
+      const key = workbenchKeyInput.value;
+      
+      // Bild als Base64 speichern (für Demo-Zwecke)
+      let imageUrl = '';
+      if (previewImage.src) {
+        imageUrl = previewImage.src; // In einer echten App würden Sie das Bild hochladen
+      }
+      
+      // Werkbank-Objekt erstellen
+      const workbenchData = {
+        name,
+        category,
+        time: totalTime,
+        timeDisplay: `${minutes} ${seconds} ${milliseconds}`, // Für spätere Anzeige
+        resources: [...currentResources],
+        outputResources: [...currentOutputResources],
+        imageUrl: imageUrl,
+        date: new Date().toISOString(),
+        timestamp: Date.now()
+      };
+      
+      let success;
+      if (key) {
+        // Bestehende Werkbank aktualisieren
+        success = await updateWorkbench(key, workbenchData);
+      } else {
+        // Neue Werkbank erstellen
+        success = await saveWorkbench(workbenchData);
+      }
+      
+      if (success) {
+        hide(workbenchModal);
+        workbenchForm.reset();
+        currentResources = [];
+        currentOutputResources = [];
+        renderResourcesList();
+        renderOutputResourcesList();
+        renderRequiredResourcesDisplay();
+        renderOutputResourcesDisplay();
+        imagePreview.classList.add('hidden');
+        showNotification(`Produkt erfolgreich ${key ? 'aktualisiert' : 'hinzugefügt'}`, 'success');
+      } else {
+        showNotification(`Fehler beim ${key ? 'Aktualisieren' : 'Speichern'} des Produkts!`, 'error');
+      }
+      
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
+
+    // Löschfunktion
+    window.deleteWorkbench = async function(key) { 
+      if (confirm('Produkt wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) { 
+        const success = await deleteWorkbenchFromFirebase(key);
+        if (success) {
+          showNotification('Produkt erfolgreich gelöscht', 'success');
+        } else {
+          showNotification('Fehler beim Löschen des Produkts!', 'error');
+        }
+      }
+    }
+
+    // CSV Export
+    exportCsv.addEventListener('click', () => {
+      if (workbenches.length === 0) {
+        showNotification('Keine Produkte zum Exportieren vorhanden.', 'error');
+        return;
+      }
+      
+      const header = ['Name', 'Kategorie', 'Herstellungszeit (Sekunden)', 'Benötigte Ressourcen', 'Erhaltene Ressourcen'];
+      const rows = workbenches.map(wb => {
+        const inputResourcesText = wb.resources && wb.resources.length > 0 
+          ? wb.resources.map(r => `${r.name}: ${r.amount}`).join('; ')
+          : 'Keine benötigten Ressourcen';
+        
+        const outputResourcesText = wb.outputResources && wb.outputResources.length > 0 
+          ? wb.outputResources.map(r => `${r.name}: ${r.amount}`).join('; ')
+          : 'Keine erhaltenen Ressourcen';
+        
+        return [
+          `"${wb.name}"`,
+          `"${wb.category}"`,
+          `"${wb.time || 0}"`,
+          `"${inputResourcesText.replace(/"/g, '""')}"`,
+          `"${outputResourcesText.replace(/"/g, '""')}"`
+        ].join(';');
+      });
+      
+      const csv = [header.join(';'), ...rows].join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      
+      // Generate filename with current date
+      const now = new Date();
+      const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
+      a.download = `produkte_manager_${dateStr}.csv`;
+      
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      a.remove();
+      
+      showNotification('CSV erfolgreich exportiert', 'success');
+    });
+
+    // Initialisierung
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCategories();
+      renderWorkbenches();
+      updateButtonStates('workbenches');
+      setupCategoryFilters();
+      
+      // Sicherstellen, dass alle Modals versteckt sind
+      hide(workbenchModal);
+      hide(categoriesModal);
+    });
   </script>
 </body>
 </html>

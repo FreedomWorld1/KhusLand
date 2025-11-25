@@ -1582,98 +1582,10 @@
         const saveCategories = document.getElementById('saveCategories');
         const cancelCategories = document.getElementById('cancelCategories');
 
-        // ========== VERBESSERTE NAVIGATION ==========
-
-        // Einfache Navigation ohne komplexe URL-Konstruktion
-        async function navigateToPage(page) {
-            try {
-                console.log('Navigiere zu Seite:', page);
-                
-                // Zugriffsprüfung
-                const hasAccess = await validateAccess();
-                if (!hasAccess) {
-                    showNotification('Zugriff wurde entzogen', 'error');
-                    return;
-                }
-                
-                if (!currentUser) {
-                    showNotification('Bitte zuerst anmelden', 'error');
-                    return;
-                }
-                
-                const pageKey = PAGE_ACCESS_CONFIG[page];
-                if (!pageKey) {
-                    showNotification('Ungültige Seite', 'error');
-                    return;
-                }
-                
-                const hasAccessToPage = await hasAccess(pageKey);
-                if (!hasAccessToPage) {
-                    showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                    return;
-                }
-                
-                showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-                
-                // Einfache Navigation - direkt zur Seite
-                setTimeout(() => {
-                    console.log('Final navigation to:', page);
-                    window.location.href = page;
-                }, 1500);
-                
-            } catch (error) {
-                console.error('Navigation error:', error);
-                showNotification('Fehler bei der Navigation: ' + error.message, 'error');
-            }
-        }
-
-        // Card Navigation initialisieren
-        function initializeCardNavigation() {
-            const cards = document.querySelectorAll('.card[data-page]');
-            console.log('Initialisiere Card Navigation für', cards.length, 'Karten');
-            
-            cards.forEach(card => {
-                // Entferne bestehende Event Listener
-                card.replaceWith(card.cloneNode(true));
-            });
-            
-            // Neue Event Listener hinzufügen
-            document.querySelectorAll('.card[data-page]').forEach(card => {
-                card.addEventListener('click', async function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    
-                    console.log('Card geklickt:', this.getAttribute('data-page'));
-                    
-                    if (this.classList.contains('disabled')) {
-                        showNotification('Kein Zugriff auf diese Seite', 'error');
-                        return;
-                    }
-                    
-                    const page = this.getAttribute('data-page');
-                    await navigateToPage(page);
-                });
-            });
-        }
-
-        // Seiten-Namen für Anzeige
-        function getPageDisplayName(pageKey) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'route': 'Drogenrouten', 
-                'werkbank': 'Werkbank Manager',
-                'materialrecycler': 'Materialrecycler',
-                'kokain': 'Kokain Ankauf',
-                'weed': 'Weed Ankauf',
-                'management': 'KhusLand Management'
-            };
-            return names[pageKey] || pageKey;
-        }
-
-        // ========== ECHTZEIT-ZUGRIFFSKONTROLLE ==========
+        // ========== KORRIGIERTE ZUGRIFFSPRÜFUNG ==========
 
         // Zugriff auf Seite prüfen (Echtzeit)
-        async function hasAccess(pageKey) {
+        async function checkPageAccess(pageKey) {
             if (!currentUser) return false;
             
             const token = localStorage.getItem('discord_access_token');
@@ -1801,7 +1713,7 @@
                 const pageKey = PAGE_ACCESS_CONFIG[page];
                 
                 if (pageKey) {
-                    const hasAccessToPage = await hasAccess(pageKey);
+                    const hasAccessToPage = await checkPageAccess(pageKey);
                     
                     // Entferne bestehende Status-Badges
                     const existingStatus = card.querySelector('.access-status');
@@ -1824,6 +1736,95 @@
                     }
                 }
             }
+        }
+
+        // ========== VERBESSERTE NAVIGATION ==========
+
+        // Einfache Navigation ohne komplexe URL-Konstruktion
+        async function navigateToPage(page) {
+            try {
+                console.log('Navigiere zu Seite:', page);
+                
+                // Zugriffsprüfung
+                const hasAccess = await validateAccess();
+                if (!hasAccess) {
+                    showNotification('Zugriff wurde entzogen', 'error');
+                    return;
+                }
+                
+                if (!currentUser) {
+                    showNotification('Bitte zuerst anmelden', 'error');
+                    return;
+                }
+                
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                if (!pageKey) {
+                    showNotification('Ungültige Seite', 'error');
+                    return;
+                }
+                
+                const hasAccessToPage = await checkPageAccess(pageKey);
+                if (!hasAccessToPage) {
+                    showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                    return;
+                }
+                
+                showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+                
+                // Einfache Navigation - direkt zur Seite
+                setTimeout(() => {
+                    console.log('Final navigation to:', page);
+                    window.location.href = page;
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Navigation error:', error);
+                showNotification('Fehler bei der Navigation: ' + error.message, 'error');
+            }
+        }
+
+        // Card Navigation initialisieren
+        function initializeCardNavigation() {
+            const cards = document.querySelectorAll('.card[data-page]');
+            console.log('Initialisiere Card Navigation für', cards.length, 'Karten');
+            
+            cards.forEach(card => {
+                // Entferne bestehende Event Listener
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
+            });
+            
+            // Neue Event Listener hinzufügen
+            document.querySelectorAll('.card[data-page]').forEach(card => {
+                card.addEventListener('click', async function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    console.log('Card geklickt:', this.getAttribute('data-page'));
+                    
+                    if (this.classList.contains('disabled')) {
+                        showNotification('Kein Zugriff auf diese Seite', 'error');
+                        return;
+                    }
+                    
+                    const page = this.getAttribute('data-page');
+                    await navigateToPage(page);
+                });
+            });
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Drogenrouten', 
+                'werkbank': 'Werkbank Manager',
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain Ankauf',
+                'weed': 'Weed Ankauf',
+                'management': 'KhusLand Management'
+            };
+            return names[pageKey] || pageKey;
         }
 
         // ========== LOGIN & AUTHENTIFIZIERUNG ==========
@@ -3163,7 +3164,7 @@
         window.removeOutputResource = removeOutputResource;
         window.removeCategory = removeCategory;
 
-        console.log('Werkbank Manager - Mit vereinfachter Navigation!');
+        console.log('Werkbank Manager - Mit korrigierter Zugriffsprüfung!');
     </script>
 </body>
 </html>

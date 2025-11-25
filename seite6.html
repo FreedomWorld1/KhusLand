@@ -781,8 +781,31 @@
             opacity: 0.5;
         }
         
-        /* Promotion Styles */
+        /* User Action Buttons */
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
         .promotion-btn {
+            background: rgba(72, 187, 120, 0.15);
+            color: #68d391;
+            border: 1px solid #48bb78;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .promotion-btn:hover {
+            background: rgba(72, 187, 120, 0.25);
+            transform: translateY(-1px);
+        }
+        
+        .demotion-btn {
             background: rgba(237, 137, 54, 0.15);
             color: #ed8936;
             border: 1px solid #ed8936;
@@ -792,14 +815,31 @@
             transition: all 0.3s;
             font-size: 0.8rem;
             font-weight: 500;
-            margin-left: 0.5rem;
         }
         
-        .promotion-btn:hover {
+        .demotion-btn:hover {
             background: rgba(237, 137, 54, 0.25);
             transform: translateY(-1px);
         }
         
+        .termination-btn {
+            background: rgba(245, 101, 101, 0.15);
+            color: #fc8181;
+            border: 1px solid #f56565;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .termination-btn:hover {
+            background: rgba(245, 101, 101, 0.25);
+            transform: translateY(-1px);
+        }
+        
+        /* Promotion History */
         .promotion-history {
             margin-top: 1rem;
             padding-top: 1rem;
@@ -812,6 +852,14 @@
             padding: 1rem;
             margin-bottom: 0.8rem;
             border-left: 4px solid #ed8936;
+        }
+        
+        .demotion-item {
+            border-left-color: #f56565;
+        }
+        
+        .termination-item {
+            border-left-color: #e53e3e;
         }
         
         .promotion-title {
@@ -830,6 +878,109 @@
             color: #a0aec0;
             font-size: 0.75rem;
             text-align: right;
+        }
+        
+        /* Reason Input */
+        .reason-input {
+            margin-top: 1rem;
+        }
+        
+        .reason-input textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .reason-input textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+        }
+        
+        /* Role ID Input */
+        .role-id-input {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .role-id-input input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+        
+        /* Custom Roles in Settings */
+        .custom-roles-container {
+            margin-top: 1.5rem;
+        }
+        
+        .custom-role-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(101, 119, 149, 0.2);
+        }
+        
+        .custom-role-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            flex: 1;
+        }
+        
+        .custom-role-inputs input {
+            padding: 0.8rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+            border-radius: 6px;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        
+        .remove-role-btn {
+            background: rgba(245, 101, 101, 0.15);
+            color: #fc8181;
+            border: 1px solid #f56565;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .remove-role-btn:hover {
+            background: rgba(245, 101, 101, 0.25);
+        }
+        
+        .add-role-btn {
+            background: rgba(72, 187, 120, 0.15);
+            color: #68d391;
+            border: 1px solid #48bb78;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        
+        .add-role-btn:hover {
+            background: rgba(72, 187, 120, 0.25);
         }
     </style>
 </head>
@@ -898,26 +1049,7 @@
                     </div>
                     
                     <div class="role-selection" id="roleSelection">
-                        <div class="role-option" data-role="admin">
-                            <div class="role-icon">👑</div>
-                            <div class="role-name">Administrator</div>
-                            <div class="role-description">Vollzugriff</div>
-                        </div>
-                        <div class="role-option" data-role="moderator">
-                            <div class="role-icon">🛡️</div>
-                            <div class="role-name">Moderator</div>
-                            <div class="role-description">Moderationsrechte</div>
-                        </div>
-                        <div class="role-option" data-role="developer">
-                            <div class="role-icon">💻</div>
-                            <div class="role-name">Developer</div>
-                            <div class="role-description">Entwicklerrechte</div>
-                        </div>
-                        <div class="role-option" data-role="supporter">
-                            <div class="role-icon">⭐</div>
-                            <div class="role-name">Supporter</div>
-                            <div class="role-description">Support-Rechte</div>
-                        </div>
+                        <!-- Roles will be loaded from settings -->
                     </div>
                 </div>
                 
@@ -944,27 +1076,12 @@
                         <input type="text" id="promotionUserId" placeholder="Discord User ID eingeben" readonly>
                     </div>
                     
-                    <div class="role-selection" id="promotionRoleSelection">
-                        <div class="role-option" data-role="admin">
-                            <div class="role-icon">👑</div>
-                            <div class="role-name">Administrator</div>
-                            <div class="role-description">Vollzugriff</div>
-                        </div>
-                        <div class="role-option" data-role="moderator">
-                            <div class="role-icon">🛡️</div>
-                            <div class="role-name">Moderator</div>
-                            <div class="role-description">Moderationsrechte</div>
-                        </div>
-                        <div class="role-option" data-role="developer">
-                            <div class="role-icon">💻</div>
-                            <div class="role-name">Developer</div>
-                            <div class="role-description">Entwicklerrechte</div>
-                        </div>
-                        <div class="role-option" data-role="supporter">
-                            <div class="role-icon">⭐</div>
-                            <div class="role-name">Supporter</div>
-                            <div class="role-description">Support-Rechte</div>
-                        </div>
+                    <div class="role-id-input">
+                        <input type="text" id="promotionRoleId" placeholder="Discord Role ID eingeben">
+                    </div>
+                    
+                    <div class="reason-input">
+                        <textarea id="promotionReason" placeholder="Grund für die Beförderung..."></textarea>
                     </div>
                 </div>
                 
@@ -972,6 +1089,66 @@
                     <button id="cancelPromotion" class="logout-btn">Abbrechen</button>
                     <button id="savePromotion" class="btn-primary">
                         <i class="fas fa-arrow-up"></i> Beförderung bestätigen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demotion Modal -->
+        <div id="demotionModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3><i class="fas fa-arrow-down"></i> Spieler degradieren</h3>
+                
+                <div class="user-selection-container">
+                    <div class="user-selection-text">
+                        Hiermit wird <span id="demotionUserPing" class="user-mention">@Benutzer</span> zum <span id="demotionRank" class="user-mention">Rang</span> degradiert.
+                    </div>
+                    
+                    <div class="discord-id-input">
+                        <input type="text" id="demotionUserId" placeholder="Discord User ID eingeben" readonly>
+                    </div>
+                    
+                    <div class="role-id-input">
+                        <input type="text" id="demotionRoleId" placeholder="Discord Role ID eingeben">
+                    </div>
+                    
+                    <div class="reason-input">
+                        <textarea id="demotionReason" placeholder="Grund für die Degradierung..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button id="cancelDemotion" class="logout-btn">Abbrechen</button>
+                    <button id="saveDemotion" class="btn-primary" style="background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);">
+                        <i class="fas fa-arrow-down"></i> Degradierung bestätigen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Termination Modal -->
+        <div id="terminationModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3><i class="fas fa-times"></i> Spieler kündigen</h3>
+                
+                <div class="user-selection-container">
+                    <div class="user-selection-text">
+                        Hiermit bekommt <span id="terminationUserPing" class="user-mention">@Benutzer</span> offiziell seinen Blood Out.
+                    </div>
+                    
+                    <div class="discord-id-input">
+                        <input type="text" id="terminationUserId" placeholder="Discord User ID eingeben" readonly>
+                    </div>
+                    
+                    <div class="reason-input">
+                        <textarea id="terminationReason" placeholder="Grund für die Kündigung..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button id="cancelTermination" class="logout-btn">Abbrechen</button>
+                    <button id="saveTermination" class="btn-primary" style="background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);">
+                        <i class="fas fa-times"></i> Kündigung bestätigen
                     </button>
                 </div>
             </div>
@@ -1096,11 +1273,11 @@
                     <!-- Promotion History -->
                     <div class="user-management-card">
                         <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-history"></i> Beförderungs-Historie
+                            <i class="fas fa-history"></i> Aktionen-Historie
                         </h3>
                         
                         <div class="promotion-history" id="promotionHistory">
-                            <!-- Promotion items will be generated here -->
+                            <!-- Action items will be generated here -->
                         </div>
                     </div>
                 </div>
@@ -1125,24 +1302,12 @@
                         
                         <div class="settings-group">
                             <h4><i class="fas fa-user-shield"></i> Verfügbare Rollen</h4>
-                            <div class="role-selection">
-                                <div class="role-option selected" data-role="admin">
-                                    <div class="role-icon">👑</div>
-                                    <div class="role-name">Administrator</div>
-                                </div>
-                                <div class="role-option selected" data-role="moderator">
-                                    <div class="role-icon">🛡️</div>
-                                    <div class="role-name">Moderator</div>
-                                </div>
-                                <div class="role-option selected" data-role="developer">
-                                    <div class="role-icon">💻</div>
-                                    <div class="role-name">Developer</div>
-                                </div>
-                                <div class="role-option selected" data-role="supporter">
-                                    <div class="role-icon">⭐</div>
-                                    <div class="role-name">Supporter</div>
-                                </div>
+                            <div class="custom-roles-container" id="customRolesContainer">
+                                <!-- Custom roles will be loaded here -->
                             </div>
+                            <button id="addCustomRole" class="add-role-btn">
+                                <i class="fas fa-plus"></i> Neue Rolle hinzufügen
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1183,7 +1348,7 @@
         const db = getDatabase(app);
         const userRolesRef = ref(db, 'user_roles');
         const settingsRef = ref(db, 'settings');
-        const promotionsRef = ref(db, 'promotions');
+        const actionsRef = ref(db, 'actions');
 
         // Seitenspezifische Konfiguration
         const PAGE_ACCESS_CONFIG = {
@@ -1200,10 +1365,10 @@
         let currentUser = null;
         let userAccessInfo = null;
         let userRoles = [];
-        let selectedRole = 'admin';
-        let promotionRole = 'admin';
+        let selectedRole = '';
         let discordWebhookUrl = '';
-        let promotions = [];
+        let actions = [];
+        let customRoles = [];
 
         // DOM Elemente
         const loginPage = document.getElementById('loginPage');
@@ -1237,15 +1402,37 @@
         const promotionUserPing = document.getElementById('promotionUserPing');
         const promotionRank = document.getElementById('promotionRank');
         const promotionUserId = document.getElementById('promotionUserId');
-        const promotionRoleSelection = document.getElementById('promotionRoleSelection');
+        const promotionRoleId = document.getElementById('promotionRoleId');
+        const promotionReason = document.getElementById('promotionReason');
         const cancelPromotion = document.getElementById('cancelPromotion');
         const savePromotion = document.getElementById('savePromotion');
+        
+        // Demotion Modal Elemente
+        const demotionModal = document.getElementById('demotionModal');
+        const demotionUserPing = document.getElementById('demotionUserPing');
+        const demotionRank = document.getElementById('demotionRank');
+        const demotionUserId = document.getElementById('demotionUserId');
+        const demotionRoleId = document.getElementById('demotionRoleId');
+        const demotionReason = document.getElementById('demotionReason');
+        const cancelDemotion = document.getElementById('cancelDemotion');
+        const saveDemotion = document.getElementById('saveDemotion');
+        
+        // Termination Modal Elemente
+        const terminationModal = document.getElementById('terminationModal');
+        const terminationUserPing = document.getElementById('terminationUserPing');
+        const terminationUserId = document.getElementById('terminationUserId');
+        const terminationReason = document.getElementById('terminationReason');
+        const cancelTermination = document.getElementById('cancelTermination');
+        const saveTermination = document.getElementById('saveTermination');
+        
         const promotionHistory = document.getElementById('promotionHistory');
         
         // Settings Elemente
         const webhookUrl = document.getElementById('webhookUrl');
         const testWebhook = document.getElementById('testWebhook');
         const saveWebhook = document.getElementById('saveWebhook');
+        const customRolesContainer = document.getElementById('customRolesContainer');
+        const addCustomRole = document.getElementById('addCustomRole');
         
         // Buttons
         const logoutBtn = document.getElementById('logoutBtn');
@@ -1419,7 +1606,7 @@
         function closeUserManagementModal() {
             userManagementModal.classList.remove('active');
             discordUserId.value = '';
-            selectedRole = 'admin';
+            selectedRole = '';
             updateRoleSelection();
         }
 
@@ -1430,17 +1617,34 @@
             } else {
                 userPingPreview.textContent = '@Benutzer';
             }
-            rolePreview.textContent = getRoleDisplayName(selectedRole);
+            
+            const selectedRoleData = customRoles.find(role => role.id === selectedRole);
+            rolePreview.textContent = selectedRoleData ? selectedRoleData.name : 'Rolle';
         }
 
         function updateRoleSelection() {
-            document.querySelectorAll('.role-option').forEach(option => {
-                if (option.getAttribute('data-role') === selectedRole) {
-                    option.classList.add('selected');
-                } else {
-                    option.classList.remove('selected');
-                }
+            roleSelection.innerHTML = '';
+            
+            customRoles.forEach(role => {
+                const roleOption = document.createElement('div');
+                roleOption.className = `role-option ${selectedRole === role.id ? 'selected' : ''}`;
+                roleOption.setAttribute('data-role', role.id);
+                
+                roleOption.innerHTML = `
+                    <div class="role-icon">${role.emoji || '👤'}</div>
+                    <div class="role-name">${role.name}</div>
+                    <div class="role-description">${role.roleId || 'Keine Role ID'}</div>
+                `;
+                
+                roleOption.addEventListener('click', function() {
+                    selectedRole = role.id;
+                    updateRoleSelection();
+                    updatePreview();
+                });
+                
+                roleSelection.appendChild(roleOption);
             });
+            
             updatePreview();
         }
 
@@ -1460,105 +1664,53 @@
             showNotification(`Ping wird getestet: <@${userId}>`, 'info');
         }
 
-        // Promotion Funktionen
-        function openPromotionModal(userId, currentRole) {
+        // Action Modals
+        function openPromotionModal(userId) {
             promotionUserId.value = userId;
             promotionUserPing.textContent = `<@${userId}>`;
-            promotionRole = getNextRole(currentRole);
-            updatePromotionRoleSelection();
+            promotionRoleId.value = '';
+            promotionReason.value = '';
             promotionModal.classList.add('active');
         }
 
         function closePromotionModal() {
             promotionModal.classList.remove('active');
-            promotionUserId.value = '';
-            promotionRole = 'admin';
         }
 
-        function updatePromotionRoleSelection() {
-            document.querySelectorAll('#promotionRoleSelection .role-option').forEach(option => {
-                if (option.getAttribute('data-role') === promotionRole) {
-                    option.classList.add('selected');
-                } else {
-                    option.classList.remove('selected');
-                }
-            });
-            promotionRank.textContent = getRoleDisplayName(promotionRole);
+        function openDemotionModal(userId) {
+            demotionUserId.value = userId;
+            demotionUserPing.textContent = `<@${userId}>`;
+            demotionRoleId.value = '';
+            demotionReason.value = '';
+            demotionModal.classList.add('active');
         }
 
-        function getNextRole(currentRole) {
-            const roleHierarchy = ['supporter', 'developer', 'moderator', 'admin'];
-            const currentIndex = roleHierarchy.indexOf(currentRole);
-            return currentIndex < roleHierarchy.length - 1 ? roleHierarchy[currentIndex + 1] : 'admin';
+        function closeDemotionModal() {
+            demotionModal.classList.remove('active');
         }
 
-        async function savePromotionToFirebase() {
-            const userId = promotionUserId.value.trim();
-            const newRole = promotionRole;
+        function openTerminationModal(userId) {
+            terminationUserId.value = userId;
+            terminationUserPing.textContent = `<@${userId}>`;
+            terminationReason.value = '';
+            terminationModal.classList.add('active');
+        }
 
-            if (!userId) {
-                showNotification('Keine User ID gefunden!', 'error');
-                return;
-            }
+        function closeTerminationModal() {
+            terminationModal.classList.remove('active');
+        }
 
-            const promotionData = {
-                userId: userId,
-                oldRole: getCurrentUserRole(userId),
-                newRole: newRole,
-                newRoleDisplay: getRoleDisplayName(newRole),
-                date: new Date().toLocaleDateString('de-DE'),
-                time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
-                timestamp: Date.now(),
-                promotedBy: currentUser ? currentUser.username : 'Unbekannt'
-            };
-
+        async function saveActionToFirebase(actionData) {
             try {
-                savePromotion.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Befördere...';
-                savePromotion.disabled = true;
-                
-                // Promotion in Firebase speichern
-                await push(promotionsRef, promotionData);
-                
-                // User-Rolle in der Benutzerliste aktualisieren
-                await updateUserRole(userId, newRole);
-                
-                // An Discord senden
-                const discordSuccess = await sendPromotionToDiscord(promotionData);
-                
-                if (discordSuccess) {
-                    showNotification(`Spieler <@${userId}> wurde zum ${getRoleDisplayName(newRole)} befördert!`, 'success');
-                } else {
-                    showNotification(`Spieler <@${userId}> wurde befördert, aber Fehler beim Senden an Discord!`, 'warning');
-                }
-                
-                closePromotionModal();
-                
+                await push(actionsRef, actionData);
+                showNotification(`${actionData.type} erfolgreich gespeichert!`, 'success');
             } catch (error) {
-                console.error('Fehler beim Befördern:', error);
-                showNotification('Fehler beim Befördern!', 'error');
-            } finally {
-                savePromotion.innerHTML = '<i class="fas fa-arrow-up"></i> Beförderung bestätigen';
-                savePromotion.disabled = false;
+                console.error('Fehler beim Speichern der Aktion:', error);
+                showNotification('Fehler beim Speichern der Aktion!', 'error');
             }
         }
 
-        function getCurrentUserRole(userId) {
-            const user = userRoles.find(u => u.userId === userId);
-            return user ? user.role : 'unknown';
-        }
-
-        async function updateUserRole(userId, newRole) {
-            // Hier müsste die Logik implementiert werden, um die Rolle des Users in Firebase zu aktualisieren
-            // Für dieses Beispiel aktualisieren wir nur das lokale Array
-            const userIndex = userRoles.findIndex(u => u.userId === userId);
-            if (userIndex !== -1) {
-                userRoles[userIndex].role = newRole;
-                userRoles[userIndex].roleDisplay = getRoleDisplayName(newRole);
-                renderUserList();
-            }
-        }
-
-        async function sendPromotionToDiscord(promotionData) {
+        async function sendPromotionToDiscord(actionData) {
             if (!discordWebhookUrl) {
                 showNotification('Kein Webhook konfiguriert!', 'error');
                 return false;
@@ -1567,23 +1719,33 @@
             try {
                 const embed = {
                     title: "🎖️ Beförderung",
-                    description: `Hiermit wurde <@${promotionData.userId}> zum **${promotionData.newRoleDisplay}** befördert.`,
-                    color: 0xed8936,
+                    description: `Hiermit wird <@${actionData.userId}> befördert.`,
+                    color: 0x48bb78,
                     fields: [
                         {
                             name: "👤 Befördert von",
-                            value: promotionData.promotedBy,
+                            value: actionData.executedBy,
                             inline: true
                         },
                         {
                             name: "🆔 User ID",
-                            value: promotionData.userId,
+                            value: actionData.userId,
                             inline: true
+                        },
+                        {
+                            name: "🎯 Role ID",
+                            value: actionData.roleId || 'Nicht angegeben',
+                            inline: true
+                        },
+                        {
+                            name: "📝 Grund",
+                            value: actionData.reason || 'Kein Grund angegeben',
+                            inline: false
                         }
                     ],
                     timestamp: new Date().toISOString(),
                     footer: {
-                        text: `🕒 ${promotionData.time}`
+                        text: `🕒 ${actionData.time}`
                     }
                 };
 
@@ -1604,6 +1766,255 @@
             }
         }
 
+        async function sendDemotionToDiscord(actionData) {
+            if (!discordWebhookUrl) {
+                showNotification('Kein Webhook konfiguriert!', 'error');
+                return false;
+            }
+
+            try {
+                const embed = {
+                    title: "📉 Degradierung",
+                    description: `Hiermit wird <@${actionData.userId}> degradiert.`,
+                    color: 0xed8936,
+                    fields: [
+                        {
+                            name: "👤 Degradiert von",
+                            value: actionData.executedBy,
+                            inline: true
+                        },
+                        {
+                            name: "🆔 User ID",
+                            value: actionData.userId,
+                            inline: true
+                        },
+                        {
+                            name: "🎯 Role ID",
+                            value: actionData.roleId || 'Nicht angegeben',
+                            inline: true
+                        },
+                        {
+                            name: "📝 Grund",
+                            value: actionData.reason || 'Kein Grund angegeben',
+                            inline: false
+                        }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: {
+                        text: `🕒 ${actionData.time}`
+                    }
+                };
+
+                const response = await fetch(discordWebhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        embeds: [embed]
+                    })
+                });
+
+                return response.ok;
+            } catch (error) {
+                console.error('Fehler beim Senden der Degradierung an Discord:', error);
+                return false;
+            }
+        }
+
+        async function sendTerminationToDiscord(actionData) {
+            if (!discordWebhookUrl) {
+                showNotification('Kein Webhook konfiguriert!', 'error');
+                return false;
+            }
+
+            try {
+                const embed = {
+                    title: "🚪 Kündigung",
+                    description: `Hiermit bekommt <@${actionData.userId}> offiziell seinen Blood Out.`,
+                    color: 0xf56565,
+                    fields: [
+                        {
+                            name: "👤 Gekündigt von",
+                            value: actionData.executedBy,
+                            inline: true
+                        },
+                        {
+                            name: "🆔 User ID",
+                            value: actionData.userId,
+                            inline: true
+                        },
+                        {
+                            name: "📝 Grund",
+                            value: actionData.reason || 'Kein Grund angegeben',
+                            inline: false
+                        }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: {
+                        text: `🕒 ${actionData.time}`
+                    }
+                };
+
+                const response = await fetch(discordWebhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        embeds: [embed]
+                    })
+                });
+
+                return response.ok;
+            } catch (error) {
+                console.error('Fehler beim Senden der Kündigung an Discord:', error);
+                return false;
+            }
+        }
+
+        async function savePromotionToFirebase() {
+            const userId = promotionUserId.value.trim();
+            const roleId = promotionRoleId.value.trim();
+            const reason = promotionReason.value.trim();
+
+            if (!userId) {
+                showNotification('Keine User ID gefunden!', 'error');
+                return;
+            }
+
+            const actionData = {
+                type: 'promotion',
+                userId: userId,
+                roleId: roleId,
+                reason: reason,
+                date: new Date().toLocaleDateString('de-DE'),
+                time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now(),
+                executedBy: currentUser ? currentUser.username : 'Unbekannt'
+            };
+
+            try {
+                savePromotion.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Befördere...';
+                savePromotion.disabled = true;
+                
+                // Aktion in Firebase speichern
+                await saveActionToFirebase(actionData);
+                
+                // An Discord senden
+                const discordSuccess = await sendPromotionToDiscord(actionData);
+                
+                if (discordSuccess) {
+                    showNotification(`Spieler <@${userId}> wurde befördert!`, 'success');
+                } else {
+                    showNotification(`Spieler <@${userId}> wurde befördert, aber Fehler beim Senden an Discord!`, 'warning');
+                }
+                
+                closePromotionModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Befördern:', error);
+                showNotification('Fehler beim Befördern!', 'error');
+            } finally {
+                savePromotion.innerHTML = '<i class="fas fa-arrow-up"></i> Beförderung bestätigen';
+                savePromotion.disabled = false;
+            }
+        }
+
+        async function saveDemotionToFirebase() {
+            const userId = demotionUserId.value.trim();
+            const roleId = demotionRoleId.value.trim();
+            const reason = demotionReason.value.trim();
+
+            if (!userId) {
+                showNotification('Keine User ID gefunden!', 'error');
+                return;
+            }
+
+            const actionData = {
+                type: 'demotion',
+                userId: userId,
+                roleId: roleId,
+                reason: reason,
+                date: new Date().toLocaleDateString('de-DE'),
+                time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now(),
+                executedBy: currentUser ? currentUser.username : 'Unbekannt'
+            };
+
+            try {
+                saveDemotion.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Degradiere...';
+                saveDemotion.disabled = true;
+                
+                // Aktion in Firebase speichern
+                await saveActionToFirebase(actionData);
+                
+                // An Discord senden
+                const discordSuccess = await sendDemotionToDiscord(actionData);
+                
+                if (discordSuccess) {
+                    showNotification(`Spieler <@${userId}> wurde degradiert!`, 'success');
+                } else {
+                    showNotification(`Spieler <@${userId}> wurde degradiert, aber Fehler beim Senden an Discord!`, 'warning');
+                }
+                
+                closeDemotionModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Degradieren:', error);
+                showNotification('Fehler beim Degradieren!', 'error');
+            } finally {
+                saveDemotion.innerHTML = '<i class="fas fa-arrow-down"></i> Degradierung bestätigen';
+                saveDemotion.disabled = false;
+            }
+        }
+
+        async function saveTerminationToFirebase() {
+            const userId = terminationUserId.value.trim();
+            const reason = terminationReason.value.trim();
+
+            if (!userId) {
+                showNotification('Keine User ID gefunden!', 'error');
+                return;
+            }
+
+            const actionData = {
+                type: 'termination',
+                userId: userId,
+                reason: reason,
+                date: new Date().toLocaleDateString('de-DE'),
+                time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now(),
+                executedBy: currentUser ? currentUser.username : 'Unbekannt'
+            };
+
+            try {
+                saveTermination.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Kündige...';
+                saveTermination.disabled = true;
+                
+                // Aktion in Firebase speichern
+                await saveActionToFirebase(actionData);
+                
+                // An Discord senden
+                const discordSuccess = await sendTerminationToDiscord(actionData);
+                
+                if (discordSuccess) {
+                    showNotification(`Spieler <@${userId}> wurde gekündigt!`, 'success');
+                } else {
+                    showNotification(`Spieler <@${userId}> wurde gekündigt, aber Fehler beim Senden an Discord!`, 'warning');
+                }
+                
+                closeTerminationModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Kündigen:', error);
+                showNotification('Fehler beim Kündigen!', 'error');
+            } finally {
+                saveTermination.innerHTML = '<i class="fas fa-times"></i> Kündigung bestätigen';
+                saveTermination.disabled = false;
+            }
+        }
+
         async function sendToDiscord(userData) {
             if (!discordWebhookUrl) {
                 showNotification('Kein Webhook konfiguriert! Bitte zuerst in den Einstellungen einen Webhook einrichten.', 'error');
@@ -1611,6 +2022,8 @@
             }
 
             try {
+                const selectedRoleData = customRoles.find(role => role.id === userData.role);
+                
                 const embed = {
                     title: "🎮 Neuer Spieler eingestellt",
                     color: 0x4299e1,
@@ -1622,7 +2035,12 @@
                         },
                         {
                             name: "🎯 Rolle",
-                            value: userData.roleDisplay,
+                            value: selectedRoleData ? selectedRoleData.name : userData.role,
+                            inline: true
+                        },
+                        {
+                            name: "🆔 Role ID",
+                            value: selectedRoleData ? selectedRoleData.roleId : 'Nicht angegeben',
                             inline: true
                         },
                         {
@@ -1678,10 +2096,17 @@
                 return;
             }
 
+            if (!role) {
+                showNotification('Bitte wählen Sie eine Rolle aus!', 'error');
+                return;
+            }
+
+            const selectedRoleData = customRoles.find(r => r.id === role);
             const userData = {
                 userId: userId,
                 role: role,
-                roleDisplay: getRoleDisplayName(role),
+                roleName: selectedRoleData ? selectedRoleData.name : role,
+                roleId: selectedRoleData ? selectedRoleData.roleId : '',
                 date: new Date().toLocaleDateString('de-DE'),
                 timestamp: Date.now(),
                 assignedBy: currentUser ? currentUser.username : 'Unbekannt'
@@ -1698,9 +2123,9 @@
                 const discordSuccess = await sendToDiscord(userData);
                 
                 if (discordSuccess) {
-                    showNotification(`Spieler <@${userId}> als ${getRoleDisplayName(role)} eingestellt und an Discord gesendet!`, 'success');
+                    showNotification(`Spieler <@${userId}> als ${selectedRoleData.name} eingestellt und an Discord gesendet!`, 'success');
                 } else {
-                    showNotification(`Spieler <@${userId}> als ${getRoleDisplayName(role)} eingestellt, aber Fehler beim Senden an Discord!`, 'warning');
+                    showNotification(`Spieler <@${userId}> als ${selectedRoleData.name} eingestellt, aber Fehler beim Senden an Discord!`, 'warning');
                 }
                 
                 closeUserManagementModal();
@@ -1712,17 +2137,6 @@
                 saveUserRole.innerHTML = '<i class="fas fa-save"></i> Spieler einstellen & an Discord senden';
                 saveUserRole.disabled = false;
             }
-        }
-
-        function getRoleDisplayName(role) {
-            const roleNames = {
-                'admin': 'Administrator',
-                'moderator': 'Moderator',
-                'member': 'Mitglied',
-                'supporter': 'Supporter',
-                'developer': 'Developer'
-            };
-            return roleNames[role] || role;
         }
 
         function getRoleBadgeClass(role) {
@@ -1750,17 +2164,17 @@
             });
         }
 
-        function loadPromotions() {
-            onValue(promotionsRef, (snapshot) => {
-                promotions = [];
+        function loadActions() {
+            onValue(actionsRef, (snapshot) => {
+                actions = [];
                 snapshot.forEach((childSnapshot) => {
                     const data = childSnapshot.val();
                     data.key = childSnapshot.key;
-                    promotions.push(data);
+                    actions.push(data);
                 });
                 
-                promotions.sort((a, b) => b.timestamp - a.timestamp);
-                renderPromotionHistory();
+                actions.sort((a, b) => b.timestamp - a.timestamp);
+                renderActionHistory();
             });
         }
 
@@ -1794,61 +2208,192 @@
                     <div class="user-details">
                         <div class="user-name"><@${user.userId}></div>
                         <div class="user-meta">
-                            <span class="role-badge ${getRoleBadgeClass(user.role)}">${user.roleDisplay}</span>
+                            <span class="role-badge ${getRoleBadgeClass(user.role)}">${user.roleName}</span>
                             <span>Eingestellt von: ${user.assignedBy}</span>
                             <span>ID: ${user.userId}</span>
+                            ${user.roleId ? `<span>Role ID: ${user.roleId}</span>` : ''}
+                        </div>
+                        <div class="user-actions">
+                            <button class="promotion-btn" data-user-id="${user.userId}">
+                                <i class="fas fa-arrow-up"></i> Befördern
+                            </button>
+                            <button class="demotion-btn" data-user-id="${user.userId}">
+                                <i class="fas fa-arrow-down"></i> Degradieren
+                            </button>
+                            <button class="termination-btn" data-user-id="${user.userId}">
+                                <i class="fas fa-times"></i> Kündigen
+                            </button>
                         </div>
                     </div>
                     <div class="user-date">
                         <div>${user.date}</div>
                         <div style="font-size: 0.8rem; color: #718096;">${new Date(user.timestamp).toLocaleTimeString('de-DE')}</div>
-                        ${user.role !== 'admin' ? `<button class="promotion-btn" data-user-id="${user.userId}" data-current-role="${user.role}">
-                            <i class="fas fa-arrow-up"></i> Befördern
-                        </button>` : ''}
                     </div>
                 `;
                 
                 userList.appendChild(userItem);
             });
 
-            // Event Listener für Beförderungs-Buttons
+            // Event Listener für Action-Buttons
             document.querySelectorAll('.promotion-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const userId = this.getAttribute('data-user-id');
-                    const currentRole = this.getAttribute('data-current-role');
-                    openPromotionModal(userId, currentRole);
+                    openPromotionModal(userId);
+                });
+            });
+
+            document.querySelectorAll('.demotion-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-user-id');
+                    openDemotionModal(userId);
+                });
+            });
+
+            document.querySelectorAll('.termination-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-user-id');
+                    openTerminationModal(userId);
                 });
             });
         }
 
-        function renderPromotionHistory() {
+        function renderActionHistory() {
             promotionHistory.innerHTML = '';
             
-            if (promotions.length === 0) {
+            if (actions.length === 0) {
                 promotionHistory.innerHTML = `
                     <div class="empty-state" style="padding: 1.5rem;">
                         <i class="fas fa-history"></i>
-                        <p style="color: #a0aec0;">Noch keine Beförderungen</p>
+                        <p style="color: #a0aec0;">Noch keine Aktionen</p>
                     </div>
                 `;
                 return;
             }
             
-            const recentPromotions = promotions.slice(0, 10);
+            const recentActions = actions.slice(0, 10);
             
-            recentPromotions.forEach(promo => {
-                const promotionItem = document.createElement('div');
-                promotionItem.className = 'promotion-item';
-                promotionItem.innerHTML = `
-                    <div class="promotion-title">🎖️ Beförderung</div>
+            recentActions.forEach(action => {
+                const actionItem = document.createElement('div');
+                let title = '';
+                let icon = '';
+                let itemClass = 'promotion-item';
+                
+                switch (action.type) {
+                    case 'promotion':
+                        title = '🎖️ Beförderung';
+                        icon = '🔼';
+                        break;
+                    case 'demotion':
+                        title = '📉 Degradierung';
+                        icon = '🔽';
+                        itemClass += ' demotion-item';
+                        break;
+                    case 'termination':
+                        title = '🚪 Kündigung';
+                        icon = '❌';
+                        itemClass += ' termination-item';
+                        break;
+                    default:
+                        title = '📝 Aktion';
+                        icon = '📝';
+                }
+                
+                actionItem.className = itemClass;
+                actionItem.innerHTML = `
+                    <div class="promotion-title">${icon} ${title}</div>
                     <div class="promotion-description">
-                        Hiermit wurde <@${promo.userId}> zum <strong>${promo.newRoleDisplay}</strong> befördert.
+                        Hiermit wird <@${action.userId}> ${action.type === 'promotion' ? 'befördert' : action.type === 'demotion' ? 'degradiert' : 'gekündigt'}.
+                        ${action.roleId ? `<br><strong>Role ID:</strong> ${action.roleId}` : ''}
+                        ${action.reason ? `<br><strong>Grund:</strong> ${action.reason}` : ''}
                     </div>
-                    <div class="promotion-time">🕒 ${promo.time}</div>
+                    <div class="promotion-time">🕒 ${action.time} | 👤 ${action.executedBy}</div>
                 `;
                 
-                promotionHistory.appendChild(promotionItem);
+                promotionHistory.appendChild(actionItem);
             });
+        }
+
+        // Custom Roles Management
+        function loadCustomRoles() {
+            const savedRoles = localStorage.getItem('khusland_custom_roles');
+            if (savedRoles) {
+                customRoles = JSON.parse(savedRoles);
+            } else {
+                // Default roles
+                customRoles = [
+                    { id: 'admin', name: 'Administrator', emoji: '👑', roleId: '' },
+                    { id: 'moderator', name: 'Moderator', emoji: '🛡️', roleId: '' },
+                    { id: 'developer', name: 'Developer', emoji: '💻', roleId: '' },
+                    { id: 'supporter', name: 'Supporter', emoji: '⭐', roleId: '' }
+                ];
+                saveCustomRoles();
+            }
+            renderCustomRoles();
+            updateRoleSelection();
+        }
+
+        function saveCustomRoles() {
+            localStorage.setItem('khusland_custom_roles', JSON.stringify(customRoles));
+        }
+
+        function renderCustomRoles() {
+            customRolesContainer.innerHTML = '';
+            
+            customRoles.forEach((role, index) => {
+                const roleItem = document.createElement('div');
+                roleItem.className = 'custom-role-item';
+                roleItem.innerHTML = `
+                    <div style="font-size: 1.5rem;">${role.emoji}</div>
+                    <div class="custom-role-inputs">
+                        <input type="text" value="${role.name}" placeholder="Rollenname" data-index="${index}" data-field="name">
+                        <input type="text" value="${role.roleId}" placeholder="Discord Role ID" data-index="${index}" data-field="roleId">
+                    </div>
+                    <button class="remove-role-btn" data-index="${index}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                customRolesContainer.appendChild(roleItem);
+            });
+
+            // Event listeners for role inputs
+            document.querySelectorAll('.custom-role-inputs input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const field = this.getAttribute('data-field');
+                    customRoles[index][field] = this.value;
+                    saveCustomRoles();
+                    updateRoleSelection();
+                });
+            });
+
+            // Event listeners for remove buttons
+            document.querySelectorAll('.remove-role-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    if (customRoles.length > 1) {
+                        customRoles.splice(index, 1);
+                        saveCustomRoles();
+                        renderCustomRoles();
+                        updateRoleSelection();
+                    } else {
+                        showNotification('Mindestens eine Rolle muss vorhanden sein!', 'error');
+                    }
+                });
+            });
+        }
+
+        function addNewCustomRole() {
+            const newRole = {
+                id: 'role_' + Date.now(),
+                name: 'Neue Rolle',
+                emoji: '👤',
+                roleId: ''
+            };
+            customRoles.push(newRole);
+            saveCustomRoles();
+            renderCustomRoles();
+            updateRoleSelection();
         }
 
         // Settings Funktionen
@@ -1992,7 +2537,7 @@
             
             updateCardAccess();
             loadUserRoles();
-            loadPromotions();
+            loadActions();
         }
 
         async function updateCardAccess() {
@@ -2217,28 +2762,22 @@
             discordUserId.addEventListener('input', updatePreview);
             testPing.addEventListener('click', testUserPing);
             
-            // Role Selection
-            document.querySelectorAll('.role-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    selectedRole = this.getAttribute('data-role');
-                    updateRoleSelection();
-                });
-            });
-            
             // Promotion Event Listeners
             cancelPromotion.addEventListener('click', closePromotionModal);
             savePromotion.addEventListener('click', savePromotionToFirebase);
             
-            document.querySelectorAll('#promotionRoleSelection .role-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    promotionRole = this.getAttribute('data-role');
-                    updatePromotionRoleSelection();
-                });
-            });
+            // Demotion Event Listeners
+            cancelDemotion.addEventListener('click', closeDemotionModal);
+            saveDemotion.addEventListener('click', saveDemotionToFirebase);
+            
+            // Termination Event Listeners
+            cancelTermination.addEventListener('click', closeTerminationModal);
+            saveTermination.addEventListener('click', saveTerminationToFirebase);
             
             // Settings Event Listeners
             saveWebhook.addEventListener('click', saveWebhookSettings);
             testWebhook.addEventListener('click', testWebhookConnection);
+            addCustomRole.addEventListener('click', addNewCustomRole);
             
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -2256,7 +2795,8 @@
             checkExistingLogin();
             loadSettings();
             loadUserRoles();
-            loadPromotions();
+            loadActions();
+            loadCustomRoles();
             
             // Prüfe auf OAuth Code in der URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -2272,7 +2812,7 @@
             }
         });
 
-        console.log('KhusLand Panel - Mit vollständig funktionierendem Discord Login und Beförderungs-System!');
+        console.log('KhusLand Panel - Mit vollständig funktionierendem Discord Login und erweitertem User Management!');
     </script>
 </body>
 </html>

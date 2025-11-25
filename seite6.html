@@ -1394,6 +1394,11 @@
                 </select>
             </div>
             
+            <div class="form-group">
+                <label class="form-label" for="hiringReason">Grund</label>
+                <textarea id="hiringReason" class="form-input form-textarea" placeholder="Grund für die Einstellung..."></textarea>
+            </div>
+            
             <div class="modal-footer">
                 <button class="btn" id="cancelAddUser">Abbrechen</button>
                 <button class="btn btn-primary" id="saveUser">Spieler einstellen</button>
@@ -1999,7 +2004,10 @@
             addUserBtn2.addEventListener('click', () => addUserModal.classList.add('active'));
             
             // Modal actions
-            cancelAddUser.addEventListener('click', () => addUserModal.classList.remove('active'));
+            cancelAddUser.addEventListener('click', () => {
+                addUserModal.classList.remove('active');
+                document.getElementById('hiringReason').value = ''; // Grund-Feld leeren
+            });
             saveUser.addEventListener('click', handleAddUser);
             cancelPromotion.addEventListener('click', () => promotionModal.classList.remove('active'));
             savePromotion.addEventListener('click', handlePromotion);
@@ -2093,10 +2101,11 @@
             });
         }
 
-        // Handle adding a new user
+        // Handle adding a new user - ÜBERARBEITET FÜR NEUES FORMAT
         async function handleAddUser() {
             const userId = document.getElementById('discordUserId').value;
             const roleId = document.getElementById('userRoleSelect').value;
+            const reason = document.getElementById('hiringReason').value || "Neueinstellung";
             
             if (!userId) {
                 showNotification('Bitte geben Sie eine User ID ein', 'error');
@@ -2116,7 +2125,7 @@
             
             const userData = {
                 userId: userId,
-                name: 'NeuerBenutzer', // In production, fetch from Discord API
+                name: 'NeuerBenutzer',
                 roleId: roleId,
                 date: new Date().toLocaleDateString('de-DE'),
                 assignedBy: currentUser.username,
@@ -2133,29 +2142,25 @@
                     userId: userId,
                     userName: 'NeuerBenutzer',
                     roleName: selectedRole.name,
-                    reason: 'Neueinstellung',
+                    reason: reason,
                     executedBy: currentUser.username,
                     timestamp: new Date().toISOString()
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured
+                // Send to Discord if webhook is configured - IM NEUEN FORMAT
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
-                        title: "🎮 Neueinstellung",
-                        description: `**${currentUser.username}** hat <@${userId}> als **${selectedRole.name}** eingestellt.`,
-                        color: 0x00ff00,
-                        fields: [
-                            { name: "👤 Spieler", value: `<@${userId}>`, inline: true },
-                            { name: "🎯 Rolle", value: selectedRole.name, inline: true },
-                            { name: "🆔 User ID", value: userId, inline: true }
-                        ]
+                        title: ":new: Einstellung",
+                        description: `Hiermit wird <@${userId}> als **${selectedRole.name}** eingestellt.\n\n**Grund:** ${reason}\n\nKhusLand Management System • ${new Date().toLocaleString('de-DE')}`,
+                        color: 0x00ff00
                     });
                 }
                 
                 addUserModal.classList.remove('active');
                 showNotification(`Spieler ${userId} erfolgreich eingestellt`, 'success');
                 document.getElementById('discordUserId').value = '';
+                document.getElementById('hiringReason').value = ''; // Feld leeren
             } catch (error) {
                 console.error('Fehler beim Speichern:', error);
                 showNotification('Fehler beim Speichern des Spielers', 'error');
@@ -2203,7 +2208,7 @@
                 const historyData = {
                     type: 'promotion',
                     userId: userId,
-                    userName: 'Spieler', // In production, use actual username
+                    userName: 'Spieler',
                     roleName: selectedRole.name,
                     reason: reason || 'Kein Grund angegeben',
                     executedBy: currentUser.username,
@@ -2470,7 +2475,7 @@
             }
         }
 
-        // Send message to Discord
+        // Send message to Discord - ÜBERARBEITET FÜR NEUES FORMAT
         async function sendToDiscord(webhookUrl, embed) {
             const response = await fetch(webhookUrl, {
                 method: 'POST',
@@ -2479,11 +2484,10 @@
                 },
                 body: JSON.stringify({
                     embeds: [{
-                        ...embed,
-                        timestamp: new Date().toISOString(),
-                        footer: {
-                            text: "KhusLand Management System"
-                        }
+                        title: embed.title,
+                        description: embed.description,
+                        color: embed.color,
+                        timestamp: new Date().toISOString()
                     }]
                 })
             });

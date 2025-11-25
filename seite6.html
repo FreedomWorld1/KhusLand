@@ -1508,7 +1508,7 @@
     <script type="module">
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, get, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, get, push, onValue, remove, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         // Firebase Konfiguration
         const firebaseConfig = {
@@ -1583,6 +1583,48 @@
         const rolesRef = ref(db, 'roles');
         const historyRef = ref(db, 'history');
         const webhooksRef = ref(db, 'webhooks');
+
+        // Initialisiere Standardrollen, falls keine vorhanden sind
+        async function initializeDefaultRoles() {
+            const rolesSnapshot = await get(rolesRef);
+            if (!rolesSnapshot.exists() || rolesSnapshot.numChildren() === 0) {
+                const defaultRoles = [
+                    {
+                        id: 'role_admin',
+                        name: 'Administrator',
+                        discordRoleId: '',
+                        emoji: '👑',
+                        color: 'role-admin'
+                    },
+                    {
+                        id: 'role_moderator',
+                        name: 'Moderator',
+                        discordRoleId: '',
+                        emoji: '🛡️',
+                        color: 'role-moderator'
+                    },
+                    {
+                        id: 'role_developer',
+                        name: 'Developer',
+                        discordRoleId: '',
+                        emoji: '💻',
+                        color: 'role-developer'
+                    },
+                    {
+                        id: 'role_supporter',
+                        name: 'Supporter',
+                        discordRoleId: '',
+                        emoji: '🔧',
+                        color: 'role-supporter'
+                    }
+                ];
+                
+                for (const role of defaultRoles) {
+                    await push(rolesRef, role);
+                }
+                console.log('Standardrollen initialisiert');
+            }
+        }
 
         // Discord OAuth Funktionen
         function startDiscordOAuth() {
@@ -1748,12 +1790,20 @@
 
         // Load data from Firebase
         function loadFirebaseData() {
+            // Initialize default roles
+            initializeDefaultRoles();
+            
             // Load users
             onValue(usersRef, (snapshot) => {
                 userRoles = [];
-                snapshot.forEach((childSnapshot) => {
-                    userRoles.push(childSnapshot.val());
-                });
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        userRoles.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                }
                 populateUserTables();
                 updateRoleSelects();
             });
@@ -1761,9 +1811,14 @@
             // Load roles
             onValue(rolesRef, (snapshot) => {
                 customRoles = [];
-                snapshot.forEach((childSnapshot) => {
-                    customRoles.push(childSnapshot.val());
-                });
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        customRoles.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                }
                 renderRoleManagement();
                 updateRoleSelects();
             });
@@ -1771,9 +1826,11 @@
             // Load history
             onValue(historyRef, (snapshot) => {
                 actionHistory = [];
-                snapshot.forEach((childSnapshot) => {
-                    actionHistory.push(childSnapshot.val());
-                });
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        actionHistory.push(childSnapshot.val());
+                    });
+                }
                 renderActionHistory();
             });
 
@@ -1803,6 +1860,18 @@
             userTableBody.innerHTML = '';
             userManagementTableBody.innerHTML = '';
             
+            if (userRoles.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="5" style="text-align: center; color: var(--text-lighter); padding: 2rem;">
+                        Keine Benutzer eingestellt
+                    </td>
+                `;
+                userTableBody.appendChild(emptyRow);
+                userManagementTableBody.appendChild(emptyRow.cloneNode(true));
+                return;
+            }
+            
             userRoles.forEach(user => {
                 const userRow = createUserRow(user);
                 userTableBody.appendChild(userRow.cloneNode(true));
@@ -1819,25 +1888,25 @@
             row.innerHTML = `
                 <td>
                     <div class="user-cell">
-                        <div class="user-avatar-small">${user.name.charAt(0)}</div>
+                        <div class="user-avatar-small">${user.name ? user.name.charAt(0) : '?'}</div>
                         <div class="user-info-small">
-                            <div class="user-name-small">${user.name}</div>
+                            <div class="user-name-small">${user.name || 'Unbekannt'}</div>
                             <div class="user-id">ID: ${user.userId}</div>
                         </div>
                     </div>
                 </td>
                 <td><span class="role-badge ${role.color}">${role.name}</span></td>
-                <td>${user.date}</td>
-                <td>${user.assignedBy}</td>
+                <td>${user.date || 'Unbekannt'}</td>
+                <td>${user.assignedBy || 'Unbekannt'}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-icon btn-promote" data-user-id="${user.userId}" data-user-name="${user.name}">
+                        <button class="btn-icon btn-promote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
                             <i class="fas fa-arrow-up"></i>
                         </button>
-                        <button class="btn-icon btn-demote" data-user-id="${user.userId}" data-user-name="${user.name}">
+                        <button class="btn-icon btn-demote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
                             <i class="fas fa-arrow-down"></i>
                         </button>
-                        <button class="btn-icon btn-terminate" data-user-id="${user.userId}" data-user-name="${user.name}">
+                        <button class="btn-icon btn-terminate" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -1851,11 +1920,16 @@
         function renderRoleManagement() {
             roleManagement.innerHTML = '';
             
+            if (customRoles.length === 0) {
+                roleManagement.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Rollen konfiguriert</p>';
+                return;
+            }
+            
             customRoles.forEach((role, index) => {
                 const roleCard = document.createElement('div');
                 roleCard.className = 'role-card';
                 roleCard.innerHTML = `
-                    <div class="role-emoji">${role.emoji}</div>
+                    <div class="role-emoji">${role.emoji || '👤'}</div>
                     <div class="role-input-group">
                         <input type="text" class="role-input role-name-input" value="${role.name}" placeholder="Rollenname" data-index="${index}">
                         <input type="text" class="role-input role-id-input" value="${role.discordRoleId}" placeholder="Discord Role ID" data-index="${index}">
@@ -1932,6 +2006,11 @@
         // Render action history
         function renderActionHistory() {
             actionHistoryContainer.innerHTML = '';
+            
+            if (actionHistory.length === 0) {
+                actionHistoryContainer.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Aktionen vorhanden</p>';
+                return;
+            }
             
             // Sort by timestamp descending and take last 10
             const recentHistory = [...actionHistory]
@@ -2124,7 +2203,7 @@
             }
             
             // Benutzername von Discord API abrufen
-            let discordUsername = 'NeuerBenutzer';
+            let discordUsername = 'Unbekannt';
             try {
                 const userResponse = await fetch(`https://discord.com/api/v10/users/${userId}`, {
                     headers: {
@@ -2151,7 +2230,8 @@
             
             try {
                 // Save to Firebase
-                await push(usersRef, userData);
+                const newUserRef = push(usersRef);
+                await set(newUserRef, userData);
                 
                 // Add to history
                 const historyData = {
@@ -2165,11 +2245,11 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
-                        title: "Einstellung",
-                        description: `Hiermit wird <@${userId}> als <@&${selectedRole.discordRoleId}> eingestellt.\n\n**Grund:** ${reason}`,
+                        title: "🎮 Einstellung",
+                        description: `Hiermit wird <@${userId}> als **${selectedRole.name}** eingestellt.\n\n**Grund:** ${reason}`,
                         color: 0x00ff00
                     });
                 }
@@ -2191,7 +2271,7 @@
             promotionModal.classList.add('active');
         }
 
-        // Handle promotion - KORRIGIERTES FORMAT
+        // Handle promotion - KORRIGIERTES FORMAT MIT EMBEDS
         async function handlePromotion() {
             const userId = document.getElementById('promotionUserId').value;
             const roleId = document.getElementById('promotionRoleSelect').value;
@@ -2235,10 +2315,10 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
                 if (webhooks.promotions) {
                     await sendToDiscord(webhooks.promotions, {
-                        title: "Beförderung",
+                        title: "🎖️ Beförderung",
                         description: `Hiermit wurde <@${userId}> zum <@&${selectedRole.discordRoleId}> befördert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                         color: 0xffd700
                     });
@@ -2259,7 +2339,7 @@
             demotionModal.classList.add('active');
         }
 
-        // Handle demotion - KORRIGIERTES FORMAT
+        // Handle demotion - KORRIGIERTES FORMAT MIT EMBEDS
         async function handleDemotion() {
             const userId = document.getElementById('demotionUserId').value;
             const roleId = document.getElementById('demotionRoleSelect').value;
@@ -2303,10 +2383,10 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
                 if (webhooks.demotions) {
                     await sendToDiscord(webhooks.demotions, {
-                        title: "Degradierung",
+                        title: "📉 Degradierung",
                         description: `Hiermit wurde <@${userId}> zum <@&${selectedRole.discordRoleId}> degradiert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                         color: 0xffa500
                     });
@@ -2327,7 +2407,7 @@
             terminationModal.classList.add('active');
         }
 
-        // Handle termination - KORRIGIERTES FORMAT
+        // Handle termination - KORRIGIERTES FORMAT MIT EMBEDS
         async function handleTermination() {
             const userId = document.getElementById('terminationUserId').value;
             const reason = document.getElementById('terminationReason').value;
@@ -2361,10 +2441,10 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
                 if (webhooks.terminations) {
                     await sendToDiscord(webhooks.terminations, {
-                        title: "Kündigung",
+                        title: "🚪 Kündigung",
                         description: `Hiermit wurde <@${userId}> gekündigt.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                         color: 0xff0000
                     });
@@ -2447,7 +2527,7 @@
             
             try {
                 await sendToDiscord(url, {
-                    title: "Webhook Test",
+                    title: "🔧 Webhook Test",
                     description: `Dies ist ein Test für den ${type} Webhook.`,
                     color: 0x00ff00
                 });
@@ -2481,7 +2561,7 @@
             }
         }
 
-        // Send message to Discord - OHNE TIMESTAMP UND OHNE EMBEDS
+        // Send message to Discord - MIT EMBEDS UND OHNE TIMESTAMP
         async function sendToDiscord(webhookUrl, embed) {
             const response = await fetch(webhookUrl, {
                 method: 'POST',
@@ -2489,7 +2569,12 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    content: `**${embed.title}**\n${embed.description}`
+                    embeds: [{
+                        title: embed.title,
+                        description: embed.description,
+                        color: embed.color
+                        // KEIN timestamp Feld - entfernt "heute um XX:XX Uhr"
+                    }]
                 })
             });
             

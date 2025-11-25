@@ -2101,7 +2101,7 @@
             });
         }
 
-        // Handle adding a new user - ÜBERARBEITET FÜR NEUES FORMAT
+        // Handle adding a new user - KORRIGIERTES FORMAT
         async function handleAddUser() {
             const userId = document.getElementById('discordUserId').value;
             const roleId = document.getElementById('userRoleSelect').value;
@@ -2148,11 +2148,11 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM NEUEN FORMAT
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
                         title: ":new: Einstellung",
-                        description: `Hiermit wird <@${userId}> als **${selectedRole.name}** eingestellt.\n\n**Grund:** ${reason}\n\nKhusLand Management System • ${new Date().toLocaleString('de-DE')}`,
+                        description: `Hiermit wird <@${userId}> als **${selectedRole.name}** eingestellt.\n\n**Grund:** ${reason}`,
                         color: 0x00ff00
                     });
                 }
@@ -2475,7 +2475,7 @@
             }
         }
 
-        // Send message to Discord - ÜBERARBEITET FÜR NEUES FORMAT
+        // Send message to Discord - OHNE TIMESTAMP
         async function sendToDiscord(webhookUrl, embed) {
             const response = await fetch(webhookUrl, {
                 method: 'POST',
@@ -2486,8 +2486,8 @@
                     embeds: [{
                         title: embed.title,
                         description: embed.description,
-                        color: embed.color,
-                        timestamp: new Date().toISOString()
+                        color: embed.color
+                        // KEIN timestamp Feld - entfernt "heute um XX:XX Uhr"
                     }]
                 })
             });

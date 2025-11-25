@@ -1582,21 +1582,92 @@
         const saveCategories = document.getElementById('saveCategories');
         const cancelCategories = document.getElementById('cancelCategories');
 
-        // ========== BASIS-URL FUNKTION ==========
+        // ========== VERBESSERTE NAVIGATION ==========
 
-        // Basis-URL für GitHub Pages ermitteln
-        function getBaseUrl() {
-            // Wenn wir auf GitHub Pages sind
-            if (window.location.hostname.includes('github.io')) {
-                const pathParts = window.location.pathname.split('/');
-                // Repository name extrahieren (normalerweise der zweite Teil)
-                if (pathParts.length > 1 && pathParts[1]) {
-                    const repoName = pathParts[1];
-                    return `${window.location.origin}/${repoName}`;
+        // Einfache Navigation ohne komplexe URL-Konstruktion
+        async function navigateToPage(page) {
+            try {
+                console.log('Navigiere zu Seite:', page);
+                
+                // Zugriffsprüfung
+                const hasAccess = await validateAccess();
+                if (!hasAccess) {
+                    showNotification('Zugriff wurde entzogen', 'error');
+                    return;
                 }
+                
+                if (!currentUser) {
+                    showNotification('Bitte zuerst anmelden', 'error');
+                    return;
+                }
+                
+                const pageKey = PAGE_ACCESS_CONFIG[page];
+                if (!pageKey) {
+                    showNotification('Ungültige Seite', 'error');
+                    return;
+                }
+                
+                const hasAccessToPage = await hasAccess(pageKey);
+                if (!hasAccessToPage) {
+                    showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
+                    return;
+                }
+                
+                showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
+                
+                // Einfache Navigation - direkt zur Seite
+                setTimeout(() => {
+                    console.log('Final navigation to:', page);
+                    window.location.href = page;
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Navigation error:', error);
+                showNotification('Fehler bei der Navigation: ' + error.message, 'error');
             }
-            // Für lokale Entwicklung
-            return window.location.origin;
+        }
+
+        // Card Navigation initialisieren
+        function initializeCardNavigation() {
+            const cards = document.querySelectorAll('.card[data-page]');
+            console.log('Initialisiere Card Navigation für', cards.length, 'Karten');
+            
+            cards.forEach(card => {
+                // Entferne bestehende Event Listener
+                card.replaceWith(card.cloneNode(true));
+            });
+            
+            // Neue Event Listener hinzufügen
+            document.querySelectorAll('.card[data-page]').forEach(card => {
+                card.addEventListener('click', async function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    
+                    console.log('Card geklickt:', this.getAttribute('data-page'));
+                    
+                    if (this.classList.contains('disabled')) {
+                        showNotification('Kein Zugriff auf diese Seite', 'error');
+                        return;
+                    }
+                    
+                    const page = this.getAttribute('data-page');
+                    await navigateToPage(page);
+                });
+            });
+        }
+
+        // Seiten-Namen für Anzeige
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Drogenrouten', 
+                'werkbank': 'Werkbank Manager',
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain Ankauf',
+                'weed': 'Weed Ankauf',
+                'management': 'KhusLand Management'
+            };
+            return names[pageKey] || pageKey;
         }
 
         // ========== ECHTZEIT-ZUGRIFFSKONTROLLE ==========
@@ -1753,85 +1824,6 @@
                     }
                 }
             }
-        }
-
-        // ========== NAVIGATION FUNKTIONEN ==========
-
-        // Navigation zu anderen Seiten mit Echtzeit-Zugriffsprüfung
-        async function navigateToWithAccessCheck(page) {
-            try {
-                // Sofortige Zugriffsprüfung
-                const hasAccess = await validateAccess();
-                if (!hasAccess) return;
-                
-                if (!currentUser) {
-                    showNotification('Bitte zuerst anmelden', 'error');
-                    return;
-                }
-                
-                const pageKey = PAGE_ACCESS_CONFIG[page];
-                if (!pageKey) {
-                    showNotification('Ungültige Seite', 'error');
-                    return;
-                }
-                
-                const hasAccessToPage = await hasAccess(pageKey);
-                if (!hasAccessToPage) {
-                    showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                    return;
-                }
-                
-                showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-                
-                // Korrekte URL für GitHub Pages konstruieren
-                const baseUrl = getBaseUrl();
-                let targetUrl;
-                
-                if (page === 'index.html') {
-                    targetUrl = baseUrl + '/';
-                } else {
-                    targetUrl = baseUrl + '/' + page;
-                }
-                
-                console.log('Navigating to:', targetUrl);
-                
-                setTimeout(() => {
-                    window.location.href = targetUrl;
-                }, 1500);
-                
-            } catch (error) {
-                console.error('Navigation error:', error);
-                showNotification('Fehler bei der Navigation', 'error');
-            }
-        }
-
-        // Card Navigation initialisieren
-        function initializeCardNavigation() {
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', async function() {
-                    const hasAccess = await validateAccess();
-                    if (!hasAccess) return;
-                    
-                    if (!this.classList.contains('disabled')) {
-                        const page = this.getAttribute('data-page');
-                        navigateToWithAccessCheck(page);
-                    }
-                });
-            });
-        }
-
-        // Seiten-Namen für Anzeige
-        function getPageDisplayName(pageKey) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'route': 'Route',
-                'werkbank': 'Werkbank', 
-                'materialrecycler': 'Materialrecycler',
-                'kokain': 'Kokain',
-                'weed': 'Weed',
-                'management': 'Management'
-            };
-            return names[pageKey] || pageKey;
         }
 
         // ========== LOGIN & AUTHENTIFIZIERUNG ==========
@@ -3150,7 +3142,6 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM geladen - Initialisiere App...');
-            console.log('Base URL:', getBaseUrl());
             initializeEventListeners();
             
             // Zuerst OAuth Callback prüfen
@@ -3172,7 +3163,7 @@
         window.removeOutputResource = removeOutputResource;
         window.removeCategory = removeCategory;
 
-        console.log('Werkbank Manager - Mit korrigierter Navigation für GitHub Pages!');
+        console.log('Werkbank Manager - Mit vereinfachter Navigation!');
     </script>
 </body>
 </html>

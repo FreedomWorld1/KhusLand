@@ -2123,9 +2123,26 @@
                 return;
             }
             
+            // Benutzername von Discord API abrufen
+            let discordUsername = 'NeuerBenutzer';
+            try {
+                const userResponse = await fetch(`https://discord.com/api/v10/users/${userId}`, {
+                    headers: {
+                        'Authorization': `Bot ${DISCORD_CLIENT_ID}`
+                    }
+                });
+                
+                if (userResponse.ok) {
+                    const userData = await userResponse.json();
+                    discordUsername = userData.username;
+                }
+            } catch (error) {
+                console.error('Fehler beim Abrufen des Discord-Benutzernamens:', error);
+            }
+            
             const userData = {
                 userId: userId,
-                name: 'NeuerBenutzer',
+                name: discordUsername,
                 roleId: roleId,
                 date: new Date().toLocaleDateString('de-DE'),
                 assignedBy: currentUser.username,
@@ -2140,7 +2157,7 @@
                 const historyData = {
                     type: 'hiring',
                     userId: userId,
-                    userName: 'NeuerBenutzer',
+                    userName: discordUsername,
                     roleName: selectedRole.name,
                     reason: reason,
                     executedBy: currentUser.username,
@@ -2151,14 +2168,14 @@
                 // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
-                        title: ":new: Einstellung",
-                        description: `Hiermit wird <@${userId}> als **${selectedRole.name}** eingestellt.\n\n**Grund:** ${reason}`,
+                        title: "Einstellung",
+                        description: `Hiermit wird <@${userId}> als <@&${selectedRole.discordRoleId}> eingestellt.\n\n**Grund:** ${reason}`,
                         color: 0x00ff00
                     });
                 }
                 
                 addUserModal.classList.remove('active');
-                showNotification(`Spieler ${userId} erfolgreich eingestellt`, 'success');
+                showNotification(`Spieler ${discordUsername} erfolgreich eingestellt`, 'success');
                 document.getElementById('discordUserId').value = '';
                 document.getElementById('hiringReason').value = ''; // Feld leeren
             } catch (error) {
@@ -2174,7 +2191,7 @@
             promotionModal.classList.add('active');
         }
 
-        // Handle promotion
+        // Handle promotion - KORRIGIERTES FORMAT
         async function handlePromotion() {
             const userId = document.getElementById('promotionUserId').value;
             const roleId = document.getElementById('promotionRoleSelect').value;
@@ -2190,9 +2207,11 @@
                 // Find and update user in Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
+                let currentUserName = '';
                 userSnapshot.forEach((childSnapshot) => {
                     if (childSnapshot.val().userId === userId) {
                         userKey = childSnapshot.key;
+                        currentUserName = childSnapshot.val().name;
                     }
                 });
                 
@@ -2208,7 +2227,7 @@
                 const historyData = {
                     type: 'promotion',
                     userId: userId,
-                    userName: 'Spieler',
+                    userName: currentUserName,
                     roleName: selectedRole.name,
                     reason: reason || 'Kein Grund angegeben',
                     executedBy: currentUser.username,
@@ -2216,22 +2235,17 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
                 if (webhooks.promotions) {
                     await sendToDiscord(webhooks.promotions, {
-                        title: "🎖️ Beförderung",
-                        description: `**${currentUser.username}** hat <@${userId}> zum **${selectedRole.name}** befördert.`,
-                        color: 0xffd700,
-                        fields: [
-                            { name: "👤 Spieler", value: `<@${userId}>`, inline: true },
-                            { name: "🎯 Neue Rolle", value: selectedRole.name, inline: true },
-                            { name: "📝 Grund", value: reason || "Kein Grund angegeben", inline: false }
-                        ]
+                        title: "Beförderung",
+                        description: `Hiermit wurde <@${userId}> zum <@&${selectedRole.discordRoleId}> befördert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                        color: 0xffd700
                     });
                 }
                 
                 promotionModal.classList.remove('active');
-                showNotification(`Spieler ${userId} wurde befördert`, 'success');
+                showNotification(`Spieler ${currentUserName} wurde befördert`, 'success');
             } catch (error) {
                 console.error('Fehler bei der Beförderung:', error);
                 showNotification('Fehler bei der Beförderung', 'error');
@@ -2245,7 +2259,7 @@
             demotionModal.classList.add('active');
         }
 
-        // Handle demotion
+        // Handle demotion - KORRIGIERTES FORMAT
         async function handleDemotion() {
             const userId = document.getElementById('demotionUserId').value;
             const roleId = document.getElementById('demotionRoleSelect').value;
@@ -2261,9 +2275,11 @@
                 // Find and update user in Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
+                let currentUserName = '';
                 userSnapshot.forEach((childSnapshot) => {
                     if (childSnapshot.val().userId === userId) {
                         userKey = childSnapshot.key;
+                        currentUserName = childSnapshot.val().name;
                     }
                 });
                 
@@ -2279,7 +2295,7 @@
                 const historyData = {
                     type: 'demotion',
                     userId: userId,
-                    userName: 'Spieler',
+                    userName: currentUserName,
                     roleName: selectedRole.name,
                     reason: reason || 'Kein Grund angegeben',
                     executedBy: currentUser.username,
@@ -2287,22 +2303,17 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
                 if (webhooks.demotions) {
                     await sendToDiscord(webhooks.demotions, {
-                        title: "📉 Degradierung",
-                        description: `**${currentUser.username}** hat <@${userId}> zum **${selectedRole.name}** degradiert.`,
-                        color: 0xffa500,
-                        fields: [
-                            { name: "👤 Spieler", value: `<@${userId}>`, inline: true },
-                            { name: "🎯 Neue Rolle", value: selectedRole.name, inline: true },
-                            { name: "📝 Grund", value: reason || "Kein Grund angegeben", inline: false }
-                        ]
+                        title: "Degradierung",
+                        description: `Hiermit wurde <@${userId}> zum <@&${selectedRole.discordRoleId}> degradiert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                        color: 0xffa500
                     });
                 }
                 
                 demotionModal.classList.remove('active');
-                showNotification(`Spieler ${userId} wurde degradiert`, 'warning');
+                showNotification(`Spieler ${currentUserName} wurde degradiert`, 'warning');
             } catch (error) {
                 console.error('Fehler bei der Degradierung:', error);
                 showNotification('Fehler bei der Degradierung', 'error');
@@ -2316,7 +2327,7 @@
             terminationModal.classList.add('active');
         }
 
-        // Handle termination
+        // Handle termination - KORRIGIERTES FORMAT
         async function handleTermination() {
             const userId = document.getElementById('terminationUserId').value;
             const reason = document.getElementById('terminationReason').value;
@@ -2325,9 +2336,11 @@
                 // Find and remove user from Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
+                let currentUserName = '';
                 userSnapshot.forEach((childSnapshot) => {
                     if (childSnapshot.val().userId === userId) {
                         userKey = childSnapshot.key;
+                        currentUserName = childSnapshot.val().name;
                     }
                 });
                 
@@ -2340,7 +2353,7 @@
                 const historyData = {
                     type: 'termination',
                     userId: userId,
-                    userName: 'Spieler',
+                    userName: currentUserName,
                     roleName: '',
                     reason: reason || 'Kein Grund angegeben',
                     executedBy: currentUser.username,
@@ -2348,21 +2361,17 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured
+                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
                 if (webhooks.terminations) {
                     await sendToDiscord(webhooks.terminations, {
-                        title: "🚪 Kündigung",
-                        description: `**${currentUser.username}** hat <@${userId}> gekündigt.`,
-                        color: 0xff0000,
-                        fields: [
-                            { name: "👤 Spieler", value: `<@${userId}>`, inline: true },
-                            { name: "📝 Grund", value: reason || "Kein Grund angegeben", inline: false }
-                        ]
+                        title: "Kündigung",
+                        description: `Hiermit wurde <@${userId}> gekündigt.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                        color: 0xff0000
                     });
                 }
                 
                 terminationModal.classList.remove('active');
-                showNotification(`Spieler ${userId} wurde gekündigt`, 'error');
+                showNotification(`Spieler ${currentUserName} wurde gekündigt`, 'error');
             } catch (error) {
                 console.error('Fehler bei der Kündigung:', error);
                 showNotification('Fehler bei der Kündigung', 'error');
@@ -2438,12 +2447,9 @@
             
             try {
                 await sendToDiscord(url, {
-                    title: "🔧 Webhook Test",
+                    title: "Webhook Test",
                     description: `Dies ist ein Test für den ${type} Webhook.`,
-                    color: 0x00ff00,
-                    fields: [
-                        { name: "🧪 Test", value: "Webhook funktioniert korrekt!", inline: false }
-                    ]
+                    color: 0x00ff00
                 });
                 showNotification('Webhook Test erfolgreich gesendet', 'success');
             } catch (error) {
@@ -2475,7 +2481,7 @@
             }
         }
 
-        // Send message to Discord - OHNE TIMESTAMP
+        // Send message to Discord - OHNE TIMESTAMP UND OHNE EMBEDS
         async function sendToDiscord(webhookUrl, embed) {
             const response = await fetch(webhookUrl, {
                 method: 'POST',
@@ -2483,12 +2489,7 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    embeds: [{
-                        title: embed.title,
-                        description: embed.description,
-                        color: embed.color
-                        // KEIN timestamp Feld - entfernt "heute um XX:XX Uhr"
-                    }]
+                    content: `**${embed.title}**\n${embed.description}`
                 })
             });
             

@@ -2427,6 +2427,12 @@
                 if (userKey) {
                     const userRef = ref(db, `users/${userKey}`);
                     await remove(userRef);
+                    
+                    // Remove from local array
+                    userRoles = userRoles.filter(user => user.userId !== userId);
+                    
+                    // Update UI immediately
+                    populateUserTables();
                 }
                 
                 // Add to history
@@ -2444,8 +2450,8 @@
                 // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
                 if (webhooks.terminations) {
                     await sendToDiscord(webhooks.terminations, {
-                        title: "🚪 Kündigung",
-                        description: `Hiermit wurde <@${userId}> gekündigt.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                        title: "📢 Blood Out",
+                        description: `Hiermit bekommt <@${userId}> offiziell seinen blood out.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                         color: 0xff0000
                     });
                 }

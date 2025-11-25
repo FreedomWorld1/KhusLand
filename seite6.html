@@ -490,22 +490,17 @@
         }
         
         .role-admin {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
         }
         
         .role-moderator {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-        }
-        
-        .role-developer {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, var(--secondary) 0%, #0d966c 100%);
             color: white;
         }
         
         .role-supporter {
-            background: linear-gradient(135deg, var(--secondary) 0%, #0d966c 100%);
+            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
             color: white;
         }
         
@@ -816,95 +811,6 @@
             border-radius: 10px;
             color: var(--text);
             font-size: 0.9rem;
-        }
-        
-        .role-management {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .role-card {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .role-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-        
-        .role-emoji {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        
-        .role-input-group {
-            margin-bottom: 1rem;
-        }
-        
-        .role-input {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .role-name {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text);
-        }
-        
-        .role-id {
-            font-size: 0.8rem;
-            color: var(--text-lighter);
-            margin-bottom: 1rem;
-        }
-        
-        .add-role-btn {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--secondary);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .add-role-btn:hover {
-            background: rgba(16, 185, 129, 0.2);
-        }
-        
-        .remove-role-btn {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-        }
-        
-        .remove-role-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
         }
         
         .history-item {
@@ -1350,17 +1256,6 @@
                     </div>
                 </div>
                 
-                <!-- Rollenverwaltung -->
-                <div class="settings-section">
-                    <h3><i class="fas fa-user-shield"></i> Rollenverwaltung</h3>
-                    <div class="role-management" id="roleManagement">
-                        <!-- Roles will be populated here -->
-                    </div>
-                    <button class="add-role-btn" id="addRoleBtn">
-                        <i class="fas fa-plus"></i> Neue Rolle hinzufügen
-                    </button>
-                </div>
-                
                 <!-- Aktionshistorie -->
                 <div class="settings-section">
                     <h3><i class="fas fa-history"></i> Aktionshistorie</h3>
@@ -1390,7 +1285,9 @@
             <div class="form-group">
                 <label class="form-label" for="userRoleSelect">Rolle</label>
                 <select id="userRoleSelect" class="form-input">
-                    <!-- Roles will be populated here -->
+                    <option value="admin">Administrator</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="supporter">Supporter</option>
                 </select>
             </div>
             
@@ -1424,7 +1321,9 @@
             <div class="form-group">
                 <label class="form-label" for="promotionRoleSelect">Neue Rolle</label>
                 <select id="promotionRoleSelect" class="form-input">
-                    <!-- Roles will be populated here -->
+                    <option value="admin">Administrator</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="supporter">Supporter</option>
                 </select>
             </div>
             
@@ -1458,7 +1357,9 @@
             <div class="form-group">
                 <label class="form-label" for="demotionRoleSelect">Neue Rolle</label>
                 <select id="demotionRoleSelect" class="form-input">
-                    <!-- Roles will be populated here -->
+                    <option value="admin">Administrator</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="supporter">Supporter</option>
                 </select>
             </div>
             
@@ -1534,13 +1435,19 @@
         // System Variablen
         let currentUser = null;
         let userRoles = [];
-        let customRoles = [];
         let actionHistory = [];
         let webhooks = {
             hiring: '',
             promotions: '',
             demotions: '',
             terminations: ''
+        };
+
+        // Feste Rollen (ohne Firebase-Verwaltung)
+        const fixedRoles = {
+            'admin': { name: 'Administrator', color: 'role-admin' },
+            'moderator': { name: 'Moderator', color: 'role-moderator' },
+            'supporter': { name: 'Supporter', color: 'role-supporter' }
         };
 
         // DOM Elements
@@ -1573,14 +1480,11 @@
         const saveTermination = document.getElementById('saveTermination');
         const refreshUsers = document.getElementById('refreshUsers');
         const exportUsers = document.getElementById('exportUsers');
-        const roleManagement = document.getElementById('roleManagement');
-        const addRoleBtn = document.getElementById('addRoleBtn');
         const actionHistoryContainer = document.getElementById('actionHistory');
         const notification = document.getElementById('notification');
 
         // Firebase Referenzen
         const usersRef = ref(db, 'users');
-        const rolesRef = ref(db, 'roles');
         const historyRef = ref(db, 'history');
         const webhooksRef = ref(db, 'webhooks');
 
@@ -1755,17 +1659,6 @@
                     userRoles.push(childSnapshot.val());
                 });
                 populateUserTables();
-                updateRoleSelects();
-            });
-
-            // Load roles
-            onValue(rolesRef, (snapshot) => {
-                customRoles = [];
-                snapshot.forEach((childSnapshot) => {
-                    customRoles.push(childSnapshot.val());
-                });
-                renderRoleManagement();
-                updateRoleSelects();
             });
 
             // Load history
@@ -1814,7 +1707,7 @@
         function createUserRow(user) {
             const row = document.createElement('tr');
             
-            const role = customRoles.find(r => r.id === user.roleId) || { name: 'Unbekannt', color: 'role-admin' };
+            const role = fixedRoles[user.roleId] || { name: 'Unbekannt', color: 'role-admin' };
             
             row.innerHTML = `
                 <td>
@@ -1845,80 +1738,6 @@
             `;
             
             return row;
-        }
-
-        // Render role management
-        function renderRoleManagement() {
-            roleManagement.innerHTML = '';
-            
-            customRoles.forEach((role, index) => {
-                const roleCard = document.createElement('div');
-                roleCard.className = 'role-card';
-                roleCard.innerHTML = `
-                    <div class="role-emoji">${role.emoji}</div>
-                    <div class="role-input-group">
-                        <input type="text" class="role-input role-name-input" value="${role.name}" placeholder="Rollenname" data-index="${index}">
-                        <input type="text" class="role-input role-id-input" value="${role.discordRoleId}" placeholder="Discord Role ID" data-index="${index}">
-                        <input type="text" class="role-input role-emoji-input" value="${role.emoji}" placeholder="Emoji" data-index="${index}">
-                        <select class="role-input role-color-input" data-index="${index}">
-                            <option value="role-admin" ${role.color === 'role-admin' ? 'selected' : ''}>Admin (Rot)</option>
-                            <option value="role-moderator" ${role.color === 'role-moderator' ? 'selected' : ''}>Moderator (Orange)</option>
-                            <option value="role-developer" ${role.color === 'role-developer' ? 'selected' : ''}>Developer (Lila)</option>
-                            <option value="role-supporter" ${role.color === 'role-supporter' ? 'selected' : ''}>Supporter (Grün)</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary save-role-btn" data-index="${index}" style="width: 100%; margin-bottom: 0.5rem;">
-                        <i class="fas fa-save"></i> Speichern
-                    </button>
-                    ${customRoles.length > 1 ? `<button class="remove-role-btn" data-index="${index}">
-                        <i class="fas fa-trash"></i> Entfernen
-                    </button>` : ''}
-                `;
-                roleManagement.appendChild(roleCard);
-            });
-
-            // Add event listeners for role inputs
-            document.querySelectorAll('.role-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    saveRoleToFirebase(index);
-                });
-            });
-
-            document.querySelectorAll('.save-role-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    saveRoleToFirebase(index);
-                });
-            });
-
-            document.querySelectorAll('.remove-role-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeRoleFromFirebase(index);
-                });
-            });
-        }
-
-        // Update role selects in modals
-        function updateRoleSelects() {
-            const roleSelects = [
-                document.getElementById('userRoleSelect'),
-                document.getElementById('promotionRoleSelect'),
-                document.getElementById('demotionRoleSelect')
-            ];
-
-            roleSelects.forEach(select => {
-                if (select) {
-                    select.innerHTML = '';
-                    customRoles.forEach(role => {
-                        const option = document.createElement('option');
-                        option.value = role.id;
-                        option.textContent = role.name;
-                        select.appendChild(option);
-                    });
-                }
-            });
         }
 
         // Update webhook inputs
@@ -2025,9 +1844,6 @@
                 showNotification('Benutzerliste exportiert', 'success');
             });
             
-            // Add role button
-            addRoleBtn.addEventListener('click', addNewRole);
-            
             // Webhook buttons
             document.querySelectorAll('.test-webhook').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -2101,7 +1917,7 @@
             });
         }
 
-        // Handle adding a new user - KORRIGIERTES FORMAT
+        // Handle adding a new user
         async function handleAddUser() {
             const userId = document.getElementById('discordUserId').value;
             const roleId = document.getElementById('userRoleSelect').value;
@@ -2117,7 +1933,7 @@
                 return;
             }
             
-            const selectedRole = customRoles.find(r => r.id === roleId);
+            const selectedRole = fixedRoles[roleId];
             if (!selectedRole) {
                 showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
                 return;
@@ -2148,7 +1964,7 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT
+                // Send to Discord if webhook is configured
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
                         title: ":new: Einstellung",
@@ -2180,7 +1996,7 @@
             const roleId = document.getElementById('promotionRoleSelect').value;
             const reason = document.getElementById('promotionReason').value;
             
-            const selectedRole = customRoles.find(r => r.id === roleId);
+            const selectedRole = fixedRoles[roleId];
             if (!selectedRole) {
                 showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
                 return;
@@ -2251,7 +2067,7 @@
             const roleId = document.getElementById('demotionRoleSelect').value;
             const reason = document.getElementById('demotionReason').value;
             
-            const selectedRole = customRoles.find(r => r.id === roleId);
+            const selectedRole = fixedRoles[roleId];
             if (!selectedRole) {
                 showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
                 return;
@@ -2366,59 +2182,6 @@
             } catch (error) {
                 console.error('Fehler bei der Kündigung:', error);
                 showNotification('Fehler bei der Kündigung', 'error');
-            }
-        }
-
-        // Add new role
-        async function addNewRole() {
-            const newRole = {
-                id: 'role_' + Date.now(),
-                name: 'Neue Rolle',
-                discordRoleId: '',
-                emoji: '👤',
-                color: 'role-admin'
-            };
-            
-            try {
-                await push(rolesRef, newRole);
-                showNotification('Neue Rolle hinzugefügt', 'success');
-            } catch (error) {
-                console.error('Fehler beim Hinzufügen der Rolle:', error);
-                showNotification('Fehler beim Hinzufügen der Rolle', 'error');
-            }
-        }
-
-        // Save role to Firebase
-        async function saveRoleToFirebase(index) {
-            const role = customRoles[index];
-            const roleInputs = document.querySelectorAll(`[data-index="${index}"]`);
-            
-            role.name = roleInputs[0].value;
-            role.discordRoleId = roleInputs[1].value;
-            role.emoji = roleInputs[2].value;
-            role.color = roleInputs[3].value;
-            
-            try {
-                const roleRef = ref(db, `roles/${role.id}`);
-                await set(roleRef, role);
-                showNotification('Rolle gespeichert', 'success');
-            } catch (error) {
-                console.error('Fehler beim Speichern der Rolle:', error);
-                showNotification('Fehler beim Speichern der Rolle', 'error');
-            }
-        }
-
-        // Remove role from Firebase
-        async function removeRoleFromFirebase(index) {
-            const role = customRoles[index];
-            
-            try {
-                const roleRef = ref(db, `roles/${role.id}`);
-                await remove(roleRef);
-                showNotification('Rolle entfernt', 'success');
-            } catch (error) {
-                console.error('Fehler beim Entfernen der Rolle:', error);
-                showNotification('Fehler beim Entfernen der Rolle', 'error');
             }
         }
 

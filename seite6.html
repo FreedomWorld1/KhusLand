@@ -356,6 +356,7 @@
             border: 1px solid var(--card-border);
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
         }
         
         .table-header {
@@ -758,6 +759,113 @@
             margin-top: 2rem;
         }
         
+        /* Settings */
+        .settings-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .settings-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .settings-section h3 i {
+            color: var(--primary);
+        }
+        
+        .webhook-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .webhook-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .role-management {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .role-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        
+        .role-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .role-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .role-id {
+            font-size: 0.8rem;
+            color: var(--text-lighter);
+            margin-bottom: 1rem;
+        }
+        
+        .history-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .history-action {
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .history-date {
+            font-size: 0.8rem;
+            color: var(--text-lighter);
+        }
+        
+        .history-details {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
         /* Notification */
         .notification {
             position: fixed;
@@ -932,7 +1040,7 @@
                 </div>
                 
                 <div class="cards-grid">
-                    <div class="card" data-page="index.html">
+                    <div class="card" data-page="weed">
                         <div class="card-header">
                             <div class="card-icon">🌿</div>
                             <div class="card-title">Weed Ankauf</div>
@@ -949,7 +1057,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite2.html">
+                    <div class="card" data-page="kokain">
                         <div class="card-header">
                             <div class="card-icon">💊</div>
                             <div class="card-title">Kokain Ankauf</div>
@@ -966,7 +1074,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite3.html">
+                    <div class="card" data-page="recycler">
                         <div class="card-header">
                             <div class="card-icon">♻️</div>
                             <div class="card-title">Materialrecycler</div>
@@ -983,7 +1091,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite4.html">
+                    <div class="card" data-page="werkbank">
                         <div class="card-header">
                             <div class="card-icon">🔧</div>
                             <div class="card-title">Werkbank Manager</div>
@@ -1000,7 +1108,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite5.html">
+                    <div class="card" data-page="routen">
                         <div class="card-header">
                             <div class="card-icon">🛣️</div>
                             <div class="card-title">Drogenrouten</div>
@@ -1017,7 +1125,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite6.html">
+                    <div class="card" data-page="management">
                         <div class="card-header">
                             <div class="card-icon">🏞️</div>
                             <div class="card-title">KhusLand Management</div>
@@ -1106,58 +1214,92 @@
                     <h1 class="page-title">Einstellungen</h1>
                 </div>
                 
-                <div class="cards-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fab fa-discord"></i>
-                            </div>
-                            <div class="card-title">Discord Webhook</div>
+                <!-- Discord Reports Konfiguration -->
+                <div class="settings-section">
+                    <h3><i class="fab fa-discord"></i> Discord Reports Konfiguration</h3>
+                    <div class="webhook-container">
+                        <input type="text" id="webhookUrl" class="webhook-input" placeholder="Discord Webhook URL hier einfügen">
+                        <button class="btn btn-primary" id="testWebhook">
+                            <i class="fas fa-bell"></i> Testen
+                        </button>
+                        <button class="btn btn-success" id="saveWebhook">
+                            <i class="fas fa-save"></i> Speichern
+                        </button>
+                    </div>
+                    <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Hier können Sie den Discord Webhook für automatische Benachrichtigungen konfigurieren.
+                    </p>
+                </div>
+                
+                <!-- Rollenverwaltung -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-user-shield"></i> Rollenverwaltung</h3>
+                    <div class="role-management">
+                        <div class="role-card">
+                            <div class="role-emoji">👑</div>
+                            <div class="role-name">Administrator</div>
+                            <div class="role-id">ID: <span contenteditable="true">123456789</span></div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                                <i class="fas fa-save"></i> Speichern
+                            </button>
                         </div>
-                        <div class="card-content">
-                            Konfigurieren Sie den Discord Webhook für Benachrichtigungen.
+                        <div class="role-card">
+                            <div class="role-emoji">🛡️</div>
+                            <div class="role-name">Moderator</div>
+                            <div class="role-id">ID: <span contenteditable="true">987654321</span></div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                                <i class="fas fa-save"></i> Speichern
+                            </button>
                         </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" id="webhookSettingsBtn">
-                                <i class="fas fa-cog"></i>
-                                Konfigurieren
+                        <div class="role-card">
+                            <div class="role-emoji">💻</div>
+                            <div class="role-name">Developer</div>
+                            <div class="role-id">ID: <span contenteditable="true">456789123</span></div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                                <i class="fas fa-save"></i> Speichern
+                            </button>
+                        </div>
+                        <div class="role-card">
+                            <div class="role-emoji">⭐</div>
+                            <div class="role-name">Supporter</div>
+                            <div class="role-id">ID: <span contenteditable="true">789123456</span></div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                                <i class="fas fa-save"></i> Speichern
                             </button>
                         </div>
                     </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-user-shield"></i>
+                </div>
+                
+                <!-- Aktionshistorie -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-history"></i> Aktionshistorie</h3>
+                    <div id="actionHistory">
+                        <div class="history-item">
+                            <div class="history-header">
+                                <div class="history-action">🎖️ Beförderung</div>
+                                <div class="history-date">15.10.2023 14:30</div>
                             </div>
-                            <div class="card-title">Rollenverwaltung</div>
-                        </div>
-                        <div class="card-content">
-                            Verwalten Sie verfügbare Rollen und Berechtigungen.
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" id="roleSettingsBtn">
-                                <i class="fas fa-edit"></i>
-                                Verwalten
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-icon">
-                                <i class="fas fa-history"></i>
+                            <div class="history-details">
+                                User <strong>MaxMustermann</strong> wurde zum <strong>Administrator</strong> befördert. Grund: "Auszeichnung für hervorragende Leistungen"
                             </div>
-                            <div class="card-title">Aktionshistorie</div>
                         </div>
-                        <div class="card-content">
-                            Zeigen Sie die Historie aller durchgeführten Aktionen an.
+                        <div class="history-item">
+                            <div class="history-header">
+                                <div class="history-action">📉 Degradierung</div>
+                                <div class="history-date">12.10.2023 11:15</div>
+                            </div>
+                            <div class="history-details">
+                                User <strong>LisaExample</strong> wurde zum <strong>Supporter</strong> degradiert. Grund: "Performance-Probleme"
+                            </div>
                         </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary" id="historySettingsBtn">
-                                <i class="fas fa-list"></i>
-                                Anzeigen
-                            </button>
+                        <div class="history-item">
+                            <div class="history-header">
+                                <div class="history-action">🚪 Kündigung</div>
+                                <div class="history-date">10.10.2023 09:45</div>
+                            </div>
+                            <div class="history-details">
+                                User <strong>TomDemo</strong> wurde gekündigt. Grund: "Wiederholte Regelverstöße"
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1300,6 +1442,8 @@
         // System Variablen
         let currentUser = null;
         let userRoles = [];
+        let actionHistory = [];
+        let discordWebhook = '';
 
         // DOM Elements
         const loginPage = document.getElementById('loginPage');
@@ -1331,6 +1475,9 @@
         const saveTermination = document.getElementById('saveTermination');
         const refreshUsers = document.getElementById('refreshUsers');
         const exportUsers = document.getElementById('exportUsers');
+        const webhookUrl = document.getElementById('webhookUrl');
+        const testWebhook = document.getElementById('testWebhook');
+        const saveWebhook = document.getElementById('saveWebhook');
         const notification = document.getElementById('notification');
 
         // Discord OAuth Funktionen
@@ -1508,8 +1655,10 @@
                 showLoginPage();
             }
             
-            // Load sample data
+            // Load data
             loadUserRoles();
+            loadActionHistory();
+            loadSettings();
             
             // Setup event listeners
             setupEventListeners();
@@ -1538,6 +1687,22 @@
             ];
             
             populateUserTables();
+        }
+
+        // Load action history
+        function loadActionHistory() {
+            // Sample data
+            actionHistory = [
+                { type: 'promotion', userId: '123456789', userName: 'MaxMustermann', role: 'Administrator', reason: 'Auszeichnung für hervorragende Leistungen', date: '15.10.2023 14:30' },
+                { type: 'demotion', userId: '987654321', userName: 'LisaExample', role: 'Supporter', reason: 'Performance-Probleme', date: '12.10.2023 11:15' },
+                { type: 'termination', userId: '456789123', userName: 'TomDemo', role: '', reason: 'Wiederholte Regelverstöße', date: '10.10.2023 09:45' }
+            ];
+        }
+
+        // Load settings
+        function loadSettings() {
+            discordWebhook = localStorage.getItem('discord_webhook') || '';
+            webhookUrl.value = discordWebhook;
         }
 
         // Populate user tables with data
@@ -1588,13 +1753,13 @@
                 <td>${user.assignedBy}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-icon btn-promote" data-user-id="${user.id}">
+                        <button class="btn-icon btn-promote" data-user-id="${user.id}" data-user-name="${user.name}">
                             <i class="fas fa-arrow-up"></i>
                         </button>
-                        <button class="btn-icon btn-demote" data-user-id="${user.id}">
+                        <button class="btn-icon btn-demote" data-user-id="${user.id}" data-user-name="${user.name}">
                             <i class="fas fa-arrow-down"></i>
                         </button>
-                        <button class="btn-icon btn-terminate" data-user-id="${user.id}">
+                        <button class="btn-icon btn-terminate" data-user-id="${user.id}" data-user-name="${user.name}">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -1645,6 +1810,10 @@
                 showNotification('Benutzerliste exportiert', 'success');
             });
             
+            // Settings buttons
+            testWebhook.addEventListener('click', handleTestWebhook);
+            saveWebhook.addEventListener('click', handleSaveWebhook);
+            
             // Card clicks
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -1659,17 +1828,20 @@
             document.addEventListener('click', function(e) {
                 if (e.target.closest('.btn-promote')) {
                     const userId = e.target.closest('.btn-promote').getAttribute('data-user-id');
-                    openPromotionModal(userId);
+                    const userName = e.target.closest('.btn-promote').getAttribute('data-user-name');
+                    openPromotionModal(userId, userName);
                 }
                 
                 if (e.target.closest('.btn-demote')) {
                     const userId = e.target.closest('.btn-demote').getAttribute('data-user-id');
-                    openDemotionModal(userId);
+                    const userName = e.target.closest('.btn-demote').getAttribute('data-user-name');
+                    openDemotionModal(userId, userName);
                 }
                 
                 if (e.target.closest('.btn-terminate')) {
                     const userId = e.target.closest('.btn-terminate').getAttribute('data-user-id');
-                    openTerminationModal(userId);
+                    const userName = e.target.closest('.btn-terminate').getAttribute('data-user-name');
+                    openTerminationModal(userId, userName);
                 }
             });
         }
@@ -1729,6 +1901,16 @@
             userRoles.push(newUser);
             populateUserTables();
             
+            // Add to action history
+            actionHistory.unshift({
+                type: 'add',
+                userId: userId,
+                userName: 'NeuerBenutzer',
+                role: role,
+                reason: 'Neueinstellung',
+                date: new Date().toLocaleString('de-DE')
+            });
+            
             addUserModal.classList.remove('active');
             showNotification(`Spieler ${userId} erfolgreich eingestellt`, 'success');
             
@@ -1737,8 +1919,10 @@
         }
 
         // Open promotion modal
-        function openPromotionModal(userId) {
+        function openPromotionModal(userId, userName) {
             document.getElementById('promotionUserId').value = userId;
+            document.getElementById('promotionRoleId').value = '';
+            document.getElementById('promotionReason').value = '';
             promotionModal.classList.add('active');
         }
 
@@ -1753,6 +1937,23 @@
                 return;
             }
             
+            // Find user and update role
+            const userIndex = userRoles.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+                userRoles[userIndex].role = 'admin'; // In a real app, this would be based on roleId
+            }
+            
+            // Add to action history
+            actionHistory.unshift({
+                type: 'promotion',
+                userId: userId,
+                userName: userRoles[userIndex]?.name || 'Unbekannt',
+                role: 'Administrator',
+                reason: reason || 'Kein Grund angegeben',
+                date: new Date().toLocaleString('de-DE')
+            });
+            
+            populateUserTables();
             promotionModal.classList.remove('active');
             showNotification(`Spieler ${userId} wurde befördert`, 'success');
             
@@ -1762,8 +1963,10 @@
         }
 
         // Open demotion modal
-        function openDemotionModal(userId) {
+        function openDemotionModal(userId, userName) {
             document.getElementById('demotionUserId').value = userId;
+            document.getElementById('demotionRoleId').value = '';
+            document.getElementById('demotionReason').value = '';
             demotionModal.classList.add('active');
         }
 
@@ -1778,6 +1981,23 @@
                 return;
             }
             
+            // Find user and update role
+            const userIndex = userRoles.findIndex(u => u.id === userId);
+            if (userIndex !== -1) {
+                userRoles[userIndex].role = 'supporter'; // In a real app, this would be based on roleId
+            }
+            
+            // Add to action history
+            actionHistory.unshift({
+                type: 'demotion',
+                userId: userId,
+                userName: userRoles[userIndex]?.name || 'Unbekannt',
+                role: 'Supporter',
+                reason: reason || 'Kein Grund angegeben',
+                date: new Date().toLocaleString('de-DE')
+            });
+            
+            populateUserTables();
             demotionModal.classList.remove('active');
             showNotification(`Spieler ${userId} wurde degradiert`, 'warning');
             
@@ -1787,8 +2007,9 @@
         }
 
         // Open termination modal
-        function openTerminationModal(userId) {
+        function openTerminationModal(userId, userName) {
             document.getElementById('terminationUserId').value = userId;
+            document.getElementById('terminationReason').value = '';
             terminationModal.classList.add('active');
         }
 
@@ -1797,11 +2018,66 @@
             const userId = document.getElementById('terminationUserId').value;
             const reason = document.getElementById('terminationReason').value;
             
+            // Remove user from list
+            const userIndex = userRoles.findIndex(u => u.id === userId);
+            const userName = userRoles[userIndex]?.name || 'Unbekannt';
+            
+            if (userIndex !== -1) {
+                userRoles.splice(userIndex, 1);
+            }
+            
+            // Add to action history
+            actionHistory.unshift({
+                type: 'termination',
+                userId: userId,
+                userName: userName,
+                role: '',
+                reason: reason || 'Kein Grund angegeben',
+                date: new Date().toLocaleString('de-DE')
+            });
+            
+            populateUserTables();
             terminationModal.classList.remove('active');
             showNotification(`Spieler ${userId} wurde gekündigt`, 'error');
             
             // Clear form
             document.getElementById('terminationReason').value = '';
+        }
+
+        // Handle webhook test
+        function handleTestWebhook() {
+            const url = webhookUrl.value.trim();
+            
+            if (!url) {
+                showNotification('Bitte geben Sie eine Webhook URL ein', 'error');
+                return;
+            }
+            
+            if (!url.startsWith('https://discord.com/api/webhooks/')) {
+                showNotification('Bitte geben Sie eine gültige Discord Webhook URL ein', 'error');
+                return;
+            }
+            
+            showNotification('Webhook Test erfolgreich gesendet', 'success');
+        }
+
+        // Handle webhook save
+        function handleSaveWebhook() {
+            const url = webhookUrl.value.trim();
+            
+            if (!url) {
+                showNotification('Bitte geben Sie eine Webhook URL ein', 'error');
+                return;
+            }
+            
+            if (!url.startsWith('https://discord.com/api/webhooks/')) {
+                showNotification('Bitte geben Sie eine gültige Discord Webhook URL ein', 'error');
+                return;
+            }
+            
+            discordWebhook = url;
+            localStorage.setItem('discord_webhook', url);
+            showNotification('Webhook URL erfolgreich gespeichert', 'success');
         }
 
         // Show notification

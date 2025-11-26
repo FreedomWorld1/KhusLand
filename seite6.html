@@ -233,24 +233,27 @@
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
         
-        /* Cards */
+        /* Cards - VERBESSERT mit größeren Buttons */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
             margin-bottom: 2rem;
         }
         
         .card {
             background: var(--card-bg);
             border-radius: 16px;
-            padding: 1.5rem;
+            padding: 2.2rem;
             border: 1px solid var(--card-border);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             transition: all 0.3s;
             cursor: pointer;
             position: relative;
-            overflow: hidden;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         
         .card::before {
@@ -264,7 +267,7 @@
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             border-color: var(--primary);
         }
@@ -288,49 +291,66 @@
         }
         
         .card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
         }
         
         .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
             color: var(--text);
         }
         
         .card-content {
             color: var(--text-light);
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
         }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: auto;
         }
         
         .card-status {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-lighter);
         }
         
+        /* STATUS INDICATOR STYLES - VERBESSERT */
         .status-indicator {
-            width: 8px;
-            height: 8px;
+            display: inline-block;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .status-online {
             background: var(--secondary);
             box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+        
+        .status-offline {
+            background: var(--danger);
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        }
+        
+        .status-warning {
+            background: var(--warning);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+        }
+        
+        .status-maintenance {
+            background: var(--primary);
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
         }
         
         .access-badge {
@@ -1148,33 +1168,29 @@
                 
                 <div class="cards-grid">
                     <div class="card" data-page="weed">
-                        <div class="card-header">
-                            <div class="card-icon">🌿</div>
-                            <div class="card-title">Weed Ankauf</div>
-                        </div>
+                        <div class="card-icon">🌿</div>
+                        <h3 class="card-title">Weed Ankauf</h3>
                         <div class="card-content">
-                            Koordinieren Sie Wareneingang und Ankaufkonditionen.
+                            Den Weed-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
                         </div>
                         <div class="card-footer">
                             <div class="card-status">
-                                <div class="status-indicator"></div>
-                                <span>System online</span>
+                                <div class="status-indicator status-offline"></div>
+                                <span>System offline</span>
                             </div>
                             <div class="access-badge access-allowed">Zugriff</div>
                         </div>
                     </div>
                     
                     <div class="card" data-page="kokain">
-                        <div class="card-header">
-                            <div class="card-icon">💊</div>
-                            <div class="card-title">Kokain Ankauf</div>
-                        </div>
+                        <div class="card-icon">❄️</div>
+                        <h3 class="card-title">Kokain Ankauf</h3>
                         <div class="card-content">
-                            Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität.
+                            Den Kokain-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
                         </div>
                         <div class="card-footer">
                             <div class="card-status">
-                                <div class="status-indicator"></div>
+                                <div class="status-indicator status-online"></div>
                                 <span>System online</span>
                             </div>
                             <div class="access-badge access-allowed">Zugriff</div>
@@ -1182,16 +1198,14 @@
                     </div>
                     
                     <div class="card" data-page="recycler">
-                        <div class="card-header">
-                            <div class="card-icon">♻️</div>
-                            <div class="card-title">Materialrecycler</div>
-                        </div>
+                        <div class="card-icon">♻️</div>
+                        <h3 class="card-title">Materialrecycler - Produkte</h3>
                         <div class="card-content">
-                            Verwalten Sie Recycling-Prozesse und produzierte Materialien.
+                            Recyclingprozesse sowie die daraus entstandenen Materialien verwalten.
                         </div>
                         <div class="card-footer">
                             <div class="card-status">
-                                <div class="status-indicator"></div>
+                                <div class="status-indicator status-online"></div>
                                 <span>System online</span>
                             </div>
                             <div class="access-badge access-allowed">Zugriff</div>
@@ -1199,16 +1213,14 @@
                     </div>
                     
                     <div class="card" data-page="werkbank">
-                        <div class="card-header">
-                            <div class="card-icon">🔧</div>
-                            <div class="card-title">Werkbank Manager</div>
-                        </div>
+                        <div class="card-icon">🔧</div>
+                        <h3 class="card-title">Werkbank Manager</h3>
                         <div class="card-content">
-                            Überwachen Sie Werkstattaktivitäten und Produktionsaufträge.
+                            Überprüfe, dass alle Rohstoffe für die Werkstatt vorhanden sind.
                         </div>
                         <div class="card-footer">
                             <div class="card-status">
-                                <div class="status-indicator"></div>
+                                <div class="status-indicator status-online"></div>
                                 <span>System online</span>
                             </div>
                             <div class="access-badge access-allowed">Zugriff</div>
@@ -1216,16 +1228,14 @@
                     </div>
                     
                     <div class="card" data-page="routen">
-                        <div class="card-header">
-                            <div class="card-icon">🛣️</div>
-                            <div class="card-title">Drogenrouten</div>
-                        </div>
+                        <div class="card-icon">🛣️</div>
+                        <h3 class="card-title">Drogenrouten</h3>
                         <div class="card-content">
-                            Planen und überwachen Sie sichere Transportrouten für Lieferungen.
+                            Behalte die Drogenrouten im Blick.
                         </div>
                         <div class="card-footer">
                             <div class="card-status">
-                                <div class="status-indicator"></div>
+                                <div class="status-indicator status-online"></div>
                                 <span>System online</span>
                             </div>
                             <div class="access-badge access-allowed">Zugriff</div>
@@ -1233,16 +1243,14 @@
                     </div>
                     
                     <div class="card" data-page="management">
-                        <div class="card-header">
-                            <div class="card-icon">🏞️</div>
-                            <div class="card-title">KhusLand Management</div>
-                        </div>
+                        <div class="card-icon">🏞️</div>
+                        <h3 class="card-title">KhusLand Management</h3>
                         <div class="card-content">
-                            Verwalten Sie KhusLand Gebiete und Operationen.
+                            Verwalten Sie Mitarbeiter.
                         </div>
                         <div class="card-footer">
                             <div class="card-status">
-                                <div class="status-indicator"></div>
+                                <div class="status-indicator status-online"></div>
                                 <span>System online</span>
                             </div>
                             <div class="access-badge access-allowed">Zugriff</div>

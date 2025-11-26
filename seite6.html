@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Ihr CSS bleibt unverändert */
         * {
             margin: 0;
             padding: 0;
@@ -1167,7 +1166,7 @@
                 </div>
                 
                 <div class="cards-grid">
-                    <div class="card" data-page="weed">
+                    <div class="card" data-page="index.html">
                         <div class="card-icon">🌿</div>
                         <h3 class="card-title">Weed Ankauf</h3>
                         <div class="card-content">
@@ -1182,7 +1181,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="kokain">
+                    <div class="card" data-page="seite2.html">
                         <div class="card-icon">❄️</div>
                         <h3 class="card-title">Kokain Ankauf</h3>
                         <div class="card-content">
@@ -1197,7 +1196,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="recycler">
+                    <div class="card" data-page="seite3.html">
                         <div class="card-icon">♻️</div>
                         <h3 class="card-title">Materialrecycler - Produkte</h3>
                         <div class="card-content">
@@ -1212,7 +1211,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="werkbank">
+                    <div class="card" data-page="seite4.html">
                         <div class="card-icon">🔧</div>
                         <h3 class="card-title">Werkbank Manager</h3>
                         <div class="card-content">
@@ -1227,7 +1226,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="routen">
+                    <div class="card" data-page="seite5.html">
                         <div class="card-icon">🛣️</div>
                         <h3 class="card-title">Drogenrouten</h3>
                         <div class="card-content">
@@ -1242,7 +1241,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="management">
+                    <div class="card" data-page="seite6.html">
                         <div class="card-icon">🏞️</div>
                         <h3 class="card-title">KhusLand Management</h3>
                         <div class="card-content">
@@ -1622,6 +1621,16 @@
         const DISCORD_CLIENT_ID = '1432942180770644079';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
+
+        // Seiten-URLs für Weiterleitungen
+        const PAGE_URLS = {
+            'index.html': 'https://freedomworld1.github.io/KhusLand/index.html',
+            'seite2.html': 'https://freedomworld1.github.io/KhusLand/seite2.html',
+            'seite3.html': 'https://freedomworld1.github.io/KhusLand/seite3.html',
+            'seite4.html': 'https://freedomworld1.github.io/KhusLand/seite4.html',
+            'seite5.html': 'https://freedomworld1.github.io/KhusLand/seite5.html',
+            'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
+        };
 
         // System Variablen
         let currentUser = null;
@@ -2261,12 +2270,21 @@
                 });
             });
             
-            // Card clicks
+            // Card clicks - JETZT MIT FUNKTIONIERENDEN WEITERLEITUNGEN
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     if (!this.classList.contains('disabled')) {
                         const page = this.getAttribute('data-page');
-                        showNotification(`Navigiere zu ${page}`, 'info');
+                        const pageUrl = PAGE_URLS[page];
+                        
+                        if (pageUrl) {
+                            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
+                            setTimeout(() => {
+                                window.location.href = pageUrl;
+                            }, 1500);
+                        } else {
+                            showNotification(`Seite ${page} nicht gefunden`, 'error');
+                        }
                     }
                 });
             });

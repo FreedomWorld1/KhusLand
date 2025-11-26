@@ -977,6 +977,49 @@
             background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
         }
         
+        /* Warnungs-Badge */
+        .warning-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        /* Name Einstellungen */
+        .name-settings {
+            margin-bottom: 2rem;
+        }
+        
+        .name-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .name-input {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
         /* Hidden utility */
         .hidden {
             display: none;
@@ -1070,6 +1113,7 @@
                 <a href="#" class="nav-item" data-tab="users">
                     <i class="fas fa-users"></i>
                     <span>User Management</span>
+                    <div class="warning-badge hidden" id="userWarningBadge">!</div>
                 </a>
                 <a href="#" class="nav-item" data-tab="settings">
                     <i class="fas fa-cog"></i>
@@ -1286,6 +1330,37 @@
                     <h1 class="page-title">Einstellungen</h1>
                 </div>
                 
+                <!-- Name Einstellungen -->
+                <div class="settings-section">
+                    <h3><i class="fas fa-user-edit"></i> Name Einstellungen</h3>
+                    
+                    <div class="name-settings">
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">👤 Benutzer Name</div>
+                            </div>
+                            <div class="name-input-group">
+                                <input type="text" id="userDisplayName" class="name-input" placeholder="Angezeigter Name für Benutzer">
+                                <button class="btn btn-success" id="saveUserName">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">🎮 Spieler Name</div>
+                            </div>
+                            <div class="name-input-group">
+                                <input type="text" id="playerDisplayName" class="name-input" placeholder="Angezeigter Name für Spieler">
+                                <button class="btn btn-success" id="savePlayerName">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Discord Webhooks Konfiguration -->
                 <div class="settings-section">
                     <h3><i class="fab fa-discord"></i> Discord Webhooks Konfiguration</h3>
@@ -1345,6 +1420,22 @@
                                 <i class="fas fa-bell"></i> Testen
                             </button>
                             <button class="btn btn-success save-webhook" data-type="terminations">
+                                <i class="fas fa-save"></i> Speichern
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- NEUER WEBHOOK FÜR TEAM VERWARNUNG -->
+                    <div class="webhook-container">
+                        <div class="webhook-header">
+                            <div class="webhook-title">⚠️ Team Verwarnungen</div>
+                        </div>
+                        <div class="webhook-input-group">
+                            <input type="text" id="webhookWarnings" class="webhook-input" placeholder="Webhook URL für Team Verwarnungen">
+                            <button class="btn btn-primary test-webhook" data-type="warnings">
+                                <i class="fas fa-bell"></i> Testen
+                            </button>
+                            <button class="btn btn-success save-webhook" data-type="warnings">
                                 <i class="fas fa-save"></i> Speichern
                             </button>
                         </div>
@@ -1502,6 +1593,33 @@
         </div>
     </div>
 
+    <!-- Warning Modal -->
+    <div id="warningModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon" style="background: var(--danger);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2 class="modal-title">Team Verwarnung</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="warningUserId">User ID</label>
+                <input type="text" id="warningUserId" class="form-input" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="warningReason">Verwarnungsgrund</label>
+                <textarea id="warningReason" class="form-input form-textarea" placeholder="Grund für die Verwarnung..."></textarea>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn" id="cancelWarning">Abbrechen</button>
+                <button class="btn btn-danger" id="saveWarning">Verwarnung senden</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
@@ -1537,11 +1655,16 @@
         let userRoles = [];
         let customRoles = [];
         let actionHistory = [];
+        let displayNames = {
+            user: 'Benutzer',
+            player: 'Spieler'
+        };
         let webhooks = {
             hiring: '',
             promotions: '',
             demotions: '',
-            terminations: ''
+            terminations: '',
+            warnings: '' // NEUER WEBHOOK FÜR VERWARNUNGEN
         };
 
         // DOM Elements
@@ -1572,18 +1695,28 @@
         const terminationModal = document.getElementById('terminationModal');
         const cancelTermination = document.getElementById('cancelTermination');
         const saveTermination = document.getElementById('saveTermination');
+        const warningModal = document.getElementById('warningModal');
+        const cancelWarning = document.getElementById('cancelWarning');
+        const saveWarning = document.getElementById('saveWarning');
         const refreshUsers = document.getElementById('refreshUsers');
         const exportUsers = document.getElementById('exportUsers');
         const roleManagement = document.getElementById('roleManagement');
         const addRoleBtn = document.getElementById('addRoleBtn');
         const actionHistoryContainer = document.getElementById('actionHistory');
         const notification = document.getElementById('notification');
+        const userWarningBadge = document.getElementById('userWarningBadge');
+        const userDisplayName = document.getElementById('userDisplayName');
+        const playerDisplayName = document.getElementById('playerDisplayName');
+        const saveUserName = document.getElementById('saveUserName');
+        const savePlayerName = document.getElementById('savePlayerName');
 
         // Firebase Referenzen
         const usersRef = ref(db, 'users');
         const rolesRef = ref(db, 'roles');
         const historyRef = ref(db, 'history');
         const webhooksRef = ref(db, 'webhooks');
+        const namesRef = ref(db, 'displayNames');
+        const warningsRef = ref(db, 'warnings');
 
         // Initialisiere Standardrollen, falls keine vorhanden sind
         async function initializeDefaultRoles() {
@@ -1843,6 +1976,35 @@
                     updateWebhookInputs();
                 }
             });
+
+            // Load display names
+            onValue(namesRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    displayNames = snapshot.val();
+                    updateDisplayNameInputs();
+                }
+            });
+
+            // Load warnings and show badge if there are active warnings
+            onValue(warningsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const warnings = [];
+                    snapshot.forEach((childSnapshot) => {
+                        warnings.push(childSnapshot.val());
+                    });
+                    
+                    // Show warning badge if there are active warnings
+                    const activeWarnings = warnings.filter(w => !w.resolved);
+                    if (activeWarnings.length > 0) {
+                        userWarningBadge.textContent = activeWarnings.length;
+                        userWarningBadge.classList.remove('hidden');
+                    } else {
+                        userWarningBadge.classList.add('hidden');
+                    }
+                } else {
+                    userWarningBadge.classList.add('hidden');
+                }
+            });
         }
 
         // Show login page
@@ -1866,7 +2028,7 @@
                 const emptyRow = document.createElement('tr');
                 emptyRow.innerHTML = `
                     <td colspan="5" style="text-align: center; color: var(--text-lighter); padding: 2rem;">
-                        Keine Benutzer eingestellt
+                        Keine ${displayNames.player} eingestellt
                     </td>
                 `;
                 userTableBody.appendChild(emptyRow);
@@ -1888,7 +2050,7 @@
         function createUserRow(user) {
             const row = document.createElement('tr');
             
-            // Find the role by roleId - KORRIGIERT
+            // Find the role by roleId
             const role = customRoles.find(r => r.id === user.roleId) || { 
                 name: 'Unbekannt', 
                 color: 'role-admin',
@@ -1915,6 +2077,9 @@
                         </button>
                         <button class="btn-icon btn-demote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
                             <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <button class="btn-icon btn-warning" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
+                            <i class="fas fa-exclamation-triangle"></i>
                         </button>
                         <button class="btn-icon btn-terminate" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
                             <i class="fas fa-times"></i>
@@ -2011,6 +2176,23 @@
             document.getElementById('webhookPromotions').value = webhooks.promotions || '';
             document.getElementById('webhookDemotions').value = webhooks.demotions || '';
             document.getElementById('webhookTerminations').value = webhooks.terminations || '';
+            document.getElementById('webhookWarnings').value = webhooks.warnings || '';
+        }
+
+        // Update display name inputs
+        function updateDisplayNameInputs() {
+            userDisplayName.value = displayNames.user || 'Benutzer';
+            playerDisplayName.value = displayNames.player || 'Spieler';
+            
+            // Update table headers and labels
+            document.querySelectorAll('.table-title').forEach(title => {
+                if (title.textContent.includes('Benutzer')) {
+                    title.textContent = title.textContent.replace('Benutzer', displayNames.user);
+                }
+                if (title.textContent.includes('Spieler')) {
+                    title.textContent = title.textContent.replace('Spieler', displayNames.player);
+                }
+            });
         }
 
         // Render action history
@@ -2037,19 +2219,23 @@
                 switch (action.type) {
                     case 'hiring':
                         actionIcon = '🎮';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde als <strong>${action.roleName}</strong> eingestellt`;
+                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde als <strong>${action.roleName}</strong> eingestellt`;
                         break;
                     case 'promotion':
                         actionIcon = '🎖️';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> befördert`;
+                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> befördert`;
                         break;
                     case 'demotion':
                         actionIcon = '📉';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> degradiert`;
+                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> degradiert`;
                         break;
                     case 'termination':
                         actionIcon = '🚪';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde gekündigt`;
+                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde gekündigt`;
+                        break;
+                    case 'warning':
+                        actionIcon = '⚠️';
+                        actionText = `${displayNames.player} <strong>${action.userName}</strong> hat eine Verwarnung erhalten`;
                         break;
                 }
                 
@@ -2104,14 +2290,16 @@
             saveDemotion.addEventListener('click', handleDemotion);
             cancelTermination.addEventListener('click', () => terminationModal.classList.remove('active'));
             saveTermination.addEventListener('click', handleTermination);
+            cancelWarning.addEventListener('click', () => warningModal.classList.remove('active'));
+            saveWarning.addEventListener('click', handleWarning);
             
             // Refresh and export buttons
             refreshUsers.addEventListener('click', () => {
-                showNotification('Benutzerliste aktualisiert', 'success');
+                showNotification(`${displayNames.user}liste aktualisiert`, 'success');
             });
             
             exportUsers.addEventListener('click', () => {
-                showNotification('Benutzerliste exportiert', 'success');
+                showNotification(`${displayNames.user}liste exportiert`, 'success');
             });
             
             // Add role button
@@ -2131,6 +2319,10 @@
                     saveWebhook(type);
                 });
             });
+            
+            // Name settings buttons
+            saveUserName.addEventListener('click', () => saveDisplayName('user'));
+            savePlayerName.addEventListener('click', () => saveDisplayName('player'));
             
             // Card clicks
             document.querySelectorAll('.card').forEach(card => {
@@ -2154,6 +2346,12 @@
                     const userId = e.target.closest('.btn-demote').getAttribute('data-user-id');
                     const userName = e.target.closest('.btn-demote').getAttribute('data-user-name');
                     openDemotionModal(userId, userName);
+                }
+                
+                if (e.target.closest('.btn-warning')) {
+                    const userId = e.target.closest('.btn-warning').getAttribute('data-user-id');
+                    const userName = e.target.closest('.btn-warning').getAttribute('data-user-name');
+                    openWarningModal(userId, userName);
                 }
                 
                 if (e.target.closest('.btn-terminate')) {
@@ -2264,8 +2462,17 @@
                     });
                 }
                 
+                // Discord Role pingen, wenn Role ID vorhanden ist
+                if (selectedRole.discordRoleId) {
+                    await sendToDiscord(webhooks.hiring, {
+                        title: "🎮 Einstellung",
+                        description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId}>.\n\n**Grund:** ${reason}`,
+                        color: 0x00ff00
+                    });
+                }
+                
                 addUserModal.classList.remove('active');
-                showNotification(`Spieler ${discordUsername} erfolgreich eingestellt`, 'success');
+                showNotification(`${displayNames.player} ${discordUsername} erfolgreich eingestellt`, 'success');
                 document.getElementById('discordUserId').value = '';
                 document.getElementById('hiringReason').value = ''; // Feld leeren
             } catch (error) {
@@ -2281,7 +2488,7 @@
             promotionModal.classList.add('active');
         }
 
-        // Handle promotion - KORRIGIERTE VERSION
+        // Handle promotion
         async function handlePromotion() {
             const userId = document.getElementById('promotionUserId').value;
             const roleId = document.getElementById('promotionRoleSelect').value;
@@ -2329,7 +2536,7 @@
                     };
                     await push(historyRef, historyData);
                     
-                    // Send to Discord if webhook is configured - KORRIGIERT
+                    // Send to Discord if webhook is configured
                     if (webhooks.promotions) {
                         await sendToDiscord(webhooks.promotions, {
                             title: "🎖️ Beförderung",
@@ -2338,10 +2545,19 @@
                         });
                     }
                     
+                    // Discord Role pingen, wenn Role ID vorhanden ist
+                    if (selectedRole.discordRoleId) {
+                        await sendToDiscord(webhooks.promotions, {
+                            title: "🎖️ Beförderung",
+                            description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xffd700
+                        });
+                    }
+                    
                     promotionModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserData.name} wurde befördert`, 'success');
+                    showNotification(`${displayNames.player} ${currentUserData.name} wurde befördert`, 'success');
                 } else {
-                    showNotification('Benutzer nicht gefunden', 'error');
+                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler bei der Beförderung:', error);
@@ -2356,7 +2572,7 @@
             demotionModal.classList.add('active');
         }
 
-        // Handle demotion - KORRIGIERTE VERSION
+        // Handle demotion
         async function handleDemotion() {
             const userId = document.getElementById('demotionUserId').value;
             const roleId = document.getElementById('demotionRoleSelect').value;
@@ -2404,7 +2620,7 @@
                     };
                     await push(historyRef, historyData);
                     
-                    // Send to Discord if webhook is configured - KORRIGIERT
+                    // Send to Discord if webhook is configured
                     if (webhooks.demotions) {
                         await sendToDiscord(webhooks.demotions, {
                             title: "📉 Degradierung",
@@ -2413,14 +2629,102 @@
                         });
                     }
                     
+                    // Discord Role pingen, wenn Role ID vorhanden ist
+                    if (selectedRole.discordRoleId) {
+                        await sendToDiscord(webhooks.demotions, {
+                            title: "📉 Degradierung",
+                            description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xffa500
+                        });
+                    }
+                    
                     demotionModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserData.name} wurde degradiert`, 'warning');
+                    showNotification(`${displayNames.player} ${currentUserData.name} wurde degradiert`, 'warning');
                 } else {
-                    showNotification('Benutzer nicht gefunden', 'error');
+                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler bei der Degradierung:', error);
                 showNotification('Fehler bei der Degradierung', 'error');
+            }
+        }
+
+        // Open warning modal
+        function openWarningModal(userId, userName) {
+            document.getElementById('warningUserId').value = userId;
+            document.getElementById('warningReason').value = '';
+            warningModal.classList.add('active');
+        }
+
+        // Handle warning
+        async function handleWarning() {
+            const userId = document.getElementById('warningUserId').value;
+            const reason = document.getElementById('warningReason').value;
+            
+            if (!userId) {
+                showNotification('Ungültige User ID', 'error');
+                return;
+            }
+            
+            if (!reason) {
+                showNotification('Bitte geben Sie einen Grund für die Verwarnung an', 'error');
+                return;
+            }
+            
+            try {
+                // Find user in Firebase
+                const userSnapshot = await get(usersRef);
+                let currentUserData = null;
+                
+                userSnapshot.forEach((childSnapshot) => {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
+                        currentUserData = userData;
+                    }
+                });
+                
+                if (currentUserData) {
+                    // Save warning to Firebase
+                    const warningData = {
+                        userId: userId,
+                        userName: currentUserData.name,
+                        reason: reason,
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString(),
+                        resolved: false
+                    };
+                    
+                    await push(warningsRef, warningData);
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'warning',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: '',
+                        reason: reason,
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured
+                    if (webhooks.warnings) {
+                        await sendToDiscord(webhooks.warnings, {
+                            title: "⚠️ Team Verwarnung",
+                            description: `**Familien Updates**\n\nHiermit erhält <@${userId}> eine offizielle Verwarnung.\n\n**Grund:** ${reason}`,
+                            color: 0xff0000
+                        });
+                    }
+                    
+                    warningModal.classList.remove('active');
+                    showNotification(`Verwarnung an ${displayNames.player} ${currentUserData.name} gesendet`, 'warning');
+                } else {
+                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
+                }
+            } catch (error) {
+                console.error('Fehler beim Senden der Verwarnung:', error);
+                showNotification('Fehler beim Senden der Verwarnung', 'error');
             }
         }
 
@@ -2431,7 +2735,7 @@
             terminationModal.classList.add('active');
         }
 
-        // Handle termination - KORRIGIERTE VERSION
+        // Handle termination
         async function handleTermination() {
             const userId = document.getElementById('terminationUserId').value;
             const reason = document.getElementById('terminationReason').value;
@@ -2484,9 +2788,9 @@
                     }
                     
                     terminationModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserData.name} wurde gekündigt`, 'success');
+                    showNotification(`${displayNames.player} ${currentUserData.name} wurde gekündigt`, 'success');
                 } else {
-                    showNotification('Benutzer nicht gefunden', 'error');
+                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler bei der Kündigung:', error);
@@ -2544,6 +2848,30 @@
             } catch (error) {
                 console.error('Fehler beim Entfernen der Rolle:', error);
                 showNotification('Fehler beim Entfernen der Rolle', 'error');
+            }
+        }
+
+        // Save display name
+        async function saveDisplayName(type) {
+            const input = type === 'user' ? userDisplayName : playerDisplayName;
+            const value = input.value.trim();
+            
+            if (!value) {
+                showNotification('Bitte geben Sie einen Namen ein', 'error');
+                return;
+            }
+            
+            try {
+                displayNames[type] = value;
+                await set(namesRef, displayNames);
+                showNotification(`${type === 'user' ? 'Benutzer' : 'Spieler'} Name gespeichert`, 'success');
+                
+                // Update UI
+                updateDisplayNameInputs();
+                populateUserTables();
+            } catch (error) {
+                console.error('Fehler beim Speichern des Namens:', error);
+                showNotification('Fehler beim Speichern des Namens', 'error');
             }
         }
 

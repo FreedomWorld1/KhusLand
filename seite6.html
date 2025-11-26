@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Ihr CSS bleibt unverändert */
         * {
             margin: 0;
             padding: 0;
@@ -1798,9 +1799,10 @@
                 userRoles = [];
                 if (snapshot.exists()) {
                     snapshot.forEach((childSnapshot) => {
+                        const userData = childSnapshot.val();
                         userRoles.push({
                             id: childSnapshot.key,
-                            ...childSnapshot.val()
+                            ...userData
                         });
                     });
                 }
@@ -1886,7 +1888,12 @@
         function createUserRow(user) {
             const row = document.createElement('tr');
             
-            const role = customRoles.find(r => r.id === user.roleId) || { name: 'Unbekannt', color: 'role-admin' };
+            // Find the role by roleId - KORRIGIERT
+            const role = customRoles.find(r => r.id === user.roleId) || { 
+                name: 'Unbekannt', 
+                color: 'role-admin',
+                discordRoleId: ''
+            };
             
             row.innerHTML = `
                 <td>
@@ -2274,7 +2281,7 @@
             promotionModal.classList.add('active');
         }
 
-        // Handle promotion
+        // Handle promotion - KORRIGIERTE VERSION
         async function handlePromotion() {
             const userId = document.getElementById('promotionUserId').value;
             const roleId = document.getElementById('promotionRoleSelect').value;
@@ -2290,46 +2297,52 @@
                 // Find and update user in Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
-                let currentUserName = '';
+                let currentUserData = null;
+                
                 userSnapshot.forEach((childSnapshot) => {
                     const userData = childSnapshot.val();
                     if (userData.userId === userId) {
                         userKey = childSnapshot.key;
-                        currentUserName = userData.name;
+                        currentUserData = userData;
                     }
                 });
                 
-                if (userKey) {
-                    const userRef = ref(db, `users/${userKey}`);
-                    await set(userRef, {
-                        ...userSnapshot.val(),
+                if (userKey && currentUserData) {
+                    // ALLE Benutzerdaten behalten, nur die Rolle aktualisieren
+                    const updatedUserData = {
+                        ...currentUserData,
                         roleId: roleId
-                    });
+                    };
+                    
+                    const userRef = ref(db, `users/${userKey}`);
+                    await set(userRef, updatedUserData);
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'promotion',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: selectedRole.name,
+                        reason: reason || 'Kein Grund angegeben',
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured - KORRIGIERT
+                    if (webhooks.promotions) {
+                        await sendToDiscord(webhooks.promotions, {
+                            title: "🎖️ Beförderung",
+                            description: `Hiermit wurde <@${userId}> zum **${selectedRole.name}** befördert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xffd700
+                        });
+                    }
+                    
+                    promotionModal.classList.remove('active');
+                    showNotification(`Spieler ${currentUserData.name} wurde befördert`, 'success');
+                } else {
+                    showNotification('Benutzer nicht gefunden', 'error');
                 }
-                
-                // Add to history
-                const historyData = {
-                    type: 'promotion',
-                    userId: userId,
-                    userName: currentUserName,
-                    roleName: selectedRole.name,
-                    reason: reason || 'Kein Grund angegeben',
-                    executedBy: currentUser.username,
-                    timestamp: new Date().toISOString()
-                };
-                await push(historyRef, historyData);
-                
-                // Send to Discord if webhook is configured
-                if (webhooks.promotions) {
-                    await sendToDiscord(webhooks.promotions, {
-                        title: "🎖️ Beförderung",
-                        description: `Hiermit wurde <@${userId}> zum <@&${selectedRole.discordRoleId}> befördert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
-                        color: 0xffd700
-                    });
-                }
-                
-                promotionModal.classList.remove('active');
-                showNotification(`Spieler ${currentUserName} wurde befördert`, 'success');
             } catch (error) {
                 console.error('Fehler bei der Beförderung:', error);
                 showNotification('Fehler bei der Beförderung', 'error');
@@ -2343,7 +2356,7 @@
             demotionModal.classList.add('active');
         }
 
-        // Handle demotion
+        // Handle demotion - KORRIGIERTE VERSION
         async function handleDemotion() {
             const userId = document.getElementById('demotionUserId').value;
             const roleId = document.getElementById('demotionRoleSelect').value;
@@ -2359,46 +2372,52 @@
                 // Find and update user in Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
-                let currentUserName = '';
+                let currentUserData = null;
+                
                 userSnapshot.forEach((childSnapshot) => {
                     const userData = childSnapshot.val();
                     if (userData.userId === userId) {
                         userKey = childSnapshot.key;
-                        currentUserName = userData.name;
+                        currentUserData = userData;
                     }
                 });
                 
-                if (userKey) {
-                    const userRef = ref(db, `users/${userKey}`);
-                    await set(userRef, {
-                        ...userSnapshot.val(),
+                if (userKey && currentUserData) {
+                    // ALLE Benutzerdaten behalten, nur die Rolle aktualisieren
+                    const updatedUserData = {
+                        ...currentUserData,
                         roleId: roleId
-                    });
+                    };
+                    
+                    const userRef = ref(db, `users/${userKey}`);
+                    await set(userRef, updatedUserData);
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'demotion',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: selectedRole.name,
+                        reason: reason || 'Kein Grund angegeben',
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured - KORRIGIERT
+                    if (webhooks.demotions) {
+                        await sendToDiscord(webhooks.demotions, {
+                            title: "📉 Degradierung",
+                            description: `Hiermit wurde <@${userId}> zum **${selectedRole.name}** degradiert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xffa500
+                        });
+                    }
+                    
+                    demotionModal.classList.remove('active');
+                    showNotification(`Spieler ${currentUserData.name} wurde degradiert`, 'warning');
+                } else {
+                    showNotification('Benutzer nicht gefunden', 'error');
                 }
-                
-                // Add to history
-                const historyData = {
-                    type: 'demotion',
-                    userId: userId,
-                    userName: currentUserName,
-                    roleName: selectedRole.name,
-                    reason: reason || 'Kein Grund angegeben',
-                    executedBy: currentUser.username,
-                    timestamp: new Date().toISOString()
-                };
-                await push(historyRef, historyData);
-                
-                // Send to Discord if webhook is configured
-                if (webhooks.demotions) {
-                    await sendToDiscord(webhooks.demotions, {
-                        title: "📉 Degradierung",
-                        description: `Hiermit wurde <@${userId}> zum <@&${selectedRole.discordRoleId}> degradiert.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
-                        color: 0xffa500
-                    });
-                }
-                
-                demotionModal.classList.remove('active');
-                showNotification(`Spieler ${currentUserName} wurde degradiert`, 'warning');
             } catch (error) {
                 console.error('Fehler bei der Degradierung:', error);
                 showNotification('Fehler bei der Degradierung', 'error');
@@ -2426,17 +2445,17 @@
                 // Find and remove user from Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
-                let currentUserName = '';
+                let currentUserData = null;
                 
                 userSnapshot.forEach((childSnapshot) => {
                     const userData = childSnapshot.val();
                     if (userData.userId === userId) {
                         userKey = childSnapshot.key;
-                        currentUserName = userData.name;
+                        currentUserData = userData;
                     }
                 });
                 
-                if (userKey) {
+                if (userKey && currentUserData) {
                     const userRef = ref(db, `users/${userKey}`);
                     await remove(userRef);
                     
@@ -2447,7 +2466,7 @@
                     const historyData = {
                         type: 'termination',
                         userId: userId,
-                        userName: currentUserName,
+                        userName: currentUserData.name,
                         roleName: '',
                         reason: reason || 'Kein Grund angegeben',
                         executedBy: currentUser.username,
@@ -2465,7 +2484,7 @@
                     }
                     
                     terminationModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserName} wurde gekündigt`, 'success');
+                    showNotification(`Spieler ${currentUserData.name} wurde gekündigt`, 'success');
                 } else {
                     showNotification('Benutzer nicht gefunden', 'error');
                 }

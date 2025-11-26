@@ -999,25 +999,16 @@
             position: relative;
         }
         
-        /* Name Einstellungen */
-        .name-settings {
-            margin-bottom: 2rem;
+        /* Warning Button */
+        .btn-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
         
-        .name-input-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .name-input {
-            flex: 1;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 0.9rem;
+        .btn-warning:hover {
+            background: rgba(245, 158, 11, 0.3);
+            transform: translateY(-2px);
         }
         
         /* Hidden utility */
@@ -1330,37 +1321,6 @@
                     <h1 class="page-title">Einstellungen</h1>
                 </div>
                 
-                <!-- Name Einstellungen -->
-                <div class="settings-section">
-                    <h3><i class="fas fa-user-edit"></i> Name Einstellungen</h3>
-                    
-                    <div class="name-settings">
-                        <div class="webhook-container">
-                            <div class="webhook-header">
-                                <div class="webhook-title">👤 Benutzer Name</div>
-                            </div>
-                            <div class="name-input-group">
-                                <input type="text" id="userDisplayName" class="name-input" placeholder="Angezeigter Name für Benutzer">
-                                <button class="btn btn-success" id="saveUserName">
-                                    <i class="fas fa-save"></i> Speichern
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="webhook-container">
-                            <div class="webhook-header">
-                                <div class="webhook-title">🎮 Spieler Name</div>
-                            </div>
-                            <div class="name-input-group">
-                                <input type="text" id="playerDisplayName" class="name-input" placeholder="Angezeigter Name für Spieler">
-                                <button class="btn btn-success" id="savePlayerName">
-                                    <i class="fas fa-save"></i> Speichern
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
                 <!-- Discord Webhooks Konfiguration -->
                 <div class="settings-section">
                     <h3><i class="fab fa-discord"></i> Discord Webhooks Konfiguration</h3>
@@ -1477,6 +1437,11 @@
             <div class="form-group">
                 <label class="form-label" for="discordUserId">Discord User ID</label>
                 <input type="text" id="discordUserId" class="form-input" placeholder="123456789012345678">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="playerName">Spieler Name</label>
+                <input type="text" id="playerName" class="form-input" placeholder="Name des Spielers">
             </div>
             
             <div class="form-group">
@@ -1655,10 +1620,6 @@
         let userRoles = [];
         let customRoles = [];
         let actionHistory = [];
-        let displayNames = {
-            user: 'Benutzer',
-            player: 'Spieler'
-        };
         let webhooks = {
             hiring: '',
             promotions: '',
@@ -1705,17 +1666,12 @@
         const actionHistoryContainer = document.getElementById('actionHistory');
         const notification = document.getElementById('notification');
         const userWarningBadge = document.getElementById('userWarningBadge');
-        const userDisplayName = document.getElementById('userDisplayName');
-        const playerDisplayName = document.getElementById('playerDisplayName');
-        const saveUserName = document.getElementById('saveUserName');
-        const savePlayerName = document.getElementById('savePlayerName');
 
         // Firebase Referenzen
         const usersRef = ref(db, 'users');
         const rolesRef = ref(db, 'roles');
         const historyRef = ref(db, 'history');
         const webhooksRef = ref(db, 'webhooks');
-        const namesRef = ref(db, 'displayNames');
         const warningsRef = ref(db, 'warnings');
 
         // Initialisiere Standardrollen, falls keine vorhanden sind
@@ -1977,14 +1933,6 @@
                 }
             });
 
-            // Load display names
-            onValue(namesRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    displayNames = snapshot.val();
-                    updateDisplayNameInputs();
-                }
-            });
-
             // Load warnings and show badge if there are active warnings
             onValue(warningsRef, (snapshot) => {
                 if (snapshot.exists()) {
@@ -2028,7 +1976,7 @@
                 const emptyRow = document.createElement('tr');
                 emptyRow.innerHTML = `
                     <td colspan="5" style="text-align: center; color: var(--text-lighter); padding: 2rem;">
-                        Keine ${displayNames.player} eingestellt
+                        Keine Spieler eingestellt
                     </td>
                 `;
                 userTableBody.appendChild(emptyRow);
@@ -2179,22 +2127,6 @@
             document.getElementById('webhookWarnings').value = webhooks.warnings || '';
         }
 
-        // Update display name inputs
-        function updateDisplayNameInputs() {
-            userDisplayName.value = displayNames.user || 'Benutzer';
-            playerDisplayName.value = displayNames.player || 'Spieler';
-            
-            // Update table headers and labels
-            document.querySelectorAll('.table-title').forEach(title => {
-                if (title.textContent.includes('Benutzer')) {
-                    title.textContent = title.textContent.replace('Benutzer', displayNames.user);
-                }
-                if (title.textContent.includes('Spieler')) {
-                    title.textContent = title.textContent.replace('Spieler', displayNames.player);
-                }
-            });
-        }
-
         // Render action history
         function renderActionHistory() {
             actionHistoryContainer.innerHTML = '';
@@ -2219,23 +2151,23 @@
                 switch (action.type) {
                     case 'hiring':
                         actionIcon = '🎮';
-                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde als <strong>${action.roleName}</strong> eingestellt`;
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde als <strong>${action.roleName}</strong> eingestellt`;
                         break;
                     case 'promotion':
                         actionIcon = '🎖️';
-                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> befördert`;
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> befördert`;
                         break;
                     case 'demotion':
                         actionIcon = '📉';
-                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> degradiert`;
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> degradiert`;
                         break;
                     case 'termination':
                         actionIcon = '🚪';
-                        actionText = `${displayNames.player} <strong>${action.userName}</strong> wurde gekündigt`;
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde gekündigt`;
                         break;
                     case 'warning':
                         actionIcon = '⚠️';
-                        actionText = `${displayNames.player} <strong>${action.userName}</strong> hat eine Verwarnung erhalten`;
+                        actionText = `Spieler <strong>${action.userName}</strong> hat eine Verwarnung erhalten`;
                         break;
                 }
                 
@@ -2282,6 +2214,7 @@
             cancelAddUser.addEventListener('click', () => {
                 addUserModal.classList.remove('active');
                 document.getElementById('hiringReason').value = ''; // Grund-Feld leeren
+                document.getElementById('playerName').value = ''; // Name-Feld leeren
             });
             saveUser.addEventListener('click', handleAddUser);
             cancelPromotion.addEventListener('click', () => promotionModal.classList.remove('active'));
@@ -2295,11 +2228,11 @@
             
             // Refresh and export buttons
             refreshUsers.addEventListener('click', () => {
-                showNotification(`${displayNames.user}liste aktualisiert`, 'success');
+                showNotification('Benutzerliste aktualisiert', 'success');
             });
             
             exportUsers.addEventListener('click', () => {
-                showNotification(`${displayNames.user}liste exportiert`, 'success');
+                showNotification('Benutzerliste exportiert', 'success');
             });
             
             // Add role button
@@ -2319,10 +2252,6 @@
                     saveWebhook(type);
                 });
             });
-            
-            // Name settings buttons
-            saveUserName.addEventListener('click', () => saveDisplayName('user'));
-            savePlayerName.addEventListener('click', () => saveDisplayName('player'));
             
             // Card clicks
             document.querySelectorAll('.card').forEach(card => {
@@ -2391,11 +2320,17 @@
         // Handle adding a new user
         async function handleAddUser() {
             const userId = document.getElementById('discordUserId').value;
+            const playerName = document.getElementById('playerName').value;
             const roleId = document.getElementById('userRoleSelect').value;
             const reason = document.getElementById('hiringReason').value || "Neueinstellung";
             
             if (!userId) {
                 showNotification('Bitte geben Sie eine User ID ein', 'error');
+                return;
+            }
+            
+            if (!playerName) {
+                showNotification('Bitte geben Sie einen Spieler Namen ein', 'error');
                 return;
             }
             
@@ -2410,26 +2345,9 @@
                 return;
             }
             
-            // Benutzername von Discord API abrufen
-            let discordUsername = 'Unbekannt';
-            try {
-                const userResponse = await fetch(`https://discord.com/api/v10/users/${userId}`, {
-                    headers: {
-                        'Authorization': `Bot ${DISCORD_CLIENT_ID}`
-                    }
-                });
-                
-                if (userResponse.ok) {
-                    const userData = await userResponse.json();
-                    discordUsername = userData.username;
-                }
-            } catch (error) {
-                console.error('Fehler beim Abrufen des Discord-Benutzernamens:', error);
-            }
-            
             const userData = {
                 userId: userId,
-                name: discordUsername,
+                name: playerName,
                 roleId: roleId,
                 date: new Date().toLocaleDateString('de-DE'),
                 assignedBy: currentUser.username,
@@ -2445,7 +2363,7 @@
                 const historyData = {
                     type: 'hiring',
                     userId: userId,
-                    userName: discordUsername,
+                    userName: playerName,
                     roleName: selectedRole.name,
                     reason: reason,
                     executedBy: currentUser.username,
@@ -2472,8 +2390,9 @@
                 }
                 
                 addUserModal.classList.remove('active');
-                showNotification(`${displayNames.player} ${discordUsername} erfolgreich eingestellt`, 'success');
+                showNotification(`Spieler ${playerName} erfolgreich eingestellt`, 'success');
                 document.getElementById('discordUserId').value = '';
+                document.getElementById('playerName').value = '';
                 document.getElementById('hiringReason').value = ''; // Feld leeren
             } catch (error) {
                 console.error('Fehler beim Speichern:', error);
@@ -2555,9 +2474,9 @@
                     }
                     
                     promotionModal.classList.remove('active');
-                    showNotification(`${displayNames.player} ${currentUserData.name} wurde befördert`, 'success');
+                    showNotification(`Spieler ${currentUserData.name} wurde befördert`, 'success');
                 } else {
-                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
+                    showNotification(`Spieler nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler bei der Beförderung:', error);
@@ -2639,9 +2558,9 @@
                     }
                     
                     demotionModal.classList.remove('active');
-                    showNotification(`${displayNames.player} ${currentUserData.name} wurde degradiert`, 'warning');
+                    showNotification(`Spieler ${currentUserData.name} wurde degradiert`, 'warning');
                 } else {
-                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
+                    showNotification(`Spieler nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler bei der Degradierung:', error);
@@ -2718,9 +2637,9 @@
                     }
                     
                     warningModal.classList.remove('active');
-                    showNotification(`Verwarnung an ${displayNames.player} ${currentUserData.name} gesendet`, 'warning');
+                    showNotification(`Verwarnung an Spieler ${currentUserData.name} gesendet`, 'warning');
                 } else {
-                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
+                    showNotification(`Spieler nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler beim Senden der Verwarnung:', error);
@@ -2788,9 +2707,9 @@
                     }
                     
                     terminationModal.classList.remove('active');
-                    showNotification(`${displayNames.player} ${currentUserData.name} wurde gekündigt`, 'success');
+                    showNotification(`Spieler ${currentUserData.name} wurde gekündigt`, 'success');
                 } else {
-                    showNotification(`${displayNames.player} nicht gefunden`, 'error');
+                    showNotification(`Spieler nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler bei der Kündigung:', error);
@@ -2848,30 +2767,6 @@
             } catch (error) {
                 console.error('Fehler beim Entfernen der Rolle:', error);
                 showNotification('Fehler beim Entfernen der Rolle', 'error');
-            }
-        }
-
-        // Save display name
-        async function saveDisplayName(type) {
-            const input = type === 'user' ? userDisplayName : playerDisplayName;
-            const value = input.value.trim();
-            
-            if (!value) {
-                showNotification('Bitte geben Sie einen Namen ein', 'error');
-                return;
-            }
-            
-            try {
-                displayNames[type] = value;
-                await set(namesRef, displayNames);
-                showNotification(`${type === 'user' ? 'Benutzer' : 'Spieler'} Name gespeichert`, 'success');
-                
-                // Update UI
-                updateDisplayNameInputs();
-                populateUserTables();
-            } catch (error) {
-                console.error('Fehler beim Speichern des Namens:', error);
-                showNotification('Fehler beim Speichern des Namens', 'error');
             }
         }
 

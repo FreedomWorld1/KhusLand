@@ -1241,7 +1241,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite6.html">
+                    <div class="card" data-page="management">
                         <div class="card-icon">🏞️</div>
                         <h3 class="card-title">KhusLand Management</h3>
                         <div class="card-content">
@@ -1621,14 +1621,14 @@
         const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/';
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-        // Seiten-URLs für Weiterleitungen
+        // Seiten-URLs für Weiterleitungen - KORRIGIERT: Management bleibt auf der Seite
         const PAGE_URLS = {
             'index.html': 'https://freedomworld1.github.io/KhusLand/index.html',
             'seite2.html': 'https://freedomworld1.github.io/KhusLand/seite2.html',
             'seite3.html': 'https://freedomworld1.github.io/KhusLand/seite3.html',
             'seite4.html': 'https://freedomworld1.github.io/KhusLand/seite4.html',
             'seite5.html': 'https://freedomworld1.github.io/KhusLand/seite5.html',
-            'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
+            'management': '#' // Management bleibt auf der aktuellen Seite
         };
 
         // System Variablen
@@ -1951,6 +1951,9 @@
             // Event Listener initialisieren
             initializeEventListeners();
             
+            // Standardmäßig zum Dashboard-Tab wechseln
+            switchTab('dashboard');
+            
             // Daten laden
             loadUsers();
             
@@ -2000,11 +2003,21 @@
                 });
             });
 
-            // Card Klicks
+            // Card Klicks - KORRIGIERT: Management bleibt auf der Seite
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', () => {
                     const page = card.dataset.page;
-                    if (page && PAGE_URLS[page]) {
+                    
+                    // Überspringe Weiterleitung für Management
+                    if (page === 'management') {
+                        // Wechsle zum User Management Tab statt weiterzuleiten
+                        switchTab('users');
+                        showNotification('User Management wurde geladen', 'success');
+                        return;
+                    }
+                    
+                    // Für andere Seiten normale Weiterleitung
+                    if (page && PAGE_URLS[page] && page !== 'management') {
                         window.open(PAGE_URLS[page], '_blank');
                     }
                 });
@@ -2015,6 +2028,13 @@
             cancelDemotion.addEventListener('click', () => demotionModal.classList.remove('active'));
             cancelTermination.addEventListener('click', () => terminationModal.classList.remove('active'));
             cancelWarning.addEventListener('click', () => warningModal.classList.remove('active'));
+            
+            // User Action Event Listener
+            saveUser.addEventListener('click', addNewUser);
+            savePromotion.addEventListener('click', promoteUser);
+            saveDemotion.addEventListener('click', demoteUser);
+            saveTermination.addEventListener('click', terminateUser);
+            saveWarning.addEventListener('click', warnUser);
         }
 
         function switchTab(tabName) {
@@ -2286,7 +2306,7 @@
         }
 
         // User Actions
-        saveUser.addEventListener('click', async () => {
+        async function addNewUser() {
             const discordUserId = document.getElementById('discordUserId').value;
             const playerName = document.getElementById('playerName').value;
             const roleSelect = document.getElementById('userRoleSelect');
@@ -2340,9 +2360,9 @@
                 console.error('Fehler beim Einstellen des Spielers:', error);
                 showNotification('Fehler beim Einstellen des Spielers', 'error');
             }
-        });
+        }
 
-        savePromotion.addEventListener('click', async () => {
+        async function promoteUser() {
             const userId = document.getElementById('promotionUserId').value;
             const roleSelect = document.getElementById('promotionRoleSelect');
             const selectedOption = roleSelect.options[roleSelect.selectedIndex];
@@ -2395,9 +2415,9 @@
                 console.error('Fehler beim Befördern des Spielers:', error);
                 showNotification('Fehler beim Befördern des Spielers', 'error');
             }
-        });
+        }
 
-        saveDemotion.addEventListener('click', async () => {
+        async function demoteUser() {
             const userId = document.getElementById('demotionUserId').value;
             const roleSelect = document.getElementById('demotionRoleSelect');
             const selectedOption = roleSelect.options[roleSelect.selectedIndex];
@@ -2450,9 +2470,9 @@
                 console.error('Fehler beim Degradieren des Spielers:', error);
                 showNotification('Fehler beim Degradieren des Spielers', 'error');
             }
-        });
+        }
 
-        saveTermination.addEventListener('click', async () => {
+        async function terminateUser() {
             const userId = document.getElementById('terminationUserId').value;
             const reason = document.getElementById('terminationReason').value;
 
@@ -2501,9 +2521,9 @@
                 console.error('Fehler beim Kündigen des Spielers:', error);
                 showNotification('Fehler beim Kündigen des Spielers', 'error');
             }
-        });
+        }
 
-        saveWarning.addEventListener('click', async () => {
+        async function warnUser() {
             const userId = document.getElementById('warningUserId').value;
             const reason = document.getElementById('warningReason').value;
 
@@ -2555,7 +2575,7 @@
                 console.error('Fehler beim Senden der Verwarnung:', error);
                 showNotification('Fehler beim Senden der Verwarnung', 'error');
             }
-        });
+        }
 
         function resetAddUserForm() {
             document.getElementById('discordUserId').value = '';

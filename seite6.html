@@ -1241,7 +1241,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="management">
+                    <div class="card" data-page="seite6.html">
                         <div class="card-icon">🏞️</div>
                         <h3 class="card-title">KhusLand Management</h3>
                         <div class="card-content">
@@ -1595,6 +1595,7 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
+    <!-- Firebase Import -->
     <script type="module">
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1616,19 +1617,19 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Discord OAuth Konfiguration - KORRIGIERT
+        // Discord OAuth Konfiguration
         const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = 'https://freedomworld1.github.io/KhusLand/';
+        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
         const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
 
-        // Seiten-URLs für Weiterleitungen - KORRIGIERT: Management bleibt auf der Seite
+        // Seiten-URLs für Weiterleitungen
         const PAGE_URLS = {
             'index.html': 'https://freedomworld1.github.io/KhusLand/index.html',
             'seite2.html': 'https://freedomworld1.github.io/KhusLand/seite2.html',
             'seite3.html': 'https://freedomworld1.github.io/KhusLand/seite3.html',
             'seite4.html': 'https://freedomworld1.github.io/KhusLand/seite4.html',
             'seite5.html': 'https://freedomworld1.github.io/KhusLand/seite5.html',
-            'management': '#' // Management bleibt auf der aktuellen Seite
+            'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
         };
 
         // System Variablen
@@ -1641,7 +1642,7 @@
             promotions: '',
             demotions: '',
             terminations: '',
-            warnings: ''
+            warnings: '' // NEUER WEBHOOK FÜR VERWARNUNGEN
         };
 
         // DOM Elements
@@ -1690,40 +1691,6 @@
         const webhooksRef = ref(db, 'webhooks');
         const warningsRef = ref(db, 'warnings');
 
-        // Debug-Funktion für OAuth
-        function debugOAuth() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const error = urlParams.get('error');
-            const errorDescription = urlParams.get('error_description');
-            
-            console.log('🔍 OAuth Debug Information:');
-            console.log('URL Parameters:', {
-                code: code ? code.substring(0, 10) + '...' : 'none',
-                error: error || 'none',
-                errorDescription: errorDescription || 'none',
-                fullURL: window.location.href
-            });
-            
-            if (error) {
-                console.error('❌ Discord OAuth Error:', error, errorDescription);
-                showError(`Discord Fehler: ${error} - ${errorDescription}`);
-            }
-            
-            // Teste Backend-Verbindung
-            testBackendConnection();
-        }
-
-        async function testBackendConnection() {
-            try {
-                console.log('🔧 Testing backend connection...');
-                const response = await fetch(`${BACKEND_URL}/health`);
-                console.log('Backend Status:', response.status, response.ok ? 'OK' : 'ERROR');
-            } catch (error) {
-                console.error('❌ Backend nicht erreichbar:', error);
-            }
-        }
-
         // Initialisiere Standardrollen, falls keine vorhanden sind
         async function initializeDefaultRoles() {
             const rolesSnapshot = await get(rolesRef);
@@ -1762,11 +1729,11 @@
                 for (const role of defaultRoles) {
                     await push(rolesRef, role);
                 }
-                console.log('✅ Standardrollen initialisiert');
+                console.log('Standardrollen initialisiert');
             }
         }
 
-        // Discord OAuth Funktionen - VERBESSERT
+        // Discord OAuth Funktionen
         function startDiscordOAuth() {
             const scope = 'identify';
             const state = generateRandomState();
@@ -1781,7 +1748,6 @@
             authUrl.searchParams.set('state', state);
             authUrl.searchParams.set('prompt', 'none');
             
-            console.log('🚀 Starting OAuth with URL:', authUrl.toString());
             window.location.href = authUrl.toString();
         }
 
@@ -1793,9 +1759,6 @@
             try {
                 loginLoading.style.display = 'block';
                 discordLoginBtn.disabled = true;
-                errorMessage.style.display = 'none';
-                
-                console.log('🔄 Starte Token-Austausch mit Code:', code.substring(0, 10) + '...');
                 
                 const response = await fetch(`${BACKEND_URL}/token`, {
                     method: 'POST',
@@ -1808,25 +1771,20 @@
                     })
                 });
 
-                console.log('📨 Token Response Status:', response.status);
-                
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ Worker Error Response:', errorText);
-                    throw new Error(`Worker responded with status ${response.status}: ${errorText}`);
+                    throw new Error(`Worker responded with status ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log('✅ Token Response Data received');
 
                 if (data.access_token) {
                     await verifyUser(data.access_token);
                 } else {
-                    throw new Error('Kein Access Token erhalten: ' + JSON.stringify(data));
+                    throw new Error('Kein Access Token erhalten');
                 }
             } catch (error) {
-                console.error('❌ Fehler beim Token-Austausch:', error);
-                showError('Fehler bei der Anmeldung: ' + error.message);
+                console.error('Fehler beim Token-Austausch:', error);
+                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
                 loginLoading.style.display = 'none';
                 discordLoginBtn.disabled = false;
             }
@@ -1834,255 +1792,329 @@
 
         async function verifyUser(accessToken) {
             try {
-                console.log('👤 Verifiziere Benutzer mit Token');
-                
                 const response = await fetch(`${BACKEND_URL}/verify-user`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        accessToken: accessToken
+                        accessToken: accessToken,
+                        currentPage: 'dashboard'
                     })
                 });
 
-                console.log('📨 Verify Response Status:', response.status);
-                
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ Verify Error Response:', errorText);
-                    throw new Error(`Verify failed with status ${response.status}: ${errorText}`);
+                    throw new Error(`Verification failed with status ${response.status}`);
                 }
 
-                const userData = await response.json();
-                console.log('✅ User Data received:', userData);
+                const data = await response.json();
 
-                if (userData.id) {
-                    currentUser = userData;
-                    await initializeDefaultRoles();
-                    await loadRoles();
-                    await loadWebhooks();
-                    await loadHistory();
-                    await loadWarnings();
+                if (data.isAuthorized) {
+                    localStorage.setItem('discord_user', JSON.stringify(data.user));
+                    localStorage.setItem('discord_access_token', accessToken);
+                    
+                    const user = data.user;
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        avatar: user.avatar
+                    };
+                    
+                    await loadDiscordAvatar(user);
                     showMainApp();
+                    showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
                 } else {
-                    throw new Error('Ungültige Benutzerdaten erhalten: ' + JSON.stringify(userData));
+                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
                 }
             } catch (error) {
-                console.error('❌ Fehler bei der Benutzerverifikation:', error);
-                showError('Fehler bei der Benutzerverifikation: ' + error.message);
+                console.error('Fehler bei der Benutzerüberprüfung:', error);
+                showError('Fehler bei der Berechtigungsprüfung');
+            } finally {
                 loginLoading.style.display = 'none';
                 discordLoginBtn.disabled = false;
             }
         }
 
-        // Alternative OAuth Implementierung (falls Backend nicht funktioniert)
-        function startDirectDiscordOAuth() {
-            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-            authUrl.searchParams.set('response_type', 'token'); // implicit grant
-            authUrl.searchParams.set('scope', 'identify');
-            authUrl.searchParams.set('state', generateRandomState());
-            
-            console.log('🚀 Starting Direct OAuth with URL:', authUrl.toString());
-            window.location.href = authUrl.toString();
-        }
-
-        function handleImplicitGrant() {
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const accessToken = params.get('access_token');
-            
-            if (accessToken) {
-                console.log('✅ Implicit grant access token received');
-                verifyUserDirect(accessToken);
-                // Entferne Token aus URL
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        }
-
-        async function verifyUserDirect(accessToken) {
+        // Discord Avatar laden
+        async function loadDiscordAvatar(userData) {
             try {
-                console.log('👤 Verifiziere Benutzer direkt mit Token');
-                const response = await fetch('https://discord.com/api/users/@me', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const userData = await response.json();
-                    currentUser = userData;
-                    console.log('✅ User verified directly:', userData);
-                    await initializeDefaultRoles();
-                    await loadRoles();
-                    await loadWebhooks();
-                    await loadHistory();
-                    await loadWarnings();
-                    showMainApp();
+                if (userData.avatar) {
+                    const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
+                    userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
+                    userAvatar.innerHTML = '';
+                    
+                    const img = new Image();
+                    img.onerror = () => {
+                        const firstLetter = userData.username.charAt(0).toUpperCase();
+                        userAvatar.style.backgroundImage = '';
+                        userAvatar.innerHTML = `<span>${firstLetter}</span>`;
+                    };
+                    img.src = avatarUrl;
                 } else {
-                    throw new Error('Failed to fetch user data: ' + response.status);
+                    const firstLetter = userData.username.charAt(0).toUpperCase();
+                    userAvatar.style.backgroundImage = '';
+                    userAvatar.innerHTML = `<span>${firstLetter}</span>`;
                 }
+                
+                userName.textContent = userData.username;
+                userRole.textContent = 'Administrator';
             } catch (error) {
-                console.error('❌ Fehler bei direkter Benutzerverifikation:', error);
-                showError('Anmeldung fehlgeschlagen: ' + error.message);
+                console.error('Error loading Discord avatar:', error);
+                userAvatar.style.backgroundImage = '';
+                userAvatar.innerHTML = '<i class="fas fa-user"></i>';
             }
         }
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        function showMainApp() {
-            loginPage.style.display = 'none';
-            mainContent.classList.remove('hidden');
+        // Initialize the application
+        function initApp() {
+            const userData = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
             
-            // Benutzerdaten anzeigen
-            userName.textContent = currentUser.username;
-            userRole.textContent = 'Administrator';
-            
-            if (currentUser.avatar) {
-                userAvatar.style.backgroundImage = `url(https://cdn.discordapp.com/avatars/${currentUser.id}/${currentUser.avatar}.png)`;
-                userAvatar.innerHTML = '';
+            if (userData && token) {
+                try {
+                    const user = JSON.parse(userData);
+                    currentUser = {
+                        id: user.id,
+                        username: user.username,
+                        avatar: user.avatar
+                    };
+                    
+                    loadDiscordAvatar(user);
+                    showMainApp();
+                    showNotification(`Willkommen zurück, ${user.username}`, 'info');
+                } catch (e) {
+                    console.error('Fehler beim Laden der Benutzerdaten:', e);
+                    showLoginPage();
+                }
+            } else {
+                showLoginPage();
             }
             
-            // Event Listener initialisieren
-            initializeEventListeners();
-            
-            // Standardmäßig zum Dashboard-Tab wechseln
-            switchTab('dashboard');
-            
-            // Daten laden
-            loadUsers();
-            
-            console.log('✅ Main App erfolgreich geladen');
+            // Load data from Firebase
+            loadFirebaseData();
+            setupEventListeners();
         }
 
-        function initializeEventListeners() {
-            // Navigation
-            navItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const tab = item.dataset.tab;
-                    switchTab(tab);
-                });
-            });
-
-            // Logout
-            logoutBtn.addEventListener('click', () => {
-                sessionStorage.clear();
-                window.location.href = window.location.origin + window.location.pathname;
-            });
-
-            // Modals
-            addUserBtn.addEventListener('click', () => addUserModal.classList.add('active'));
-            addUserBtn2.addEventListener('click', () => addUserModal.classList.add('active'));
-            cancelAddUser.addEventListener('click', () => addUserModal.classList.remove('active'));
+        // Load data from Firebase
+        function loadFirebaseData() {
+            // Initialize default roles
+            initializeDefaultRoles();
             
-            // User Management
-            refreshUsers.addEventListener('click', loadUsers);
-            exportUsers.addEventListener('click', exportUsersToCSV);
-            
-            // Rollenverwaltung
-            addRoleBtn.addEventListener('click', addNewRole);
-            
-            // Webhook Event Listener
-            document.querySelectorAll('.save-webhook').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const type = e.target.closest('button').dataset.type;
-                    saveWebhook(type);
-                });
-            });
-            
-            document.querySelectorAll('.test-webhook').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const type = e.target.closest('button').dataset.type;
-                    testDiscordWebhook(type);
-                });
-            });
-
-            // Card Klicks - KORRIGIERT: Management bleibt auf der Seite
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const page = card.dataset.page;
-                    
-                    // Überspringe Weiterleitung für Management
-                    if (page === 'management') {
-                        // Wechsle zum User Management Tab statt weiterzuleiten
-                        switchTab('users');
-                        showNotification('User Management wurde geladen', 'success');
-                        return;
-                    }
-                    
-                    // Für andere Seiten normale Weiterleitung
-                    if (page && PAGE_URLS[page] && page !== 'management') {
-                        window.open(PAGE_URLS[page], '_blank');
-                    }
-                });
-            });
-
-            // Modal Event Listener
-            cancelPromotion.addEventListener('click', () => promotionModal.classList.remove('active'));
-            cancelDemotion.addEventListener('click', () => demotionModal.classList.remove('active'));
-            cancelTermination.addEventListener('click', () => terminationModal.classList.remove('active'));
-            cancelWarning.addEventListener('click', () => warningModal.classList.remove('active'));
-            
-            // User Action Event Listener
-            saveUser.addEventListener('click', addNewUser);
-            savePromotion.addEventListener('click', promoteUser);
-            saveDemotion.addEventListener('click', demoteUser);
-            saveTermination.addEventListener('click', terminateUser);
-            saveWarning.addEventListener('click', warnUser);
-        }
-
-        function switchTab(tabName) {
-            // Navigation aktualisieren
-            navItems.forEach(item => {
-                item.classList.toggle('active', item.dataset.tab === tabName);
-            });
-            
-            // Tab Inhalte anzeigen/verstecken
-            tabContents.forEach(tab => {
-                tab.classList.toggle('hidden', tab.id !== tabName);
-            });
-        }
-
-        // Rollen Management
-        async function loadRoles() {
-            try {
-                const snapshot = await get(rolesRef);
+            // Load users
+            onValue(usersRef, (snapshot) => {
+                userRoles = [];
                 if (snapshot.exists()) {
-                    customRoles = [];
                     snapshot.forEach((childSnapshot) => {
-                        customRoles.push(childSnapshot.val());
+                        const userData = childSnapshot.val();
+                        userRoles.push({
+                            id: childSnapshot.key,
+                            ...userData
+                        });
                     });
-                    updateRoleSelects();
-                    updateRoleManagement();
                 }
-            } catch (error) {
-                console.error('Fehler beim Laden der Rollen:', error);
-            }
+                populateUserTables();
+                updateRoleSelects();
+            });
+
+            // Load roles
+            onValue(rolesRef, (snapshot) => {
+                customRoles = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        customRoles.push({
+                            id: childSnapshot.key,
+                            ...childSnapshot.val()
+                        });
+                    });
+                }
+                renderRoleManagement();
+                updateRoleSelects();
+            });
+
+            // Load history
+            onValue(historyRef, (snapshot) => {
+                actionHistory = [];
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        actionHistory.push(childSnapshot.val());
+                    });
+                }
+                renderActionHistory();
+            });
+
+            // Load webhooks
+            onValue(webhooksRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    webhooks = snapshot.val();
+                    updateWebhookInputs();
+                }
+            });
+
+            // Load warnings and show badge if there are active warnings
+            onValue(warningsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const warnings = [];
+                    snapshot.forEach((childSnapshot) => {
+                        warnings.push(childSnapshot.val());
+                    });
+                    
+                    // Show warning badge if there are active warnings
+                    const activeWarnings = warnings.filter(w => !w.resolved);
+                    if (activeWarnings.length > 0) {
+                        userWarningBadge.textContent = activeWarnings.length;
+                        userWarningBadge.classList.remove('hidden');
+                    } else {
+                        userWarningBadge.classList.add('hidden');
+                    }
+                } else {
+                    userWarningBadge.classList.add('hidden');
+                }
+            });
         }
 
-        async function saveRoles() {
-            try {
-                // Lösche alle vorhandenen Rollen
-                await remove(rolesRef);
-                
-                // Speichere alle Rollen neu
-                for (const role of customRoles) {
-                    await push(rolesRef, role);
-                }
-                
-                showNotification('Rollen erfolgreich gespeichert', 'success');
-            } catch (error) {
-                console.error('Fehler beim Speichern der Rollen:', error);
-                showNotification('Fehler beim Speichern der Rollen', 'error');
-            }
+        // Show login page
+        function showLoginPage() {
+            loginPage.classList.remove('hidden');
+            mainContent.classList.add('hidden');
         }
 
+        // Show main application
+        function showMainApp() {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+        }
+
+        // Populate user tables with data
+        function populateUserTables() {
+            userTableBody.innerHTML = '';
+            userManagementTableBody.innerHTML = '';
+            
+            if (userRoles.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="5" style="text-align: center; color: var(--text-lighter); padding: 2rem;">
+                        Keine Spieler eingestellt
+                    </td>
+                `;
+                userTableBody.appendChild(emptyRow);
+                userManagementTableBody.appendChild(emptyRow.cloneNode(true));
+                return;
+            }
+            
+            userRoles.forEach(user => {
+                const userRow = createUserRow(user);
+                userTableBody.appendChild(userRow);
+                
+                // Für die User Management Tabelle eine Kopie erstellen
+                const userRowCopy = createUserRow(user);
+                userManagementTableBody.appendChild(userRowCopy);
+            });
+        }
+
+        // Create a user table row
+        function createUserRow(user) {
+            const row = document.createElement('tr');
+            
+            // Find the role by roleId
+            const role = customRoles.find(r => r.id === user.roleId) || { 
+                name: 'Unbekannt', 
+                color: 'role-admin',
+                discordRoleId: ''
+            };
+            
+            row.innerHTML = `
+                <td>
+                    <div class="user-cell">
+                        <div class="user-avatar-small">${user.name ? user.name.charAt(0) : '?'}</div>
+                        <div class="user-info-small">
+                            <div class="user-name-small">${user.name || 'Unbekannt'}</div>
+                            <div class="user-id">ID: ${user.userId}</div>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="role-badge ${role.color}">${role.name}</span></td>
+                <td>${user.date || 'Unbekannt'}</td>
+                <td>${user.assignedBy || 'Unbekannt'}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-icon btn-promote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button class="btn-icon btn-demote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <button class="btn-icon btn-warning" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </button>
+                        <button class="btn-icon btn-terminate" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            return row;
+        }
+
+        // Render role management
+        function renderRoleManagement() {
+            roleManagement.innerHTML = '';
+            
+            if (customRoles.length === 0) {
+                roleManagement.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Rollen konfiguriert</p>';
+                return;
+            }
+            
+            customRoles.forEach((role, index) => {
+                const roleCard = document.createElement('div');
+                roleCard.className = 'role-card';
+                roleCard.innerHTML = `
+                    <div class="role-emoji">${role.emoji || '👤'}</div>
+                    <div class="role-input-group">
+                        <input type="text" class="role-input role-name-input" value="${role.name}" placeholder="Rollenname" data-index="${index}">
+                        <input type="text" class="role-input role-id-input" value="${role.discordRoleId}" placeholder="Discord Role ID" data-index="${index}">
+                        <input type="text" class="role-input role-emoji-input" value="${role.emoji}" placeholder="Emoji" data-index="${index}">
+                        <select class="role-input role-color-input" data-index="${index}">
+                            <option value="role-admin" ${role.color === 'role-admin' ? 'selected' : ''}>Admin (Rot)</option>
+                            <option value="role-moderator" ${role.color === 'role-moderator' ? 'selected' : ''}>Moderator (Orange)</option>
+                            <option value="role-developer" ${role.color === 'role-developer' ? 'selected' : ''}>Developer (Lila)</option>
+                            <option value="role-supporter" ${role.color === 'role-supporter' ? 'selected' : ''}>Supporter (Grün)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary save-role-btn" data-index="${index}" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fas fa-save"></i> Speichern
+                    </button>
+                    ${customRoles.length > 1 ? `<button class="remove-role-btn" data-index="${index}">
+                        <i class="fas fa-trash"></i> Entfernen
+                    </button>` : ''}
+                `;
+                roleManagement.appendChild(roleCard);
+            });
+
+            // Add event listeners for role inputs
+            document.querySelectorAll('.role-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    saveRoleToFirebase(index);
+                });
+            });
+
+            document.querySelectorAll('.save-role-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    saveRoleToFirebase(index);
+                });
+            });
+
+            document.querySelectorAll('.remove-role-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeRoleFromFirebase(index);
+                });
+            });
+        }
+
+        // Update role selects in modals
         function updateRoleSelects() {
             const roleSelects = [
                 document.getElementById('userRoleSelect'),
@@ -2096,480 +2128,517 @@
                     customRoles.forEach(role => {
                         const option = document.createElement('option');
                         option.value = role.id;
-                        option.textContent = `${role.emoji || '🎯'} ${role.name}`;
-                        option.dataset.discordRoleId = role.discordRoleId || '';
+                        option.textContent = role.name;
                         select.appendChild(option);
                     });
                 }
             });
         }
 
-        function updateRoleManagement() {
-            roleManagement.innerHTML = '';
+        // Update webhook inputs
+        function updateWebhookInputs() {
+            document.getElementById('webhookHiring').value = webhooks.hiring || '';
+            document.getElementById('webhookPromotions').value = webhooks.promotions || '';
+            document.getElementById('webhookDemotions').value = webhooks.demotions || '';
+            document.getElementById('webhookTerminations').value = webhooks.terminations || '';
+            document.getElementById('webhookWarnings').value = webhooks.warnings || '';
+        }
+
+        // Render action history
+        function renderActionHistory() {
+            actionHistoryContainer.innerHTML = '';
             
-            customRoles.forEach((role, index) => {
-                const roleCard = document.createElement('div');
-                roleCard.className = 'role-card';
-                roleCard.innerHTML = `
-                    <div class="role-emoji">${role.emoji || '🎯'}</div>
-                    <div class="role-input-group">
-                        <input type="text" class="role-input role-name-input" 
-                               value="${role.name}" placeholder="Rollenname"
-                               data-index="${index}">
-                        <input type="text" class="role-input role-id-input" 
-                               value="${role.discordRoleId || ''}" placeholder="Discord Role ID"
-                               data-index="${index}">
+            if (actionHistory.length === 0) {
+                actionHistoryContainer.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Aktionen vorhanden</p>';
+                return;
+            }
+            
+            // Sort by timestamp descending and take last 10
+            const recentHistory = [...actionHistory]
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10);
+            
+            recentHistory.forEach(action => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                let actionIcon = '📝';
+                let actionText = '';
+                
+                switch (action.type) {
+                    case 'hiring':
+                        actionIcon = '🎮';
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde als <strong>${action.roleName}</strong> eingestellt`;
+                        break;
+                    case 'promotion':
+                        actionIcon = '🎖️';
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> befördert`;
+                        break;
+                    case 'demotion':
+                        actionIcon = '📉';
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> degradiert`;
+                        break;
+                    case 'termination':
+                        actionIcon = '🚪';
+                        actionText = `Spieler <strong>${action.userName}</strong> wurde gekündigt`;
+                        break;
+                    case 'warning':
+                        actionIcon = '⚠️';
+                        actionText = `Spieler <strong>${action.userName}</strong> hat eine Verwarnung erhalten`;
+                        break;
+                }
+                
+                if (action.reason) {
+                    actionText += `. Grund: "${action.reason}"`;
+                }
+                
+                historyItem.innerHTML = `
+                    <div class="history-header">
+                        <div class="history-action">${actionIcon} ${action.type}</div>
+                        <div class="history-date">${new Date(action.timestamp).toLocaleString('de-DE')}</div>
                     </div>
-                    <div class="role-name">${role.name}</div>
-                    <div class="role-id">ID: ${role.discordRoleId || 'Nicht gesetzt'}</div>
-                    <button class="remove-role-btn" data-index="${index}">
-                        <i class="fas fa-trash"></i> Rolle entfernen
-                    </button>
+                    <div class="history-details">
+                        ${actionText}
+                    </div>
                 `;
-                roleManagement.appendChild(roleCard);
-            });
-
-            // Event-Listener für Rollen-Inputs
-            document.querySelectorAll('.role-name-input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const index = e.target.dataset.index;
-                    customRoles[index].name = e.target.value;
-                    saveRoles();
-                });
-            });
-
-            document.querySelectorAll('.role-id-input').forEach(input => {
-                input.addEventListener('change', (e) => {
-                    const index = e.target.dataset.index;
-                    customRoles[index].discordRoleId = e.target.value;
-                    saveRoles();
-                });
-            });
-
-            document.querySelectorAll('.remove-role-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const index = e.target.closest('button').dataset.index;
-                    customRoles.splice(index, 1);
-                    updateRoleManagement();
-                    saveRoles();
-                });
+                
+                actionHistoryContainer.appendChild(historyItem);
             });
         }
 
-        function addNewRole() {
-            const newRole = {
-                id: 'role_' + Date.now(),
-                name: 'Neue Rolle',
-                discordRoleId: '',
-                emoji: '🎯',
-                color: 'role-supporter'
+        // Setup event listeners
+        function setupEventListeners() {
+            // Discord login
+            discordLoginBtn.addEventListener('click', startDiscordOAuth);
+            
+            // Logout
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tab = this.getAttribute('data-tab');
+                    switchTab(tab);
+                });
+            });
+            
+            // Add user buttons
+            addUserBtn.addEventListener('click', () => addUserModal.classList.add('active'));
+            addUserBtn2.addEventListener('click', () => addUserModal.classList.add('active'));
+            
+            // Modal actions
+            cancelAddUser.addEventListener('click', () => {
+                addUserModal.classList.remove('active');
+                document.getElementById('hiringReason').value = ''; // Grund-Feld leeren
+                document.getElementById('playerName').value = ''; // Name-Feld leeren
+            });
+            saveUser.addEventListener('click', handleAddUser);
+            cancelPromotion.addEventListener('click', () => promotionModal.classList.remove('active'));
+            savePromotion.addEventListener('click', handlePromotion);
+            cancelDemotion.addEventListener('click', () => demotionModal.classList.remove('active'));
+            saveDemotion.addEventListener('click', handleDemotion);
+            cancelTermination.addEventListener('click', () => terminationModal.classList.remove('active'));
+            saveTermination.addEventListener('click', handleTermination);
+            cancelWarning.addEventListener('click', () => warningModal.classList.remove('active'));
+            saveWarning.addEventListener('click', handleWarning);
+            
+            // Refresh and export buttons
+            refreshUsers.addEventListener('click', () => {
+                showNotification('Benutzerliste aktualisiert', 'success');
+            });
+            
+            exportUsers.addEventListener('click', () => {
+                showNotification('Benutzerliste exportiert', 'success');
+            });
+            
+            // Add role button
+            addRoleBtn.addEventListener('click', addNewRole);
+            
+            // Webhook buttons
+            document.querySelectorAll('.test-webhook').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    testWebhook(type);
+                });
+            });
+            
+            document.querySelectorAll('.save-webhook').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    saveWebhook(type);
+                });
+            });
+            
+            // Card clicks - JETZT MIT FUNKTIONIERENDEN WEITERLEITUNGEN
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('click', function() {
+                    if (!this.classList.contains('disabled')) {
+                        const page = this.getAttribute('data-page');
+                        const pageUrl = PAGE_URLS[page];
+                        
+                        if (pageUrl) {
+                            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
+                            setTimeout(() => {
+                                window.location.href = pageUrl;
+                            }, 1500);
+                        } else {
+                            showNotification(`Seite ${page} nicht gefunden`, 'error');
+                        }
+                    }
+                });
+            });
+            
+            // Action buttons in tables
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.btn-promote')) {
+                    const userId = e.target.closest('.btn-promote').getAttribute('data-user-id');
+                    const userName = e.target.closest('.btn-promote').getAttribute('data-user-name');
+                    openPromotionModal(userId, userName);
+                }
+                
+                if (e.target.closest('.btn-demote')) {
+                    const userId = e.target.closest('.btn-demote').getAttribute('data-user-id');
+                    const userName = e.target.closest('.btn-demote').getAttribute('data-user-name');
+                    openDemotionModal(userId, userName);
+                }
+                
+                if (e.target.closest('.btn-warning')) {
+                    const userId = e.target.closest('.btn-warning').getAttribute('data-user-id');
+                    const userName = e.target.closest('.btn-warning').getAttribute('data-user-name');
+                    openWarningModal(userId, userName);
+                }
+                
+                if (e.target.closest('.btn-terminate')) {
+                    const userId = e.target.closest('.btn-terminate').getAttribute('data-user-id');
+                    const userName = e.target.closest('.btn-terminate').getAttribute('data-user-name');
+                    openTerminationModal(userId, userName);
+                }
+            });
+        }
+
+        // Handle logout
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('discord_user');
+            localStorage.removeItem('discord_access_token');
+            showLoginPage();
+            showNotification('Erfolgreich abgemeldet', 'info');
+        }
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-tab') === tabName) {
+                    item.classList.add('active');
+                }
+            });
+            
+            tabContents.forEach(tab => {
+                tab.classList.add('hidden');
+                if (tab.id === tabName) {
+                    tab.classList.remove('hidden');
+                }
+            });
+        }
+
+        // Handle adding a new user
+        async function handleAddUser() {
+            const userId = document.getElementById('discordUserId').value;
+            const playerName = document.getElementById('playerName').value;
+            const roleId = document.getElementById('userRoleSelect').value;
+            const reason = document.getElementById('hiringReason').value || "Neueinstellung";
+            
+            if (!userId) {
+                showNotification('Bitte geben Sie eine User ID ein', 'error');
+                return;
+            }
+            
+            if (!playerName) {
+                showNotification('Bitte geben Sie einen Spieler Namen ein', 'error');
+                return;
+            }
+            
+            if (!/^\d+$/.test(userId)) {
+                showNotification('Bitte geben Sie eine gültige Discord User ID ein (nur Zahlen)', 'error');
+                return;
+            }
+            
+            const selectedRole = customRoles.find(r => r.id === roleId);
+            if (!selectedRole) {
+                showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
+                return;
+            }
+            
+            const userData = {
+                userId: userId,
+                name: playerName,
+                roleId: roleId,
+                date: new Date().toLocaleDateString('de-DE'),
+                assignedBy: currentUser.username,
+                timestamp: new Date().toISOString()
             };
             
-            customRoles.push(newRole);
-            updateRoleManagement();
-            saveRoles();
-        }
-
-        // User Management
-        async function loadUsers() {
             try {
-                const snapshot = await get(usersRef);
-                userTableBody.innerHTML = '';
-                userManagementTableBody.innerHTML = '';
+                // Save to Firebase
+                const newUserRef = push(usersRef);
+                await set(newUserRef, userData);
                 
-                if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        const user = childSnapshot.val();
-                        if (user.status !== 'terminated') {
-                            addUserToTable(user, userTableBody);
-                        }
-                        addUserToManagementTable(user, userManagementTableBody);
+                // Add to history
+                const historyData = {
+                    type: 'hiring',
+                    userId: userId,
+                    userName: playerName,
+                    roleName: selectedRole.name,
+                    reason: reason,
+                    executedBy: currentUser.username,
+                    timestamp: new Date().toISOString()
+                };
+                await push(historyRef, historyData);
+                
+                // Send to Discord if webhook is configured
+                if (webhooks.hiring) {
+                    await sendToDiscord(webhooks.hiring, {
+                        title: "🎮 Einstellung",
+                        description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId || 'unknown-role'}>.\n\n**Grund:** ${reason}`,
+                        color: 0x00ff00
                     });
                 }
+                
+                addUserModal.classList.remove('active');
+                showNotification(`Spieler ${playerName} erfolgreich eingestellt`, 'success');
+                document.getElementById('discordUserId').value = '';
+                document.getElementById('playerName').value = '';
+                document.getElementById('hiringReason').value = ''; // Feld leeren
             } catch (error) {
-                console.error('Fehler beim Laden der Benutzer:', error);
+                console.error('Fehler beim Speichern:', error);
+                showNotification('Fehler beim Speichern des Spielers', 'error');
             }
         }
 
-        function addUserToTable(user, tableBody) {
-            const row = document.createElement('tr');
-            
-            const roleInfo = customRoles.find(role => role.id === user.role) || { name: 'Unbekannt', color: 'role-supporter' };
-            
-            row.innerHTML = `
-                <td>
-                    <div class="user-cell">
-                        <div class="user-avatar-small">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="user-info-small">
-                            <div class="user-name-small">${user.name}</div>
-                            <div class="user-id">ID: ${user.id}</div>
-                        </div>
-                    </div>
-                </td>
-                <td><span class="role-badge ${roleInfo.color}">${roleInfo.name}</span></td>
-                <td>${new Date(user.hiredAt).toLocaleDateString('de-DE')}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn-icon btn-promote promote-user" data-userid="${user.id}">
-                            <i class="fas fa-arrow-up"></i>
-                        </button>
-                        <button class="btn-icon btn-demote demote-user" data-userid="${user.id}">
-                            <i class="fas fa-arrow-down"></i>
-                        </button>
-                        <button class="btn-icon btn-terminate terminate-user" data-userid="${user.id}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <button class="btn-icon btn-warning warn-user" data-userid="${user.id}">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </button>
-                    </div>
-                </td>
-            `;
-            
-            tableBody.appendChild(row);
-            
-            // Event Listener für Aktionen
-            row.querySelector('.promote-user').addEventListener('click', () => openPromotionModal(user));
-            row.querySelector('.demote-user').addEventListener('click', () => openDemotionModal(user));
-            row.querySelector('.terminate-user').addEventListener('click', () => openTerminationModal(user));
-            row.querySelector('.warn-user').addEventListener('click', () => openWarningModal(user));
-        }
-
-        function addUserToManagementTable(user, tableBody) {
-            const row = document.createElement('tr');
-            
-            const roleInfo = customRoles.find(role => role.id === user.role) || { name: 'Unbekannt', color: 'role-supporter' };
-            
-            row.innerHTML = `
-                <td>
-                    <div class="user-cell">
-                        <div class="user-avatar-small">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="user-info-small">
-                            <div class="user-name-small">${user.name}</div>
-                            <div class="user-id">ID: ${user.id}</div>
-                        </div>
-                    </div>
-                </td>
-                <td><span class="role-badge ${roleInfo.color}">${roleInfo.name}</span></td>
-                <td>${new Date(user.hiredAt).toLocaleDateString('de-DE')}</td>
-                <td>${user.hiredByName || 'Unbekannt'}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn-icon btn-promote promote-user" data-userid="${user.id}">
-                            <i class="fas fa-arrow-up"></i>
-                        </button>
-                        <button class="btn-icon btn-demote demote-user" data-userid="${user.id}">
-                            <i class="fas fa-arrow-down"></i>
-                        </button>
-                        <button class="btn-icon btn-terminate terminate-user" data-userid="${user.id}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                        <button class="btn-icon btn-warning warn-user" data-userid="${user.id}">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </button>
-                    </div>
-                </td>
-            `;
-            
-            tableBody.appendChild(row);
-            
-            // Event Listener für Aktionen
-            row.querySelector('.promote-user').addEventListener('click', () => openPromotionModal(user));
-            row.querySelector('.demote-user').addEventListener('click', () => openDemotionModal(user));
-            row.querySelector('.terminate-user').addEventListener('click', () => openTerminationModal(user));
-            row.querySelector('.warn-user').addEventListener('click', () => openWarningModal(user));
-        }
-
-        // Modal Functions
-        function openPromotionModal(user) {
-            document.getElementById('promotionUserId').value = user.id;
+        // Open promotion modal
+        function openPromotionModal(userId, userName) {
+            document.getElementById('promotionUserId').value = userId;
+            document.getElementById('promotionReason').value = '';
             promotionModal.classList.add('active');
         }
 
-        function openDemotionModal(user) {
-            document.getElementById('demotionUserId').value = user.id;
+        // Handle promotion
+        async function handlePromotion() {
+            const userId = document.getElementById('promotionUserId').value;
+            const roleId = document.getElementById('promotionRoleSelect').value;
+            const reason = document.getElementById('promotionReason').value;
+            
+            const selectedRole = customRoles.find(r => r.id === roleId);
+            if (!selectedRole) {
+                showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
+                return;
+            }
+            
+            try {
+                // Find and update user in Firebase
+                const userSnapshot = await get(usersRef);
+                let userKey = null;
+                let currentUserData = null;
+                
+                userSnapshot.forEach((childSnapshot) => {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
+                        userKey = childSnapshot.key;
+                        currentUserData = userData;
+                    }
+                });
+                
+                if (userKey && currentUserData) {
+                    // ALLE Benutzerdaten behalten, nur die Rolle aktualisieren
+                    const updatedUserData = {
+                        ...currentUserData,
+                        roleId: roleId
+                    };
+                    
+                    const userRef = ref(db, `users/${userKey}`);
+                    await set(userRef, updatedUserData);
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'promotion',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: selectedRole.name,
+                        reason: reason || 'Kein Grund angegeben',
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured
+                    if (webhooks.promotions) {
+                        await sendToDiscord(webhooks.promotions, {
+                            title: "🎖️ Beförderung",
+                            description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId || 'unknown-role'}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xffd700
+                        });
+                    }
+                    
+                    promotionModal.classList.remove('active');
+                    showNotification(`Spieler ${currentUserData.name} wurde befördert`, 'success');
+                } else {
+                    showNotification(`Spieler nicht gefunden`, 'error');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Beförderung:', error);
+                showNotification('Fehler bei der Beförderung', 'error');
+            }
+        }
+
+        // Open demotion modal
+        function openDemotionModal(userId, userName) {
+            document.getElementById('demotionUserId').value = userId;
+            document.getElementById('demotionReason').value = '';
             demotionModal.classList.add('active');
         }
 
-        function openTerminationModal(user) {
-            document.getElementById('terminationUserId').value = user.id;
-            terminationModal.classList.add('active');
+        // Handle demotion
+        async function handleDemotion() {
+            const userId = document.getElementById('demotionUserId').value;
+            const roleId = document.getElementById('demotionRoleSelect').value;
+            const reason = document.getElementById('demotionReason').value;
+            
+            const selectedRole = customRoles.find(r => r.id === roleId);
+            if (!selectedRole) {
+                showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
+                return;
+            }
+            
+            try {
+                // Find and update user in Firebase
+                const userSnapshot = await get(usersRef);
+                let userKey = null;
+                let currentUserData = null;
+                
+                userSnapshot.forEach((childSnapshot) => {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
+                        userKey = childSnapshot.key;
+                        currentUserData = userData;
+                    }
+                });
+                
+                if (userKey && currentUserData) {
+                    // ALLE Benutzerdaten behalten, nur die Rolle aktualisieren
+                    const updatedUserData = {
+                        ...currentUserData,
+                        roleId: roleId
+                    };
+                    
+                    const userRef = ref(db, `users/${userKey}`);
+                    await set(userRef, updatedUserData);
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'demotion',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: selectedRole.name,
+                        reason: reason || 'Kein Grund angegeben',
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured
+                    if (webhooks.demotions) {
+                        await sendToDiscord(webhooks.demotions, {
+                            title: "📉 Degradierung",
+                            description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId || 'unknown-role'}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xffa500
+                        });
+                    }
+                    
+                    demotionModal.classList.remove('active');
+                    showNotification(`Spieler ${currentUserData.name} wurde degradiert`, 'warning');
+                } else {
+                    showNotification(`Spieler nicht gefunden`, 'error');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Degradierung:', error);
+                showNotification('Fehler bei der Degradierung', 'error');
+            }
         }
 
-        function openWarningModal(user) {
-            document.getElementById('warningUserId').value = user.id;
+        // Open warning modal
+        function openWarningModal(userId, userName) {
+            document.getElementById('warningUserId').value = userId;
+            document.getElementById('warningReason').value = '';
             warningModal.classList.add('active');
         }
 
-        // User Actions
-        async function addNewUser() {
-            const discordUserId = document.getElementById('discordUserId').value;
-            const playerName = document.getElementById('playerName').value;
-            const roleSelect = document.getElementById('userRoleSelect');
-            const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-            const roleId = roleSelect.value;
-            const discordRoleId = selectedOption.dataset.discordRoleId;
-            const reason = document.getElementById('hiringReason').value;
-
-            if (!discordUserId || !playerName || !roleId) {
-                showNotification('Bitte fülle alle erforderlichen Felder aus', 'warning');
-                return;
-            }
-
-            try {
-                const userData = {
-                    id: discordUserId,
-                    name: playerName,
-                    role: roleId,
-                    discordRoleId: discordRoleId,
-                    hiredBy: currentUser.id,
-                    hiredByName: currentUser.username,
-                    hiredAt: new Date().toISOString(),
-                    status: 'active'
-                };
-
-                await set(child(usersRef, discordUserId), userData);
-                
-                // Sende Discord Webhook
-                await sendDiscordWebhook('hiring', {
-                    discordUserId: discordUserId,
-                    playerName: playerName,
-                    roleId: discordRoleId,
-                    roleName: selectedOption.textContent,
-                    reason: reason
-                });
-
-                // Füge zur Historie hinzu
-                await addToHistory('hiring', {
-                    targetUser: discordUserId,
-                    targetName: playerName,
-                    role: roleId,
-                    reason: reason
-                });
-
-                showNotification('Spieler erfolgreich eingestellt', 'success');
-                addUserModal.classList.remove('active');
-                resetAddUserForm();
-                loadUsers();
-
-            } catch (error) {
-                console.error('Fehler beim Einstellen des Spielers:', error);
-                showNotification('Fehler beim Einstellen des Spielers', 'error');
-            }
-        }
-
-        async function promoteUser() {
-            const userId = document.getElementById('promotionUserId').value;
-            const roleSelect = document.getElementById('promotionRoleSelect');
-            const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-            const newRoleId = roleSelect.value;
-            const discordRoleId = selectedOption.dataset.discordRoleId;
-            const reason = document.getElementById('promotionReason').value;
-
-            if (!userId || !newRoleId) {
-                showNotification('Bitte fülle alle erforderlichen Felder aus', 'warning');
-                return;
-            }
-
-            try {
-                const userRef = child(usersRef, userId);
-                const userSnapshot = await get(userRef);
-                
-                if (userSnapshot.exists()) {
-                    const user = userSnapshot.val();
-                    const oldRole = user.role;
-                    
-                    await set(userRef, {
-                        ...user,
-                        role: newRoleId,
-                        discordRoleId: discordRoleId
-                    });
-
-                    // Sende Discord Webhook
-                    await sendDiscordWebhook('promotions', {
-                        discordUserId: userId,
-                        playerName: user.name,
-                        roleId: discordRoleId,
-                        roleName: selectedOption.textContent,
-                        reason: reason
-                    });
-
-                    // Füge zur Historie hinzu
-                    await addToHistory('promotion', {
-                        targetUser: userId,
-                        targetName: user.name,
-                        oldRole: oldRole,
-                        newRole: newRoleId,
-                        reason: reason
-                    });
-
-                    showNotification('Spieler erfolgreich befördert', 'success');
-                    promotionModal.classList.remove('active');
-                    loadUsers();
-                }
-            } catch (error) {
-                console.error('Fehler beim Befördern des Spielers:', error);
-                showNotification('Fehler beim Befördern des Spielers', 'error');
-            }
-        }
-
-        async function demoteUser() {
-            const userId = document.getElementById('demotionUserId').value;
-            const roleSelect = document.getElementById('demotionRoleSelect');
-            const selectedOption = roleSelect.options[roleSelect.selectedIndex];
-            const newRoleId = roleSelect.value;
-            const discordRoleId = selectedOption.dataset.discordRoleId;
-            const reason = document.getElementById('demotionReason').value;
-
-            if (!userId || !newRoleId) {
-                showNotification('Bitte fülle alle erforderlichen Felder aus', 'warning');
-                return;
-            }
-
-            try {
-                const userRef = child(usersRef, userId);
-                const userSnapshot = await get(userRef);
-                
-                if (userSnapshot.exists()) {
-                    const user = userSnapshot.val();
-                    const oldRole = user.role;
-                    
-                    await set(userRef, {
-                        ...user,
-                        role: newRoleId,
-                        discordRoleId: discordRoleId
-                    });
-
-                    // Sende Discord Webhook
-                    await sendDiscordWebhook('demotions', {
-                        discordUserId: userId,
-                        playerName: user.name,
-                        roleId: discordRoleId,
-                        roleName: selectedOption.textContent,
-                        reason: reason
-                    });
-
-                    // Füge zur Historie hinzu
-                    await addToHistory('demotion', {
-                        targetUser: userId,
-                        targetName: user.name,
-                        oldRole: oldRole,
-                        newRole: newRoleId,
-                        reason: reason
-                    });
-
-                    showNotification('Spieler erfolgreich degradiert', 'success');
-                    demotionModal.classList.remove('active');
-                    loadUsers();
-                }
-            } catch (error) {
-                console.error('Fehler beim Degradieren des Spielers:', error);
-                showNotification('Fehler beim Degradieren des Spielers', 'error');
-            }
-        }
-
-        async function terminateUser() {
-            const userId = document.getElementById('terminationUserId').value;
-            const reason = document.getElementById('terminationReason').value;
-
-            if (!userId) {
-                showNotification('Bitte fülle alle erforderlichen Felder aus', 'warning');
-                return;
-            }
-
-            try {
-                const userRef = child(usersRef, userId);
-                const userSnapshot = await get(userRef);
-                
-                if (userSnapshot.exists()) {
-                    const user = userSnapshot.val();
-                    
-                    await set(userRef, {
-                        ...user,
-                        status: 'terminated',
-                        terminatedAt: new Date().toISOString(),
-                        terminatedBy: currentUser.id,
-                        terminationReason: reason
-                    });
-
-                    // Sende Discord Webhook
-                    await sendDiscordWebhook('terminations', {
-                        discordUserId: userId,
-                        playerName: user.name,
-                        roleId: user.discordRoleId,
-                        roleName: customRoles.find(r => r.id === user.role)?.name || 'Unbekannt',
-                        reason: reason
-                    });
-
-                    // Füge zur Historie hinzu
-                    await addToHistory('termination', {
-                        targetUser: userId,
-                        targetName: user.name,
-                        role: user.role,
-                        reason: reason
-                    });
-
-                    showNotification('Spieler erfolgreich gekündigt', 'success');
-                    terminationModal.classList.remove('active');
-                    loadUsers();
-                }
-            } catch (error) {
-                console.error('Fehler beim Kündigen des Spielers:', error);
-                showNotification('Fehler beim Kündigen des Spielers', 'error');
-            }
-        }
-
-        async function warnUser() {
+        // Handle warning
+        async function handleWarning() {
             const userId = document.getElementById('warningUserId').value;
             const reason = document.getElementById('warningReason').value;
-
-            if (!userId || !reason) {
-                showNotification('Bitte fülle alle erforderlichen Felder aus', 'warning');
+            
+            if (!userId) {
+                showNotification('Ungültige User ID', 'error');
                 return;
             }
-
+            
+            if (!reason) {
+                showNotification('Bitte geben Sie einen Grund für die Verwarnung an', 'error');
+                return;
+            }
+            
             try {
-                const userRef = child(usersRef, userId);
-                const userSnapshot = await get(userRef);
+                // Find user in Firebase
+                const userSnapshot = await get(usersRef);
+                let currentUserData = null;
                 
-                if (userSnapshot.exists()) {
-                    const user = userSnapshot.val();
-                    
-                    // Speichere Verwarnung
+                userSnapshot.forEach((childSnapshot) => {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
+                        currentUserData = userData;
+                    }
+                });
+                
+                if (currentUserData) {
+                    // Save warning to Firebase
                     const warningData = {
                         userId: userId,
-                        userName: user.name,
+                        userName: currentUserData.name,
                         reason: reason,
-                        warnedBy: currentUser.id,
-                        warnedByName: currentUser.username,
-                        warnedAt: new Date().toISOString()
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString(),
+                        resolved: false
                     };
-
+                    
                     await push(warningsRef, warningData);
-
-                    // Sende Discord Webhook
-                    await sendDiscordWebhook('warnings', {
-                        discordUserId: userId,
-                        playerName: user.name,
-                        roleId: user.discordRoleId,
-                        roleName: customRoles.find(r => r.id === user.role)?.name || 'Unbekannt',
-                        reason: reason
-                    });
-
-                    // Füge zur Historie hinzu
-                    await addToHistory('warning', {
-                        targetUser: userId,
-                        targetName: user.name,
-                        reason: reason
-                    });
-
-                    showNotification('Verwarnung erfolgreich gesendet', 'success');
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'warning',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: '',
+                        reason: reason,
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured
+                    if (webhooks.warnings) {
+                        await sendToDiscord(webhooks.warnings, {
+                            title: "⚠️ Team Verwarnung",
+                            description: `**Familien Updates**\n\nHiermit erhält <@${userId}> eine offizielle Verwarnung.\n\n**Grund:** ${reason}`,
+                            color: 0xff0000
+                        });
+                    }
+                    
                     warningModal.classList.remove('active');
-                    await loadWarnings();
+                    showNotification(`Verwarnung an Spieler ${currentUserData.name} gesendet`, 'warning');
+                } else {
+                    showNotification(`Spieler nicht gefunden`, 'error');
                 }
             } catch (error) {
                 console.error('Fehler beim Senden der Verwarnung:', error);
@@ -2577,341 +2646,203 @@
             }
         }
 
-        function resetAddUserForm() {
-            document.getElementById('discordUserId').value = '';
-            document.getElementById('playerName').value = '';
-            document.getElementById('userRoleSelect').selectedIndex = 0;
-            document.getElementById('hiringReason').value = '';
+        // Open termination modal
+        function openTerminationModal(userId, userName) {
+            document.getElementById('terminationUserId').value = userId;
+            document.getElementById('terminationReason').value = '';
+            terminationModal.classList.add('active');
         }
 
-        // Webhook Functions
-        async function loadWebhooks() {
-            try {
-                const snapshot = await get(webhooksRef);
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    webhooks = { ...webhooks, ...data };
-                    
-                    // Webhook Inputs aktualisieren
-                    document.getElementById('webhookHiring').value = webhooks.hiring || '';
-                    document.getElementById('webhookPromotions').value = webhooks.promotions || '';
-                    document.getElementById('webhookDemotions').value = webhooks.demotions || '';
-                    document.getElementById('webhookTerminations').value = webhooks.terminations || '';
-                    document.getElementById('webhookWarnings').value = webhooks.warnings || '';
-                }
-            } catch (error) {
-                console.error('Fehler beim Laden der Webhooks:', error);
-            }
-        }
-
-        async function saveWebhook(type) {
-            const input = document.getElementById(`webhook${type.charAt(0).toUpperCase() + type.slice(1)}`);
-            const url = input.value.trim();
+        // Handle termination
+        async function handleTermination() {
+            const userId = document.getElementById('terminationUserId').value;
+            const reason = document.getElementById('terminationReason').value;
             
-            if (url && !url.startsWith('https://discord.com/api/webhooks/')) {
-                showNotification('Ungültige Webhook URL', 'error');
+            if (!userId) {
+                showNotification('Ungültige User ID', 'error');
                 return;
             }
+            
+            try {
+                // Find and remove user from Firebase
+                const userSnapshot = await get(usersRef);
+                let userKey = null;
+                let currentUserData = null;
+                
+                userSnapshot.forEach((childSnapshot) => {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
+                        userKey = childSnapshot.key;
+                        currentUserData = userData;
+                    }
+                });
+                
+                if (userKey && currentUserData) {
+                    const userRef = ref(db, `users/${userKey}`);
+                    await remove(userRef);
+                    
+                    // UI sofort aktualisieren
+                    populateUserTables();
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'termination',
+                        userId: userId,
+                        userName: currentUserData.name,
+                        roleName: '',
+                        reason: reason || 'Kein Grund angegeben',
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured
+                    if (webhooks.terminations) {
+                        await sendToDiscord(webhooks.terminations, {
+                            title: "📢 Blood Out",
+                            description: `Hiermit bekommt <@${userId}> offiziell seinen blood out.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xff0000
+                        });
+                    }
+                    
+                    terminationModal.classList.remove('active');
+                    showNotification(`Spieler ${currentUserData.name} wurde gekündigt`, 'success');
+                } else {
+                    showNotification(`Spieler nicht gefunden`, 'error');
+                }
+            } catch (error) {
+                console.error('Fehler bei der Kündigung:', error);
+                showNotification('Fehler bei der Kündigung', 'error');
+            }
+        }
 
+        // Add new role
+        async function addNewRole() {
+            const newRole = {
+                id: 'role_' + Date.now(),
+                name: 'Neue Rolle',
+                discordRoleId: '',
+                emoji: '👤',
+                color: 'role-admin'
+            };
+            
+            try {
+                await push(rolesRef, newRole);
+                showNotification('Neue Rolle hinzugefügt', 'success');
+            } catch (error) {
+                console.error('Fehler beim Hinzufügen der Rolle:', error);
+                showNotification('Fehler beim Hinzufügen der Rolle', 'error');
+            }
+        }
+
+        // Save role to Firebase
+        async function saveRoleToFirebase(index) {
+            const role = customRoles[index];
+            const roleInputs = document.querySelectorAll(`[data-index="${index}"]`);
+            
+            role.name = roleInputs[0].value;
+            role.discordRoleId = roleInputs[1].value;
+            role.emoji = roleInputs[2].value;
+            role.color = roleInputs[3].value;
+            
+            try {
+                const roleRef = ref(db, `roles/${role.id}`);
+                await set(roleRef, role);
+                showNotification('Rolle gespeichert', 'success');
+            } catch (error) {
+                console.error('Fehler beim Speichern der Rolle:', error);
+                showNotification('Fehler beim Speichern der Rolle', 'error');
+            }
+        }
+
+        // Remove role from Firebase
+        async function removeRoleFromFirebase(index) {
+            const role = customRoles[index];
+            
+            try {
+                const roleRef = ref(db, `roles/${role.id}`);
+                await remove(roleRef);
+                showNotification('Rolle entfernt', 'success');
+            } catch (error) {
+                console.error('Fehler beim Entfernen der Rolle:', error);
+                showNotification('Fehler beim Entfernen der Rolle', 'error');
+            }
+        }
+
+        // Test webhook
+        async function testWebhook(type) {
+            const url = document.getElementById(`webhook${type.charAt(0).toUpperCase() + type.slice(1)}`).value;
+            
+            if (!url) {
+                showNotification('Bitte geben Sie eine Webhook URL ein', 'error');
+                return;
+            }
+            
+            if (!url.startsWith('https://discord.com/api/webhooks/')) {
+                showNotification('Bitte geben Sie eine gültige Discord Webhook URL ein', 'error');
+                return;
+            }
+            
+            try {
+                await sendToDiscord(url, {
+                    title: "🔧 Webhook Test",
+                    description: `Dies ist ein Test für den ${type} Webhook.`,
+                    color: 0x00ff00
+                });
+                showNotification('Webhook Test erfolgreich gesendet', 'success');
+            } catch (error) {
+                showNotification('Webhook Test fehlgeschlagen', 'error');
+            }
+        }
+
+        // Save webhook
+        async function saveWebhook(type) {
+            const url = document.getElementById(`webhook${type.charAt(0).toUpperCase() + type.slice(1)}`).value;
+            
+            if (!url) {
+                showNotification('Bitte geben Sie eine Webhook URL ein', 'error');
+                return;
+            }
+            
+            if (!url.startsWith('https://discord.com/api/webhooks/')) {
+                showNotification('Bitte geben Sie eine gültige Discord Webhook URL ein', 'error');
+                return;
+            }
+            
             try {
                 webhooks[type] = url;
-                await set(child(webhooksRef, type), url);
-                showNotification(`Webhook für ${type} gespeichert`, 'success');
+                await set(webhooksRef, webhooks);
+                showNotification('Webhook URL erfolgreich gespeichert', 'success');
             } catch (error) {
                 console.error('Fehler beim Speichern des Webhooks:', error);
                 showNotification('Fehler beim Speichern des Webhooks', 'error');
             }
         }
 
-        // Funktion zum Senden von Discord Webhook-Nachrichten
-        async function sendDiscordWebhook(type, data) {
-            const webhookUrl = webhooks[type];
-            if (!webhookUrl) {
-                console.warn(`Keine Webhook-URL für ${type} konfiguriert`);
-                return;
-            }
-
-            try {
-                // Hole die Rolleninformationen
-                const roleId = data.roleId || data.discordRoleId;
-                const roleName = data.roleName || 'Unbekannte Rolle';
-                
-                // Erstelle die Embed-Nachricht
-                const embed = {
-                    title: getWebhookTitle(type),
-                    color: getWebhookColor(type),
-                    timestamp: new Date().toISOString(),
-                    fields: [],
-                    footer: {
-                        text: `KhusLand Panel • ${new Date().toLocaleDateString('de-DE')}`,
-                        icon_url: "https://cdn.discordapp.com/embed/avatars/0.png"
-                    }
-                };
-
-                // Füge Felder basierend auf dem Typ hinzu
-                switch (type) {
-                    case 'hiring':
-                        embed.description = `🎉 **Neuer Spieler eingestellt**`;
-                        embed.fields.push(
-                            { name: "👤 Spieler", value: data.playerName || 'Unbekannt', inline: true },
-                            { name: "🆔 Discord ID", value: data.discordUserId || 'Unbekannt', inline: true },
-                            { name: "🎖️ Rolle", value: roleId ? `<@&${roleId}>` : roleName, inline: true },
-                            { name: "📝 Grund", value: data.reason || 'Nicht angegeben', inline: false },
-                            { name: "👨‍💼 Eingestellt von", value: `<@${currentUser.id}>`, inline: true }
-                        );
-                        break;
-
-                    case 'promotions':
-                        embed.description = `📈 **Spieler befördert**`;
-                        embed.fields.push(
-                            { name: "👤 Spieler", value: data.playerName || 'Unbekannt', inline: true },
-                            { name: "🆔 Discord ID", value: data.discordUserId || 'Unbekannt', inline: true },
-                            { name: "🎖️ Neue Rolle", value: roleId ? `<@&${roleId}>` : roleName, inline: true },
-                            { name: "📝 Grund", value: data.reason || 'Nicht angegeben', inline: false },
-                            { name: "👨‍💼 Befördert von", value: `<@${currentUser.id}>`, inline: true }
-                        );
-                        break;
-
-                    case 'demotions':
-                        embed.description = `📉 **Spieler degradiert**`;
-                        embed.fields.push(
-                            { name: "👤 Spieler", value: data.playerName || 'Unbekannt', inline: true },
-                            { name: "🆔 Discord ID", value: data.discordUserId || 'Unbekannt', inline: true },
-                            { name: "🎖️ Neue Rolle", value: roleId ? `<@&${roleId}>` : roleName, inline: true },
-                            { name: "📝 Grund", value: data.reason || 'Nicht angegeben', inline: false },
-                            { name: "👨‍💼 Degradiert von", value: `<@${currentUser.id}>`, inline: true }
-                        );
-                        break;
-
-                    case 'terminations':
-                        embed.description = `🚪 **Spieler gekündigt**`;
-                        embed.fields.push(
-                            { name: "👤 Spieler", value: data.playerName || 'Unbekannt', inline: true },
-                            { name: "🆔 Discord ID", value: data.discordUserId || 'Unbekannt', inline: true },
-                            { name: "🎖️ Letzte Rolle", value: roleId ? `<@&${roleId}>` : roleName, inline: true },
-                            { name: "📝 Grund", value: data.reason || 'Nicht angegeben', inline: false },
-                            { name: "👨‍💼 Gekündigt von", value: `<@${currentUser.id}>`, inline: true }
-                        );
-                        break;
-
-                    case 'warnings':
-                        embed.description = `⚠️ **Team Verwarnung**`;
-                        embed.fields.push(
-                            { name: "👤 Spieler", value: data.playerName || 'Unbekannt', inline: true },
-                            { name: "🆔 Discord ID", value: data.discordUserId || 'Unbekannt', inline: true },
-                            { name: "🎖️ Aktuelle Rolle", value: roleId ? `<@&${roleId}>` : roleName, inline: true },
-                            { name: "📝 Verwarnungsgrund", value: data.reason || 'Nicht angegeben', inline: false },
-                            { name: "👨‍💼 Verwarnung von", value: `<@${currentUser.id}>`, inline: true }
-                        );
-                        break;
-                }
-
-                // Sende die Webhook-Nachricht
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        embeds: [embed]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Webhook fehlgeschlagen: ${response.status}`);
-                }
-
-                console.log(`Webhook ${type} erfolgreich gesendet`);
-            } catch (error) {
-                console.error(`Fehler beim Senden des Webhooks ${type}:`, error);
-                showNotification(`Fehler beim Senden der Discord-Benachrichtigung`, 'error');
-            }
-        }
-
-        // Hilfsfunktion für Webhook-Titel
-        function getWebhookTitle(type) {
-            const titles = {
-                'hiring': 'Spieler Einstellung',
-                'promotions': 'Beförderung',
-                'demotions': 'Degradierung',
-                'terminations': 'Kündigung',
-                'warnings': 'Team Verwarnung'
-            };
-            return titles[type] || 'System Benachrichtigung';
-        }
-
-        // Hilfsfunktion für Webhook-Farben
-        function getWebhookColor(type) {
-            const colors = {
-                'hiring': 0x10B981,    // Grün
-                'promotions': 0x3B82F6, // Blau
-                'demotions': 0xF59E0B,  // Orange
-                'terminations': 0xEF4444, // Rot
-                'warnings': 0xDC2626    // Dunkelrot
-            };
-            return colors[type] || 0x6366F1;
-        }
-
-        // Funktion zum Testen von Webhooks
-        async function testDiscordWebhook(type) {
-            const webhookUrl = webhooks[type];
-            if (!webhookUrl) {
-                showNotification(`Keine Webhook-URL für ${type} konfiguriert`, 'warning');
-                return;
-            }
-
-            try {
-                // Test-Daten für die Webhook-Nachricht
-                const testData = {
-                    playerName: 'Test Spieler',
-                    discordUserId: '123456789012345678',
-                    roleId: '123456789012345679', // Beispiel-Role-ID
-                    roleName: 'Test Rolle',
-                    reason: 'Dies ist ein Test der Webhook-Funktionalität'
-                };
-
-                await sendDiscordWebhook(type, testData);
-                showNotification(`Webhook ${type} erfolgreich getestet`, 'success');
-            } catch (error) {
-                console.error(`Fehler beim Testen des Webhooks ${type}:`, error);
-                showNotification(`Fehler beim Testen des Webhooks`, 'error');
-            }
-        }
-
-        // History Management
-        async function loadHistory() {
-            try {
-                const snapshot = await get(historyRef);
-                actionHistoryContainer.innerHTML = '';
-                
-                if (snapshot.exists()) {
-                    const history = [];
-                    snapshot.forEach((childSnapshot) => {
-                        history.push(childSnapshot.val());
-                    });
-                    
-                    // Sortiere nach Datum (neueste zuerst)
-                    history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                    
-                    // Zeige die letzten 20 Einträge
-                    history.slice(0, 20).forEach(entry => {
-                        addHistoryItem(entry);
-                    });
-                }
-            } catch (error) {
-                console.error('Fehler beim Laden der Historie:', error);
-            }
-        }
-
-        async function addToHistory(action, details) {
-            try {
-                const historyEntry = {
-                    action: action,
-                    details: details,
-                    user: currentUser.id,
-                    userName: currentUser.username,
-                    timestamp: new Date().toISOString()
-                };
-
-                await push(historyRef, historyEntry);
-                await loadHistory(); // Aktualisiere die Anzeige
-            } catch (error) {
-                console.error('Fehler beim Hinzufügen zur Historie:', error);
-            }
-        }
-
-        function addHistoryItem(entry) {
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            
-            const actionText = getActionText(entry.action, entry.details);
-            
-            historyItem.innerHTML = `
-                <div class="history-header">
-                    <div class="history-action">${actionText}</div>
-                    <div class="history-date">${new Date(entry.timestamp).toLocaleString('de-DE')}</div>
-                </div>
-                <div class="history-details">
-                    Durchgeführt von: ${entry.userName} (${entry.user})
-                </div>
-            `;
-            
-            actionHistoryContainer.appendChild(historyItem);
-        }
-
-        function getActionText(action, details) {
-            const actions = {
-                'hiring': `Spieler eingestellt: ${details.targetName} (${details.targetUser})`,
-                'promotion': `Beförderung: ${details.targetName} zu ${details.newRole}`,
-                'demotion': `Degradierung: ${details.targetName} zu ${details.newRole}`,
-                'termination': `Kündigung: ${details.targetName}`,
-                'warning': `Verwarnung: ${details.targetName}`
-            };
-            return actions[action] || `Unbekannte Aktion: ${action}`;
-        }
-
-        // Warnings Management
-        async function loadWarnings() {
-            try {
-                const snapshot = await get(warningsRef);
-                let warningCount = 0;
-                
-                if (snapshot.exists()) {
-                    snapshot.forEach(() => {
-                        warningCount++;
-                    });
-                }
-                
-                // Zeige Warnungs-Badge an, wenn Verwarnungen vorhanden sind
-                if (warningCount > 0) {
-                    userWarningBadge.textContent = warningCount;
-                    userWarningBadge.classList.remove('hidden');
-                } else {
-                    userWarningBadge.classList.add('hidden');
-                }
-            } catch (error) {
-                console.error('Fehler beim Laden der Verwarnungen:', error);
-            }
-        }
-
-        // Export Funktion
-        function exportUsersToCSV() {
-            const rows = [['Name', 'Discord ID', 'Rolle', 'Eingestellt am', 'Eingestellt von', 'Status']];
-            
-            // Sammle alle Benutzer
-            const users = [];
-            userManagementTableBody.querySelectorAll('tr').forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length >= 5) {
-                    const name = cells[0].querySelector('.user-name-small').textContent;
-                    const id = cells[0].querySelector('.user-id').textContent.replace('ID: ', '');
-                    const role = cells[1].querySelector('.role-badge').textContent;
-                    const hiredDate = cells[2].textContent;
-                    const hiredBy = cells[3].textContent;
-                    const status = 'Aktiv'; // Vereinfachte Annahme
-                    
-                    rows.push([name, id, role, hiredDate, hiredBy, status]);
-                }
+        // Send message to Discord
+        async function sendToDiscord(webhookUrl, embed) {
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: embed.title,
+                        description: embed.description,
+                        color: embed.color
+                    }]
+                })
             });
             
-            // Erstelle CSV Inhalt
-            const csvContent = rows.map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+            if (!response.ok) {
+                throw new Error('Failed to send Discord message');
+            }
             
-            // Erstelle Download
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', `khusland_users_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showNotification('Benutzerliste erfolgreich exportiert', 'success');
+            return true;
         }
 
-        // Notification System
+        // Show notification
         function showNotification(message, type = 'info') {
             notification.textContent = message;
             notification.className = `notification ${type}`;
@@ -2923,52 +2854,28 @@
                 setTimeout(() => {
                     notification.classList.add('hidden');
                 }, 300);
-            }, 5000);
+            }, 4000);
         }
 
-        // URL Parameter verarbeiten (für OAuth Callback)
-        function handleUrlParameters() {
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            // Check for OAuth code in URL
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const state = urlParams.get('state');
-            const error = urlParams.get('error');
-            
-            console.log('🔄 Handling URL parameters...');
-            
-            if (error) {
-                showError('Anmeldung fehlgeschlagen: ' + error);
-                return;
-            }
             
             if (code && state) {
-                const savedState = sessionStorage.getItem('oauth_state');
-                if (state === savedState) {
-                    console.log('✅ State validation successful, exchanging code for token');
-                    exchangeCodeForToken(code);
-                } else {
-                    console.error('❌ State validation failed');
-                    showError('Ungültiger State-Parameter');
-                }
-            } else {
-                console.log('ℹ️ No OAuth code found in URL, checking for implicit grant...');
-                handleImplicitGrant();
+                const newUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+                exchangeCodeForToken(code);
             }
-        }
-
-        // Initialisierung
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 KhusLand Panel initializing...');
-            
-            // Debug-Informationen anzeigen
-            debugOAuth();
-            
-            // Discord Login Event Listener
-            discordLoginBtn.addEventListener('click', startDiscordOAuth);
-            
-            // URL Parameter verarbeiten
-            handleUrlParameters();
-            
-            console.log('✅ KhusLand Panel initialized successfully');
         });
     </script>
 </body>

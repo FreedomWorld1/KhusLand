@@ -1874,8 +1874,11 @@
             
             userRoles.forEach(user => {
                 const userRow = createUserRow(user);
-                userTableBody.appendChild(userRow.cloneNode(true));
-                userManagementTableBody.appendChild(userRow);
+                userTableBody.appendChild(userRow);
+                
+                // Für die User Management Tabelle eine Kopie erstellen
+                const userRowCopy = createUserRow(user);
+                userManagementTableBody.appendChild(userRowCopy);
             });
         }
 
@@ -2180,7 +2183,7 @@
             });
         }
 
-        // Handle adding a new user - KORRIGIERTES FORMAT
+        // Handle adding a new user
         async function handleAddUser() {
             const userId = document.getElementById('discordUserId').value;
             const roleId = document.getElementById('userRoleSelect').value;
@@ -2245,7 +2248,7 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
+                // Send to Discord if webhook is configured
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
                         title: "🎮 Einstellung",
@@ -2271,7 +2274,7 @@
             promotionModal.classList.add('active');
         }
 
-        // Handle promotion - KORRIGIERTES FORMAT MIT EMBEDS
+        // Handle promotion
         async function handlePromotion() {
             const userId = document.getElementById('promotionUserId').value;
             const roleId = document.getElementById('promotionRoleSelect').value;
@@ -2289,9 +2292,10 @@
                 let userKey = null;
                 let currentUserName = '';
                 userSnapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().userId === userId) {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
                         userKey = childSnapshot.key;
-                        currentUserName = childSnapshot.val().name;
+                        currentUserName = userData.name;
                     }
                 });
                 
@@ -2315,7 +2319,7 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
+                // Send to Discord if webhook is configured
                 if (webhooks.promotions) {
                     await sendToDiscord(webhooks.promotions, {
                         title: "🎖️ Beförderung",
@@ -2339,7 +2343,7 @@
             demotionModal.classList.add('active');
         }
 
-        // Handle demotion - KORRIGIERTES FORMAT MIT EMBEDS
+        // Handle demotion
         async function handleDemotion() {
             const userId = document.getElementById('demotionUserId').value;
             const roleId = document.getElementById('demotionRoleSelect').value;
@@ -2357,9 +2361,10 @@
                 let userKey = null;
                 let currentUserName = '';
                 userSnapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().userId === userId) {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
                         userKey = childSnapshot.key;
-                        currentUserName = childSnapshot.val().name;
+                        currentUserName = userData.name;
                     }
                 });
                 
@@ -2383,7 +2388,7 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
+                // Send to Discord if webhook is configured
                 if (webhooks.demotions) {
                     await sendToDiscord(webhooks.demotions, {
                         title: "📉 Degradierung",
@@ -2407,20 +2412,27 @@
             terminationModal.classList.add('active');
         }
 
-        // Handle termination - KORRIGIERTES FORMAT MIT EMBEDS
+        // Handle termination - KORRIGIERTE VERSION
         async function handleTermination() {
             const userId = document.getElementById('terminationUserId').value;
             const reason = document.getElementById('terminationReason').value;
+            
+            if (!userId) {
+                showNotification('Ungültige User ID', 'error');
+                return;
+            }
             
             try {
                 // Find and remove user from Firebase
                 const userSnapshot = await get(usersRef);
                 let userKey = null;
                 let currentUserName = '';
+                
                 userSnapshot.forEach((childSnapshot) => {
-                    if (childSnapshot.val().userId === userId) {
+                    const userData = childSnapshot.val();
+                    if (userData.userId === userId) {
                         userKey = childSnapshot.key;
-                        currentUserName = childSnapshot.val().name;
+                        currentUserName = userData.name;
                     }
                 });
                 
@@ -2428,36 +2440,35 @@
                     const userRef = ref(db, `users/${userKey}`);
                     await remove(userRef);
                     
-                    // Remove from local array
-                    userRoles = userRoles.filter(user => user.userId !== userId);
-                    
-                    // Update UI immediately
+                    // UI sofort aktualisieren
                     populateUserTables();
+                    
+                    // Add to history
+                    const historyData = {
+                        type: 'termination',
+                        userId: userId,
+                        userName: currentUserName,
+                        roleName: '',
+                        reason: reason || 'Kein Grund angegeben',
+                        executedBy: currentUser.username,
+                        timestamp: new Date().toISOString()
+                    };
+                    await push(historyRef, historyData);
+                    
+                    // Send to Discord if webhook is configured
+                    if (webhooks.terminations) {
+                        await sendToDiscord(webhooks.terminations, {
+                            title: "📢 Blood Out",
+                            description: `Hiermit bekommt <@${userId}> offiziell seinen blood out.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            color: 0xff0000
+                        });
+                    }
+                    
+                    terminationModal.classList.remove('active');
+                    showNotification(`Spieler ${currentUserName} wurde gekündigt`, 'success');
+                } else {
+                    showNotification('Benutzer nicht gefunden', 'error');
                 }
-                
-                // Add to history
-                const historyData = {
-                    type: 'termination',
-                    userId: userId,
-                    userName: currentUserName,
-                    roleName: '',
-                    reason: reason || 'Kein Grund angegeben',
-                    executedBy: currentUser.username,
-                    timestamp: new Date().toISOString()
-                };
-                await push(historyRef, historyData);
-                
-                // Send to Discord if webhook is configured - IM KORRIGIERTEN FORMAT MIT EMBEDS
-                if (webhooks.terminations) {
-                    await sendToDiscord(webhooks.terminations, {
-                        title: "📢 Blood Out",
-                        description: `Hiermit bekommt <@${userId}> offiziell seinen blood out.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
-                        color: 0xff0000
-                    });
-                }
-                
-                terminationModal.classList.remove('active');
-                showNotification(`Spieler ${currentUserName} wurde gekündigt`, 'error');
             } catch (error) {
                 console.error('Fehler bei der Kündigung:', error);
                 showNotification('Fehler bei der Kündigung', 'error');
@@ -2567,7 +2578,7 @@
             }
         }
 
-        // Send message to Discord - MIT EMBEDS UND OHNE TIMESTAMP
+        // Send message to Discord
         async function sendToDiscord(webhookUrl, embed) {
             const response = await fetch(webhookUrl, {
                 method: 'POST',
@@ -2579,7 +2590,6 @@
                         title: embed.title,
                         description: embed.description,
                         color: embed.color
-                        // KEIN timestamp Feld - entfernt "heute um XX:XX Uhr"
                     }]
                 })
             });

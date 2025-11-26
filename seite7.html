@@ -272,6 +272,7 @@
             font-size: 0.9rem;
         }
         
+        /* STATUS INDICATOR STYLES - KORRIGIERT */
         .status-indicator {
             display: inline-block;
             width: 12px;
@@ -283,6 +284,29 @@
         .status-online {
             background: #48bb78;
             box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
+        }
+        
+        .status-offline {
+            background: #f56565;
+            box-shadow: 0 0 8px rgba(245, 101, 101, 0.5);
+        }
+        
+        .status-warning {
+            background: #ed8936;
+            box-shadow: 0 0 8px rgba(237, 137, 54, 0.5);
+        }
+        
+        .status-maintenance {
+            background: #4299e1;
+            box-shadow: 0 0 8px rgba(66, 153, 225, 0.5);
+        }
+        
+        .card-status {
+            display: flex;
+            align-items: center;
+            color: #a0aec0;
+            font-size: 0.9rem;
+            margin-top: 1rem;
         }
         
         .access-status {
@@ -318,6 +342,45 @@
         
         .hidden {
             display: none;
+        }
+        
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            z-index: 1100;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 400px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+        
+        .notification.info {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
         }
         
         /* Access Badge */
@@ -465,7 +528,7 @@
                     <div class="card" data-page="seite4.html">
                         <div class="card-icon">🔧</div>
                         <h3>Werkbank Manager</h3>
-                        <p>Behalte im Blick, welche Materialien für die Produktion nötig sind.</p>
+                        <p>Überprüfe, dass alle Rohstoffe für die Werkstatt vorhanden sind.</p>
                         <div class="status">
                             <span class="status-indicator status-online"></span>
                             System online

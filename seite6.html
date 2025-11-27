@@ -1759,7 +1759,7 @@
         // System Variablen
         let currentUser = null;
         let userRoles = [];
-        let customRoles = FIXED_ROLES; // Verwende feste Rollen
+        let customRoles = [];
         let actionHistory = [];
         let webhooks = {
             hiring: '',
@@ -1818,10 +1818,13 @@
         async function initializeFixedRoles() {
             const rolesSnapshot = await get(rolesRef);
             if (!rolesSnapshot.exists() || rolesSnapshot.numChildren() === 0) {
+                console.log('Initialisiere feste Rollen in Firebase...');
                 for (const role of FIXED_ROLES) {
                     await push(rolesRef, role);
                 }
-                console.log('Feste Rollen initialisiert');
+                console.log('Feste Rollen erfolgreich in Firebase initialisiert');
+            } else {
+                console.log('Rollen existieren bereits in Firebase');
             }
         }
 
@@ -2008,7 +2011,7 @@
                 updateRoleSelects();
             });
 
-            // Load roles
+            // Load roles - WICHTIG: Hier werden die Rollen aus Firebase geladen
             onValue(rolesRef, (snapshot) => {
                 customRoles = [];
                 if (snapshot.exists()) {
@@ -2018,6 +2021,11 @@
                             ...childSnapshot.val()
                         });
                     });
+                    console.log('Rollen aus Firebase geladen:', customRoles);
+                } else {
+                    console.log('Keine Rollen in Firebase gefunden');
+                    // Falls keine Rollen in Firebase sind, verwende die festen Rollen
+                    customRoles = FIXED_ROLES;
                 }
                 renderRoleManagement();
                 updateRoleSelects();
@@ -2110,7 +2118,7 @@
             // Find the role by roleId
             const role = customRoles.find(r => r.id === user.roleId) || { 
                 name: 'Unbekannt', 
-                color: 'role-admin',
+                color: 'role-founder',
                 discordRoleId: ''
             };
             

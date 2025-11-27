@@ -2399,8 +2399,8 @@
                 
                 // Send to Discord if webhook is configured
                 if (webhooks.hiring) {
-                    // DISCORD ROLE ID WIRD HIER GESENDET
-                    const discordRoleId = selectedRole.discordRoleId;
+                    // KORREKTUR: Discord Role ID wird jetzt korrekt verwendet
+                    const discordRoleId = selectedRole.discordRoleId || 'unknown-role';
                     await sendToDiscord(webhooks.hiring, {
                         title: "🎮 Einstellung",
                         description: `Hiermit erhält <@${userId}> die Rolle <@&${discordRoleId}>.\n\n**Grund:** ${reason}`,
@@ -2476,8 +2476,8 @@
                     
                     // Send to Discord if webhook is configured
                     if (webhooks.promotions) {
-                        // DISCORD ROLE ID WIRD HIER GESENDET
-                        const discordRoleId = selectedRole.discordRoleId;
+                        // KORREKTUR: Discord Role ID wird jetzt korrekt verwendet
+                        const discordRoleId = selectedRole.discordRoleId || 'unknown-role';
                         await sendToDiscord(webhooks.promotions, {
                             title: "🎖️ Beförderung",
                             description: `Hiermit erhält <@${userId}> die Rolle <@&${discordRoleId}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
@@ -2553,8 +2553,8 @@
                     
                     // Send to Discord if webhook is configured
                     if (webhooks.demotions) {
-                        // DISCORD ROLE ID WIRD HIER GESENDET
-                        const discordRoleId = selectedRole.discordRoleId;
+                        // KORREKTUR: Discord Role ID wird jetzt korrekt verwendet
+                        const discordRoleId = selectedRole.discordRoleId || 'unknown-role';
                         await sendToDiscord(webhooks.demotions, {
                             title: "📉 Degradierung",
                             description: `Hiermit erhält <@${userId}> die Rolle <@&${discordRoleId}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,

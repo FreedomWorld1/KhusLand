@@ -286,7 +286,6 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1rem;
         }
         
         .card-icon {
@@ -509,23 +508,63 @@
             font-weight: 600;
         }
         
-        .role-admin {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+        .role-founder {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
             color: white;
         }
         
-        .role-moderator {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+        .role-overseer {
+            background: linear-gradient(135deg, #ff6b00 0%, #cc5500 100%);
             color: white;
         }
         
-        .role-developer {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        .role-consigliere {
+            background: linear-gradient(135deg, #ff0080 0%, #cc0066 100%);
             color: white;
         }
         
-        .role-supporter {
-            background: linear-gradient(135deg, var(--secondary) 0%, #0d966c 100%);
+        .role-manager {
+            background: linear-gradient(135deg, #9900ff 0%, #7700cc 100%);
+            color: white;
+        }
+        
+        .role-organisator {
+            background: linear-gradient(135deg, #0099ff 0%, #0077cc 100%);
+            color: white;
+        }
+        
+        .role-aufseher {
+            background: linear-gradient(135deg, #00cc99 0%, #00aa77 100%);
+            color: white;
+        }
+        
+        .role-sammler {
+            background: linear-gradient(135deg, #ffcc00 0%, #ccaa00 100%);
+            color: white;
+        }
+        
+        .role-verteiler {
+            background: linear-gradient(135deg, #ff9900 0%, #cc7700 100%);
+            color: white;
+        }
+        
+        .role-gaertner {
+            background: linear-gradient(135deg, #66cc00 0%, #55aa00 100%);
+            color: white;
+        }
+        
+        .role-runner {
+            background: linear-gradient(135deg, #00ccff 0%, #00aacc 100%);
+            color: white;
+        }
+        
+        .role-helfer {
+            background: linear-gradient(135deg, #999999 0%, #777777 100%);
+            color: white;
+        }
+        
+        .role-neuling {
+            background: linear-gradient(135deg, #666666 0%, #444444 100%);
             color: white;
         }
         
@@ -1415,9 +1454,6 @@
                     <div class="role-management" id="roleManagement">
                         <!-- Roles will be populated here -->
                     </div>
-                    <button class="add-role-btn" id="addRoleBtn">
-                        <i class="fas fa-plus"></i> Neue Rolle hinzufügen
-                    </button>
                 </div>
                 
                 <!-- Aktionshistorie -->
@@ -1632,10 +1668,98 @@
             'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
         };
 
+        // Feste Rollen
+        const FIXED_ROLES = [
+            {
+                id: 'role_founder',
+                name: 'KL┃❱ Founder ┃12',
+                discordRoleId: '1420622115157049505',
+                emoji: '👑',
+                color: 'role-founder'
+            },
+            {
+                id: 'role_overseer',
+                name: 'KL┃❱ Overseer ┃11',
+                discordRoleId: '1420627856412905513',
+                emoji: '🛡️',
+                color: 'role-overseer'
+            },
+            {
+                id: 'role_consigliere',
+                name: 'KL┃❱ Consigliere ┃10',
+                discordRoleId: '1420628139436015748',
+                emoji: '💼',
+                color: 'role-consigliere'
+            },
+            {
+                id: 'role_manager',
+                name: 'KL┃❱ Manger ┃9',
+                discordRoleId: '1420628642920267886',
+                emoji: '📊',
+                color: 'role-manager'
+            },
+            {
+                id: 'role_organisator',
+                name: 'KL┃❱ Organisator ┃ 8',
+                discordRoleId: '1420629056201949257',
+                emoji: '📋',
+                color: 'role-organisator'
+            },
+            {
+                id: 'role_aufseher',
+                name: 'KL┃❱ Aufseher ┃7',
+                discordRoleId: '1420629498805751891',
+                emoji: '👁️',
+                color: 'role-aufseher'
+            },
+            {
+                id: 'role_sammler',
+                name: 'KL┃❱ Sammler ┃6',
+                discordRoleId: '1420629795934310510',
+                emoji: '📦',
+                color: 'role-sammler'
+            },
+            {
+                id: 'role_verteiler',
+                name: 'KL┃❱ Verteiler ┃5',
+                discordRoleId: '1420629919972593766',
+                emoji: '🚚',
+                color: 'role-verteiler'
+            },
+            {
+                id: 'role_gaertner',
+                name: 'KL┃❱ Gärtner ┃4',
+                discordRoleId: '1420630031188889610',
+                emoji: '🌿',
+                color: 'role-gaertner'
+            },
+            {
+                id: 'role_runner',
+                name: 'KL┃❱ Runner ┃3',
+                discordRoleId: '1420630156611158137',
+                emoji: '🏃',
+                color: 'role-runner'
+            },
+            {
+                id: 'role_helfer',
+                name: 'KL┃❱ Helfer┃2',
+                discordRoleId: '1420630262722723840',
+                emoji: '🤝',
+                color: 'role-helfer'
+            },
+            {
+                id: 'role_neuling',
+                name: 'KL┃❱ Neuling┃1',
+                discordRoleId: '1420630384055554069',
+                emoji: '🆕',
+                color: 'role-neuling'
+            }
+        ];
+
         // System Variablen
         let currentUser = null;
         let userRoles = [];
-        let customRoles = [];
+        let customRoles = FIXED_ROLES; // Verwende feste Rollen
         let actionHistory = [];
         let webhooks = {
             hiring: '',
@@ -1679,7 +1803,6 @@
         const refreshUsers = document.getElementById('refreshUsers');
         const exportUsers = document.getElementById('exportUsers');
         const roleManagement = document.getElementById('roleManagement');
-        const addRoleBtn = document.getElementById('addRoleBtn');
         const actionHistoryContainer = document.getElementById('actionHistory');
         const notification = document.getElementById('notification');
         const userWarningBadge = document.getElementById('userWarningBadge');
@@ -1691,45 +1814,14 @@
         const webhooksRef = ref(db, 'webhooks');
         const warningsRef = ref(db, 'warnings');
 
-        // Initialisiere Standardrollen, falls keine vorhanden sind
-        async function initializeDefaultRoles() {
+        // Initialisiere feste Rollen in Firebase
+        async function initializeFixedRoles() {
             const rolesSnapshot = await get(rolesRef);
             if (!rolesSnapshot.exists() || rolesSnapshot.numChildren() === 0) {
-                const defaultRoles = [
-                    {
-                        id: 'role_admin',
-                        name: 'Administrator',
-                        discordRoleId: '',
-                        emoji: '👑',
-                        color: 'role-admin'
-                    },
-                    {
-                        id: 'role_moderator',
-                        name: 'Moderator',
-                        discordRoleId: '',
-                        emoji: '🛡️',
-                        color: 'role-moderator'
-                    },
-                    {
-                        id: 'role_developer',
-                        name: 'Developer',
-                        discordRoleId: '',
-                        emoji: '💻',
-                        color: 'role-developer'
-                    },
-                    {
-                        id: 'role_supporter',
-                        name: 'Supporter',
-                        discordRoleId: '',
-                        emoji: '🔧',
-                        color: 'role-supporter'
-                    }
-                ];
-                
-                for (const role of defaultRoles) {
+                for (const role of FIXED_ROLES) {
                     await push(rolesRef, role);
                 }
-                console.log('Standardrollen initialisiert');
+                console.log('Feste Rollen initialisiert');
             }
         }
 
@@ -1897,8 +1989,8 @@
 
         // Load data from Firebase
         function loadFirebaseData() {
-            // Initialize default roles
-            initializeDefaultRoles();
+            // Initialize fixed roles
+            initializeFixedRoles();
             
             // Load users
             onValue(usersRef, (snapshot) => {
@@ -2070,47 +2162,11 @@
                 roleCard.className = 'role-card';
                 roleCard.innerHTML = `
                     <div class="role-emoji">${role.emoji || '👤'}</div>
-                    <div class="role-input-group">
-                        <input type="text" class="role-input role-name-input" value="${role.name}" placeholder="Rollenname" data-index="${index}">
-                        <input type="text" class="role-input role-id-input" value="${role.discordRoleId}" placeholder="Discord Role ID" data-index="${index}">
-                        <input type="text" class="role-input role-emoji-input" value="${role.emoji}" placeholder="Emoji" data-index="${index}">
-                        <select class="role-input role-color-input" data-index="${index}">
-                            <option value="role-admin" ${role.color === 'role-admin' ? 'selected' : ''}>Admin (Rot)</option>
-                            <option value="role-moderator" ${role.color === 'role-moderator' ? 'selected' : ''}>Moderator (Orange)</option>
-                            <option value="role-developer" ${role.color === 'role-developer' ? 'selected' : ''}>Developer (Lila)</option>
-                            <option value="role-supporter" ${role.color === 'role-supporter' ? 'selected' : ''}>Supporter (Grün)</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary save-role-btn" data-index="${index}" style="width: 100%; margin-bottom: 0.5rem;">
-                        <i class="fas fa-save"></i> Speichern
-                    </button>
-                    ${customRoles.length > 1 ? `<button class="remove-role-btn" data-index="${index}">
-                        <i class="fas fa-trash"></i> Entfernen
-                    </button>` : ''}
+                    <div class="role-name">${role.name}</div>
+                    <div class="role-id">ID: ${role.discordRoleId}</div>
+                    <div class="role-badge ${role.color}" style="margin-top: 0.5rem;">${role.name}</div>
                 `;
                 roleManagement.appendChild(roleCard);
-            });
-
-            // Add event listeners for role inputs
-            document.querySelectorAll('.role-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    saveRoleToFirebase(index);
-                });
-            });
-
-            document.querySelectorAll('.save-role-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    saveRoleToFirebase(index);
-                });
-            });
-
-            document.querySelectorAll('.remove-role-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeRoleFromFirebase(index);
-                });
             });
         }
 
@@ -2251,9 +2307,6 @@
             exportUsers.addEventListener('click', () => {
                 showNotification('Benutzerliste exportiert', 'success');
             });
-            
-            // Add role button
-            addRoleBtn.addEventListener('click', addNewRole);
             
             // Webhook buttons
             document.querySelectorAll('.test-webhook').forEach(btn => {
@@ -2713,59 +2766,6 @@
             } catch (error) {
                 console.error('Fehler bei der Kündigung:', error);
                 showNotification('Fehler bei der Kündigung', 'error');
-            }
-        }
-
-        // Add new role
-        async function addNewRole() {
-            const newRole = {
-                id: 'role_' + Date.now(),
-                name: 'Neue Rolle',
-                discordRoleId: '',
-                emoji: '👤',
-                color: 'role-admin'
-            };
-            
-            try {
-                await push(rolesRef, newRole);
-                showNotification('Neue Rolle hinzugefügt', 'success');
-            } catch (error) {
-                console.error('Fehler beim Hinzufügen der Rolle:', error);
-                showNotification('Fehler beim Hinzufügen der Rolle', 'error');
-            }
-        }
-
-        // Save role to Firebase
-        async function saveRoleToFirebase(index) {
-            const role = customRoles[index];
-            const roleInputs = document.querySelectorAll(`[data-index="${index}"]`);
-            
-            role.name = roleInputs[0].value;
-            role.discordRoleId = roleInputs[1].value;
-            role.emoji = roleInputs[2].value;
-            role.color = roleInputs[3].value;
-            
-            try {
-                const roleRef = ref(db, `roles/${role.id}`);
-                await set(roleRef, role);
-                showNotification('Rolle gespeichert', 'success');
-            } catch (error) {
-                console.error('Fehler beim Speichern der Rolle:', error);
-                showNotification('Fehler beim Speichern der Rolle', 'error');
-            }
-        }
-
-        // Remove role from Firebase
-        async function removeRoleFromFirebase(index) {
-            const role = customRoles[index];
-            
-            try {
-                const roleRef = ref(db, `roles/${role.id}`);
-                await remove(roleRef);
-                showNotification('Rolle entfernt', 'success');
-            } catch (error) {
-                console.error('Fehler beim Entfernen der Rolle:', error);
-                showNotification('Fehler beim Entfernen der Rolle', 'error');
             }
         }
 

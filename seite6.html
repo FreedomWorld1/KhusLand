@@ -984,6 +984,9 @@
                 // User Info aktualisieren
                 document.getElementById('userName').textContent = this.currentUser.username;
                 document.getElementById('userAvatar').innerHTML = this.currentUser.username.charAt(0).toUpperCase();
+                
+                // Daten laden
+                this.loadData();
             }
             
             switchTab(tabName) {
@@ -1047,12 +1050,14 @@
                 const roleSelect = document.getElementById('userRoleSelect');
                 const promotionSelect = document.getElementById('promotionRoleSelect');
                 
+                console.log('Rollen geladen:', roles); // Debug
+                
                 // Rollen in Einstellungen anzeigen
                 container.innerHTML = roles.map(role => `
                     <div class="role-card">
                         <div style="font-weight: 600; margin-bottom: 0.5rem;">${role.name}</div>
                         <div style="font-size: 0.8rem; color: var(--text-lighter); margin-bottom: 1rem;">
-                            Discord ID: ${role.discordRoleId}
+                            Discord ID: ${role.discordRoleId || 'Nicht gesetzt'}
                         </div>
                         <div style="font-size: 0.8rem; color: var(--text-lighter);">
                             Level: ${role.level || 'N/A'}
@@ -1068,6 +1073,8 @@
                 promotionSelect.innerHTML = roles.map(role => `
                     <option value="${role.id}">${role.name}</option>
                 `).join('');
+                
+                console.log('Rollen Select gefüllt:', roleSelect.innerHTML); // Debug
             }
             
             loadWebhooks() {
@@ -1308,7 +1315,6 @@
         // Einfache Datenbank
         class SimpleDB {
             constructor() {
-                // Deine Discord Rollen mit IDs
                 this.data = {
                     users: [],
                     roles: [
@@ -1323,7 +1329,14 @@
                         { id: 'gaertner', name: 'KL┃❱ Gärtner ┃4', discordRoleId: '1420630031188889610', level: 4 },
                         { id: 'runner', name: 'KL┃❱ Runner ┃3', discordRoleId: '1420630156611158137', level: 3 },
                         { id: 'helfer', name: 'KL┃❱ Helfer┃2', discordRoleId: '1420630262722723840', level: 2 },
-                        { id: 'neuling', name: 'KL┃❱ Neuling┃1', discordRoleId: '1420630384055554069', level: 1 }
+                        { id: 'neuling', name: 'KL┃❱ Neuling┃1', discordRoleId: '1420630384055554069', level: 1 },
+                        // AWRN Team Rollen
+                        { id: 'awrn_leader', name: 'AWRN┃❱ Leader', discordRoleId: 'AWRN_LEADER_ID', level: 12 },
+                        { id: 'awrn_coleader', name: 'AWRN┃❱ Co-Leader', discordRoleId: 'AWRN_COLEADER_ID', level: 11 },
+                        { id: 'awrn_admin', name: 'AWRN┃❱ Admin', discordRoleId: 'AWRN_ADMIN_ID', level: 10 },
+                        { id: 'awrn_mod', name: 'AWRN┃❱ Moderator', discordRoleId: 'AWRN_MOD_ID', level: 9 },
+                        { id: 'awrn_member', name: 'AWRN┃❱ Member', discordRoleId: 'AWRN_MEMBER_ID', level: 8 },
+                        { id: 'awrn_trial', name: 'AWRN┃❱ Trial', discordRoleId: 'AWRN_TRIAL_ID', level: 7 }
                     ],
                     webhooks: {
                         hiring: '',
@@ -1340,7 +1353,12 @@
             loadFromStorage() {
                 const saved = localStorage.getItem('khusland_db');
                 if (saved) {
-                    this.data = JSON.parse(saved);
+                    const parsed = JSON.parse(saved);
+                    // Stelle sicher, dass alle Rollen vorhanden sind
+                    if (!parsed.roles || parsed.roles.length < this.data.roles.length) {
+                        parsed.roles = this.data.roles;
+                    }
+                    this.data = parsed;
                 }
             }
             

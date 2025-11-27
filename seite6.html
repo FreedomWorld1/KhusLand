@@ -555,6 +555,36 @@
         .text-center {
             text-align: center;
         }
+
+        /* Access Control */
+        .access-denied {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .access-denied:hover {
+            transform: none !important;
+            border-color: var(--card-border) !important;
+        }
+
+        .access-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .access-allowed {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--secondary);
+        }
+
+        .access-denied-badge {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
@@ -588,6 +618,14 @@
                 <a href="#" class="nav-item" data-tab="users">
                     <i class="fas fa-users"></i>
                     <span>User Management</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="routes">
+                    <i class="fas fa-route"></i>
+                    <span>Drogenrouten</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="production">
+                    <i class="fas fa-industry"></i>
+                    <span>Produktion</span>
                 </a>
                 <a href="#" class="nav-item" data-tab="settings">
                     <i class="fas fa-cog"></i>
@@ -626,7 +664,7 @@
                 </div>
                 
                 <div class="cards-grid">
-                    <div class="card" data-page="index.html">
+                    <div class="card" data-page="weed">
                         <div class="card-icon">🌿</div>
                         <h3 class="card-title">Weed Ankauf</h3>
                         <div class="card-content">
@@ -634,7 +672,7 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite2.html">
+                    <div class="card" data-page="cocaine">
                         <div class="card-icon">❄️</div>
                         <h3 class="card-title">Kokain Ankauf</h3>
                         <div class="card-content">
@@ -642,11 +680,35 @@
                         </div>
                     </div>
                     
-                    <div class="card" data-page="seite3.html">
+                    <div class="card" data-page="recycler">
                         <div class="card-icon">♻️</div>
                         <h3 class="card-title">Materialrecycler</h3>
                         <div class="card-content">
                             Recyclingprozesse und Materialien verwalten.
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="workshop">
+                        <div class="card-icon">🔧</div>
+                        <h3 class="card-title">Werkbank Manager</h3>
+                        <div class="card-content">
+                            Überprüfe, dass alle Rohstoffe für die Werkstatt vorhanden sind.
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="routes">
+                        <div class="card-icon">🛣️</div>
+                        <h3 class="card-title">Drogenrouten</h3>
+                        <div class="card-content">
+                            Behalte die Drogenrouten im Blick.
+                        </div>
+                    </div>
+
+                    <div class="card" data-page="management">
+                        <div class="card-icon">👥</div>
+                        <h3 class="card-title">Team Management</h3>
+                        <div class="card-content">
+                            Verwalte dein Team und deren Berechtigungen.
                         </div>
                     </div>
                 </div>
@@ -706,6 +768,99 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Routes Tab -->
+            <div id="routes" class="tab-content hidden">
+                <div class="header">
+                    <h1 class="page-title">Drogenrouten Management</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="addRouteBtn">
+                            <i class="fas fa-plus"></i>
+                            Route hinzufügen
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card" data-route="weed-route">
+                        <div class="card-icon">🌿</div>
+                        <h3 class="card-title">Weed Route</h3>
+                        <div class="card-content">
+                            Überwachung der Weed-Lieferrouten und Bestände.
+                        </div>
+                        <div class="card-status">
+                            <span class="access-badge access-allowed">Aktiv</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card" data-route="cocaine-route">
+                        <div class="card-icon">❄️</div>
+                        <h3 class="card-title">Kokain Route</h3>
+                        <div class="card-content">
+                            Kontrolle der Kokain-Transportwege.
+                        </div>
+                        <div class="card-status">
+                            <span class="access-badge access-allowed">Aktiv</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card" data-route="meth-route">
+                        <div class="card-icon">⚗️</div>
+                        <h3 class="card-title">Meth Route</h3>
+                        <div class="card-content">
+                            Verwaltung der Meth-Produktionswege.
+                        </div>
+                        <div class="card-status">
+                            <span class="access-badge access-denied-badge">Inaktiv</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Production Tab -->
+            <div id="production" class="tab-content hidden">
+                <div class="header">
+                    <h1 class="page-title">Produktionsübersicht</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-success" id="refreshProduction">
+                            <i class="fas fa-sync-alt"></i>
+                            Aktualisieren
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon">🏭</div>
+                        <h3 class="card-title">Aktive Produktionen</h3>
+                        <div class="card-content">
+                            <strong>Weed:</strong> 2.5kg im Umlauf<br>
+                            <strong>Kokain:</strong> 1.8kg verfügbar<br>
+                            <strong>Meth:</strong> 0.75kg in Produktion
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">Produktionsstatistik</h3>
+                        <div class="card-content">
+                            <strong>Diese Woche:</strong> 15kg produziert<br>
+                            <strong>Letzte Woche:</strong> 12kg produziert<br>
+                            <strong>Wachstum:</strong> +25%
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">⚠️</div>
+                        <h3 class="card-title">Warnungen</h3>
+                        <div class="card-content">
+                            <strong>Weed:</strong> Vorrat niedrig<br>
+                            <strong>Kokain:</strong> Alles im grünen Bereich<br>
+                            <strong>Meth:</strong> Produktion läuft
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- Settings Tab -->
             <div id="settings" class="tab-content hidden">
@@ -724,6 +879,9 @@
                             <button class="btn btn-success save-webhook" data-type="hiring">
                                 <i class="fas fa-save"></i> Speichern
                             </button>
+                            <button class="btn btn-primary test-webhook" data-type="hiring">
+                                <i class="fas fa-bell"></i> Testen
+                            </button>
                         </div>
                     </div>
                     
@@ -733,6 +891,9 @@
                             <input type="text" id="webhookPromotions" class="webhook-input" placeholder="https://discord.com/api/webhooks/...">
                             <button class="btn btn-success save-webhook" data-type="promotions">
                                 <i class="fas fa-save"></i> Speichern
+                            </button>
+                            <button class="btn btn-primary test-webhook" data-type="promotions">
+                                <i class="fas fa-bell"></i> Testen
                             </button>
                         </div>
                     </div>
@@ -744,6 +905,22 @@
                             <button class="btn btn-success save-webhook" data-type="demotions">
                                 <i class="fas fa-save"></i> Speichern
                             </button>
+                            <button class="btn btn-primary test-webhook" data-type="demotions">
+                                <i class="fas fa-bell"></i> Testen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="webhook-container">
+                        <div class="webhook-title">🚪 Kündigungen</div>
+                        <div class="webhook-input-group">
+                            <input type="text" id="webhookTerminations" class="webhook-input" placeholder="https://discord.com/api/webhooks/...">
+                            <button class="btn btn-success save-webhook" data-type="terminations">
+                                <i class="fas fa-save"></i> Speichern
+                            </button>
+                            <button class="btn btn-primary test-webhook" data-type="terminations">
+                                <i class="fas fa-bell"></i> Testen
+                            </button>
                         </div>
                     </div>
                     
@@ -754,6 +931,9 @@
                             <button class="btn btn-success save-webhook" data-type="warnings">
                                 <i class="fas fa-save"></i> Speichern
                             </button>
+                            <button class="btn btn-primary test-webhook" data-type="warnings">
+                                <i class="fas fa-bell"></i> Testen
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -763,6 +943,14 @@
                     <h3>Rollenverwaltung</h3>
                     <div class="role-management" id="roleManagement">
                         <!-- Rollen werden via JavaScript geladen -->
+                    </div>
+                </div>
+
+                <!-- Zugriffsverwaltung -->
+                <div class="settings-section">
+                    <h3>Zugriffsberechtigungen</h3>
+                    <div class="access-control" id="accessControl">
+                        <!-- Zugriffsberechtigungen werden via JavaScript geladen -->
                     </div>
                 </div>
             </div>
@@ -836,6 +1024,30 @@
         </div>
     </div>
 
+    <!-- Termination Modal -->
+    <div id="terminationModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Spieler kündigen</h2>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="terminationUserId">User ID</label>
+                <input type="text" id="terminationUserId" class="form-input" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="terminationReason">Kündigungsgrund</label>
+                <textarea id="terminationReason" class="form-input" placeholder="Grund für die Kündigung..." rows="3"></textarea>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn" id="cancelTermination">Abbrechen</button>
+                <button class="btn btn-danger" id="saveTermination">Kündigung bestätigen</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Warning Modal -->
     <div id="warningModal" class="modal-overlay">
         <div class="modal-content">
@@ -869,6 +1081,7 @@
             constructor() {
                 this.db = new SimpleDB();
                 this.currentUser = null;
+                this.authorizedUsers = ['123456789']; // Discord IDs die Zugriff haben
                 this.init();
             }
             
@@ -882,7 +1095,12 @@
                 const userData = localStorage.getItem('current_user');
                 if (userData) {
                     this.currentUser = JSON.parse(userData);
-                    this.showMainApp();
+                    // Prüfe ob der User Zugriff hat
+                    if (this.authorizedUsers.includes(this.currentUser.id)) {
+                        this.showMainApp();
+                    } else {
+                        this.showNoAccess();
+                    }
                 } else {
                     this.showLoginPage();
                 }
@@ -933,6 +1151,15 @@
                     this.handlePromotion();
                 });
                 
+                // Termination
+                document.getElementById('cancelTermination').addEventListener('click', () => {
+                    this.hideTerminationModal();
+                });
+                
+                document.getElementById('saveTermination').addEventListener('click', () => {
+                    this.handleTermination();
+                });
+                
                 // Warning
                 document.getElementById('cancelWarning').addEventListener('click', () => {
                     this.hideWarningModal();
@@ -949,20 +1176,54 @@
                         this.saveWebhook(type);
                     });
                 });
+
+                // Test Webhooks
+                document.querySelectorAll('.test-webhook').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const type = e.target.getAttribute('data-type');
+                        this.testWebhook(type);
+                    });
+                });
+
+                // Card Klicks für Seiten
+                document.querySelectorAll('.card[data-page]').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const page = card.getAttribute('data-page');
+                        this.openPage(page);
+                    });
+                });
             }
             
             handleDiscordLogin() {
-                // Simuliere Discord Login
-                const user = {
-                    id: '123456789',
-                    username: 'Admin',
-                    avatar: null
-                };
+                // Simuliere Discord Login mit verschiedenen Benutzern
+                const users = [
+                    {
+                        id: '123456789', // Hat Zugriff
+                        username: 'Admin',
+                        avatar: null,
+                        role: 'Administrator'
+                    },
+                    {
+                        id: '987654321', // Hat KEINEN Zugriff
+                        username: 'User',
+                        avatar: null,
+                        role: 'User'
+                    }
+                ];
+                
+                // Wähle zufällig einen Benutzer für Demo
+                const user = users[Math.floor(Math.random() * users.length)];
                 
                 this.currentUser = user;
                 localStorage.setItem('current_user', JSON.stringify(user));
-                this.showMainApp();
-                this.showNotification('Erfolgreich angemeldet', 'success');
+                
+                // Prüfe Zugriff
+                if (this.authorizedUsers.includes(user.id)) {
+                    this.showMainApp();
+                    this.showNotification('Erfolgreich angemeldet', 'success');
+                } else {
+                    this.showNoAccess();
+                }
             }
             
             handleLogout() {
@@ -977,12 +1238,19 @@
                 document.getElementById('mainContent').classList.add('hidden');
             }
             
+            showNoAccess() {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('mainContent').classList.add('hidden');
+                this.showNotification('Zugriff verweigert - Keine Berechtigung', 'error');
+            }
+            
             showMainApp() {
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
                 
                 // User Info aktualisieren
                 document.getElementById('userName').textContent = this.currentUser.username;
+                document.getElementById('userRole').textContent = this.currentUser.role;
                 document.getElementById('userAvatar').innerHTML = this.currentUser.username.charAt(0).toUpperCase();
                 
                 // Daten laden
@@ -1003,10 +1271,29 @@
                 document.getElementById(tabName).classList.remove('hidden');
             }
             
+            openPage(page) {
+                // Hier können externe Seiten geöffnet werden
+                const pages = {
+                    'weed': 'https://freedomworld1.github.io/KhusLand/index.html',
+                    'cocaine': 'https://freedomworld1.github.io/KhusLand/seite2.html',
+                    'recycler': 'https://freedomworld1.github.io/KhusLand/seite3.html',
+                    'workshop': 'https://freedomworld1.github.io/KhusLand/seite4.html',
+                    'routes': 'https://freedomworld1.github.io/KhusLand/seite5.html',
+                    'management': '#' // Bleibt auf aktueller Seite
+                };
+                
+                if (pages[page] && page !== 'management') {
+                    window.open(pages[page], '_blank');
+                } else if (page === 'management') {
+                    this.switchTab('users');
+                }
+            }
+            
             loadData() {
                 this.renderUsers();
                 this.renderRoles();
                 this.loadWebhooks();
+                this.setupAccessControl();
             }
             
             renderUsers() {
@@ -1033,7 +1320,7 @@
                                 <button class="btn-icon btn-warning" onclick="app.openWarningModal('${user.id}')">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </button>
-                                <button class="btn-icon btn-terminate" onclick="app.terminateUser('${user.id}')">
+                                <button class="btn-icon btn-terminate" onclick="app.openTerminationModal('${user.id}')">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
@@ -1049,8 +1336,6 @@
                 const container = document.getElementById('roleManagement');
                 const roleSelect = document.getElementById('userRoleSelect');
                 const promotionSelect = document.getElementById('promotionRoleSelect');
-                
-                console.log('Rollen geladen:', roles); // Debug
                 
                 // Rollen in Einstellungen anzeigen
                 container.innerHTML = roles.map(role => `
@@ -1073,8 +1358,68 @@
                 promotionSelect.innerHTML = roles.map(role => `
                     <option value="${role.id}">${role.name}</option>
                 `).join('');
+            }
+            
+            setupAccessControl() {
+                // Setze Zugriffsberechtigungen basierend auf Benutzerrolle
+                const accessControl = document.getElementById('accessControl');
+                const userLevel = this.getUserLevel();
                 
-                console.log('Rollen Select gefüllt:', roleSelect.innerHTML); // Debug
+                accessControl.innerHTML = `
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Aktueller Benutzer:</strong> ${this.currentUser.username}
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Berechtigungsstufe:</strong> ${userLevel}
+                    </div>
+                    <div style="background: rgba(30, 41, 59, 0.6); padding: 1rem; border-radius: 8px;">
+                        <strong>Verfügbare Bereiche:</strong>
+                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                            <li>Dashboard ${userLevel >= 1 ? '✅' : '❌'}</li>
+                            <li>User Management ${userLevel >= 5 ? '✅' : '❌'}</li>
+                            <li>Drogenrouten ${userLevel >= 3 ? '✅' : '❌'}</li>
+                            <li>Produktion ${userLevel >= 7 ? '✅' : '❌'}</li>
+                            <li>Einstellungen ${userLevel >= 10 ? '✅' : '❌'}</li>
+                        </ul>
+                    </div>
+                `;
+                
+                // Deaktiviere Tabs basierend auf Berechtigungen
+                this.setTabAccess('users', userLevel >= 5);
+                this.setTabAccess('routes', userLevel >= 3);
+                this.setTabAccess('production', userLevel >= 7);
+                this.setTabAccess('settings', userLevel >= 10);
+            }
+            
+            setTabAccess(tabName, hasAccess) {
+                const tab = document.querySelector(`[data-tab="${tabName}"]`);
+                if (tab) {
+                    if (!hasAccess) {
+                        tab.classList.add('access-denied');
+                        tab.style.cursor = 'not-allowed';
+                        tab.onclick = (e) => {
+                            e.preventDefault();
+                            this.showNotification('Zugriff verweigert - Unzureichende Berechtigungen', 'error');
+                        };
+                    } else {
+                        tab.classList.remove('access-denied');
+                        tab.style.cursor = 'pointer';
+                        tab.onclick = null;
+                    }
+                }
+            }
+            
+            getUserLevel() {
+                // Simuliere Benutzerlevel basierend auf Rolle
+                const levels = {
+                    'Administrator': 10,
+                    'Manager': 8,
+                    'Supervisor': 6,
+                    'Member': 4,
+                    'Trial': 2,
+                    'User': 1
+                };
+                return levels[this.currentUser.role] || 1;
             }
             
             loadWebhooks() {
@@ -1082,6 +1427,7 @@
                 document.getElementById('webhookHiring').value = webhooks.hiring || '';
                 document.getElementById('webhookPromotions').value = webhooks.promotions || '';
                 document.getElementById('webhookDemotions').value = webhooks.demotions || '';
+                document.getElementById('webhookTerminations').value = webhooks.terminations || '';
                 document.getElementById('webhookWarnings').value = webhooks.warnings || '';
             }
             
@@ -1108,6 +1454,19 @@
             
             hidePromotionModal() {
                 document.getElementById('promotionModal').classList.remove('active');
+            }
+            
+            openTerminationModal(userId) {
+                const user = this.db.getUsers().find(u => u.id === userId);
+                if (user) {
+                    document.getElementById('terminationUserId').value = user.userId;
+                    document.getElementById('terminationReason').value = '';
+                    document.getElementById('terminationModal').classList.add('active');
+                }
+            }
+            
+            hideTerminationModal() {
+                document.getElementById('terminationModal').classList.remove('active');
             }
             
             openWarningModal(userId) {
@@ -1181,6 +1540,29 @@
                 }
             }
             
+            handleTermination() {
+                const userId = document.getElementById('terminationUserId').value;
+                const reason = document.getElementById('terminationReason').value || 'Kein Grund angegeben';
+                
+                const user = this.db.getUsers().find(u => u.userId === userId);
+                if (user) {
+                    // Discord Webhook senden
+                    this.sendDiscordNotification('terminations', {
+                        userId: userId,
+                        userName: user.name,
+                        reason: reason
+                    });
+                    
+                    // User entfernen
+                    this.db.data.users = this.db.data.users.filter(u => u.id !== user.id);
+                    this.db.saveToStorage();
+                    
+                    this.hideTerminationModal();
+                    this.renderUsers();
+                    this.showNotification(`${user.name} wurde gekündigt`, 'success');
+                }
+            }
+            
             handleWarning() {
                 const userId = document.getElementById('warningUserId').value;
                 const reason = document.getElementById('warningReason').value;
@@ -1204,22 +1586,13 @@
                 }
             }
             
-            terminateUser(userId) {
-                const user = this.db.getUsers().find(u => u.id === userId);
-                if (user && confirm(`Möchtest du ${user.name} wirklich kündigen?`)) {
-                    this.db.data.users = this.db.data.users.filter(u => u.id !== userId);
-                    this.db.saveToStorage();
-                    this.renderUsers();
-                    this.showNotification(`${user.name} wurde gekündigt`, 'success');
-                }
-            }
-            
             sendDiscordNotification(type, data) {
                 const webhooks = this.db.getWebhooks();
                 const webhookUrl = webhooks[type];
                 
                 if (!webhookUrl) {
                     console.log(`Kein Webhook für ${type} konfiguriert`);
+                    this.showNotification(`Webhook für ${type} nicht konfiguriert`, 'warning');
                     return;
                 }
                 
@@ -1234,7 +1607,8 @@
                         embed = {
                             title: "🎮 Einstellung",
                             description: `Hiermit erhält <@${data.userId}> die Rolle ${roleMention}.\n\n**Grund:** ${data.reason}`,
-                            color: 0x00ff00
+                            color: 0x00ff00,
+                            timestamp: new Date().toISOString()
                         };
                         break;
                         
@@ -1243,7 +1617,17 @@
                         embed = {
                             title: "🎖️ Beförderung", 
                             description: `Hiermit erhält <@${data.userId}> die Rolle ${promotionRoleMention}.\n\n**Grund:** ${data.reason}`,
-                            color: 0xffd700
+                            color: 0xffd700,
+                            timestamp: new Date().toISOString()
+                        };
+                        break;
+                        
+                    case 'terminations':
+                        embed = {
+                            title: "🚪 Kündigung",
+                            description: `Hiermit wird <@${data.userId}> aus dem Team entlassen.\n\n**Grund:** ${data.reason}`,
+                            color: 0xff0000,
+                            timestamp: new Date().toISOString()
                         };
                         break;
                         
@@ -1251,23 +1635,50 @@
                         embed = {
                             title: "⚠️ Team Verwarnung",
                             description: `**Familien Updates**\n\nHiermit erhält <@${data.userId}> eine offizielle Verwarnung.\n\n**Grund:** ${data.reason}`,
-                            color: 0xff0000
+                            color: 0xff0000,
+                            timestamp: new Date().toISOString()
                         };
                         break;
                 }
                 
-                // Webhook senden (simuliert)
-                console.log('Sende Discord Webhook:', {
-                    url: webhookUrl,
-                    embed: embed
+                // Webhook senden (echte Implementierung)
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [embed] })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log(`Webhook ${type} erfolgreich gesendet`);
+                        this.showNotification(`Discord Benachrichtigung gesendet`, 'success');
+                    } else {
+                        throw new Error('Webhook fehlgeschlagen');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fehler beim Senden des Webhooks:', error);
+                    this.showNotification('Fehler beim Senden der Discord-Benachrichtigung', 'error');
                 });
+            }
+            
+            testWebhook(type) {
+                const webhooks = this.db.getWebhooks();
+                const webhookUrl = webhooks[type];
                 
-                // In einer echten Implementierung:
-                // fetch(webhookUrl, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ embeds: [embed] })
-                // });
+                if (!webhookUrl) {
+                    this.showNotification(`Kein Webhook für ${type} konfiguriert`, 'warning');
+                    return;
+                }
+                
+                // Test-Daten für Webhook
+                const testData = {
+                    userId: '123456789',
+                    userName: 'Test Benutzer',
+                    roleId: 'test_role',
+                    reason: 'Dies ist ein Test der Webhook-Funktionalität'
+                };
+                
+                this.sendDiscordNotification(type, testData);
             }
             
             saveWebhook(type) {
@@ -1342,6 +1753,7 @@
                         hiring: '',
                         promotions: '',
                         demotions: '',
+                        terminations: '',
                         warnings: ''
                     }
                 };

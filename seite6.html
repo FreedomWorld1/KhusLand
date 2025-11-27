@@ -1668,7 +1668,7 @@
             'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
         };
 
-        // Feste Rollen
+        // Feste Rollen - DIREKT IM CODE
         const FIXED_ROLES = [
             {
                 id: 'role_founder',
@@ -1759,14 +1759,14 @@
         // System Variablen
         let currentUser = null;
         let userRoles = [];
-        let customRoles = [];
+        let customRoles = FIXED_ROLES; // DIREKT die festen Rollen verwenden
         let actionHistory = [];
         let webhooks = {
             hiring: '',
             promotions: '',
             demotions: '',
             terminations: '',
-            warnings: '' // NEUER WEBHOOK FÜR VERWARNUNGEN
+            warnings: ''
         };
 
         // DOM Elements
@@ -1813,20 +1813,6 @@
         const historyRef = ref(db, 'history');
         const webhooksRef = ref(db, 'webhooks');
         const warningsRef = ref(db, 'warnings');
-
-        // Initialisiere feste Rollen in Firebase
-        async function initializeFixedRoles() {
-            const rolesSnapshot = await get(rolesRef);
-            if (!rolesSnapshot.exists() || rolesSnapshot.numChildren() === 0) {
-                console.log('Initialisiere feste Rollen in Firebase...');
-                for (const role of FIXED_ROLES) {
-                    await push(rolesRef, role);
-                }
-                console.log('Feste Rollen erfolgreich in Firebase initialisiert');
-            } else {
-                console.log('Rollen existieren bereits in Firebase');
-            }
-        }
 
         // Discord OAuth Funktionen
         function startDiscordOAuth() {
@@ -1988,13 +1974,14 @@
             // Load data from Firebase
             loadFirebaseData();
             setupEventListeners();
+            
+            // DIREKT die Rollen initialisieren
+            updateRoleSelects();
+            renderRoleManagement();
         }
 
         // Load data from Firebase
         function loadFirebaseData() {
-            // Initialize fixed roles
-            initializeFixedRoles();
-            
             // Load users
             onValue(usersRef, (snapshot) => {
                 userRoles = [];
@@ -2008,27 +1995,6 @@
                     });
                 }
                 populateUserTables();
-                updateRoleSelects();
-            });
-
-            // Load roles - WICHTIG: Hier werden die Rollen aus Firebase geladen
-            onValue(rolesRef, (snapshot) => {
-                customRoles = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        customRoles.push({
-                            id: childSnapshot.key,
-                            ...childSnapshot.val()
-                        });
-                    });
-                    console.log('Rollen aus Firebase geladen:', customRoles);
-                } else {
-                    console.log('Keine Rollen in Firebase gefunden');
-                    // Falls keine Rollen in Firebase sind, verwende die festen Rollen
-                    customRoles = FIXED_ROLES;
-                }
-                renderRoleManagement();
-                updateRoleSelects();
             });
 
             // Load history
@@ -2159,11 +2125,6 @@
         // Render role management
         function renderRoleManagement() {
             roleManagement.innerHTML = '';
-            
-            if (customRoles.length === 0) {
-                roleManagement.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Rollen konfiguriert</p>';
-                return;
-            }
             
             customRoles.forEach((role, index) => {
                 const roleCard = document.createElement('div');
@@ -2331,7 +2292,7 @@
                 });
             });
             
-            // Card clicks - JETZT MIT FUNKTIONIERENDEN WEITERLEITUNGEN
+            // Card clicks
             document.querySelectorAll('.card').forEach(card => {
                 card.addEventListener('click', function() {
                     if (!this.classList.contains('disabled')) {

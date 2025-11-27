@@ -2423,7 +2423,7 @@
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
                         title: "🎮 Einstellung",
-                        description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId || 'unknown-role'}>.\n\n**Grund:** ${reason}`,
+                        description: `**Hiermit wird** <@${userId}> **als** <@&${selectedRole.discordRoleId **eingestellt.**|| 'unknown-role'}>.\n\n**Grund:** ${reason}`,
                         color: 0x00ff00
                     });
                 }
@@ -2498,7 +2498,7 @@
                     if (webhooks.promotions) {
                         await sendToDiscord(webhooks.promotions, {
                             title: "🎖️ Beförderung",
-                            description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId || 'unknown-role'}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            description: `**Hiermit wurde** <@${userId}> **zum** <@&${selectedRole.discordRoleId **Befördert.**|| 'unknown-role'}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                             color: 0xffd700
                         });
                     }
@@ -2573,7 +2573,7 @@
                     if (webhooks.demotions) {
                         await sendToDiscord(webhooks.demotions, {
                             title: "📉 Degradierung",
-                            description: `Hiermit erhält <@${userId}> die Rolle <@&${selectedRole.discordRoleId || 'unknown-role'}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            description: `**Hiermit wird** <@${userId}> **zum** <@&${selectedRole.discordRoleId **Degradiert**|| 'unknown-role'}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                             color: 0xffa500
                         });
                     }
@@ -2652,7 +2652,7 @@
                     if (webhooks.warnings) {
                         await sendToDiscord(webhooks.warnings, {
                             title: "⚠️ Team Verwarnung",
-                            description: `**Familien Updates**\n\nHiermit erhält <@${userId}> eine offizielle Verwarnung.\n\n**Grund:** ${reason}`,
+                            description: `**Familien Updates**\n\n**Hiermit erhält** <@${userId}> **eine Verwarnung.*\n\n**Grund:** ${reason}`,
                             color: 0xff0000
                         });
                     }
@@ -2722,7 +2722,7 @@
                     if (webhooks.terminations) {
                         await sendToDiscord(webhooks.terminations, {
                             title: "📢 Blood Out",
-                            description: `Hiermit bekommt <@${userId}> offiziell seinen blood out.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                            description: `**Hiermit bekommt** <@${userId}> **offiziell seinen blood out.**\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
                             color: 0xff0000
                         });
                     }

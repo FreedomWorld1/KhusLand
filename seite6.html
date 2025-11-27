@@ -60,7 +60,6 @@
             position: fixed;
             height: 100vh;
             z-index: 100;
-            transition: all 0.3s ease;
         }
         
         .sidebar-header {
@@ -115,18 +114,11 @@
         .nav-item:hover {
             background: rgba(99, 102, 241, 0.1);
             color: var(--text);
-            transform: translateX(5px);
         }
         
         .nav-item.active {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-        
-        .nav-item i {
-            width: 20px;
-            text-align: center;
         }
         
         .sidebar-footer {
@@ -152,8 +144,6 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            background-size: cover;
-            background-position: center;
         }
         
         .user-details {
@@ -179,13 +169,8 @@
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 500;
-            font-size: 0.8rem;
             width: 100%;
             margin-top: 0.5rem;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
         }
         
         /* Main Content */
@@ -219,185 +204,6 @@
             align-items: center;
         }
         
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--secondary);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-        
-        /* Cards - VERBESSERT mit größeren Buttons */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2.2rem;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        }
-        
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            border-color: var(--primary);
-        }
-        
-        .card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .card.disabled:hover {
-            transform: none;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            border-color: var(--card-border);
-        }
-        
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-        
-        .card-title {
-            font-size: 1.6rem;
-            margin-bottom: 1.2rem;
-            color: var(--text);
-        }
-        
-        .card-content {
-            color: var(--text-light);
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-        
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-        }
-        
-        .card-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-lighter);
-        }
-        
-        /* STATUS INDICATOR STYLES - VERBESSERT */
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        
-        .status-online {
-            background: var(--secondary);
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-        }
-        
-        .status-offline {
-            background: var(--danger);
-            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
-        }
-        
-        .status-warning {
-            background: var(--warning);
-            box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
-        }
-        
-        .status-maintenance {
-            background: var(--primary);
-            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
-        }
-        
-        .access-badge {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        
-        .access-allowed {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--secondary);
-        }
-        
-        .access-denied {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-        }
-        
-        /* Tables */
-        .table-container {
-            background: var(--card-bg);
-            border-radius: 16px;
-            border: 1px solid var(--card-border);
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            margin-bottom: 2rem;
-        }
-        
-        .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .table-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .table-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-        
         .btn {
             padding: 0.75rem 1.5rem;
             border-radius: 10px;
@@ -408,33 +214,68 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.9rem;
         }
         
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         
-        .btn-success {
-            background: linear-gradient(135deg, var(--secondary) 0%, #0d966c 100%);
-            color: white;
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
         }
         
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-            color: white;
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+        
+        .card-content {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        /* Tables */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
         }
         
         .table {
@@ -448,137 +289,12 @@
             background: rgba(15, 23, 42, 0.5);
             color: var(--text-light);
             font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .table td {
             padding: 1rem 1.5rem;
             border-bottom: 1px solid rgba(99, 102, 241, 0.1);
             color: var(--text-light);
-        }
-        
-        .table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .table tr:hover {
-            background: rgba(99, 102, 241, 0.05);
-        }
-        
-        .user-cell {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .user-avatar-small {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        .user-info-small {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-name-small {
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .user-id {
-            font-size: 0.75rem;
-            color: var(--text-lighter);
-        }
-        
-        .role-badge {
-            display: inline-block;
-            padding: 0.35rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .role-admin {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-            color: white;
-        }
-        
-        .role-moderator {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-            color: white;
-        }
-        
-        .role-developer {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            color: white;
-        }
-        
-        .role-supporter {
-            background: linear-gradient(135deg, var(--secondary) 0%, #0d966c 100%);
-            color: white;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            color: white;
-            font-size: 0.9rem;
-        }
-        
-        .btn-promote {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--secondary);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-        
-        .btn-promote:hover {
-            background: rgba(16, 185, 129, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .btn-demote {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-        
-        .btn-demote:hover {
-            background: rgba(245, 158, 11, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .btn-terminate {
-            background: rgba(239, 68, 68, 0.2);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-        
-        .btn-terminate:hover {
-            background: rgba(239, 68, 68, 0.3);
-            transform: translateY(-2px);
         }
         
         /* Login Page */
@@ -588,14 +304,12 @@
             border-radius: 20px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 440px;
+            max-width: 400px;
             text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            backdrop-filter: blur(10px);
         }
         
         .login-logo {
@@ -610,21 +324,12 @@
             color: white;
             font-weight: bold;
             font-size: 1.8rem;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
         
         .login-title {
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .login-subtitle {
-            color: var(--text-light);
-            margin-bottom: 2rem;
         }
         
         .discord-login-btn {
@@ -642,43 +347,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
-        }
-        
-        .discord-login-btn:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
-        }
-        
-        .loading {
-            display: none;
-            margin-top: 1.5rem;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1.5rem 0;
-            display: none;
-            border-left: 4px solid var(--danger);
+            margin-top: 2rem;
         }
         
         /* Modals */
@@ -693,7 +362,6 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            backdrop-filter: blur(5px);
         }
 
         .modal-overlay.active {
@@ -706,9 +374,6 @@
             border-radius: 20px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            backdrop-filter: blur(10px);
         }
 
         .modal-header {
@@ -716,20 +381,6 @@
             align-items: center;
             gap: 0.75rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
-        }
-        
-        .modal-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
         }
         
         .modal-title {
@@ -747,7 +398,6 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--text);
-            font-size: 0.9rem;
         }
         
         .form-input {
@@ -758,18 +408,6 @@
             border-radius: 10px;
             font-size: 1rem;
             color: var(--text);
-            transition: all 0.3s;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-        
-        .form-textarea {
-            min-height: 100px;
-            resize: vertical;
         }
         
         .modal-footer {
@@ -785,57 +423,7 @@
             border-radius: 16px;
             padding: 2rem;
             border: 1px solid var(--card-border);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
             margin-bottom: 2rem;
-        }
-        
-        .settings-section h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        
-        .settings-section h3 i {
-            color: var(--primary);
-        }
-        
-        .webhook-container {
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 12px;
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-        
-        .webhook-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .webhook-title {
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .webhook-input-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .webhook-input {
-            flex: 1;
-            padding: 1rem;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 0.9rem;
         }
         
         .role-management {
@@ -850,22 +438,6 @@
             border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: all 0.3s;
-        }
-        
-        .role-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-        
-        .role-emoji {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-        
-        .role-input-group {
-            margin-bottom: 1rem;
         }
         
         .role-input {
@@ -875,213 +447,16 @@
             border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 8px;
             color: var(--text);
-            font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
         
-        .role-name {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text);
-        }
-        
-        .role-id {
-            font-size: 0.8rem;
-            color: var(--text-lighter);
-            margin-bottom: 1rem;
-        }
-        
-        .add-role-btn {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--secondary);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .add-role-btn:hover {
-            background: rgba(16, 185, 129, 0.2);
-        }
-        
-        .remove-role-btn {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
-        }
-        
-        .remove-role-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
-        }
-        
-        .history-item {
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-        
-        .history-action {
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .history-date {
-            font-size: 0.8rem;
-            color: var(--text-lighter);
-        }
-        
-        .history-details {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-        
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            z-index: 1100;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            max-width: 400px;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background: linear-gradient(135deg, var(--secondary) 0%, #0d966c 100%);
-        }
-        
-        .notification.error {
-            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-        }
-        
-        .notification.info {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        }
-        
-        .notification.warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
-        }
-        
-        /* Warnungs-Badge */
-        .warning-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--danger);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        .nav-item {
-            position: relative;
-        }
-        
-        /* Warning Button */
-        .btn-warning {
-            background: rgba(245, 158, 11, 0.2);
-            color: var(--warning);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-        
-        .btn-warning:hover {
-            background: rgba(245, 158, 11, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        /* Hidden utility */
+        /* Utility */
         .hidden {
             display: none;
         }
         
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 70px;
-                padding: 1.5rem 0.5rem;
-            }
-            
-            .sidebar-title, .user-details, .nav-item span {
-                display: none;
-            }
-            
-            .sidebar-header {
-                justify-content: center;
-            }
-            
-            .user-info {
-                justify-content: center;
-            }
-            
-            .main-content {
-                margin-left: 70px;
-            }
-            
-            .cards-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 1rem;
-            }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
+        .text-center {
+            text-align: center;
         }
     </style>
 </head>
@@ -1091,18 +466,11 @@
         <div class="login-container">
             <div class="login-logo">KL</div>
             <h1 class="login-title">KhusLand Panel</h1>
-            <p class="login-subtitle">Bitte mit Discord anmelden um fortzufahren</p>
-            
-            <div class="error-message" id="errorMessage"></div>
+            <p class="login-subtitle">Bitte mit Discord anmelden</p>
             
             <button id="discordLogin" class="discord-login-btn">
                 <i class="fab fa-discord"></i> Mit Discord anmelden
             </button>
-            
-            <div class="loading" id="loginLoading">
-                <div class="spinner"></div>
-                <p style="margin-top: 1rem; color: var(--text-light);">Anmeldung läuft...</p>
-            </div>
         </div>
     </div>
 
@@ -1123,7 +491,6 @@
                 <a href="#" class="nav-item" data-tab="users">
                     <i class="fas fa-users"></i>
                     <span>User Management</span>
-                    <div class="warning-badge hidden" id="userWarningBadge">!</div>
                 </a>
                 <a href="#" class="nav-item" data-tab="settings">
                     <i class="fas fa-cog"></i>
@@ -1154,10 +521,6 @@
                 <div class="header">
                     <h1 class="page-title">Dashboard</h1>
                     <div class="header-actions">
-                        <div class="status-badge">
-                            <i class="fas fa-circle"></i>
-                            <span>Alle Systeme Online</span>
-                        </div>
                         <button class="btn btn-primary" id="addUserBtn">
                             <i class="fas fa-user-plus"></i>
                             Spieler einstellen
@@ -1170,14 +533,7 @@
                         <div class="card-icon">🌿</div>
                         <h3 class="card-title">Weed Ankauf</h3>
                         <div class="card-content">
-                            Den Weed-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-offline"></div>
-                                <span>System offline</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
+                            Den Weed-Einkauf auf korrekte Abläufe überprüfen.
                         </div>
                     </div>
                     
@@ -1185,74 +541,15 @@
                         <div class="card-icon">❄️</div>
                         <h3 class="card-title">Kokain Ankauf</h3>
                         <div class="card-content">
-                            Den Kokain-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
+                            Den Kokain-Einkauf auf Vollständigkeit überprüfen.
                         </div>
                     </div>
                     
                     <div class="card" data-page="seite3.html">
                         <div class="card-icon">♻️</div>
-                        <h3 class="card-title">Materialrecycler - Produkte</h3>
+                        <h3 class="card-title">Materialrecycler</h3>
                         <div class="card-content">
-                            Recyclingprozesse sowie die daraus entstandenen Materialien verwalten.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite4.html">
-                        <div class="card-icon">🔧</div>
-                        <h3 class="card-title">Werkbank Manager</h3>
-                        <div class="card-content">
-                            Überprüfe, dass alle Rohstoffe für die Werkstatt vorhanden sind.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite5.html">
-                        <div class="card-icon">🛣️</div>
-                        <h3 class="card-title">Drogenrouten</h3>
-                        <div class="card-content">
-                            Behalte die Drogenrouten im Blick.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite6.html">
-                        <div class="card-icon">🏞️</div>
-                        <h3 class="card-title">KhusLand Management</h3>
-                        <div class="card-content">
-                            Verwalten Sie Mitarbeiter.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
+                            Recyclingprozesse und Materialien verwalten.
                         </div>
                     </div>
                 </div>
@@ -1260,12 +557,6 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h2 class="table-title">Aktive Benutzer</h2>
-                        <div class="table-actions">
-                            <button class="btn btn-primary" id="refreshUsers">
-                                <i class="fas fa-sync-alt"></i>
-                                Aktualisieren
-                            </button>
-                        </div>
                     </div>
                     <table class="table">
                         <thead>
@@ -1277,7 +568,9 @@
                             </tr>
                         </thead>
                         <tbody id="userTableBody">
-                            <!-- Users will be populated here -->
+                            <tr>
+                                <td colspan="4" class="text-center">Keine Benutzer vorhanden</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -1298,12 +591,6 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h2 class="table-title">Eingestellte Spieler</h2>
-                        <div class="table-actions">
-                            <button class="btn btn-primary" id="exportUsers">
-                                <i class="fas fa-download"></i>
-                                Exportieren
-                            </button>
-                        </div>
                     </div>
                     <table class="table">
                         <thead>
@@ -1311,12 +598,13 @@
                                 <th>Benutzer</th>
                                 <th>Rolle</th>
                                 <th>Eingestellt am</th>
-                                <th>Eingestellt von</th>
                                 <th>Aktionen</th>
                             </tr>
                         </thead>
                         <tbody id="userManagementTableBody">
-                            <!-- Users will be populated here -->
+                            <tr>
+                                <td colspan="4" class="text-center">Keine Benutzer vorhanden</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -1328,104 +616,48 @@
                     <h1 class="page-title">Einstellungen</h1>
                 </div>
                 
-                <!-- Discord Webhooks Konfiguration -->
+                <!-- Discord Webhooks -->
                 <div class="settings-section">
-                    <h3><i class="fab fa-discord"></i> Discord Webhooks Konfiguration</h3>
+                    <h3>Discord Webhooks</h3>
                     
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">🎮 Spieler Einstellungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookHiring" class="webhook-input" placeholder="Webhook URL für Spieler-Einstellungen">
-                            <button class="btn btn-primary test-webhook" data-type="hiring">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="hiring">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Einstellungen Webhook</label>
+                        <input type="text" id="webhookHiring" class="form-input" placeholder="https://discord.com/api/webhooks/...">
                     </div>
                     
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">🎖️ Beförderungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookPromotions" class="webhook-input" placeholder="Webhook URL für Beförderungen">
-                            <button class="btn btn-primary test-webhook" data-type="promotions">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="promotions">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Beförderungen Webhook</label>
+                        <input type="text" id="webhookPromotions" class="form-input" placeholder="https://discord.com/api/webhooks/...">
                     </div>
                     
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">📉 Degradierungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookDemotions" class="webhook-input" placeholder="Webhook URL für Degradierungen">
-                            <button class="btn btn-primary test-webhook" data-type="demotions">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="demotions">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Degradierungen Webhook</label>
+                        <input type="text" id="webhookDemotions" class="form-input" placeholder="https://discord.com/api/webhooks/...">
                     </div>
                     
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">🚪 Kündigungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookTerminations" class="webhook-input" placeholder="Webhook URL für Kündigungen">
-                            <button class="btn btn-primary test-webhook" data-type="terminations">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="terminations">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- NEUER WEBHOOK FÜR TEAM VERWARNUNG -->
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">⚠️ Team Verwarnungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookWarnings" class="webhook-input" placeholder="Webhook URL für Team Verwarnungen">
-                            <button class="btn btn-primary test-webhook" data-type="warnings">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="warnings">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary" id="saveWebhooks">
+                        <i class="fas fa-save"></i> Webhooks speichern
+                    </button>
                 </div>
                 
                 <!-- Rollenverwaltung -->
                 <div class="settings-section">
-                    <h3><i class="fas fa-user-shield"></i> Rollenverwaltung</h3>
+                    <h3>Rollenverwaltung</h3>
                     <div class="role-management" id="roleManagement">
-                        <!-- Roles will be populated here -->
+                        <div class="role-card">
+                            <input type="text" class="role-input role-name" value="Administrator" placeholder="Rollenname">
+                            <input type="text" class="role-input role-id" value="" placeholder="Discord Role ID">
+                            <button class="btn btn-primary save-role">Speichern</button>
+                        </div>
+                        <div class="role-card">
+                            <input type="text" class="role-input role-name" value="Moderator" placeholder="Rollenname">
+                            <input type="text" class="role-input role-id" value="" placeholder="Discord Role ID">
+                            <button class="btn btn-primary save-role">Speichern</button>
+                        </div>
                     </div>
-                    <button class="add-role-btn" id="addRoleBtn">
-                        <i class="fas fa-plus"></i> Neue Rolle hinzufügen
+                    <button class="btn btn-primary" id="addRoleBtn" style="margin-top: 1rem;">
+                        <i class="fas fa-plus"></i> Neue Rolle
                     </button>
-                </div>
-                
-                <!-- Aktionshistorie -->
-                <div class="settings-section">
-                    <h3><i class="fas fa-history"></i> Aktionshistorie</h3>
-                    <div id="actionHistory">
-                        <!-- History will be populated here -->
-                    </div>
                 </div>
             </div>
         </div>
@@ -1435,9 +667,6 @@
     <div id="addUserModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-icon">
-                    <i class="fas fa-user-plus"></i>
-                </div>
                 <h2 class="modal-title">Spieler einstellen</h2>
             </div>
             
@@ -1454,13 +683,14 @@
             <div class="form-group">
                 <label class="form-label" for="userRoleSelect">Rolle</label>
                 <select id="userRoleSelect" class="form-input">
-                    <!-- Roles will be populated here -->
+                    <option value="admin">Administrator</option>
+                    <option value="moderator">Moderator</option>
                 </select>
             </div>
             
             <div class="form-group">
                 <label class="form-label" for="hiringReason">Grund</label>
-                <textarea id="hiringReason" class="form-input form-textarea" placeholder="Grund für die Einstellung..."></textarea>
+                <textarea id="hiringReason" class="form-input" placeholder="Grund für die Einstellung..." rows="3"></textarea>
             </div>
             
             <div class="modal-footer">
@@ -1470,1419 +700,433 @@
         </div>
     </div>
 
-    <!-- Promotion Modal -->
-    <div id="promotionModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-                <h2 class="modal-title">Spieler befördern</h2>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="promotionUserId">User ID</label>
-                <input type="text" id="promotionUserId" class="form-input" readonly>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="promotionRoleSelect">Neue Rolle</label>
-                <select id="promotionRoleSelect" class="form-input">
-                    <!-- Roles will be populated here -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="promotionReason">Grund</label>
-                <textarea id="promotionReason" class="form-input form-textarea" placeholder="Grund für die Beförderung..."></textarea>
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn" id="cancelPromotion">Abbrechen</button>
-                <button class="btn btn-primary" id="savePromotion">Beförderung bestätigen</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Demotion Modal -->
-    <div id="demotionModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">
-                    <i class="fas fa-arrow-down"></i>
-                </div>
-                <h2 class="modal-title">Spieler degradieren</h2>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="demotionUserId">User ID</label>
-                <input type="text" id="demotionUserId" class="form-input" readonly>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="demotionRoleSelect">Neue Rolle</label>
-                <select id="demotionRoleSelect" class="form-input">
-                    <!-- Roles will be populated here -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="demotionReason">Grund</label>
-                <textarea id="demotionReason" class="form-input form-textarea" placeholder="Grund für die Degradierung..."></textarea>
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn" id="cancelDemotion">Abbrechen</button>
-                <button class="btn btn-warning" id="saveDemotion">Degradierung bestätigen</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Termination Modal -->
-    <div id="terminationModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon">
-                    <i class="fas fa-times"></i>
-                </div>
-                <h2 class="modal-title">Spieler kündigen</h2>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="terminationUserId">User ID</label>
-                <input type="text" id="terminationUserId" class="form-input" readonly>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="terminationReason">Grund</label>
-                <textarea id="terminationReason" class="form-input form-textarea" placeholder="Grund für die Kündigung..."></textarea>
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn" id="cancelTermination">Abbrechen</button>
-                <button class="btn btn-danger" id="saveTermination">Kündigung bestätigen</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Warning Modal -->
-    <div id="warningModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-icon" style="background: var(--danger);">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <h2 class="modal-title">Team Verwarnung</h2>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="warningUserId">User ID</label>
-                <input type="text" id="warningUserId" class="form-input" readonly>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="warningReason">Verwarnungsgrund</label>
-                <textarea id="warningReason" class="form-input form-textarea" placeholder="Grund für die Verwarnung..."></textarea>
-            </div>
-            
-            <div class="modal-footer">
-                <button class="btn" id="cancelWarning">Abbrechen</button>
-                <button class="btn btn-danger" id="saveWarning">Verwarnung senden</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Notification Container -->
-    <div id="notification" class="notification hidden"></div>
-
-    <!-- Firebase Import -->
-    <script type="module">
-        // Firebase Import und Konfiguration
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, get, push, onValue, remove, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        // Firebase Konfiguration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-            authDomain: "khusland-b7d13.firebaseapp.com",
-            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-            projectId: "khusland-b7d13",
-            storageBucket: "khusland-b7d13.firebasestorage.app",
-            messagingSenderId: "69573193613",
-            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-            measurementId: "G-JSCWR4207G"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // Discord OAuth Konfiguration
-        const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
-        // Seiten-URLs für Weiterleitungen
-        const PAGE_URLS = {
-            'index.html': 'https://freedomworld1.github.io/KhusLand/index.html',
-            'seite2.html': 'https://freedomworld1.github.io/KhusLand/seite2.html',
-            'seite3.html': 'https://freedomworld1.github.io/KhusLand/seite3.html',
-            'seite4.html': 'https://freedomworld1.github.io/KhusLand/seite4.html',
-            'seite5.html': 'https://freedomworld1.github.io/KhusLand/seite5.html',
-            'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
-        };
-
-        // System Variablen
-        let currentUser = null;
-        let userRoles = [];
-        let customRoles = [];
-        let actionHistory = [];
-        let webhooks = {
-            hiring: '',
-            promotions: '',
-            demotions: '',
-            terminations: '',
-            warnings: '' // NEUER WEBHOOK FÜR VERWARNUNGEN
-        };
-
-        // DOM Elements
-        const loginPage = document.getElementById('loginPage');
-        const mainContent = document.getElementById('mainContent');
-        const errorMessage = document.getElementById('errorMessage');
-        const discordLoginBtn = document.getElementById('discordLogin');
-        const loginLoading = document.getElementById('loginLoading');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userName = document.getElementById('userName');
-        const userRole = document.getElementById('userRole');
-        const userAvatar = document.getElementById('userAvatar');
-        const navItems = document.querySelectorAll('.nav-item');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const userTableBody = document.getElementById('userTableBody');
-        const userManagementTableBody = document.getElementById('userManagementTableBody');
-        const addUserBtn = document.getElementById('addUserBtn');
-        const addUserBtn2 = document.getElementById('addUserBtn2');
-        const addUserModal = document.getElementById('addUserModal');
-        const cancelAddUser = document.getElementById('cancelAddUser');
-        const saveUser = document.getElementById('saveUser');
-        const promotionModal = document.getElementById('promotionModal');
-        const cancelPromotion = document.getElementById('cancelPromotion');
-        const savePromotion = document.getElementById('savePromotion');
-        const demotionModal = document.getElementById('demotionModal');
-        const cancelDemotion = document.getElementById('cancelDemotion');
-        const saveDemotion = document.getElementById('saveDemotion');
-        const terminationModal = document.getElementById('terminationModal');
-        const cancelTermination = document.getElementById('cancelTermination');
-        const saveTermination = document.getElementById('saveTermination');
-        const warningModal = document.getElementById('warningModal');
-        const cancelWarning = document.getElementById('cancelWarning');
-        const saveWarning = document.getElementById('saveWarning');
-        const refreshUsers = document.getElementById('refreshUsers');
-        const exportUsers = document.getElementById('exportUsers');
-        const roleManagement = document.getElementById('roleManagement');
-        const addRoleBtn = document.getElementById('addRoleBtn');
-        const actionHistoryContainer = document.getElementById('actionHistory');
-        const notification = document.getElementById('notification');
-        const userWarningBadge = document.getElementById('userWarningBadge');
-
-        // Firebase Referenzen
-        const usersRef = ref(db, 'users');
-        const rolesRef = ref(db, 'roles');
-        const historyRef = ref(db, 'history');
-        const webhooksRef = ref(db, 'webhooks');
-        const warningsRef = ref(db, 'warnings');
-
-        // Initialisiere Standardrollen, falls keine vorhanden sind
-        async function initializeDefaultRoles() {
-            const rolesSnapshot = await get(rolesRef);
-            if (!rolesSnapshot.exists() || rolesSnapshot.numChildren() === 0) {
-                const defaultRoles = [
-                    {
-                        id: 'role_admin',
-                        name: 'Administrator',
-                        discordRoleId: '',
-                        emoji: '👑',
-                        color: 'role-admin'
-                    },
-                    {
-                        id: 'role_moderator',
-                        name: 'Moderator',
-                        discordRoleId: '',
-                        emoji: '🛡️',
-                        color: 'role-moderator'
-                    },
-                    {
-                        id: 'role_developer',
-                        name: 'Developer',
-                        discordRoleId: '',
-                        emoji: '💻',
-                        color: 'role-developer'
-                    },
-                    {
-                        id: 'role_supporter',
-                        name: 'Supporter',
-                        discordRoleId: '',
-                        emoji: '🔧',
-                        color: 'role-supporter'
+    <script>
+        // Einfache Firebase-ähnliche Datenbank
+        class SimpleDB {
+            constructor() {
+                this.data = {
+                    users: [],
+                    roles: [
+                        { id: 'admin', name: 'Administrator', discordRoleId: '' },
+                        { id: 'moderator', name: 'Moderator', discordRoleId: '' }
+                    ],
+                    webhooks: {
+                        hiring: '',
+                        promotions: '',
+                        demotions: ''
                     }
-                ];
+                };
                 
-                for (const role of defaultRoles) {
-                    await push(rolesRef, role);
-                }
-                console.log('Standardrollen initialisiert');
-            }
-        }
-
-        // Discord OAuth Funktionen
-        function startDiscordOAuth() {
-            const scope = 'identify';
-            const state = generateRandomState();
-            
-            sessionStorage.setItem('oauth_state', state);
-            
-            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-            authUrl.searchParams.set('response_type', 'code');
-            authUrl.searchParams.set('scope', scope);
-            authUrl.searchParams.set('state', state);
-            authUrl.searchParams.set('prompt', 'none');
-            
-            window.location.href = authUrl.toString();
-        }
-
-        function generateRandomState() {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        }
-
-        async function exchangeCodeForToken(code) {
-            try {
-                loginLoading.style.display = 'block';
-                discordLoginBtn.disabled = true;
-                
-                const response = await fetch(`${BACKEND_URL}/token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        code: code, 
-                        redirect_uri: DISCORD_REDIRECT_URI
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Worker responded with status ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.access_token) {
-                    await verifyUser(data.access_token);
-                } else {
-                    throw new Error('Kein Access Token erhalten');
-                }
-            } catch (error) {
-                console.error('Fehler beim Token-Austausch:', error);
-                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-                loginLoading.style.display = 'none';
-                discordLoginBtn.disabled = false;
-            }
-        }
-
-        async function verifyUser(accessToken) {
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: accessToken,
-                        currentPage: 'dashboard'
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error(`Verification failed with status ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.isAuthorized) {
-                    localStorage.setItem('discord_user', JSON.stringify(data.user));
-                    localStorage.setItem('discord_access_token', accessToken);
-                    
-                    const user = data.user;
-                    currentUser = {
-                        id: user.id,
-                        username: user.username,
-                        avatar: user.avatar
-                    };
-                    
-                    await loadDiscordAvatar(user);
-                    showMainApp();
-                    showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-                } else {
-                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
-                }
-            } catch (error) {
-                console.error('Fehler bei der Benutzerüberprüfung:', error);
-                showError('Fehler bei der Berechtigungsprüfung');
-            } finally {
-                loginLoading.style.display = 'none';
-                discordLoginBtn.disabled = false;
-            }
-        }
-
-        // Discord Avatar laden
-        async function loadDiscordAvatar(userData) {
-            try {
-                if (userData.avatar) {
-                    const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
-                    userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                    userAvatar.innerHTML = '';
-                    
-                    const img = new Image();
-                    img.onerror = () => {
-                        const firstLetter = userData.username.charAt(0).toUpperCase();
-                        userAvatar.style.backgroundImage = '';
-                        userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-                    };
-                    img.src = avatarUrl;
-                } else {
-                    const firstLetter = userData.username.charAt(0).toUpperCase();
-                    userAvatar.style.backgroundImage = '';
-                    userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-                }
-                
-                userName.textContent = userData.username;
-                userRole.textContent = 'Administrator';
-            } catch (error) {
-                console.error('Error loading Discord avatar:', error);
-                userAvatar.style.backgroundImage = '';
-                userAvatar.innerHTML = '<i class="fas fa-user"></i>';
-            }
-        }
-
-        // Initialize the application
-        function initApp() {
-            const userData = localStorage.getItem('discord_user');
-            const token = localStorage.getItem('discord_access_token');
-            
-            if (userData && token) {
-                try {
-                    const user = JSON.parse(userData);
-                    currentUser = {
-                        id: user.id,
-                        username: user.username,
-                        avatar: user.avatar
-                    };
-                    
-                    loadDiscordAvatar(user);
-                    showMainApp();
-                    showNotification(`Willkommen zurück, ${user.username}`, 'info');
-                } catch (e) {
-                    console.error('Fehler beim Laden der Benutzerdaten:', e);
-                    showLoginPage();
-                }
-            } else {
-                showLoginPage();
+                // Daten aus localStorage laden
+                this.loadFromStorage();
             }
             
-            // Load data from Firebase
-            loadFirebaseData();
-            setupEventListeners();
-        }
-
-        // Load data from Firebase
-        function loadFirebaseData() {
-            // Initialize default roles
-            initializeDefaultRoles();
-            
-            // Load users
-            onValue(usersRef, (snapshot) => {
-                userRoles = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        const userData = childSnapshot.val();
-                        userRoles.push({
-                            id: childSnapshot.key,
-                            ...userData
-                        });
-                    });
+            loadFromStorage() {
+                const saved = localStorage.getItem('khusland_db');
+                if (saved) {
+                    this.data = JSON.parse(saved);
                 }
-                populateUserTables();
-                updateRoleSelects();
-            });
-
-            // Load roles
-            onValue(rolesRef, (snapshot) => {
-                customRoles = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        customRoles.push({
-                            id: childSnapshot.key,
-                            ...childSnapshot.val()
-                        });
-                    });
-                }
-                renderRoleManagement();
-                updateRoleSelects();
-            });
-
-            // Load history
-            onValue(historyRef, (snapshot) => {
-                actionHistory = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((childSnapshot) => {
-                        actionHistory.push(childSnapshot.val());
-                    });
-                }
-                renderActionHistory();
-            });
-
-            // Load webhooks
-            onValue(webhooksRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    webhooks = snapshot.val();
-                    updateWebhookInputs();
-                }
-            });
-
-            // Load warnings and show badge if there are active warnings
-            onValue(warningsRef, (snapshot) => {
-                if (snapshot.exists()) {
-                    const warnings = [];
-                    snapshot.forEach((childSnapshot) => {
-                        warnings.push(childSnapshot.val());
-                    });
-                    
-                    // Show warning badge if there are active warnings
-                    const activeWarnings = warnings.filter(w => !w.resolved);
-                    if (activeWarnings.length > 0) {
-                        userWarningBadge.textContent = activeWarnings.length;
-                        userWarningBadge.classList.remove('hidden');
-                    } else {
-                        userWarningBadge.classList.add('hidden');
-                    }
-                } else {
-                    userWarningBadge.classList.add('hidden');
-                }
-            });
-        }
-
-        // Show login page
-        function showLoginPage() {
-            loginPage.classList.remove('hidden');
-            mainContent.classList.add('hidden');
-        }
-
-        // Show main application
-        function showMainApp() {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-        }
-
-        // Populate user tables with data
-        function populateUserTables() {
-            userTableBody.innerHTML = '';
-            userManagementTableBody.innerHTML = '';
-            
-            if (userRoles.length === 0) {
-                const emptyRow = document.createElement('tr');
-                emptyRow.innerHTML = `
-                    <td colspan="5" style="text-align: center; color: var(--text-lighter); padding: 2rem;">
-                        Keine Spieler eingestellt
-                    </td>
-                `;
-                userTableBody.appendChild(emptyRow);
-                userManagementTableBody.appendChild(emptyRow.cloneNode(true));
-                return;
             }
             
-            userRoles.forEach(user => {
-                const userRow = createUserRow(user);
-                userTableBody.appendChild(userRow);
-                
-                // Für die User Management Tabelle eine Kopie erstellen
-                const userRowCopy = createUserRow(user);
-                userManagementTableBody.appendChild(userRowCopy);
-            });
-        }
-
-        // Create a user table row
-        function createUserRow(user) {
-            const row = document.createElement('tr');
-            
-            // Find the role by roleId
-            const role = customRoles.find(r => r.id === user.roleId) || { 
-                name: 'Unbekannt', 
-                color: 'role-admin',
-                discordRoleId: ''
-            };
-            
-            row.innerHTML = `
-                <td>
-                    <div class="user-cell">
-                        <div class="user-avatar-small">${user.name ? user.name.charAt(0) : '?'}</div>
-                        <div class="user-info-small">
-                            <div class="user-name-small">${user.name || 'Unbekannt'}</div>
-                            <div class="user-id">ID: ${user.userId}</div>
-                        </div>
-                    </div>
-                </td>
-                <td><span class="role-badge ${role.color}">${role.name}</span></td>
-                <td>${user.date || 'Unbekannt'}</td>
-                <td>${user.assignedBy || 'Unbekannt'}</td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn-icon btn-promote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
-                            <i class="fas fa-arrow-up"></i>
-                        </button>
-                        <button class="btn-icon btn-demote" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
-                            <i class="fas fa-arrow-down"></i>
-                        </button>
-                        <button class="btn-icon btn-warning" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </button>
-                        <button class="btn-icon btn-terminate" data-user-id="${user.userId}" data-user-name="${user.name || 'Unbekannt'}">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </td>
-            `;
-            
-            return row;
-        }
-
-        // Render role management
-        function renderRoleManagement() {
-            roleManagement.innerHTML = '';
-            
-            if (customRoles.length === 0) {
-                roleManagement.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Rollen konfiguriert</p>';
-                return;
+            saveToStorage() {
+                localStorage.setItem('khusland_db', JSON.stringify(this.data));
             }
             
-            customRoles.forEach((role, index) => {
-                const roleCard = document.createElement('div');
-                roleCard.className = 'role-card';
-                roleCard.innerHTML = `
-                    <div class="role-emoji">${role.emoji || '👤'}</div>
-                    <div class="role-input-group">
-                        <input type="text" class="role-input role-name-input" value="${role.name}" placeholder="Rollenname" data-index="${index}">
-                        <input type="text" class="role-input role-id-input" value="${role.discordRoleId}" placeholder="Discord Role ID" data-index="${index}">
-                        <input type="text" class="role-input role-emoji-input" value="${role.emoji}" placeholder="Emoji" data-index="${index}">
-                        <select class="role-input role-color-input" data-index="${index}">
-                            <option value="role-admin" ${role.color === 'role-admin' ? 'selected' : ''}>Admin (Rot)</option>
-                            <option value="role-moderator" ${role.color === 'role-moderator' ? 'selected' : ''}>Moderator (Orange)</option>
-                            <option value="role-developer" ${role.color === 'role-developer' ? 'selected' : ''}>Developer (Lila)</option>
-                            <option value="role-supporter" ${role.color === 'role-supporter' ? 'selected' : ''}>Supporter (Grün)</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-primary save-role-btn" data-index="${index}" style="width: 100%; margin-bottom: 0.5rem;">
-                        <i class="fas fa-save"></i> Speichern
-                    </button>
-                    ${customRoles.length > 1 ? `<button class="remove-role-btn" data-index="${index}">
-                        <i class="fas fa-trash"></i> Entfernen
-                    </button>` : ''}
-                `;
-                roleManagement.appendChild(roleCard);
-            });
-
-            // Add event listeners for role inputs
-            document.querySelectorAll('.role-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    saveRoleToFirebase(index);
-                });
-            });
-
-            document.querySelectorAll('.save-role-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    saveRoleToFirebase(index);
-                });
-            });
-
-            document.querySelectorAll('.remove-role-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    removeRoleFromFirebase(index);
-                });
-            });
-        }
-
-        // Update role selects in modals
-        function updateRoleSelects() {
-            const roleSelects = [
-                document.getElementById('userRoleSelect'),
-                document.getElementById('promotionRoleSelect'),
-                document.getElementById('demotionRoleSelect')
-            ];
-
-            roleSelects.forEach(select => {
-                if (select) {
-                    select.innerHTML = '';
-                    customRoles.forEach(role => {
-                        const option = document.createElement('option');
-                        option.value = role.id;
-                        option.textContent = role.name;
-                        select.appendChild(option);
-                    });
-                }
-            });
-        }
-
-        // Update webhook inputs
-        function updateWebhookInputs() {
-            document.getElementById('webhookHiring').value = webhooks.hiring || '';
-            document.getElementById('webhookPromotions').value = webhooks.promotions || '';
-            document.getElementById('webhookDemotions').value = webhooks.demotions || '';
-            document.getElementById('webhookTerminations').value = webhooks.terminations || '';
-            document.getElementById('webhookWarnings').value = webhooks.warnings || '';
-        }
-
-        // Render action history
-        function renderActionHistory() {
-            actionHistoryContainer.innerHTML = '';
-            
-            if (actionHistory.length === 0) {
-                actionHistoryContainer.innerHTML = '<p style="color: var(--text-lighter); text-align: center;">Keine Aktionen vorhanden</p>';
-                return;
-            }
-            
-            // Sort by timestamp descending and take last 10
-            const recentHistory = [...actionHistory]
-                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-                .slice(0, 10);
-            
-            recentHistory.forEach(action => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                
-                let actionIcon = '📝';
-                let actionText = '';
-                
-                switch (action.type) {
-                    case 'hiring':
-                        actionIcon = '🎮';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde als <strong>${action.roleName}</strong> eingestellt`;
-                        break;
-                    case 'promotion':
-                        actionIcon = '🎖️';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> befördert`;
-                        break;
-                    case 'demotion':
-                        actionIcon = '📉';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde zum <strong>${action.roleName}</strong> degradiert`;
-                        break;
-                    case 'termination':
-                        actionIcon = '🚪';
-                        actionText = `Spieler <strong>${action.userName}</strong> wurde gekündigt`;
-                        break;
-                    case 'warning':
-                        actionIcon = '⚠️';
-                        actionText = `Spieler <strong>${action.userName}</strong> hat eine Verwarnung erhalten`;
-                        break;
-                }
-                
-                if (action.reason) {
-                    actionText += `. Grund: "${action.reason}"`;
-                }
-                
-                historyItem.innerHTML = `
-                    <div class="history-header">
-                        <div class="history-action">${actionIcon} ${action.type}</div>
-                        <div class="history-date">${new Date(action.timestamp).toLocaleString('de-DE')}</div>
-                    </div>
-                    <div class="history-details">
-                        ${actionText}
-                    </div>
-                `;
-                
-                actionHistoryContainer.appendChild(historyItem);
-            });
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Discord login
-            discordLoginBtn.addEventListener('click', startDiscordOAuth);
-            
-            // Logout
-            logoutBtn.addEventListener('click', handleLogout);
-            
-            // Navigation
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const tab = this.getAttribute('data-tab');
-                    switchTab(tab);
-                });
-            });
-            
-            // Add user buttons
-            addUserBtn.addEventListener('click', () => addUserModal.classList.add('active'));
-            addUserBtn2.addEventListener('click', () => addUserModal.classList.add('active'));
-            
-            // Modal actions
-            cancelAddUser.addEventListener('click', () => {
-                addUserModal.classList.remove('active');
-                document.getElementById('hiringReason').value = ''; // Grund-Feld leeren
-                document.getElementById('playerName').value = ''; // Name-Feld leeren
-            });
-            saveUser.addEventListener('click', handleAddUser);
-            cancelPromotion.addEventListener('click', () => promotionModal.classList.remove('active'));
-            savePromotion.addEventListener('click', handlePromotion);
-            cancelDemotion.addEventListener('click', () => demotionModal.classList.remove('active'));
-            saveDemotion.addEventListener('click', handleDemotion);
-            cancelTermination.addEventListener('click', () => terminationModal.classList.remove('active'));
-            saveTermination.addEventListener('click', handleTermination);
-            cancelWarning.addEventListener('click', () => warningModal.classList.remove('active'));
-            saveWarning.addEventListener('click', handleWarning);
-            
-            // Refresh and export buttons
-            refreshUsers.addEventListener('click', () => {
-                showNotification('Benutzerliste aktualisiert', 'success');
-            });
-            
-            exportUsers.addEventListener('click', () => {
-                showNotification('Benutzerliste exportiert', 'success');
-            });
-            
-            // Add role button
-            addRoleBtn.addEventListener('click', addNewRole);
-            
-            // Webhook buttons
-            document.querySelectorAll('.test-webhook').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const type = this.getAttribute('data-type');
-                    testWebhook(type);
-                });
-            });
-            
-            document.querySelectorAll('.save-webhook').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const type = this.getAttribute('data-type');
-                    saveWebhook(type);
-                });
-            });
-            
-            // Card clicks - JETZT MIT FUNKTIONIERENDEN WEITERLEITUNGEN
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', function() {
-                    if (!this.classList.contains('disabled')) {
-                        const page = this.getAttribute('data-page');
-                        const pageUrl = PAGE_URLS[page];
-                        
-                        if (pageUrl) {
-                            showNotification(`Weiterleitung zu ${page}...`, 'info', 1500);
-                            setTimeout(() => {
-                                window.location.href = pageUrl;
-                            }, 1500);
-                        } else {
-                            showNotification(`Seite ${page} nicht gefunden`, 'error');
-                        }
-                    }
-                });
-            });
-            
-            // Action buttons in tables
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.btn-promote')) {
-                    const userId = e.target.closest('.btn-promote').getAttribute('data-user-id');
-                    const userName = e.target.closest('.btn-promote').getAttribute('data-user-name');
-                    openPromotionModal(userId, userName);
-                }
-                
-                if (e.target.closest('.btn-demote')) {
-                    const userId = e.target.closest('.btn-demote').getAttribute('data-user-id');
-                    const userName = e.target.closest('.btn-demote').getAttribute('data-user-name');
-                    openDemotionModal(userId, userName);
-                }
-                
-                if (e.target.closest('.btn-warning')) {
-                    const userId = e.target.closest('.btn-warning').getAttribute('data-user-id');
-                    const userName = e.target.closest('.btn-warning').getAttribute('data-user-name');
-                    openWarningModal(userId, userName);
-                }
-                
-                if (e.target.closest('.btn-terminate')) {
-                    const userId = e.target.closest('.btn-terminate').getAttribute('data-user-id');
-                    const userName = e.target.closest('.btn-terminate').getAttribute('data-user-name');
-                    openTerminationModal(userId, userName);
-                }
-            });
-        }
-
-        // Handle logout
-        function handleLogout() {
-            currentUser = null;
-            localStorage.removeItem('discord_user');
-            localStorage.removeItem('discord_access_token');
-            showLoginPage();
-            showNotification('Erfolgreich abgemeldet', 'info');
-        }
-
-        // Switch between tabs
-        function switchTab(tabName) {
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-tab') === tabName) {
-                    item.classList.add('active');
-                }
-            });
-            
-            tabContents.forEach(tab => {
-                tab.classList.add('hidden');
-                if (tab.id === tabName) {
-                    tab.classList.remove('hidden');
-                }
-            });
-        }
-
-        // Handle adding a new user
-        async function handleAddUser() {
-            const userId = document.getElementById('discordUserId').value;
-            const playerName = document.getElementById('playerName').value;
-            const roleId = document.getElementById('userRoleSelect').value;
-            const reason = document.getElementById('hiringReason').value || "Neueinstellung";
-            
-            if (!userId) {
-                showNotification('Bitte geben Sie eine User ID ein', 'error');
-                return;
-            }
-            
-            if (!playerName) {
-                showNotification('Bitte geben Sie einen Spieler Namen ein', 'error');
-                return;
-            }
-            
-            if (!/^\d+$/.test(userId)) {
-                showNotification('Bitte geben Sie eine gültige Discord User ID ein (nur Zahlen)', 'error');
-                return;
-            }
-            
-            const selectedRole = customRoles.find(r => r.id === roleId);
-            if (!selectedRole) {
-                showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
-                return;
-            }
-            
-            const userData = {
-                userId: userId,
-                name: playerName,
-                roleId: roleId,
-                date: new Date().toLocaleDateString('de-DE'),
-                assignedBy: currentUser.username,
-                timestamp: new Date().toISOString()
-            };
-            
-            try {
-                // Save to Firebase
-                const newUserRef = push(usersRef);
-                await set(newUserRef, userData);
-                
-                // Add to history
-                const historyData = {
-                    type: 'hiring',
-                    userId: userId,
-                    userName: playerName,
-                    roleName: selectedRole.name,
-                    reason: reason,
-                    executedBy: currentUser.username,
+            // User Management
+            addUser(userData) {
+                const user = {
+                    id: Date.now().toString(),
+                    ...userData,
+                    date: new Date().toLocaleDateString('de-DE'),
                     timestamp: new Date().toISOString()
                 };
-                await push(historyRef, historyData);
+                this.data.users.push(user);
+                this.saveToStorage();
+                return user;
+            }
+            
+            getUsers() {
+                return this.data.users;
+            }
+            
+            // Role Management
+            getRoles() {
+                return this.data.roles;
+            }
+            
+            updateRole(roleId, updates) {
+                const role = this.data.roles.find(r => r.id === roleId);
+                if (role) {
+                    Object.assign(role, updates);
+                    this.saveToStorage();
+                }
+            }
+            
+            addRole(roleData) {
+                const role = {
+                    id: 'role_' + Date.now(),
+                    ...roleData
+                };
+                this.data.roles.push(role);
+                this.saveToStorage();
+                return role;
+            }
+            
+            // Webhook Management
+            getWebhooks() {
+                return this.data.webhooks;
+            }
+            
+            updateWebhooks(updates) {
+                Object.assign(this.data.webhooks, updates);
+                this.saveToStorage();
+            }
+        }
+
+        // Haupt-Applikation
+        class KhusLandApp {
+            constructor() {
+                this.db = new SimpleDB();
+                this.currentUser = null;
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.loadData();
+                this.checkAuth();
+            }
+            
+            checkAuth() {
+                // Einfache Auth-Simulation
+                const userData = localStorage.getItem('current_user');
+                if (userData) {
+                    this.currentUser = JSON.parse(userData);
+                    this.showMainApp();
+                } else {
+                    this.showLoginPage();
+                }
+            }
+            
+            setupEventListeners() {
+                // Login
+                document.getElementById('discordLogin').addEventListener('click', () => {
+                    this.handleDiscordLogin();
+                });
                 
-                // Send to Discord if webhook is configured
-                if (webhooks.hiring) {
-                    // KORREKTUR: Discord Role ID wird jetzt korrekt verwendet
-                    const discordRoleId = selectedRole.discordRoleId || 'unknown-role';
-                    await sendToDiscord(webhooks.hiring, {
-                        title: "🎮 Einstellung",
-                        description: `Hiermit erhält <@${userId}> die Rolle <@&${discordRoleId}>.\n\n**Grund:** ${reason}`,
-                        color: 0x00ff00
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.handleLogout();
+                });
+                
+                // Navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const tab = item.getAttribute('data-tab');
+                        this.switchTab(tab);
                     });
+                });
+                
+                // Add User
+                document.getElementById('addUserBtn').addEventListener('click', () => {
+                    this.showAddUserModal();
+                });
+                
+                document.getElementById('addUserBtn2').addEventListener('click', () => {
+                    this.showAddUserModal();
+                });
+                
+                document.getElementById('cancelAddUser').addEventListener('click', () => {
+                    this.hideAddUserModal();
+                });
+                
+                document.getElementById('saveUser').addEventListener('click', () => {
+                    this.handleAddUser();
+                });
+                
+                // Settings
+                document.getElementById('saveWebhooks').addEventListener('click', () => {
+                    this.saveWebhooks();
+                });
+                
+                document.getElementById('addRoleBtn').addEventListener('click', () => {
+                    this.addNewRole();
+                });
+                
+                // Role Management
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('save-role')) {
+                        this.saveRole(e.target);
+                    }
+                });
+            }
+            
+            handleDiscordLogin() {
+                // Simuliere Discord Login
+                const user = {
+                    id: '123456789',
+                    username: 'Admin',
+                    avatar: null
+                };
+                
+                this.currentUser = user;
+                localStorage.setItem('current_user', JSON.stringify(user));
+                this.showMainApp();
+                this.showNotification('Erfolgreich angemeldet', 'success');
+            }
+            
+            handleLogout() {
+                this.currentUser = null;
+                localStorage.removeItem('current_user');
+                this.showLoginPage();
+                this.showNotification('Erfolgreich abgemeldet', 'info');
+            }
+            
+            showLoginPage() {
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('mainContent').classList.add('hidden');
+            }
+            
+            showMainApp() {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                
+                // User Info aktualisieren
+                document.getElementById('userName').textContent = this.currentUser.username;
+                document.getElementById('userAvatar').innerHTML = this.currentUser.username.charAt(0).toUpperCase();
+            }
+            
+            switchTab(tabName) {
+                // Navigation aktualisieren
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+                
+                // Tab Inhalte anzeigen
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.add('hidden');
+                });
+                document.getElementById(tabName).classList.remove('hidden');
+            }
+            
+            loadData() {
+                this.renderUsers();
+                this.renderRoles();
+                this.loadWebhooks();
+            }
+            
+            renderUsers() {
+                const users = this.db.getUsers();
+                const tbody = document.getElementById('userTableBody');
+                const tbody2 = document.getElementById('userManagementTableBody');
+                
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Keine Benutzer vorhanden</td></tr>';
+                    tbody2.innerHTML = '<tr><td colspan="4" class="text-center">Keine Benutzer vorhanden</td></tr>';
+                    return;
                 }
                 
-                addUserModal.classList.remove('active');
-                showNotification(`Spieler ${playerName} erfolgreich eingestellt`, 'success');
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.name}</td>
+                        <td>${this.getRoleName(user.roleId)}</td>
+                        <td>${user.date}</td>
+                        <td>
+                            <button class="btn" onclick="app.promoteUser('${user.id}')">Befördern</button>
+                            <button class="btn" onclick="app.terminateUser('${user.id}')">Kündigen</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                tbody2.innerHTML = tbody.innerHTML;
+            }
+            
+            renderRoles() {
+                const roles = this.db.getRoles();
+                const container = document.getElementById('roleManagement');
+                
+                container.innerHTML = roles.map(role => `
+                    <div class="role-card">
+                        <input type="text" class="role-input role-name" value="${role.name}" 
+                               data-role-id="${role.id}" placeholder="Rollenname">
+                        <input type="text" class="role-input role-id" value="${role.discordRoleId || ''}" 
+                               data-role-id="${role.id}" placeholder="Discord Role ID">
+                        <button class="btn btn-primary save-role" data-role-id="${role.id}">Speichern</button>
+                    </div>
+                `).join('');
+            }
+            
+            loadWebhooks() {
+                const webhooks = this.db.getWebhooks();
+                document.getElementById('webhookHiring').value = webhooks.hiring || '';
+                document.getElementById('webhookPromotions').value = webhooks.promotions || '';
+                document.getElementById('webhookDemotions').value = webhooks.demotions || '';
+            }
+            
+            showAddUserModal() {
+                document.getElementById('addUserModal').classList.add('active');
+            }
+            
+            hideAddUserModal() {
+                document.getElementById('addUserModal').classList.remove('active');
+                // Formular zurücksetzen
                 document.getElementById('discordUserId').value = '';
                 document.getElementById('playerName').value = '';
-                document.getElementById('hiringReason').value = ''; // Feld leeren
-            } catch (error) {
-                console.error('Fehler beim Speichern:', error);
-                showNotification('Fehler beim Speichern des Spielers', 'error');
-            }
-        }
-
-        // Open promotion modal
-        function openPromotionModal(userId, userName) {
-            document.getElementById('promotionUserId').value = userId;
-            document.getElementById('promotionReason').value = '';
-            promotionModal.classList.add('active');
-        }
-
-        // Handle promotion
-        async function handlePromotion() {
-            const userId = document.getElementById('promotionUserId').value;
-            const roleId = document.getElementById('promotionRoleSelect').value;
-            const reason = document.getElementById('promotionReason').value;
-            
-            const selectedRole = customRoles.find(r => r.id === roleId);
-            if (!selectedRole) {
-                showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
-                return;
+                document.getElementById('hiringReason').value = '';
             }
             
-            try {
-                // Find and update user in Firebase
-                const userSnapshot = await get(usersRef);
-                let userKey = null;
-                let currentUserData = null;
+            handleAddUser() {
+                const userId = document.getElementById('discordUserId').value;
+                const playerName = document.getElementById('playerName').value;
+                const roleId = document.getElementById('userRoleSelect').value;
+                const reason = document.getElementById('hiringReason').value || 'Kein Grund angegeben';
                 
-                userSnapshot.forEach((childSnapshot) => {
-                    const userData = childSnapshot.val();
-                    if (userData.userId === userId) {
-                        userKey = childSnapshot.key;
-                        currentUserData = userData;
-                    }
+                if (!userId || !playerName) {
+                    this.showNotification('Bitte fülle alle Felder aus', 'error');
+                    return;
+                }
+                
+                const userData = {
+                    userId: userId,
+                    name: playerName,
+                    roleId: roleId,
+                    assignedBy: this.currentUser.username
+                };
+                
+                const user = this.db.addUser(userData);
+                
+                // Discord Webhook senden
+                this.sendDiscordNotification('hiring', {
+                    userId: userId,
+                    userName: playerName,
+                    roleId: roleId,
+                    reason: reason
                 });
                 
-                if (userKey && currentUserData) {
-                    // ALLE Benutzerdaten behalten, nur die Rolle aktualisieren
-                    const updatedUserData = {
-                        ...currentUserData,
-                        roleId: roleId
-                    };
-                    
-                    const userRef = ref(db, `users/${userKey}`);
-                    await set(userRef, updatedUserData);
-                    
-                    // Add to history
-                    const historyData = {
-                        type: 'promotion',
-                        userId: userId,
-                        userName: currentUserData.name,
-                        roleName: selectedRole.name,
-                        reason: reason || 'Kein Grund angegeben',
-                        executedBy: currentUser.username,
-                        timestamp: new Date().toISOString()
-                    };
-                    await push(historyRef, historyData);
-                    
-                    // Send to Discord if webhook is configured
-                    if (webhooks.promotions) {
-                        // KORREKTUR: Discord Role ID wird jetzt korrekt verwendet
-                        const discordRoleId = selectedRole.discordRoleId || 'unknown-role';
-                        await sendToDiscord(webhooks.promotions, {
-                            title: "🎖️ Beförderung",
-                            description: `Hiermit erhält <@${userId}> die Rolle <@&${discordRoleId}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
+                this.hideAddUserModal();
+                this.renderUsers();
+                this.showNotification(`Spieler ${playerName} erfolgreich eingestellt`, 'success');
+            }
+            
+            sendDiscordNotification(type, data) {
+                const webhooks = this.db.getWebhooks();
+                const webhookUrl = webhooks[type];
+                
+                if (!webhookUrl) {
+                    console.log(`Kein Webhook für ${type} konfiguriert`);
+                    return;
+                }
+                
+                const role = this.db.getRoles().find(r => r.id === data.roleId);
+                const discordRoleId = role?.discordRoleId;
+                
+                let embed;
+                
+                switch (type) {
+                    case 'hiring':
+                        const roleMention = discordRoleId ? `<@&${discordRoleId}>` : role?.name;
+                        embed = {
+                            title: "🎮 Einstellung",
+                            description: `Hiermit erhält <@${data.userId}> die Rolle ${roleMention}.\n\n**Grund:** ${data.reason}`,
+                            color: 0x00ff00
+                        };
+                        break;
+                        
+                    case 'promotions':
+                        const promotionRoleMention = discordRoleId ? `<@&${discordRoleId}>` : role?.name;
+                        embed = {
+                            title: "🎖️ Beförderung", 
+                            description: `Hiermit erhält <@${data.userId}> die Rolle ${promotionRoleMention}.\n\n**Grund:** ${data.reason}`,
                             color: 0xffd700
-                        });
-                    }
-                    
-                    promotionModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserData.name} wurde befördert`, 'success');
-                } else {
-                    showNotification(`Spieler nicht gefunden`, 'error');
+                        };
+                        break;
                 }
-            } catch (error) {
-                console.error('Fehler bei der Beförderung:', error);
-                showNotification('Fehler bei der Beförderung', 'error');
-            }
-        }
-
-        // Open demotion modal
-        function openDemotionModal(userId, userName) {
-            document.getElementById('demotionUserId').value = userId;
-            document.getElementById('demotionReason').value = '';
-            demotionModal.classList.add('active');
-        }
-
-        // Handle demotion
-        async function handleDemotion() {
-            const userId = document.getElementById('demotionUserId').value;
-            const roleId = document.getElementById('demotionRoleSelect').value;
-            const reason = document.getElementById('demotionReason').value;
-            
-            const selectedRole = customRoles.find(r => r.id === roleId);
-            if (!selectedRole) {
-                showNotification('Bitte wählen Sie eine gültige Rolle aus', 'error');
-                return;
-            }
-            
-            try {
-                // Find and update user in Firebase
-                const userSnapshot = await get(usersRef);
-                let userKey = null;
-                let currentUserData = null;
                 
-                userSnapshot.forEach((childSnapshot) => {
-                    const userData = childSnapshot.val();
-                    if (userData.userId === userId) {
-                        userKey = childSnapshot.key;
-                        currentUserData = userData;
-                    }
+                // Webhook senden (simuliert)
+                console.log('Sende Discord Webhook:', {
+                    url: webhookUrl,
+                    embed: embed
                 });
                 
-                if (userKey && currentUserData) {
-                    // ALLE Benutzerdaten behalten, nur die Rolle aktualisieren
-                    const updatedUserData = {
-                        ...currentUserData,
-                        roleId: roleId
-                    };
-                    
-                    const userRef = ref(db, `users/${userKey}`);
-                    await set(userRef, updatedUserData);
-                    
-                    // Add to history
-                    const historyData = {
-                        type: 'demotion',
-                        userId: userId,
-                        userName: currentUserData.name,
-                        roleName: selectedRole.name,
-                        reason: reason || 'Kein Grund angegeben',
-                        executedBy: currentUser.username,
-                        timestamp: new Date().toISOString()
-                    };
-                    await push(historyRef, historyData);
-                    
-                    // Send to Discord if webhook is configured
-                    if (webhooks.demotions) {
-                        // KORREKTUR: Discord Role ID wird jetzt korrekt verwendet
-                        const discordRoleId = selectedRole.discordRoleId || 'unknown-role';
-                        await sendToDiscord(webhooks.demotions, {
-                            title: "📉 Degradierung",
-                            description: `Hiermit erhält <@${userId}> die Rolle <@&${discordRoleId}>.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
-                            color: 0xffa500
-                        });
-                    }
-                    
-                    demotionModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserData.name} wurde degradiert`, 'warning');
-                } else {
-                    showNotification(`Spieler nicht gefunden`, 'error');
-                }
-            } catch (error) {
-                console.error('Fehler bei der Degradierung:', error);
-                showNotification('Fehler bei der Degradierung', 'error');
-            }
-        }
-
-        // Open warning modal
-        function openWarningModal(userId, userName) {
-            document.getElementById('warningUserId').value = userId;
-            document.getElementById('warningReason').value = '';
-            warningModal.classList.add('active');
-        }
-
-        // Handle warning
-        async function handleWarning() {
-            const userId = document.getElementById('warningUserId').value;
-            const reason = document.getElementById('warningReason').value;
-            
-            if (!userId) {
-                showNotification('Ungültige User ID', 'error');
-                return;
+                // In einer echten Implementierung:
+                // fetch(webhookUrl, {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ embeds: [embed] })
+                // });
             }
             
-            if (!reason) {
-                showNotification('Bitte geben Sie einen Grund für die Verwarnung an', 'error');
-                return;
-            }
-            
-            try {
-                // Find user in Firebase
-                const userSnapshot = await get(usersRef);
-                let currentUserData = null;
+            saveWebhooks() {
+                const updates = {
+                    hiring: document.getElementById('webhookHiring').value,
+                    promotions: document.getElementById('webhookPromotions').value,
+                    demotions: document.getElementById('webhookDemotions').value
+                };
                 
-                userSnapshot.forEach((childSnapshot) => {
-                    const userData = childSnapshot.val();
-                    if (userData.userId === userId) {
-                        currentUserData = userData;
-                    }
+                this.db.updateWebhooks(updates);
+                this.showNotification('Webhooks erfolgreich gespeichert', 'success');
+            }
+            
+            saveRole(button) {
+                const roleId = button.getAttribute('data-role-id');
+                const nameInput = document.querySelector(`.role-name[data-role-id="${roleId}"]`);
+                const idInput = document.querySelector(`.role-id[data-role-id="${roleId}"]`);
+                
+                const updates = {
+                    name: nameInput.value,
+                    discordRoleId: idInput.value
+                };
+                
+                this.db.updateRole(roleId, updates);
+                this.showNotification('Rolle erfolgreich gespeichert', 'success');
+            }
+            
+            addNewRole() {
+                const role = this.db.addRole({
+                    name: 'Neue Rolle',
+                    discordRoleId: ''
                 });
-                
-                if (currentUserData) {
-                    // Save warning to Firebase
-                    const warningData = {
-                        userId: userId,
-                        userName: currentUserData.name,
-                        reason: reason,
-                        executedBy: currentUser.username,
-                        timestamp: new Date().toISOString(),
-                        resolved: false
-                    };
-                    
-                    await push(warningsRef, warningData);
-                    
-                    // Add to history
-                    const historyData = {
-                        type: 'warning',
-                        userId: userId,
-                        userName: currentUserData.name,
-                        roleName: '',
-                        reason: reason,
-                        executedBy: currentUser.username,
-                        timestamp: new Date().toISOString()
-                    };
-                    await push(historyRef, historyData);
-                    
-                    // Send to Discord if webhook is configured
-                    if (webhooks.warnings) {
-                        await sendToDiscord(webhooks.warnings, {
-                            title: "⚠️ Team Verwarnung",
-                            description: `**Familien Updates**\n\nHiermit erhält <@${userId}> eine offizielle Verwarnung.\n\n**Grund:** ${reason}`,
-                            color: 0xff0000
-                        });
-                    }
-                    
-                    warningModal.classList.remove('active');
-                    showNotification(`Verwarnung an Spieler ${currentUserData.name} gesendet`, 'warning');
-                } else {
-                    showNotification(`Spieler nicht gefunden`, 'error');
+                this.renderRoles();
+                this.showNotification('Neue Rolle hinzugefügt', 'success');
+            }
+            
+            promoteUser(userId) {
+                const user = this.db.getUsers().find(u => u.id === userId);
+                if (user) {
+                    this.sendDiscordNotification('promotions', {
+                        userId: user.userId,
+                        userName: user.name,
+                        roleId: user.roleId,
+                        reason: 'Beförderung'
+                    });
+                    this.showNotification(`${user.name} wurde befördert`, 'success');
                 }
-            } catch (error) {
-                console.error('Fehler beim Senden der Verwarnung:', error);
-                showNotification('Fehler beim Senden der Verwarnung', 'error');
-            }
-        }
-
-        // Open termination modal
-        function openTerminationModal(userId, userName) {
-            document.getElementById('terminationUserId').value = userId;
-            document.getElementById('terminationReason').value = '';
-            terminationModal.classList.add('active');
-        }
-
-        // Handle termination
-        async function handleTermination() {
-            const userId = document.getElementById('terminationUserId').value;
-            const reason = document.getElementById('terminationReason').value;
-            
-            if (!userId) {
-                showNotification('Ungültige User ID', 'error');
-                return;
             }
             
-            try {
-                // Find and remove user from Firebase
-                const userSnapshot = await get(usersRef);
-                let userKey = null;
-                let currentUserData = null;
-                
-                userSnapshot.forEach((childSnapshot) => {
-                    const userData = childSnapshot.val();
-                    if (userData.userId === userId) {
-                        userKey = childSnapshot.key;
-                        currentUserData = userData;
-                    }
-                });
-                
-                if (userKey && currentUserData) {
-                    const userRef = ref(db, `users/${userKey}`);
-                    await remove(userRef);
-                    
-                    // UI sofort aktualisieren
-                    populateUserTables();
-                    
-                    // Add to history
-                    const historyData = {
-                        type: 'termination',
-                        userId: userId,
-                        userName: currentUserData.name,
-                        roleName: '',
-                        reason: reason || 'Kein Grund angegeben',
-                        executedBy: currentUser.username,
-                        timestamp: new Date().toISOString()
-                    };
-                    await push(historyRef, historyData);
-                    
-                    // Send to Discord if webhook is configured
-                    if (webhooks.terminations) {
-                        await sendToDiscord(webhooks.terminations, {
-                            title: "📢 Blood Out",
-                            description: `Hiermit bekommt <@${userId}> offiziell seinen blood out.\n\n**Grund:** ${reason || "Kein Grund angegeben"}`,
-                            color: 0xff0000
-                        });
-                    }
-                    
-                    terminationModal.classList.remove('active');
-                    showNotification(`Spieler ${currentUserData.name} wurde gekündigt`, 'success');
-                } else {
-                    showNotification(`Spieler nicht gefunden`, 'error');
+            terminateUser(userId) {
+                const user = this.db.getUsers().find(u => u.id === userId);
+                if (user) {
+                    this.db.data.users = this.db.data.users.filter(u => u.id !== userId);
+                    this.db.saveToStorage();
+                    this.renderUsers();
+                    this.showNotification(`${user.name} wurde gekündigt`, 'success');
                 }
-            } catch (error) {
-                console.error('Fehler bei der Kündigung:', error);
-                showNotification('Fehler bei der Kündigung', 'error');
+            }
+            
+            getRoleName(roleId) {
+                const role = this.db.getRoles().find(r => r.id === roleId);
+                return role ? role.name : 'Unbekannt';
+            }
+            
+            showNotification(message, type = 'info') {
+                // Einfache Notification
+                alert(`[${type.toUpperCase()}] ${message}`);
             }
         }
 
-        // Add new role
-        async function addNewRole() {
-            const newRole = {
-                id: 'role_' + Date.now(),
-                name: 'Neue Rolle',
-                discordRoleId: '',
-                emoji: '👤',
-                color: 'role-admin'
-            };
-            
-            try {
-                await push(rolesRef, newRole);
-                showNotification('Neue Rolle hinzugefügt', 'success');
-            } catch (error) {
-                console.error('Fehler beim Hinzufügen der Rolle:', error);
-                showNotification('Fehler beim Hinzufügen der Rolle', 'error');
-            }
-        }
-
-        // Save role to Firebase
-        async function saveRoleToFirebase(index) {
-            const role = customRoles[index];
-            const roleInputs = document.querySelectorAll(`[data-index="${index}"]`);
-            
-            role.name = roleInputs[0].value;
-            role.discordRoleId = roleInputs[1].value;
-            role.emoji = roleInputs[2].value;
-            role.color = roleInputs[3].value;
-            
-            try {
-                const roleRef = ref(db, `roles/${role.id}`);
-                await set(roleRef, role);
-                showNotification('Rolle gespeichert', 'success');
-            } catch (error) {
-                console.error('Fehler beim Speichern der Rolle:', error);
-                showNotification('Fehler beim Speichern der Rolle', 'error');
-            }
-        }
-
-        // Remove role from Firebase
-        async function removeRoleFromFirebase(index) {
-            const role = customRoles[index];
-            
-            try {
-                const roleRef = ref(db, `roles/${role.id}`);
-                await remove(roleRef);
-                showNotification('Rolle entfernt', 'success');
-            } catch (error) {
-                console.error('Fehler beim Entfernen der Rolle:', error);
-                showNotification('Fehler beim Entfernen der Rolle', 'error');
-            }
-        }
-
-        // Test webhook
-        async function testWebhook(type) {
-            const url = document.getElementById(`webhook${type.charAt(0).toUpperCase() + type.slice(1)}`).value;
-            
-            if (!url) {
-                showNotification('Bitte geben Sie eine Webhook URL ein', 'error');
-                return;
-            }
-            
-            if (!url.startsWith('https://discord.com/api/webhooks/')) {
-                showNotification('Bitte geben Sie eine gültige Discord Webhook URL ein', 'error');
-                return;
-            }
-            
-            try {
-                await sendToDiscord(url, {
-                    title: "🔧 Webhook Test",
-                    description: `Dies ist ein Test für den ${type} Webhook.`,
-                    color: 0x00ff00
-                });
-                showNotification('Webhook Test erfolgreich gesendet', 'success');
-            } catch (error) {
-                showNotification('Webhook Test fehlgeschlagen', 'error');
-            }
-        }
-
-        // Save webhook
-        async function saveWebhook(type) {
-            const url = document.getElementById(`webhook${type.charAt(0).toUpperCase() + type.slice(1)}`).value;
-            
-            if (!url) {
-                showNotification('Bitte geben Sie eine Webhook URL ein', 'error');
-                return;
-            }
-            
-            if (!url.startsWith('https://discord.com/api/webhooks/')) {
-                showNotification('Bitte geben Sie eine gültige Discord Webhook URL ein', 'error');
-                return;
-            }
-            
-            try {
-                webhooks[type] = url;
-                await set(webhooksRef, webhooks);
-                showNotification('Webhook URL erfolgreich gespeichert', 'success');
-            } catch (error) {
-                console.error('Fehler beim Speichern des Webhooks:', error);
-                showNotification('Fehler beim Speichern des Webhooks', 'error');
-            }
-        }
-
-        // Send message to Discord
-        async function sendToDiscord(webhookUrl, embed) {
-            const response = await fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    embeds: [{
-                        title: embed.title,
-                        description: embed.description,
-                        color: embed.color
-                    }]
-                })
-            });
-            
-            if (!response.ok) {
-                throw new Error('Failed to send Discord message');
-            }
-            
-            return true;
-        }
-
-        // Show notification
-        function showNotification(message, type = 'info') {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.remove('hidden');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.classList.add('hidden');
-                }, 300);
-            }, 4000);
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initApp();
-            
-            // Check for OAuth code in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            const state = urlParams.get('state');
-            
-            if (code && state) {
-                const newUrl = window.location.origin + window.location.pathname;
-                window.history.replaceState({}, document.title, newUrl);
-                exchangeCodeForToken(code);
-            }
-        });
+        // App initialisieren
+        const app = new KhusLandApp();
     </script>
 </body>
 </html>

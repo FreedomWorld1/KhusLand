@@ -232,7 +232,7 @@
             border: 1px solid rgba(16, 185, 129, 0.2);
         }
         
-        /* Cards - VERBESSERT mit größeren Buttons */
+        /* Cards */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -322,7 +322,7 @@
             color: var(--text-lighter);
         }
         
-        /* STATUS INDICATOR STYLES - VERBESSERT */
+        /* STATUS INDICATOR STYLES */
         .status-indicator {
             display: inline-block;
             width: 12px;
@@ -1069,6 +1069,40 @@
             transform: translateY(-2px);
         }
         
+        /* Access Restricted Styles */
+        .access-restricted {
+            text-align: center;
+            padding: 3rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            margin: 2rem 0;
+        }
+
+        .access-restricted h2 {
+            color: var(--danger);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .access-restricted p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .access-restricted .restricted-details {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .access-restricted .restricted-details span {
+            color: var(--text-lighter);
+            font-size: 0.9rem;
+        }
+
         /* Hidden utility */
         .hidden {
             display: none;
@@ -1188,279 +1222,296 @@
         
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-content">
-                <div class="header">
-                    <h1 class="page-title">Dashboard</h1>
-                    <div class="header-actions">
-                        <div class="status-badge">
-                            <i class="fas fa-circle"></i>
-                            <span>Alle Systeme Online</span>
-                        </div>
-                        <button class="btn btn-primary" id="addUserBtn">
-                            <i class="fas fa-user-plus"></i>
-                            Spieler einstellen
-                        </button>
-                    </div>
+            <!-- Access Restricted Message (Initially Hidden) -->
+            <div id="accessRestricted" class="access-restricted hidden">
+                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
+                <p>Dein Account hat keinen Zugriff auf das Management-Panel.</p>
+                <div class="restricted-details">
+                    <p><strong>Seite:</strong> <span id="restrictedPageName">Management Panel</span></p>
+                    <p><strong>Benutzer:</strong> <span id="restrictedUserName">Unbekannt</span></p>
+                    <p><strong>Erforderte Berechtigung:</strong> <span>Management-Zugriff</span></p>
                 </div>
-                
-                <div class="cards-grid">
-                    <div class="card" data-page="index.html">
-                        <div class="card-icon">🌿</div>
-                        <h3 class="card-title">Weed Ankauf</h3>
-                        <div class="card-content">
-                            Den Weed-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-offline"></div>
-                                <span>System offline</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite2.html">
-                        <div class="card-icon">❄️</div>
-                        <h3 class="card-title">Kokain Ankauf</h3>
-                        <div class="card-content">
-                            Den Kokain-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite3.html">
-                        <div class="card-icon">♻️</div>
-                        <h3 class="card-title">Materialrecycler - Produkte</h3>
-                        <div class="card-content">
-                            Recyclingprozesse sowie die daraus entstandenen Materialien verwalten.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite4.html">
-                        <div class="card-icon">🔧</div>
-                        <h3 class="card-title">Werkbank Manager</h3>
-                        <div class="card-content">
-                            Überprüfe, dass alle Rohstoffe für die Werkstatt vorhanden sind.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite5.html">
-                        <div class="card-icon">🛣️</div>
-                        <h3 class="card-title">Drogenrouten</h3>
-                        <div class="card-content">
-                            Behalte die Drogenrouten im Blick.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                    
-                    <div class="card" data-page="seite6.html">
-                        <div class="card-icon">🏞️</div>
-                        <h3 class="card-title">KhusLand Management</h3>
-                        <div class="card-content">
-                            Verwalten Sie Mitarbeiter.
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-status">
-                                <div class="status-indicator status-online"></div>
-                                <span>System online</span>
-                            </div>
-                            <div class="access-badge access-allowed">Zugriff</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">Aktive Benutzer</h2>
-                        <div class="table-actions">
-                            <button class="btn btn-primary" id="refreshUsers">
-                                <i class="fas fa-sync-alt"></i>
-                                Aktualisieren
-                            </button>
-                        </div>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Benutzer</th>
-                                <th>Rolle</th>
-                                <th>Eingestellt am</th>
-                                <th>Aktionen</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userTableBody">
-                            <!-- Users will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
+                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
+                    <i class="fas fa-sign-out-alt"></i> Abmelden
+                </button>
             </div>
-            
-            <!-- Users Tab -->
-            <div id="users" class="tab-content hidden">
-                <div class="header">
-                    <h1 class="page-title">User Management</h1>
-                    <div class="header-actions">
-                        <button class="btn btn-primary" id="addUserBtn2">
-                            <i class="fas fa-user-plus"></i>
-                            Spieler einstellen
-                        </button>
+
+            <!-- Authorized Content (Initially Hidden) -->
+            <div id="authorizedContent" class="hidden">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content">
+                    <div class="header">
+                        <h1 class="page-title">Dashboard</h1>
+                        <div class="header-actions">
+                            <div class="status-badge">
+                                <i class="fas fa-circle"></i>
+                                <span>Alle Systeme Online</span>
+                            </div>
+                            <button class="btn btn-primary" id="addUserBtn">
+                                <i class="fas fa-user-plus"></i>
+                                Spieler einstellen
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="cards-grid">
+                        <div class="card" data-page="index.html">
+                            <div class="card-icon">🌿</div>
+                            <h3 class="card-title">Weed Ankauf</h3>
+                            <div class="card-content">
+                                Den Weed-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-status">
+                                    <div class="status-indicator status-offline"></div>
+                                    <span>System offline</span>
+                                </div>
+                                <div class="access-badge access-allowed">Zugriff</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-page="seite2.html">
+                            <div class="card-icon">❄️</div>
+                            <h3 class="card-title">Kokain Ankauf</h3>
+                            <div class="card-content">
+                                Den Kokain-Einkauf auf korrekte Abläufe und Vollständigkeit überprüfen.
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-status">
+                                    <div class="status-indicator status-online"></div>
+                                    <span>System online</span>
+                                </div>
+                                <div class="access-badge access-allowed">Zugriff</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-page="seite3.html">
+                            <div class="card-icon">♻️</div>
+                            <h3 class="card-title">Materialrecycler - Produkte</h3>
+                            <div class="card-content">
+                                Recyclingprozesse sowie die daraus entstandenen Materialien verwalten.
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-status">
+                                    <div class="status-indicator status-online"></div>
+                                    <span>System online</span>
+                                </div>
+                                <div class="access-badge access-allowed">Zugriff</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-page="seite4.html">
+                            <div class="card-icon">🔧</div>
+                            <h3 class="card-title">Werkbank Manager</h3>
+                            <div class="card-content">
+                                Überprüfe, dass alle Rohstoffe für die Werkstatt vorhanden sind.
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-status">
+                                    <div class="status-indicator status-online"></div>
+                                    <span>System online</span>
+                                </div>
+                                <div class="access-badge access-allowed">Zugriff</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-page="seite5.html">
+                            <div class="card-icon">🛣️</div>
+                            <h3 class="card-title">Drogenrouten</h3>
+                            <div class="card-content">
+                                Behalte die Drogenrouten im Blick.
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-status">
+                                    <div class="status-indicator status-online"></div>
+                                    <span>System online</span>
+                                </div>
+                                <div class="access-badge access-allowed">Zugriff</div>
+                            </div>
+                        </div>
+                        
+                        <div class="card" data-page="seite6.html">
+                            <div class="card-icon">🏞️</div>
+                            <h3 class="card-title">KhusLand Management</h3>
+                            <div class="card-content">
+                                Verwalten Sie Mitarbeiter.
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-status">
+                                    <div class="status-indicator status-online"></div>
+                                    <span>System online</span>
+                                </div>
+                                <div class="access-badge access-allowed">Zugriff</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h2 class="table-title">Aktive Benutzer</h2>
+                            <div class="table-actions">
+                                <button class="btn btn-primary" id="refreshUsers">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Aktualisieren
+                                </button>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Benutzer</th>
+                                    <th>Rolle</th>
+                                    <th>Eingestellt am</th>
+                                    <th>Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">Eingestellte Spieler</h2>
-                        <div class="table-actions">
-                            <button class="btn btn-primary" id="exportUsers">
-                                <i class="fas fa-download"></i>
-                                Exportieren
-                            </button>
-                        </div>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Benutzer</th>
-                                <th>Rolle</th>
-                                <th>Eingestellt am</th>
-                                <th>Eingestellt von</th>
-                                <th>Aktionen</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userManagementTableBody">
-                            <!-- Users will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Settings Tab -->
-            <div id="settings" class="tab-content hidden">
-                <div class="header">
-                    <h1 class="page-title">Einstellungen</h1>
-                </div>
-                
-                <!-- Discord Webhooks Konfiguration -->
-                <div class="settings-section">
-                    <h3><i class="fab fa-discord"></i> Discord Webhooks Konfiguration</h3>
-                    
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">🎮 Spieler Einstellungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookHiring" class="webhook-input" placeholder="Webhook URL für Spieler-Einstellungen">
-                            <button class="btn btn-primary test-webhook" data-type="hiring">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="hiring">
-                                <i class="fas fa-save"></i> Speichern
+                <!-- Users Tab -->
+                <div id="users" class="tab-content hidden">
+                    <div class="header">
+                        <h1 class="page-title">User Management</h1>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" id="addUserBtn2">
+                                <i class="fas fa-user-plus"></i>
+                                Spieler einstellen
                             </button>
                         </div>
                     </div>
                     
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">🎖️ Beförderungen</div>
+                    <div class="table-container">
+                        <div class="table-header">
+                            <h2 class="table-title">Eingestellte Spieler</h2>
+                            <div class="table-actions">
+                                <button class="btn btn-primary" id="exportUsers">
+                                    <i class="fas fa-download"></i>
+                                    Exportieren
+                                </button>
+                            </div>
                         </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookPromotions" class="webhook-input" placeholder="Webhook URL für Beförderungen">
-                            <button class="btn btn-primary test-webhook" data-type="promotions">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="promotions">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">📉 Degradierungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookDemotions" class="webhook-input" placeholder="Webhook URL für Degradierungen">
-                            <button class="btn btn-primary test-webhook" data-type="demotions">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="demotions">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">🚪 Kündigungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookTerminations" class="webhook-input" placeholder="Webhook URL für Kündigungen">
-                            <button class="btn btn-primary test-webhook" data-type="terminations">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="terminations">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- NEUER WEBHOOK FÜR TEAM VERWARNUNG -->
-                    <div class="webhook-container">
-                        <div class="webhook-header">
-                            <div class="webhook-title">⚠️ Team Verwarnungen</div>
-                        </div>
-                        <div class="webhook-input-group">
-                            <input type="text" id="webhookWarnings" class="webhook-input" placeholder="Webhook URL für Team Verwarnungen">
-                            <button class="btn btn-primary test-webhook" data-type="warnings">
-                                <i class="fas fa-bell"></i> Testen
-                            </button>
-                            <button class="btn btn-success save-webhook" data-type="warnings">
-                                <i class="fas fa-save"></i> Speichern
-                            </button>
-                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Benutzer</th>
+                                    <th>Rolle</th>
+                                    <th>Eingestellt am</th>
+                                    <th>Eingestellt von</th>
+                                    <th>Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userManagementTableBody">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 
-                <!-- Rollenverwaltung -->
-                <div class="settings-section">
-                    <h3><i class="fas fa-user-shield"></i> Rollenverwaltung</h3>
-                    <div class="role-management" id="roleManagement">
-                        <!-- Roles will be populated here -->
+                <!-- Settings Tab -->
+                <div id="settings" class="tab-content hidden">
+                    <div class="header">
+                        <h1 class="page-title">Einstellungen</h1>
                     </div>
-                </div>
-                
-                <!-- Aktionshistorie -->
-                <div class="settings-section">
-                    <h3><i class="fas fa-history"></i> Aktionshistorie</h3>
-                    <div id="actionHistory">
-                        <!-- History will be populated here -->
+                    
+                    <!-- Discord Webhooks Konfiguration -->
+                    <div class="settings-section">
+                        <h3><i class="fab fa-discord"></i> Discord Webhooks Konfiguration</h3>
+                        
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">🎮 Spieler Einstellungen</div>
+                            </div>
+                            <div class="webhook-input-group">
+                                <input type="text" id="webhookHiring" class="webhook-input" placeholder="Webhook URL für Spieler-Einstellungen">
+                                <button class="btn btn-primary test-webhook" data-type="hiring">
+                                    <i class="fas fa-bell"></i> Testen
+                                </button>
+                                <button class="btn btn-success save-webhook" data-type="hiring">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">🎖️ Beförderungen</div>
+                            </div>
+                            <div class="webhook-input-group">
+                                <input type="text" id="webhookPromotions" class="webhook-input" placeholder="Webhook URL für Beförderungen">
+                                <button class="btn btn-primary test-webhook" data-type="promotions">
+                                    <i class="fas fa-bell"></i> Testen
+                                </button>
+                                <button class="btn btn-success save-webhook" data-type="promotions">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">📉 Degradierungen</div>
+                            </div>
+                            <div class="webhook-input-group">
+                                <input type="text" id="webhookDemotions" class="webhook-input" placeholder="Webhook URL für Degradierungen">
+                                <button class="btn btn-primary test-webhook" data-type="demotions">
+                                    <i class="fas fa-bell"></i> Testen
+                                </button>
+                                <button class="btn btn-success save-webhook" data-type="demotions">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">🚪 Kündigungen</div>
+                            </div>
+                            <div class="webhook-input-group">
+                                <input type="text" id="webhookTerminations" class="webhook-input" placeholder="Webhook URL für Kündigungen">
+                                <button class="btn btn-primary test-webhook" data-type="terminations">
+                                    <i class="fas fa-bell"></i> Testen
+                                </button>
+                                <button class="btn btn-success save-webhook" data-type="terminations">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- NEUER WEBHOOK FÜR TEAM VERWARNUNG -->
+                        <div class="webhook-container">
+                            <div class="webhook-header">
+                                <div class="webhook-title">⚠️ Team Verwarnungen</div>
+                            </div>
+                            <div class="webhook-input-group">
+                                <input type="text" id="webhookWarnings" class="webhook-input" placeholder="Webhook URL für Team Verwarnungen">
+                                <button class="btn btn-primary test-webhook" data-type="warnings">
+                                    <i class="fas fa-bell"></i> Testen
+                                </button>
+                                <button class="btn btn-success save-webhook" data-type="warnings">
+                                    <i class="fas fa-save"></i> Speichern
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rollenverwaltung -->
+                    <div class="settings-section">
+                        <h3><i class="fas fa-user-shield"></i> Rollenverwaltung</h3>
+                        <div class="role-management" id="roleManagement">
+                            <!-- Roles will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Aktionshistorie -->
+                    <div class="settings-section">
+                        <h3><i class="fas fa-history"></i> Aktionshistorie</h3>
+                        <div id="actionHistory">
+                            <!-- History will be populated here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1668,7 +1719,18 @@
             'seite6.html': 'https://freedomworld1.github.io/KhusLand/seite6.html'
         };
 
-        // Feste Rollen - DIREKT IM CODE
+        // Seitenspezifische Konfiguration für Zugriffsprüfung
+        const PAGE_ACCESS_CONFIG = {
+            'seite7.html': 'dashboard',
+            'seite5.html': 'route', 
+            'seite4.html': 'werkbank',
+            'seite3.html': 'materialrecycler',
+            'seite2.html': 'kokain',
+            'index.html': 'weed',
+            'seite6.html': 'management'
+        };
+
+        // Feste Rollen
         const FIXED_ROLES = [
             {
                 id: 'role_founder',
@@ -1759,7 +1821,7 @@
         // System Variablen
         let currentUser = null;
         let userRoles = [];
-        let customRoles = FIXED_ROLES; // DIREKT die festen Rollen verwenden
+        let customRoles = FIXED_ROLES;
         let actionHistory = [];
         let webhooks = {
             hiring: '',
@@ -1768,17 +1830,23 @@
             terminations: '',
             warnings: ''
         };
+        let userAccessInfo = null;
 
         // DOM Elements
         const loginPage = document.getElementById('loginPage');
         const mainContent = document.getElementById('mainContent');
+        const authorizedContent = document.getElementById('authorizedContent');
+        const accessRestricted = document.getElementById('accessRestricted');
         const errorMessage = document.getElementById('errorMessage');
         const discordLoginBtn = document.getElementById('discordLogin');
         const loginLoading = document.getElementById('loginLoading');
         const logoutBtn = document.getElementById('logoutBtn');
+        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
         const userName = document.getElementById('userName');
         const userRole = document.getElementById('userRole');
         const userAvatar = document.getElementById('userAvatar');
+        const restrictedUserName = document.getElementById('restrictedUserName');
+        const restrictedPageName = document.getElementById('restrictedPageName');
         const navItems = document.querySelectorAll('.nav-item');
         const tabContents = document.querySelectorAll('.tab-content');
         const userTableBody = document.getElementById('userTableBody');
@@ -1871,8 +1939,11 @@
             }
         }
 
+        // Zugriffsprüfung für Management
         async function verifyUser(accessToken) {
             try {
+                const currentPage = getCurrentPageKey();
+                
                 const response = await fetch(`${BACKEND_URL}/verify-user`, {
                     method: 'POST',
                     headers: {
@@ -1880,7 +1951,7 @@
                     },
                     body: JSON.stringify({ 
                         accessToken: accessToken,
-                        currentPage: 'dashboard'
+                        currentPage: currentPage
                     })
                 });
 
@@ -1893,17 +1964,26 @@
                 if (data.isAuthorized) {
                     localStorage.setItem('discord_user', JSON.stringify(data.user));
                     localStorage.setItem('discord_access_token', accessToken);
+                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
                     
                     const user = data.user;
+                    userAccessInfo = data.accessInfo;
+                    
                     currentUser = {
                         id: user.id,
                         username: user.username,
-                        avatar: user.avatar
+                        avatar: user.avatar,
+                        ...userAccessInfo
                     };
                     
                     await loadDiscordAvatar(user);
-                    showMainApp();
-                    showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    
+                    if (data.hasPageAccess) {
+                        showAuthorizedContent(currentUser);
+                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
+                    } else {
+                        showAccessRestricted(currentUser, currentPage);
+                    }
                 } else {
                     showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
                 }
@@ -1914,6 +1994,100 @@
                 loginLoading.style.display = 'none';
                 discordLoginBtn.disabled = false;
             }
+        }
+
+        // Zugriffsprüfung für bestehende Session
+        async function checkExistingLogin() {
+            const userData = localStorage.getItem('discord_user');
+            const token = localStorage.getItem('discord_access_token');
+            const storedAccessInfo = localStorage.getItem('user_access_info');
+            
+            if (userData && token) {
+                try {
+                    const user = JSON.parse(userData);
+                    userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
+                    
+                    const currentPage = getCurrentPageKey();
+                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            accessToken: token,
+                            currentPage: currentPage
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.isAuthorized) {
+                            currentUser = {
+                                id: user.id,
+                                username: user.username,
+                                avatar: user.avatar,
+                                ...userAccessInfo
+                            };
+                            
+                            await loadDiscordAvatar(user);
+                            
+                            if (data.hasPageAccess) {
+                                showAuthorizedContent(currentUser);
+                                showNotification(`Willkommen zurück, ${user.username}`, 'info');
+                            } else {
+                                showAccessRestricted(currentUser, currentPage);
+                            }
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Fehler beim Laden der Benutzerdaten:', e);
+                }
+            }
+            
+            showLoginPage();
+        }
+
+        function getCurrentPageKey() {
+            return 'management';
+        }
+
+        function showAccessRestricted(user, pageKey) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.remove('hidden');
+            authorizedContent.classList.add('hidden');
+            
+            restrictedUserName.textContent = user.username;
+            restrictedPageName.textContent = getPageDisplayName(pageKey);
+            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf das Management-Panel`, 'error');
+        }
+
+        function showAuthorizedContent(user) {
+            loginPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.remove('hidden');
+            
+            userName.textContent = user.username;
+            userRole.textContent = 'Administrator';
+            
+            loadFirebaseData();
+            showNotification(`Willkommen im Management-Panel, ${user.username}`, 'success');
+        }
+
+        function getPageDisplayName(pageKey) {
+            const names = {
+                'dashboard': 'Dashboard',
+                'route': 'Route',
+                'werkbank': 'Werkbank', 
+                'materialrecycler': 'Materialrecycler',
+                'kokain': 'Kokain',
+                'weed': 'Weed',
+                'management': 'Management Panel'
+            };
+            return names[pageKey] || pageKey;
         }
 
         // Discord Avatar laden
@@ -1936,9 +2110,6 @@
                     userAvatar.style.backgroundImage = '';
                     userAvatar.innerHTML = `<span>${firstLetter}</span>`;
                 }
-                
-                userName.textContent = userData.username;
-                userRole.textContent = 'Administrator';
             } catch (error) {
                 console.error('Error loading Discord avatar:', error);
                 userAvatar.style.backgroundImage = '';
@@ -1948,36 +2119,16 @@
 
         // Initialize the application
         function initApp() {
-            const userData = localStorage.getItem('discord_user');
-            const token = localStorage.getItem('discord_access_token');
-            
-            if (userData && token) {
-                try {
-                    const user = JSON.parse(userData);
-                    currentUser = {
-                        id: user.id,
-                        username: user.username,
-                        avatar: user.avatar
-                    };
-                    
-                    loadDiscordAvatar(user);
-                    showMainApp();
-                    showNotification(`Willkommen zurück, ${user.username}`, 'info');
-                } catch (e) {
-                    console.error('Fehler beim Laden der Benutzerdaten:', e);
-                    showLoginPage();
-                }
+            // Zuerst OAuth Callback prüfen
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('code')) {
+                exchangeCodeForToken(urlParams.get('code'));
             } else {
-                showLoginPage();
+                // Dann bestehende Session prüfen
+                checkExistingLogin();
             }
             
-            // Load data from Firebase
-            loadFirebaseData();
             setupEventListeners();
-            
-            // DIREKT die Rollen initialisieren
-            updateRoleSelects();
-            renderRoleManagement();
         }
 
         // Load data from Firebase
@@ -2042,12 +2193,8 @@
         function showLoginPage() {
             loginPage.classList.remove('hidden');
             mainContent.classList.add('hidden');
-        }
-
-        // Show main application
-        function showMainApp() {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
+            accessRestricted.classList.add('hidden');
+            authorizedContent.classList.add('hidden');
         }
 
         // Populate user tables with data
@@ -2238,6 +2385,7 @@
             
             // Logout
             logoutBtn.addEventListener('click', handleLogout);
+            restrictedLogoutBtn.addEventListener('click', handleLogout);
             
             // Navigation
             navItems.forEach(item => {
@@ -2342,8 +2490,15 @@
         // Handle logout
         function handleLogout() {
             currentUser = null;
+            userAccessInfo = null;
             localStorage.removeItem('discord_user');
             localStorage.removeItem('discord_access_token');
+            localStorage.removeItem('user_access_info');
+            
+            const userAvatar = document.getElementById('userAvatar');
+            userAvatar.style.backgroundImage = '';
+            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
+            
             showLoginPage();
             showNotification('Erfolgreich abgemeldet', 'info');
         }
@@ -2419,7 +2574,7 @@
                 };
                 await push(historyRef, historyData);
                 
-                // Send to Discord if webhook is configured - KORRIGIERT
+                // Send to Discord if webhook is configured
                 if (webhooks.hiring) {
                     await sendToDiscord(webhooks.hiring, {
                         title: "🎮 Einstellung",
@@ -2494,7 +2649,7 @@
                     };
                     await push(historyRef, historyData);
                     
-                    // Send to Discord if webhook is configured - KORRIGIERT
+                    // Send to Discord if webhook is configured
                     if (webhooks.promotions) {
                         await sendToDiscord(webhooks.promotions, {
                             title: "🎖️ Beförderung",
@@ -2569,7 +2724,7 @@
                     };
                     await push(historyRef, historyData);
                     
-                    // Send to Discord if webhook is configured - KORRIGIERT
+                    // Send to Discord if webhook is configured
                     if (webhooks.demotions) {
                         await sendToDiscord(webhooks.demotions, {
                             title: "📉 Degradierung",
@@ -2648,7 +2803,7 @@
                     };
                     await push(historyRef, historyData);
                     
-                    // Send to Discord if webhook is configured - KORRIGIERT
+                    // Send to Discord if webhook is configured
                     if (webhooks.warnings) {
                         await sendToDiscord(webhooks.warnings, {
                             title: "⚠️ Team Verwarnung",
@@ -2718,7 +2873,7 @@
                     };
                     await push(historyRef, historyData);
                     
-                    // Send to Discord if webhook is configured - KORRIGIERT
+                    // Send to Discord if webhook is configured
                     if (webhooks.terminations) {
                         await sendToDiscord(webhooks.terminations, {
                             title: "📢 Blood Out",
@@ -2843,7 +2998,6 @@
             if (code && state) {
                 const newUrl = window.location.origin + window.location.pathname;
                 window.history.replaceState({}, document.title, newUrl);
-                exchangeCodeForToken(code);
             }
         });
     </script>

@@ -1682,7 +1682,6 @@
     <!-- Notification Container -->
     <div id="notification" class="notification hidden"></div>
 
-    <!-- Firebase Import -->
     <script type="module">
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -2187,6 +2186,10 @@
                     userWarningBadge.classList.add('hidden');
                 }
             });
+
+            // WICHTIG: Rollenverwaltung initialisieren
+            renderRoleManagement();
+            updateRoleSelects();
         }
 
         // Show login page
@@ -2269,7 +2272,7 @@
             return row;
         }
 
-        // Render role management
+        // Render role management - WICHTIGE FUNKTION
         function renderRoleManagement() {
             roleManagement.innerHTML = '';
             
@@ -2286,7 +2289,7 @@
             });
         }
 
-        // Update role selects in modals
+        // Update role selects in modals - WICHTIGE FUNKTION
         function updateRoleSelects() {
             const roleSelects = [
                 document.getElementById('userRoleSelect'),
@@ -2397,8 +2400,16 @@
             });
             
             // Add user buttons
-            addUserBtn.addEventListener('click', () => addUserModal.classList.add('active'));
-            addUserBtn2.addEventListener('click', () => addUserModal.classList.add('active'));
+            addUserBtn.addEventListener('click', () => {
+                // Stellen Sie sicher, dass die Rollenauswahl aktualisiert ist
+                updateRoleSelects();
+                addUserModal.classList.add('active');
+            });
+            addUserBtn2.addEventListener('click', () => {
+                // Stellen Sie sicher, dass die Rollenauswahl aktualisiert ist
+                updateRoleSelects();
+                addUserModal.classList.add('active');
+            });
             
             // Modal actions
             cancelAddUser.addEventListener('click', () => {
@@ -2516,6 +2527,11 @@
                 tab.classList.add('hidden');
                 if (tab.id === tabName) {
                     tab.classList.remove('hidden');
+                    
+                    // Wenn der Settings-Tab geöffnet wird, Rollenverwaltung aktualisieren
+                    if (tabName === 'settings') {
+                        renderRoleManagement();
+                    }
                 }
             });
         }
@@ -2598,6 +2614,8 @@
         function openPromotionModal(userId, userName) {
             document.getElementById('promotionUserId').value = userId;
             document.getElementById('promotionReason').value = '';
+            // Stellen Sie sicher, dass die Rollenauswahl aktualisiert ist
+            updateRoleSelects();
             promotionModal.classList.add('active');
         }
 
@@ -2673,6 +2691,8 @@
         function openDemotionModal(userId, userName) {
             document.getElementById('demotionUserId').value = userId;
             document.getElementById('demotionReason').value = '';
+            // Stellen Sie sicher, dass die Rollenauswahl aktualisiert ist
+            updateRoleSelects();
             demotionModal.classList.add('active');
         }
 

@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KhusLand Panel</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buchhaltungssystem für Rechnungen & Ratenzahlungen</title>
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --border: #e2e8f0;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -17,444 +24,128 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
-            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
         }
         
-        /* Login Styles */
-        .login-container {
-            background: rgba(30, 41, 59, 0.95);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid rgba(101, 119, 149, 0.3);
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .logo {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            border-radius: 50%;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 2rem;
-            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.4);
-        }
-        
-        h1 {
-            color: #90cdf4;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-        
-        .login-container p {
-            color: #a0aec0;
-            margin-bottom: 1rem;
-        }
-        
-        .discord-login-btn {
-            background: #5865F2;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             gap: 10px;
         }
         
-        .discord-login-btn:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
+        .logo h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
         }
         
-        .loading {
-            display: none;
-            margin-top: 1.5rem;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
         
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #4299e1;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error-message {
-            background: rgba(254, 178, 178, 0.1);
-            color: #fc8181;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            display: none;
-            border-left: 4px solid #f56565;
-        }
-        
-        /* Main Content Styles */
-        .header {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 1.2rem 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border-bottom: 2px solid #4299e1;
-        }
-        
-        .logo-small {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-        }
-        
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .logo-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
-        }
-        
-        .user-info {
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             gap: 1rem;
-            color: #cbd5e0;
         }
         
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .income { background: #dbeafe; color: var(--primary); }
+        .expense { background: #fee2e2; color: var(--danger); }
+        .profit { background: #dcfce7; color: var(--success); }
+        .pending { background: #fef3c7; color: var(--warning); }
+        .other-income { background: #e9d5ff; color: #7c3aed; }
+        
+        .stat-info h3 {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-info .amount {
+            font-size: 1.5rem;
             font-weight: bold;
-            background-size: cover;
-            background-position: center;
         }
         
-        .logout-btn {
-            background: rgba(66, 153, 225, 0.15);
-            color: #90cdf4;
-            border: 1px solid #4299e1;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(66, 153, 225, 0.25);
-        }
-        
-        .main-container {
-            max-width: 1300px;
-            margin: 2.5rem auto;
-            padding: 0 2.5rem;
-        }
-        
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            background: rgba(26, 32, 44, 0.9);
-            padding: 1.8rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-        
-        .grid-container {
+        .main-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-top: 2.5rem;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
         }
         
-        .card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 16px;
-            padding: 2.2rem;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border-color: #4299e1;
-            background: rgba(30, 38, 54, 0.9);
-        }
-        
-        .card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .card.disabled:hover {
-            transform: none;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            border-color: rgba(101, 119, 149, 0.3);
-            background: rgba(26, 32, 44, 0.8);
-        }
-        
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-        
-        .card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1.2rem;
-            color: #90cdf4;
-        }
-        
-        .card p {
-            color: #cbd5e0;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-        
-        .status {
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        
-        .status-online {
-            background: #48bb78;
-            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
-        }
-        
-        .access-status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 0.8rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        
-        .access-allowed {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-        }
-        
-        .access-denied {
-            background: rgba(245, 101, 101, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2.5rem;
-            margin-top: 4rem;
-            border-top: 1px solid rgba(101, 119, 149, 0.3);
-            color: #a0aec0;
-            background: rgba(26, 32, 44, 0.8);
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        /* System-spezifische Styles */
-        .system-card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        }
-        
-        .system-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: #90cdf4;
-            font-size: 0.9rem;
-        }
-        
-        .form-group input,
-        .form-group select {
-            padding: 0.9rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            font-size: 1rem;
-            color: #e2e8f0;
-            transition: all 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
-        }
-        
-        .price-display {
-            background: rgba(30, 41, 59, 0.6);
+        .sidebar {
+            background: white;
+            border-radius: 10px;
             padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(101, 119, 149, 0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
         }
         
-        .price-amount {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #48bb78;
+        .nav-menu {
+            list-style: none;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
+        .nav-item {
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
-        }
-        
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .table th,
-        .table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .table th {
-            background: rgba(26, 32, 44, 0.8);
-            font-weight: 600;
-            color: #90cdf4;
-        }
-        
-        .table td {
-            color: #cbd5e0;
-        }
-        
-        /* Navigation Tabs */
-        .nav-tabs {
+            transition: all 0.3s ease;
             display: flex;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            padding: 0.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border: 1px solid rgba(101, 119, 149, 0.3);
+            align-items: center;
+            gap: 10px;
         }
         
-        .nav-tab {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            text-align: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s;
-            color: #a0aec0;
-            font-size: 0.9rem;
+        .nav-item:hover {
+            background: #f1f5f9;
         }
         
-        .nav-tab.active {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        .nav-item.active {
+            background: var(--primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+        
+        .content-area {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .tab-content {
@@ -465,599 +156,915 @@
             display: block;
         }
         
-        /* Notification System */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        .notification.success {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        }
-        
-        .notification.error {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-        }
-        
-        .notification.info {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-        }
-        
-        /* Access Badge */
-        .access-badge {
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            border-radius: 12px;
-            margin-left: 8px;
-            font-weight: 600;
-        }
-        
-        .access-permanent {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-        
-        .access-temporary {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-            color: white;
-        }
-        
-        /* Discount System */
-        .discount-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .discount-btn {
-            padding: 0.8rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #cbd5e0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .discount-btn.active {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            border-color: #4299e1;
-            box-shadow: 0 2px 10px rgba(66, 153, 225, 0.3);
-        }
-        
-        .discount-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        .price-breakdown {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .price-row {
+        .page-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.1);
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
         }
         
-        .price-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .price-label {
-            color: #a0aec0;
-            font-size: 0.9rem;
+        .btn-primary {
+            background: var(--primary);
+            color: white;
         }
         
-        .price-value {
-            color: #e2e8f0;
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        tr:hover {
+            background: #f8fafc;
+        }
+        
+        .status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 600;
         }
         
-        .seller-share {
-            color: #48bb78;
-        }
+        .status-paid { background: #dcfce7; color: #166534; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-overdue { background: #fee2e2; color: #991b1b; }
         
-        .buyer-share {
-            color: #4299e1;
-        }
-        
-        /* Access Restricted Styles */
-        .access-restricted {
-            text-align: center;
-            padding: 3rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
-
-        .access-restricted h2 {
-            color: #fc8181;
-            margin-bottom: 1rem;
-        }
-
-        .access-restricted p {
-            color: #a0aec0;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Logo Upload Modal */
-        .modal-overlay {
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
         }
-
-        .modal-overlay.active {
+        
+        .modal.active {
             display: flex;
         }
-
+        
         .modal-content {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 2rem;
-            border-radius: 12px;
+            background: white;
+            border-radius: 10px;
             width: 90%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border: 1px solid rgba(101, 119, 149, 0.3);
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
-
-        .modal-content h3 {
-            color: #90cdf4;
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
             margin-bottom: 1.5rem;
-            text-align: center;
         }
-
-        .password-input {
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select, textarea {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #e2e8e0;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
             font-size: 1rem;
         }
-
-        .file-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #e2e8e0;
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
-        /* Discount Settings Styles */
-        .discount-settings {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-
-        .discount-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .discount-form {
+        
+        .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr auto;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .invoice-items {
+            margin: 1.5rem 0;
+        }
+        
+        .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
             gap: 1rem;
             margin-bottom: 1rem;
+            align-items: end;
         }
-
-        .discount-list {
-            margin-top: 1rem;
-        }
-
-        .discount-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        
+        .item-total {
             padding: 0.8rem;
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(101, 119, 149, 0.2);
+            background: #f8fafc;
+            border-radius: 6px;
+            font-weight: 600;
         }
-
-        .discount-item-info {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .discount-value {
-            font-weight: bold;
-            color: #4299e1;
-        }
-
-        .discount-label {
-            color: #cbd5e0;
-        }
-
-        .delete-discount {
-            background: rgba(245, 101, 101, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-            padding: 0.4rem 0.8rem;
+        
+        .remove-item {
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .delete-discount:hover {
-            background: rgba(245, 101, 101, 0.3);
+        
+        .add-item {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 1rem;
         }
-
-        .discount-settings-content {
-            display: none;
+        
+        .installment-plan {
+            background: #f0f9ff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
         }
-
-        .discount-settings-content.active {
-            display: block;
+        
+        .installment-display {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .installment-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .installment-row:last-child {
+            border-bottom: none;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-success { background: #dcfce7; color: #166534; }
+        .alert-warning { background: #fef3c7; color: #92400e; }
+        .alert-danger { background: #fee2e2; color: #991b1b; }
+        .alert-info { background: #dbeafe; color: var(--primary); }
+        
+        .data-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.3rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .view-btn { background: #dbeafe; color: var(--primary); }
+        .edit-btn { background: #fef3c7; color: var(--warning); }
+        .delete-btn { background: #fee2e2; color: var(--danger); }
+        .payment-btn { background: #dcfce7; color: #166534; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .recent-activity {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .activity-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .activity-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .invoice-summary {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        
+        .category-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .category-salary { background: #dbeafe; color: #1e40af; }
+        .category-investment { background: #dcfce7; color: #166534; }
+        .category-rental { background: #fef3c7; color: #92400e; }
+        .category-freelance { background: #e9d5ff; color: #7c3aed; }
+        .category-other { background: #f1f5f9; color: #64748b; }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="loginPage" class="login-container">
-        <div class="logo">KL</div>
-        <h1>KhusLand Panel Login</h1>
-        <p>Bitte mit Discord anmelden um fortzufahren</p>
-        
-        <div class="error-message" id="errorMessage"></div>
-        
-        <button id="discordLogin" class="discord-login-btn">
-            <i class="fab fa-discord"></i> Mit Discord anmelden
-        </button>
-        
-        <div class="loading" id="loginLoading">
-            <div class="spinner"></div>
-            <p style="margin-top: 1rem;">Anmeldung läuft...</p>
-        </div>
-    </div>
-
-    <!-- Main Content (Hidden until login) -->
-    <div id="mainContent" class="hidden">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo-small">
-                <div class="logo-icon" id="headerLogo">A</div>
-                <h2>KhusLand Management Panel</h2>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-calculator fa-2x" style="color: #2563eb;"></i>
+                <h1>Buchhaltungssystem Pro</h1>
             </div>
-            <div class="user-info">
-                <span id="userWelcome">Willkommen, Benutzer</span>
-                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
-                
-                <!-- User Avatar -->
-                <div class="user-avatar" id="userAvatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                
-                <button id="logoutBtn" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+            <div>
+                <button class="btn btn-primary" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button class="btn btn-success" onclick="syncWithFirebase()">
+                    <i class="fas fa-cloud-upload-alt"></i> Sync
                 </button>
             </div>
+        </header>
+
+        <div class="stats-grid" id="statsContainer">
+            <!-- Stats werden von JavaScript geladen -->
         </div>
 
-        <!-- Logo Upload Modal -->
-        <div id="logoUploadModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Logo ändern</h3>
-                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <input type="file" id="logoFile" class="file-input" accept="image/*">
-                <div class="modal-buttons">
-                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
-                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Password Modal für Logo -->
-        <div id="passwordModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Admin Passwort erforderlich</h3>
-                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <div class="modal-buttons">
-                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
-                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Password Modal für Discount Settings -->
-        <div id="discountPasswordModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Admin Passwort für Rabatt-Einstellungen</h3>
-                <input type="password" id="discountPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <div class="modal-buttons">
-                    <button id="cancelDiscountPassword" class="logout-btn">Abbrechen</button>
-                    <button id="confirmDiscountPassword" class="btn-primary">Bestätigen</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-container">
-            <!-- Access Restricted Message (Initially Hidden) -->
-            <div id="accessRestricted" class="access-restricted hidden">
-                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
-                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
-                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
-                    <i class="fas fa-sign-out-alt"></i> Abmelden
-                </button>
+        <div class="main-content">
+            <div class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" onclick="showTab('dashboard')">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </li>
+                    <li class="nav-item" onclick="showTab('invoices')">
+                        <i class="fas fa-file-invoice"></i> Rechnungen
+                    </li>
+                    <li class="nav-item" onclick="showTab('installments')">
+                        <i class="fas fa-calendar-alt"></i> Ratenzahlungen
+                    </li>
+                    <li class="nav-item" onclick="showTab('income')">
+                        <i class="fas fa-money-bill-wave"></i> Einkommen
+                    </li>
+                    <li class="nav-item" onclick="showTab('customers')">
+                        <i class="fas fa-users"></i> Kunden
+                    </li>
+                    <li class="nav-item" onclick="showTab('purchases')">
+                        <i class="fas fa-shopping-cart"></i> Einkäufe
+                    </li>
+                </ul>
             </div>
 
-            <!-- Authorized Content (Initially Hidden) -->
-            <div id="authorizedContent" class="hidden">
-                <div class="page-header">
-                    <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand</h1>
-                    <div class="status-indicators">
-                        <span style="color: #48bb78;">
-                            <i class="fas fa-circle"></i> Alle Systeme Online
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Navigation Tabs -->
-                <div class="nav-tabs">
-                    <button id="dashboardTab" class="nav-tab active">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </button>
-                    <button id="weedTab" class="nav-tab">
-                        <i class="fas fa-cannabis"></i> Weed System
-                    </button>
-                </div>
-
+            <div class="content-area">
                 <!-- Dashboard Tab -->
                 <div id="dashboard" class="tab-content active">
-                    <!-- System Cards -->
-                    <div class="grid-container">
-                        <div class="card" data-page="index.html">
-                            <div class="card-icon">🌿</div>
-                            <h3>Weed Ankauf</h3>
-                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
+                    <div class="page-header">
+                        <h2>Dashboard</h2>
+                        <div>
+                            <button class="btn btn-primary" onclick="openInvoiceModal()">
+                                <i class="fas fa-plus"></i> Neue Rechnung
+                            </button>
+                            <button class="btn btn-success" onclick="openIncomeModal()" style="margin-left: 10px;">
+                                <i class="fas fa-plus"></i> Einkommen
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="chart-container">
+                            <h3>Finanzübersicht</h3>
+                            <div id="quickStats" style="margin-top: 1rem;">
+                                <!-- Schnellstatistiken -->
                             </div>
                         </div>
-
-                        <div class="card" data-page="seite2.html">
-                            <div class="card-icon">💊</div>
-                            <h3>Kokain Ankauf</h3>
-                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
+                        
+                        <div class="recent-activity">
+                            <h3>Aktuelle Rechnungen</h3>
+                            <ul class="activity-list" id="recentInvoices">
+                                <!-- Aktuelle Rechnungen -->
+                            </ul>
                         </div>
-
-                        <div class="card" data-page="seite3.html">
-                            <div class="card-icon">♻️</div>
-                            <h3>Materialrecycler - Produkte</h3>
-                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite4.html">
-                            <div class="card-icon">🔧</div>
-                            <h3>Werkbank Manager</h3>
-                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite5.html">
-                            <div class="card-icon">🛣️</div>
-                            <h3>Drogenrouten</h3>
-                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite6.html">
-                            <div class="card-icon">🏞️</div>
-                            <h3>KhusLand Management</h3>
-                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Überfällige Rechnungen</h3>
+                        <div class="table-container">
+                            <table id="overdueInvoicesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Rechnungsnummer</th>
+                                        <th>Kunde</th>
+                                        <th>Fälligkeitsdatum</th>
+                                        <th>Offener Betrag</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Daten werden geladen -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Weed System Tab -->
-                <div id="weed" class="tab-content">
-                    <!-- Discount Settings -->
-                    <div class="discount-settings">
-                        <div class="discount-header">
-                            <h3 style="color: #90cdf4; font-size: 1.5rem;">
-                                <i class="fas fa-percentage"></i> Rabatt Einstellungen
-                            </h3>
-                            <button id="openDiscountSettings" class="btn-primary">
-                                <i class="fas fa-cog"></i> Einstellungen öffnen
-                            </button>
-                        </div>
-                        
-                        <div class="discount-settings-content" id="discountSettingsContent">
-                            <div class="discount-form">
-                                <div class="form-group">
-                                    <label for="discountValue">Rabatt Wert (%)</label>
-                                    <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="discountName">Rabatt Name</label>
-                                    <input type="text" id="discountName" placeholder="Name des Rabatts" value="Kein Rabatt">
-                                </div>
-                                
-                                <button id="addDiscount" class="btn-primary" style="align-self: end;">
-                                    <i class="fas fa-plus"></i> Hinzufügen
-                                </button>
-                            </div>
-                            
-                            <div class="discount-list" id="discountList">
-                                <!-- Discount items will be generated here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="system-card">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-cannabis"></i> Weed Ankauf Management
-                        </h3>
-                        
-                        <!-- Discount Selection -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
-                            <div class="discount-grid" id="discountButtons">
-                                <!-- Discount buttons will be generated here -->
-                            </div>
-                        </div>
-                        
-                        <div class="system-form">
-                            <div class="form-group">
-                                <label for="weedBuyer">Käufer Name</label>
-                                <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="weedSeller">Verkäufer Name</label>
-                                <input type="text" id="weedSeller" required placeholder="Name des Verkäufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="weedQuantity">Menge (Bricks)</label>
-                                <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
-                            </div>
-                        </div>
-                        
-                        <!-- Price Breakdown -->
-                        <div class="price-breakdown">
-                            <div class="price-row">
-                                <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
-                                <span class="price-value" id="totalPrice">0 €</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Rabatt:</span>
-                                <span class="price-value" id="discountAmount">0% (0 €)</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Verkäufer Anteil:</span>
-                                <span class="price-value seller-share" id="sellerShare">0 €</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Käufer Anteil:</span>
-                                <span class="price-value buyer-share" id="buyerShare">0 €</span>
-                            </div>
-                        </div>
-                        
-                        <button type="button" id="saveWeedBtn" class="btn-primary">
-                            <i class="fas fa-save"></i> Ankauf speichern
+                <!-- Rechnungen Tab -->
+                <div id="invoices" class="tab-content">
+                    <div class="page-header">
+                        <h2>Rechnungen</h2>
+                        <button class="btn btn-primary" onclick="openInvoiceModal()">
+                            <i class="fas fa-plus"></i> Neue Rechnung
                         </button>
                     </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rechnungsnummer</th>
+                                    <th>Kunde</th>
+                                    <th>Datum</th>
+                                    <th>Fällig am</th>
+                                    <th>Betrag</th>
+                                    <th>Status</th>
+                                    <th>Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTable">
+                                <!-- Daten werden geladen -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                    <!-- Weed Transactions Table -->
-                    <div class="system-card">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-history"></i> Letzte Weed Ankäufe
-                        </h3>
-                        
-                        <table class="table">
+                <!-- Ratenzahlungen Tab -->
+                <div id="installments" class="tab-content">
+                    <div class="page-header">
+                        <h2>Ratenzahlungen</h2>
+                        <div>
+                            <button class="btn btn-primary" onclick="openInvoiceModal()">
+                                <i class="fas fa-plus"></i> Neue Ratenzahlung
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rechnung</th>
+                                    <th>Kunde</th>
+                                    <th>Gesamtbetrag</th>
+                                    <th>Ratenplan</th>
+                                    <th>Offener Betrag</th>
+                                    <th>Status</th>
+                                    <th>Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="installmentsTable">
+                                <!-- Daten werden geladen -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Einkommen Tab -->
+                <div id="income" class="tab-content">
+                    <div class="page-header">
+                        <h2>Einkommen</h2>
+                        <button class="btn btn-success" onclick="openIncomeModal()">
+                            <i class="fas fa-plus"></i> Neues Einkommen
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>Datum</th>
-                                    <th>Käufer</th>
-                                    <th>Verkäufer</th>
-                                    <th>Menge</th>
-                                    <th>Rabatt</th>
-                                    <th>Gesamt</th>
-                                    <th>Verkäufer</th>
-                                    <th>Käufer</th>
+                                    <th>Beschreibung</th>
+                                    <th>Kategorie</th>
+                                    <th>Betrag</th>
+                                    <th>Quelle</th>
+                                    <th>Notizen</th>
+                                    <th>Aktionen</th>
                                 </tr>
                             </thead>
-                            <tbody id="weedTransactions">
+                            <tbody id="incomeTable">
+                                <!-- Einkommensdaten werden geladen -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kunden Tab -->
+                <div id="customers" class="tab-content">
+                    <div class="page-header">
+                        <h2>Kunden</h2>
+                        <button class="btn btn-primary" onclick="openCustomerModal()">
+                            <i class="fas fa-plus"></i> Neuer Kunde
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
-                                        Keine Transaktionen vorhanden
-                                    </td>
+                                    <th>Name</th>
+                                    <th>E-Mail</th>
+                                    <th>Telefon</th>
+                                    <th>Anzahl Rechnungen</th>
+                                    <th>Letzte Aktivität</th>
+                                    <th>Aktionen</th>
                                 </tr>
+                            </thead>
+                            <tbody id="customersTable">
+                                <!-- Daten werden geladen -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Einkäufe Tab -->
+                <div id="purchases" class="tab-content">
+                    <div class="page-header">
+                        <h2>Einkäufe</h2>
+                        <button class="btn btn-primary" onclick="openPurchaseModal()">
+                            <i class="fas fa-plus"></i> Neuer Einkauf
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Lieferant</th>
+                                    <th>Datum</th>
+                                    <th>Betrag</th>
+                                    <th>Zahlungsstatus</th>
+                                    <th>Notizen</th>
+                                    <th>Aktionen</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchasesTable">
+                                <!-- Daten werden geladen -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer">
-            <p>KhusLand Management System © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
+    <!-- Modal für neue Rechnung -->
+    <div id="invoiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Neue Rechnung erstellen</h3>
+                <button onclick="closeModal('invoiceModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="invoiceCustomer">Kunde *</label>
+                    <select id="invoiceCustomer" required>
+                        <option value="">Kunden auswählen...</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="invoiceDate">Rechnungsdatum</label>
+                        <input type="date" id="invoiceDate" value="<?php echo date('Y-m-d'); ?>" readonly style="background: #f8fafc;">
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate">Fälligkeitsdatum *</label>
+                        <input type="date" id="dueDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Rechnungspositionen</label>
+                    <div class="invoice-items">
+                        <div id="invoiceItems">
+                            <!-- Items werden dynamisch hinzugefügt -->
+                        </div>
+                        <button type="button" class="add-item" onclick="addInvoiceItem()">
+                            <i class="fas fa-plus"></i> Position hinzufügen
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="invoice-summary">
+                    <div class="summary-row">
+                        <span>Gesamtbetrag:</span>
+                        <span id="totalAmountDisplay">0.00 €</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentMethod">Zahlungsmethode *</label>
+                    <select id="paymentMethod" onchange="toggleInstallmentOptions()" required>
+                        <option value="">Bitte auswählen</option>
+                        <option value="Karte">Karte</option>
+                        <option value="Überweisung">Überweisung</option>
+                        <option value="BAR">BAR</option>
+                        <option value="Ratenzahlung">Ratenzahlung</option>
+                    </select>
+                </div>
+                
+                <div id="installmentOptions" style="display: none;">
+                    <div class="installment-plan">
+                        <h4>Ratenzahlungsplan</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="installmentCount">Anzahl Raten *</label>
+                                <select id="installmentCount" onchange="calculateInstallments()" required>
+                                    <option value="2">2 Raten</option>
+                                    <option value="3">3 Raten</option>
+                                    <option value="6">6 Raten</option>
+                                    <option value="12" selected>12 Raten</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="installmentFrequency">Ratenintervall *</label>
+                                <select id="installmentFrequency" onchange="calculateInstallments()" required>
+                                    <option value="monthly" selected>Monatlich</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="installmentDisplay" class="installment-display">
+                            <p>Bitte geben Sie zuerst den Gesamtbetrag ein.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="invoiceNotes">Notizen</label>
+                    <textarea id="invoiceNotes" rows="3" placeholder="Optional: Notizen zur Rechnung"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn" onclick="closeModal('invoiceModal')" style="background: var(--secondary); color: white;">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" onclick="saveInvoice()">Rechnung speichern</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Notification Container -->
-    <div id="notification" class="notification hidden"></div>
+    <!-- Modal für Zahlungserfassung -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Zahlung erfassen</h3>
+                <button onclick="closeModal('paymentModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="paymentInvoiceNumber">Rechnungsnummer</label>
+                    <input type="text" id="paymentInvoiceNumber" readonly style="background: #f8fafc;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentAmount">Betrag (€) *</label>
+                    <input type="number" id="paymentAmount" step="0.01" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentDate">Zahlungsdatum *</label>
+                    <input type="date" id="paymentDate" required value="<?php echo date('Y-m-d'); ?>">
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentMethodSelect">Zahlungsmethode *</label>
+                    <select id="paymentMethodSelect" required>
+                        <option value="Karte">Karte</option>
+                        <option value="Überweisung">Überweisung</option>
+                        <option value="BAR">BAR</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentNotes">Notizen</label>
+                    <textarea id="paymentNotes" rows="3"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn" onclick="closeModal('paymentModal')" style="background: var(--secondary); color: white;">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" onclick="recordPayment()">Zahlung speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal für Einkommen -->
+    <div id="incomeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="incomeModalTitle">Neues Einkommen erfassen</h3>
+                <button onclick="closeModal('incomeModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="incomeDescription">Beschreibung *</label>
+                    <input type="text" id="incomeDescription" placeholder="z.B. Gehalt, Investition, Mieteinnahmen" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="incomeAmount">Betrag (€) *</label>
+                        <input type="number" id="incomeAmount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="incomeDate">Datum *</label>
+                        <input type="date" id="incomeDate" required value="<?php echo date('Y-m-d'); ?>">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="incomeCategory">Kategorie *</label>
+                        <select id="incomeCategory" required>
+                            <option value="">Bitte auswählen</option>
+                            <option value="Gehalt">Gehalt</option>
+                            <option value="Investition">Investition</option>
+                            <option value="Mieteinnahmen">Mieteinnahmen</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Verkauf">Verkauf</option>
+                            <option value="Dividenden">Dividenden</option>
+                            <option value="Sonstiges">Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="incomeSource">Quelle</label>
+                        <input type="text" id="incomeSource" placeholder="z.B. Firma XY, Immobilie A">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="incomeNotes">Notizen</label>
+                    <textarea id="incomeNotes" rows="3" placeholder="Optionale Notizen zum Einkommen"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="incomePaymentMethod">Zahlungsmethode</label>
+                    <select id="incomePaymentMethod">
+                        <option value="Überweisung">Überweisung</option>
+                        <option value="Karte">Karte</option>
+                        <option value="BAR">BAR</option>
+                        <option value="PayPal">PayPal</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn" onclick="closeModal('incomeModal')" style="background: var(--secondary); color: white;">Abbrechen</button>
+                    <button type="button" class="btn btn-success" onclick="saveIncome()">Einkommen speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal für Kunden -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="customerModalTitle">Neuer Kunde</h3>
+                <button onclick="closeModal('customerModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="customerName">Name *</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customerEmail">E-Mail</label>
+                        <input type="email" id="customerEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerPhone">Telefon</label>
+                        <input type="tel" id="customerPhone">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerAddress">Adresse</label>
+                    <textarea id="customerAddress" rows="2"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn" onclick="closeModal('customerModal')" style="background: var(--secondary); color: white;">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCustomer()">Kunde speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal für Einkäufe -->
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Neuer Einkauf</h3>
+                <button onclick="closeModal('purchaseModal')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="purchaseSupplier">Lieferant *</label>
+                    <input type="text" id="purchaseSupplier" placeholder="Name des Lieferanten" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="purchaseDate">Einkaufsdatum *</label>
+                        <input type="date" id="purchaseDate" required value="<?php echo date('Y-m-d'); ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseTotal">Betrag (€) *</label>
+                        <input type="number" id="purchaseTotal" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="purchaseNotes">Beschreibung / Notizen</label>
+                    <textarea id="purchaseNotes" rows="3" placeholder="Was wurde eingekauft?"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="purchasePaymentMethod">Zahlungsmethode</label>
+                    <select id="purchasePaymentMethod">
+                        <option value="Überweisung">Überweisung</option>
+                        <option value="Karte">Karte</option>
+                        <option value="BAR">BAR</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn" onclick="closeModal('purchaseModal')" style="background: var(--secondary); color: white;">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" onclick="savePurchase()">Einkauf speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+    <!-- Firebase Import -->
     <script type="module">
-        // Discord OAuth Konfiguration
-        const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
         // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
@@ -1076,1015 +1083,1547 @@
             measurementId: "G-JSCWR4207G"
         };
 
+        // Firebase initialisieren
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getDatabase(app);
         const storage = getStorage(app);
-        const entriesRef = ref(db,'weed_entries');
-        const discountsRef = ref(db,'discount_settings');
-        const logoSettingsRef = ref(db,'logo_settings');
+        
+        // Firebase Referenzen
+        const incomeRef = ref(db, 'income_entries');
+        const invoicesRef = ref(db, 'invoices');
+        const customersRef = ref(db, 'customers');
+        const purchasesRef = ref(db, 'purchases');
+        const installmentPlansRef = ref(db, 'installment_plans');
+        const installmentsRef = ref(db, 'installments');
+        const paymentsRef = ref(db, 'payments');
+        const logoSettingsRef = ref(db, 'logo_settings');
         const logoImageRef = storageRef(storage, 'global_logo.png');
-
-        // Seitenspezifische Konfiguration
-        const PAGE_ACCESS_CONFIG = {
-            'seite7.html': 'dashboard',
-            'seite5.html': 'route', 
-            'seite4.html': 'werkbank',
-            'seite3.html': 'materialrecycler',
-            'seite2.html': 'kokain',
-            'index.html': 'weed',
-            'seite6.html': 'management'
+        
+        // Globale Variablen für Firebase Daten
+        window.firebaseData = {
+            db: db,
+            incomeRef: incomeRef,
+            invoicesRef: invoicesRef,
+            customersRef: customersRef,
+            purchasesRef: purchasesRef,
+            installmentPlansRef: installmentPlansRef,
+            installmentsRef: installmentsRef,
+            paymentsRef: paymentsRef
         };
 
-        // System Variablen
-        const ADMIN_PASSWORD = '1101';
-        let currentDiscount = 0;
-        let entries = [];
-        let availableDiscounts = [
-            { value: 0, label: 'Kein Rabatt' },
-            { value: 10, label: 'Mitarbeiter' },
-            { value: 15, label: 'Einkäufer' },
-            { value: 20, label: 'Normal' }
-        ];
-        let logoText = 'A';
-        let currentUser = null;
-        let userAccessInfo = null;
-        let discountSettingsUnlocked = false;
-
-        // DOM Elemente
-        const loginPage = document.getElementById('loginPage');
-        const mainContent = document.getElementById('mainContent');
-        const authorizedContent = document.getElementById('authorizedContent');
-        const accessRestricted = document.getElementById('accessRestricted');
-        const errorMessage = document.getElementById('errorMessage');
-        const userWelcome = document.getElementById('userWelcome');
-        const notification = document.getElementById('notification');
-        const accessBadge = document.getElementById('accessBadge');
-        const headerLogo = document.getElementById('headerLogo');
-        const restrictedUserName = document.getElementById('restrictedUserName');
-        const restrictedPageName = document.getElementById('restrictedPageName');
-        const discordLoginBtn = document.getElementById('discordLogin');
-        const loginLoading = document.getElementById('loginLoading');
-        
-        // Logo Upload Modal Elemente
-        const logoUploadModal = document.getElementById('logoUploadModal');
-        const passwordModal = document.getElementById('passwordModal');
-        const discountPasswordModal = document.getElementById('discountPasswordModal');
-        const adminPassword = document.getElementById('adminPassword');
-        const logoPassword = document.getElementById('logoPassword');
-        const discountPassword = document.getElementById('discountPassword');
-        const logoFile = document.getElementById('logoFile');
-        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
-        const cancelPassword = document.getElementById('cancelPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const cancelDiscountPassword = document.getElementById('cancelDiscountPassword');
-        const confirmDiscountPassword = document.getElementById('confirmDiscountPassword');
-        const saveLogo = document.getElementById('saveLogo');
-        
-        // Discount Settings Elemente
-        const openDiscountSettings = document.getElementById('openDiscountSettings');
-        const discountSettingsContent = document.getElementById('discountSettingsContent');
-        const discountValue = document.getElementById('discountValue');
-        const discountName = document.getElementById('discountName');
-        const addDiscount = document.getElementById('addDiscount');
-        const discountList = document.getElementById('discountList');
-        
-        // Buttons
-        const logoutBtn = document.getElementById('logoutBtn');
-        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
-        const dashboardTab = document.getElementById('dashboardTab');
-        const weedTab = document.getElementById('weedTab');
-        const saveWeedBtn = document.getElementById('saveWeedBtn');
-        const weedQuantity = document.getElementById('weedQuantity');
-
-        // Logo Upload Funktionen
-        function openPasswordModal() {
-            passwordModal.classList.add('active');
-        }
-
-        function closePasswordModal() {
-            passwordModal.classList.remove('active');
-            logoPassword.value = '';
-        }
-
-        function openLogoUploadModal() {
-            logoUploadModal.classList.add('active');
-        }
-
-        function closeLogoUploadModal() {
-            logoUploadModal.classList.remove('active');
-            adminPassword.value = '';
-            logoFile.value = '';
-        }
-
-        function verifyLogoPassword() {
-            const password = logoPassword.value;
-            if (password === ADMIN_PASSWORD) {
-                closePasswordModal();
-                openLogoUploadModal();
-            } else {
-                showNotification('Falsches Passwort!', 'error');
-            }
-        }
-
-        // Discount Settings Funktionen
-        function openDiscountPasswordModal() {
-            discountPasswordModal.classList.add('active');
-        }
-
-        function closeDiscountPasswordModal() {
-            discountPasswordModal.classList.remove('active');
-            discountPassword.value = '';
-        }
-
-        function verifyDiscountPassword() {
-            const password = discountPassword.value;
-            if (password === ADMIN_PASSWORD) {
-                discountSettingsUnlocked = true;
-                discountSettingsContent.classList.add('active');
-                openDiscountSettings.classList.add('hidden');
-                closeDiscountPasswordModal();
-                loadDiscountSettings(); // Rabatte neu laden
-                showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
-            } else {
-                showNotification('Falsches Passwort!', 'error');
-            }
-        }
-
-        function lockDiscountSettings() {
-            discountSettingsUnlocked = false;
-            discountSettingsContent.classList.remove('active');
-            openDiscountSettings.classList.remove('hidden');
-        }
-
-        async function handleLogoUpload() {
-            const password = adminPassword.value;
-            const file = logoFile.files[0];
-
-            if (password !== ADMIN_PASSWORD) {
-                showNotification('Falsches Admin Passwort!', 'error');
-                return;
-            }
-
-            if (!file) {
-                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
-                return;
-            }
-
-            if (!file.type.startsWith('image/')) {
-                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
-                return;
-            }
-
+        // Funktionen für Firebase
+        window.syncWithFirebase = async function() {
             try {
-                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
-                saveLogo.disabled = true;
-
-                // Bild in Firebase Storage hochladen
-                await uploadBytes(logoImageRef, file);
+                // IndexedDB Daten abrufen
+                const localData = {
+                    customers: await accountingSystem.getAll('customers'),
+                    invoices: await accountingSystem.getAll('invoices'),
+                    invoiceItems: await accountingSystem.getAll('invoiceItems'),
+                    installmentPlans: await accountingSystem.getAll('installmentPlans'),
+                    installments: await accountingSystem.getAll('installments'),
+                    purchases: await accountingSystem.getAll('purchases'),
+                    payments: await accountingSystem.getAll('payments'),
+                    income: await accountingSystem.getAll('income')
+                };
                 
-                // Download URL holen
-                const downloadURL = await getDownloadURL(logoImageRef);
+                // Zu Firebase hochladen
+                for (const [key, data] of Object.entries(localData)) {
+                    if (data.length > 0) {
+                        const firebaseRef = ref(db, key);
+                        await set(firebaseRef, data);
+                    }
+                }
                 
-                // Logo in der Datenbank speichern
-                await set(logoSettingsRef, {
-                    logoUrl: downloadURL,
-                    uploadedAt: new Date().toISOString(),
-                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
-                });
-
-                // Logo sofort anwenden
-                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
-                headerLogo.innerHTML = '';
-
-                showNotification('Logo erfolgreich hochgeladen!', 'success');
-                closeLogoUploadModal();
+                accountingSystem.showAlert('Daten erfolgreich zu Firebase synchronisiert!', 'success');
                 
             } catch (error) {
-                console.error('Fehler beim Hochladen des Logos:', error);
-                showNotification('Fehler beim Hochladen des Logos!', 'error');
-            } finally {
-                saveLogo.innerHTML = 'Logo speichern';
-                saveLogo.disabled = false;
+                console.error('Fehler beim Synchronisieren mit Firebase:', error);
+                accountingSystem.showAlert('Fehler beim Synchronisieren: ' + error.message, 'danger');
             }
-        }
+        };
 
-        // Discount Settings Funktionen
-        function loadDiscountSettings() {
-            onValue(discountsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // Konvertiere Firebase-Daten in Array
-                    availableDiscounts = [];
-                    if (Array.isArray(data)) {
-                        availableDiscounts = data;
-                    } else {
-                        // Falls es ein Objekt ist, in Array umwandeln
-                        availableDiscounts = Object.values(data);
-                    }
-                    
-                    renderDiscountButtons();
-                    if (discountSettingsUnlocked) {
-                        renderDiscountList();
-                    }
-                } else {
-                    // Standard-Discounts setzen
-                    set(discountsRef, availableDiscounts);
-                }
-            });
-        }
-
-        function renderDiscountList() {
-            discountList.innerHTML = '';
-            
-            if (availableDiscounts.length === 0) {
-                discountList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte vorhanden</p>';
-                return;
-            }
-            
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const discountItem = document.createElement('div');
-                discountItem.className = 'discount-item';
-                discountItem.innerHTML = `
-                    <div class="discount-item-info">
-                        <span class="discount-value">${discount.value}%</span>
-                        <span class="discount-label">${discount.label}</span>
-                    </div>
-                    <button class="delete-discount" data-index="${index}">
-                        <i class="fas fa-trash"></i> Löschen
-                    </button>
-                `;
-                discountList.appendChild(discountItem);
-            });
-
-            // Event Listener für Lösch-Buttons
-            document.querySelectorAll('.delete-discount').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    deleteDiscount(index);
-                });
-            });
-        }
-
-        function addNewDiscount() {
-            if (!discountSettingsUnlocked) {
-                showNotification('Bitte zuerst Passwort eingeben!', 'error');
-                return;
-            }
-
-            const value = parseInt(discountValue.value);
-            const name = discountName.value.trim();
-
-            if (isNaN(value) || value < 0 || value > 100) {
-                showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein!', 'error');
-                return;
-            }
-
-            if (!name) {
-                showNotification('Bitte geben Sie einen Namen für den Rabatt ein!', 'error');
-                return;
-            }
-
-            const newDiscount = {
-                value: value,
-                label: name
-            };
-
-            // Prüfen ob Rabatt mit gleichem Wert UND Namen bereits existiert
-            const exists = availableDiscounts.some(d => d.value === value && d.label === name);
-            if (exists) {
-                showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
-                return;
-            }
-
-            availableDiscounts.push(newDiscount);
-            saveDiscountsToFirebase();
-            
-            discountValue.value = '0';
-            discountName.value = 'Kein Rabatt';
-
-            showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
-        }
-
-        function deleteDiscount(index) {
-            if (!discountSettingsUnlocked) {
-                showNotification('Bitte zuerst Passwort eingeben!', 'error');
-                return;
-            }
-
-            if (index >= 0 && index < availableDiscounts.length) {
-                const discount = availableDiscounts[index];
-                
-                // Verhindere das Löschen des Standard-Rabatts (0%)
-                if (discount.value === 0 && discount.label === 'Kein Rabatt') {
-                    showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
-                    return;
-                }
-                
-                availableDiscounts.splice(index, 1);
-                saveDiscountsToFirebase();
-                showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');
-            }
-        }
-
-        function saveDiscountsToFirebase() {
-            set(discountsRef, availableDiscounts)
-                .then(() => {
-                    renderDiscountButtons();
-                    if (discountSettingsUnlocked) {
-                        renderDiscountList();
-                    }
-                })
-                .catch(error => {
-                    console.error('Fehler beim Speichern der Rabatte:', error);
-                    showNotification('Fehler beim Speichern der Rabatte!', 'error');
-                });
-        }
-
-        function renderDiscountButtons() {
-            const container = document.getElementById('discountButtons');
-            container.innerHTML = '';
-            
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
-                button.setAttribute('data-discount', discount.value);
-                button.setAttribute('data-label', discount.label);
-                button.innerHTML = `
-                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
-                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
-                `;
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.discount-btn').forEach(btn => {
-                        btn.classList.remove('active');
+        window.loadFromFirebase = async function() {
+            try {
+                // Daten von Firebase laden
+                const loadData = async (refPath) => {
+                    return new Promise((resolve) => {
+                        onValue(ref(db, refPath), (snapshot) => {
+                            const data = snapshot.val();
+                            resolve(data || []);
+                        });
                     });
-                    
-                    button.classList.add('active');
-                    currentDiscount = discount.value;
-                    
-                    updateWeedPrices();
-                    
-                    if (discount.value > 0) {
-                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
-                    } else {
-                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
-                    }
-                });
+                };
                 
-                container.appendChild(button);
-            });
-        }
-
-        // Globales Logo laden
-        async function loadGlobalLogo() {
-            try {
-                const downloadURL = await getDownloadURL(logoImageRef);
-                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
-                headerLogo.innerHTML = '';
-            } catch (error) {
-                // Falls kein Logo vorhanden ist, Standard beibehalten
-                console.log('Kein globales Logo gefunden, verwende Standard');
-            }
-        }
-
-        // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
-        async function hasAccess(pageKey) {
-            if (!currentUser) return false;
-            
-            const token = localStorage.getItem('discord_access_token');
-            if (!token) return false;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: token,
-                        currentPage: pageKey
-                    })
-                });
-
-                if (!response.ok) return false;
-
-                const data = await response.json();
-                return data.hasPageAccess;
+                const firebaseData = {
+                    customers: await loadData('customers'),
+                    invoices: await loadData('invoices'),
+                    invoiceItems: await loadData('invoiceItems'),
+                    installmentPlans: await loadData('installmentPlans'),
+                    installments: await loadData('installments'),
+                    purchases: await loadData('purchases'),
+                    payments: await loadData('payments'),
+                    income: await loadData('income')
+                };
                 
-            } catch (error) {
-                console.error('Fehler bei Zugriffsprüfung:', error);
-                return false;
-            }
-        }
-
-        // BENUTZER EXISTENZ PRÜFEN
-        async function checkUserExists() {
-            if (!currentUser) return false;
-            
-            const token = localStorage.getItem('discord_access_token');
-            if (!token) return false;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: token
-                    })
-                });
-
-                if (!response.ok) return false;
-
-                const data = await response.json();
-                return data.isAuthorized;
+                // IndexedDB leeren und mit Firebase Daten füllen
+                const stores = ['customers', 'invoices', 'invoiceItems', 'installmentPlans', 'installments', 'purchases', 'payments', 'income'];
                 
-            } catch (error) {
-                console.error('Fehler bei Benutzerprüfung:', error);
-                return false;
-            }
-        }
-
-        // DISCORD AVATAR LADEN
-        async function loadDiscordAvatar(userData) {
-            if (userData.avatar) {
-                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
-                
-                // User Avatar (oben rechts)
-                const userAvatar = document.getElementById('userAvatar');
-                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                userAvatar.innerHTML = ''; // Icon entfernen
-            } else {
-                // Fallback: Ersten Buchstaben des Usernamens anzeigen
-                const userAvatar = document.getElementById('userAvatar');
-                const firstLetter = userData.username.charAt(0).toUpperCase();
-                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-            }
-        }
-
-        // Aktuelle Seite identifizieren
-        function getCurrentPageKey() {
-            const pathname = window.location.pathname;
-            const filename = pathname.split('/').pop();
-            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
-        }
-
-        // Discord OAuth Login
-        function startDiscordOAuth() {
-            const scope = 'identify';
-            const state = generateRandomState();
-            
-            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-            authUrl.searchParams.set('response_type', 'code');
-            authUrl.searchParams.set('scope', scope);
-            authUrl.searchParams.set('state', state);
-            
-            window.location.href = authUrl.toString();
-        }
-
-        function generateRandomState() {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        }
-
-        async function exchangeCodeForToken(code) {
-            try {
-                loginLoading.style.display = 'block';
-                
-                const response = await fetch(`${BACKEND_URL}/token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        code, 
-                        redirect_uri: DISCORD_REDIRECT_URI
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Worker responded with status ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.access_token) {
-                    await verifyUser(data.access_token);
-                } else {
-                    throw new Error('Kein Access Token erhalten');
-                }
-            } catch (error) {
-                console.error('Fehler beim Token-Austausch:', error);
-                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-                loginLoading.style.display = 'none';
-            }
-        }
-
-        async function verifyUser(accessToken) {
-            try {
-                const currentPage = getCurrentPageKey();
-                
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken,
-                        currentPage
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Verification failed');
-                }
-
-                const data = await response.json();
-
-                if (data.isAuthorized) {
-                    localStorage.setItem('discord_user', JSON.stringify(data.user));
-                    localStorage.setItem('discord_access_token', accessToken);
-                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-                    
-                    const user = data.user;
-                    userAccessInfo = data.accessInfo;
-                    
-                    currentUser = {
-                        id: user.id,
-                        username: user.username,
-                        ...userAccessInfo
-                    };
-                    
-                    // Discord Avatar laden (nur für User Avatar)
-                    await loadDiscordAvatar(user);
-                    
-                    if (data.hasPageAccess) {
-                        showAuthorizedContent(currentUser);
-                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-                    } else {
-                        showAccessRestricted(currentUser, currentPage);
-                    }
-                } else {
-                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
-                }
-            } catch (error) {
-                console.error('Fehler bei der Benutzerüberprüfung:', error);
-                showError('Fehler bei der Berechtigungsprüfung');
-            } finally {
-                loginLoading.style.display = 'none';
-            }
-        }
-
-        // Zugriff verweigert anzeigen
-        function showAccessRestricted(user, pageKey) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.remove('hidden');
-            authorizedContent.classList.add('hidden');
-            
-            restrictedUserName.textContent = user.username;
-            restrictedPageName.textContent = getPageDisplayName(pageKey);
-            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
-        }
-
-        // Login-Seite anzeigen
-        function showLoginPage() {
-            loginPage.classList.remove('hidden');
-            mainContent.classList.add('hidden');
-            accessRestricted.classList.add('hidden');
-            authorizedContent.classList.add('hidden');
-        }
-
-        // Seiten-Namen für Anzeige
-        function getPageDisplayName(pageKey) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'route': 'Route',
-                'werkbank': 'Werkbank', 
-                'materialrecycler': 'Materialrecycler',
-                'kokain': 'Kokain',
-                'weed': 'Weed',
-                'management': 'Management'
-            };
-            return names[pageKey] || pageKey;
-        }
-
-        // Navigation zu anderen Seiten mit Zugriffsprüfung
-        async function navigateToWithAccessCheck(page) {
-            if (!currentUser) {
-                showNotification('Bitte zuerst anmelden', 'error');
-                return;
-            }
-            
-            // Prüfen ob Benutzer noch existiert
-            const userExists = await checkUserExists();
-            if (!userExists) {
-                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
-                logout();
-                return;
-            }
-            
-            const pageKey = PAGE_ACCESS_CONFIG[page];
-            if (!pageKey) {
-                showNotification('Ungültige Seite', 'error');
-                return;
-            }
-            
-            const hasAccessToPage = await hasAccess(pageKey);
-            if (!hasAccessToPage) {
-                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                return;
-            }
-            
-            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
-        }
-
-        // Autorisierten Inhalt anzeigen
-        function showAuthorizedContent(user) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.add('hidden');
-            authorizedContent.classList.remove('hidden');
-            
-            userWelcome.textContent = `Willkommen, ${user.username}`;
-            
-            if (userAccessInfo && userAccessInfo.message) {
-                accessBadge.textContent = userAccessInfo.message;
-                accessBadge.classList.remove('hidden');
-                
-                if (userAccessInfo.isPermanent) {
-                    accessBadge.className = 'access-badge access-permanent';
-                } else {
-                    accessBadge.className = 'access-badge access-temporary';
-                }
-            }
-            
-            updateCardAccess();
-            updateWeedPrices();
-            loadWeedEntries();
-            loadDiscountSettings();
-            loadGlobalLogo(); // Globales Logo laden
-        }
-
-        // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
-        async function updateCardAccess() {
-            if (!currentUser) return;
-            
-            const cards = document.querySelectorAll('.card');
-            
-            for (const card of cards) {
-                const page = card.getAttribute('data-page');
-                const pageKey = PAGE_ACCESS_CONFIG[page];
-                
-                if (pageKey) {
-                    const hasAccessToPage = await hasAccess(pageKey);
-                    
-                    // Entferne bestehende Status-Badges
-                    const existingStatus = card.querySelector('.access-status');
-                    if (existingStatus) {
-                        existingStatus.remove();
+                for (const store of stores) {
+                    // Alte Daten löschen (einfache Implementierung - in Produktion mit Transaktion)
+                    const oldData = await accountingSystem.getAll(store);
+                    for (const item of oldData) {
+                        await accountingSystem.delete(store, item.id);
                     }
                     
-                    if (hasAccessToPage) {
-                        card.classList.remove('disabled');
-                        const statusBadge = document.createElement('span');
-                        statusBadge.className = 'access-status access-allowed';
-                        statusBadge.textContent = '✓ Zugriff';
-                        card.appendChild(statusBadge);
-                    } else {
-                        card.classList.add('disabled');
-                        const statusBadge = document.createElement('span');
-                        statusBadge.className = 'access-status access-denied';
-                        statusBadge.textContent = '✗ Kein Zugriff';
-                        card.appendChild(statusBadge);
-                    }
-                }
-            }
-        }
-
-        // Notification System
-        function showNotification(message, type = 'info', duration = 4000) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.remove('hidden');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.classList.add('hidden');
-                }, 300);
-            }, duration);
-        }
-
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        // Logout
-        function logout() {
-            currentUser = null;
-            userAccessInfo = null;
-            discountSettingsUnlocked = false;
-            localStorage.removeItem('discord_user');
-            localStorage.removeItem('discord_access_token');
-            localStorage.removeItem('user_access_info');
-            
-            // User Avatar zurücksetzen
-            const userAvatar = document.getElementById('userAvatar');
-            userAvatar.style.backgroundImage = '';
-            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
-            
-            showLoginPage();
-            accessBadge.classList.add('hidden');
-            
-            showNotification('Erfolgreich ausgeloggt', 'info');
-        }
-
-        // Session prüfen
-        async function checkExistingLogin() {
-            const userData = localStorage.getItem('discord_user');
-            const token = localStorage.getItem('discord_access_token');
-            const storedAccessInfo = localStorage.getItem('user_access_info');
-            
-            if (userData && token) {
-                try {
-                    const user = JSON.parse(userData);
-                    userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
-                    
-                    const currentPage = getCurrentPageKey();
-                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ 
-                            accessToken: token,
-                            currentPage
-                        })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        
-                        if (data.isAuthorized) {
-                            currentUser = {
-                                id: user.id,
-                                username: user.username,
-                                ...userAccessInfo
-                            };
-                            
-                            // Discord Avatar laden (nur für User Avatar)
-                            await loadDiscordAvatar(user);
-                            
-                            if (data.hasPageAccess) {
-                                showAuthorizedContent(currentUser);
-                                showNotification(`Willkommen zurück, ${user.username}`, 'info');
-                            } else {
-                                showAccessRestricted(currentUser, currentPage);
-                            }
-                            return;
+                    // Neue Daten hinzufügen
+                    if (firebaseData[store]) {
+                        for (const item of firebaseData[store]) {
+                            await accountingSystem.add(store, item);
                         }
                     }
-                } catch (e) {
-                    console.error('Fehler beim Laden der Benutzerdaten:', e);
                 }
+                
+                accountingSystem.showAlert('Daten erfolgreich von Firebase geladen!', 'success');
+                accountingSystem.updateDashboard();
+                accountingSystem.loadInvoices();
+                accountingSystem.loadIncome();
+                accountingSystem.loadCustomers();
+                accountingSystem.loadPurchases();
+                accountingSystem.loadInstallments();
+                
+            } catch (error) {
+                console.error('Fehler beim Laden von Firebase:', error);
+                accountingSystem.showAlert('Fehler beim Laden: ' + error.message, 'danger');
+            }
+        };
+
+        // Beim Laden der Seite Daten von Firebase laden
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Frage, ob Daten von Firebase geladen werden sollen
+            if (confirm('Möchten Sie Daten von Firebase laden?')) {
+                await loadFromFirebase();
+            }
+        });
+
+    </script>
+
+    <script>
+        // Hauptklasse für das Buchhaltungssystem
+        class AccountingSystem {
+            constructor() {
+                this.dbName = 'accounting_db';
+                this.dbVersion = 3; // Version erhöht für Einkommen-Tabelle
+                this.db = null;
+                this.initDatabase();
+                
+                this.currentInvoiceId = null;
+                this.currentPaymentInvoiceId = null;
+                this.editingCustomerId = null;
+                this.editingIncomeId = null;
+                
+                // Standard Fälligkeitsdatum für Ratenzahlungen: 01.01.2026
+                this.defaultInstallmentDueDate = '2026-01-01';
             }
             
-            showLoginPage();
+            async initDatabase() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(this.dbName, this.dbVersion);
+                    
+                    request.onerror = (event) => {
+                        console.error('Datenbankfehler:', event.target.error);
+                        reject(event.target.error);
+                    };
+                    
+                    request.onsuccess = (event) => {
+                        this.db = event.target.result;
+                        console.log('Datenbank initialisiert');
+                        this.loadInitialData();
+                        resolve();
+                    };
+                    
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        
+                        // Kunden-Tabelle
+                        if (!db.objectStoreNames.contains('customers')) {
+                            const customerStore = db.createObjectStore('customers', { keyPath: 'id', autoIncrement: true });
+                            customerStore.createIndex('name', 'name', { unique: false });
+                        }
+                        
+                        // Rechnungen-Tabelle
+                        if (!db.objectStoreNames.contains('invoices')) {
+                            const invoiceStore = db.createObjectStore('invoices', { keyPath: 'id', autoIncrement: true });
+                            invoiceStore.createIndex('customerId', 'customerId', { unique: false });
+                            invoiceStore.createIndex('invoiceNumber', 'invoiceNumber', { unique: true });
+                            invoiceStore.createIndex('status', 'status', { unique: false });
+                            invoiceStore.createIndex('dueDate', 'dueDate', { unique: false });
+                        }
+                        
+                        // Rechnungspositionen-Tabelle
+                        if (!db.objectStoreNames.contains('invoiceItems')) {
+                            const itemStore = db.createObjectStore('invoiceItems', { keyPath: 'id', autoIncrement: true });
+                            itemStore.createIndex('invoiceId', 'invoiceId', { unique: false });
+                        }
+                        
+                        // Einkommen-Tabelle
+                        if (!db.objectStoreNames.contains('income')) {
+                            const incomeStore = db.createObjectStore('income', { keyPath: 'id', autoIncrement: true });
+                            incomeStore.createIndex('date', 'date', { unique: false });
+                            incomeStore.createIndex('category', 'category', { unique: false });
+                        }
+                        
+                        // Ratenpläne-Tabelle
+                        if (!db.objectStoreNames.contains('installmentPlans')) {
+                            const planStore = db.createObjectStore('installmentPlans', { keyPath: 'id', autoIncrement: true });
+                            planStore.createIndex('invoiceId', 'invoiceId', { unique: false });
+                        }
+                        
+                        // Einzelne Raten-Tabelle
+                        if (!db.objectStoreNames.contains('installments')) {
+                            const installmentStore = db.createObjectStore('installments', { keyPath: 'id', autoIncrement: true });
+                            installmentStore.createIndex('planId', 'planId', { unique: false });
+                            installmentStore.createIndex('invoiceId', 'invoiceId', { unique: false });
+                            installmentStore.createIndex('status', 'status', { unique: false });
+                            installmentStore.createIndex('dueDate', 'dueDate', { unique: false });
+                        }
+                        
+                        // Einkäufe-Tabelle
+                        if (!db.objectStoreNames.contains('purchases')) {
+                            const purchaseStore = db.createObjectStore('purchases', { keyPath: 'id', autoIncrement: true });
+                            purchaseStore.createIndex('supplier', 'supplier', { unique: false });
+                        }
+                        
+                        // Zahlungen-Tabelle
+                        if (!db.objectStoreNames.contains('payments')) {
+                            const paymentStore = db.createObjectStore('payments', { keyPath: 'id', autoIncrement: true });
+                            paymentStore.createIndex('invoiceId', 'invoiceId', { unique: false });
+                        }
+                    };
+                });
+            }
+            
+            async loadInitialData() {
+                const customers = await this.getAll('customers');
+                if (customers.length === 0) {
+                    await this.addSampleData();
+                }
+                
+                this.updateDashboard();
+                this.loadInvoices();
+                this.loadIncome();
+                this.loadCustomers();
+                this.loadPurchases();
+                this.loadInstallments();
+            }
+            
+            async addSampleData() {
+                // Beispiel-Kunden
+                const sampleCustomers = [
+                    { name: 'Max Mustermann', email: 'max@example.com', phone: '0123 456789', address: 'Musterstraße 1, 12345 Musterstadt' },
+                    { name: 'Erika Musterfrau', email: 'erika@example.com', phone: '0987 654321', address: 'Beispielweg 2, 54321 Beispielstadt' }
+                ];
+                
+                for (const customer of sampleCustomers) {
+                    await this.add('customers', customer);
+                }
+                
+                // Beispiel-Einkommen
+                await this.add('income', {
+                    description: 'Gehalt Januar',
+                    amount: 3500.00,
+                    date: new Date().toISOString().split('T')[0],
+                    category: 'Gehalt',
+                    source: 'Firma XYZ',
+                    paymentMethod: 'Überweisung',
+                    notes: 'Monatsgehalt',
+                    createdAt: new Date().toISOString()
+                });
+                
+                await this.add('income', {
+                    description: 'Mieteinnahmen Wohnung A',
+                    amount: 1200.00,
+                    date: new Date().toISOString().split('T')[0],
+                    category: 'Mieteinnahmen',
+                    source: 'Wohnung A',
+                    paymentMethod: 'Überweisung',
+                    notes: 'Monatliche Miete',
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Beispiel-Einkauf
+                await this.add('purchases', {
+                    supplier: 'Bürobedarf Müller',
+                    date: new Date().toISOString().split('T')[0],
+                    totalAmount: 450.00,
+                    paymentMethod: 'Überweisung',
+                    notes: 'Büromaterial für Q1',
+                    status: 'paid'
+                });
+            }
+            
+            // CRUD-Operationen
+            async add(storeName, data) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction([storeName], 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.add(data);
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async get(storeName, id) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction([storeName], 'readonly');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.get(id);
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async getAll(storeName, indexName = null, range = null) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction([storeName], 'readonly');
+                    const store = transaction.objectStore(storeName);
+                    const target = indexName ? store.index(indexName) : store;
+                    const request = range ? target.getAll(range) : target.getAll();
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async update(storeName, id, data) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction([storeName], 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.put({ ...data, id });
+                    
+                    request.onsuccess = (event) => resolve(event.target.result);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async delete(storeName, id) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction([storeName], 'readwrite');
+                    const store = transaction.objectStore(storeName);
+                    const request = store.delete(id);
+                    
+                    request.onsuccess = (event) => resolve(true);
+                    request.onerror = (event) => reject(event.target.error);
+                });
+            }
+            
+            async generateInvoiceNumber() {
+                const invoices = await this.getAll('invoices');
+                const year = new Date().getFullYear();
+                const count = invoices.filter(inv => inv.invoiceNumber?.includes(year.toString())).length + 1;
+                return `R-${year}-${count.toString().padStart(4, '0')}`;
+            }
+            
+            async createInvoice(invoiceData, items) {
+                // Rechnungsnummer generieren
+                invoiceData.invoiceNumber = invoiceData.invoiceNumber || await this.generateInvoiceNumber();
+                invoiceData.createdAt = new Date().toISOString();
+                
+                // Rechnung speichern
+                const invoiceId = await this.add('invoices', invoiceData);
+                
+                // Rechnungspositionen speichern
+                for (const item of items) {
+                    await this.add('invoiceItems', {
+                        ...item,
+                        invoiceId: invoiceId,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+                
+                // Bei Ratenzahlung: Ratenplan erstellen
+                if (invoiceData.paymentMethod === 'Ratenzahlung') {
+                    const installmentCount = parseInt(invoiceData.installmentCount) || 12;
+                    const installmentAmount = invoiceData.totalAmount / installmentCount;
+                    
+                    const planId = await this.add('installmentPlans', {
+                        invoiceId: invoiceId,
+                        totalInstallments: installmentCount,
+                        installmentAmount: installmentAmount,
+                        frequency: 'monthly',
+                        startDate: invoiceData.issueDate,
+                        totalAmount: invoiceData.totalAmount,
+                        createdAt: new Date().toISOString()
+                    });
+                    
+                    // Einzelne Raten erstellen (nur monatlich)
+                    for (let i = 0; i < installmentCount; i++) {
+                        const dueDate = new Date(this.defaultInstallmentDueDate);
+                        if (i > 0) {
+                            dueDate.setMonth(dueDate.getMonth() + i);
+                        }
+                        
+                        await this.add('installments', {
+                            planId: planId,
+                            invoiceId: invoiceId,
+                            installmentNumber: i + 1,
+                            dueDate: dueDate.toISOString().split('T')[0],
+                            amount: installmentAmount,
+                            status: 'pending',
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+                }
+                
+                return invoiceId;
+            }
+            
+            async recordPayment(invoiceId, paymentData) {
+                const invoice = await this.get('invoices', invoiceId);
+                if (!invoice) return false;
+                
+                // Zahlung speichern
+                const paymentId = await this.add('payments', {
+                    invoiceId: invoiceId,
+                    amount: paymentData.amount,
+                    date: paymentData.date,
+                    method: paymentData.method,
+                    notes: paymentData.notes,
+                    createdAt: new Date().toISOString()
+                });
+                
+                // Rechnungsstatus aktualisieren
+                invoice.paidAmount = (invoice.paidAmount || 0) + paymentData.amount;
+                
+                if (invoice.paidAmount >= invoice.totalAmount) {
+                    invoice.status = 'paid';
+                } else if (invoice.paidAmount > 0) {
+                    invoice.status = 'partial';
+                }
+                
+                await this.update('invoices', invoiceId, invoice);
+                
+                // Wenn es eine Ratenzahlung ist, Ratenstatus aktualisieren
+                if (invoice.paymentMethod === 'Ratenzahlung') {
+                    const installments = await this.getAll('installments');
+                    const invoiceInstallments = installments.filter(inst => inst.invoiceId === invoiceId && inst.status === 'pending');
+                    
+                    if (invoiceInstallments.length > 0) {
+                        // Nächste offene Rate bezahlen
+                        const nextInstallment = invoiceInstallments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
+                        if (nextInstallment && paymentData.amount >= nextInstallment.amount) {
+                            nextInstallment.status = 'paid';
+                            nextInstallment.paidDate = paymentData.date;
+                            await this.update('installments', nextInstallment.id, nextInstallment);
+                        }
+                    }
+                }
+                
+                return true;
+            }
+            
+            async addIncome(incomeData) {
+                incomeData.createdAt = new Date().toISOString();
+                return await this.add('income', incomeData);
+            }
+            
+            async getFinancialOverview() {
+                const invoices = await this.getAll('invoices');
+                const purchases = await this.getAll('purchases');
+                const income = await this.getAll('income');
+                
+                // Gesamteinnahmen aus Rechnungen
+                const totalInvoiceIncome = invoices.reduce((sum, inv) => sum + inv.totalAmount, 0);
+                
+                // Einkommen aus Einkommens-Tabelle
+                const totalOtherIncome = income.reduce((sum, inc) => sum + inc.amount, 0);
+                
+                // Gesamteinnahmen
+                const totalIncome = totalInvoiceIncome + totalOtherIncome;
+                
+                // Bereits bezahlte Beträge
+                const paidAmount = invoices.reduce((sum, inv) => sum + (inv.paidAmount || 0), 0);
+                
+                // Offene Rechnungen
+                const openInvoices = invoices.filter(inv => inv.status !== 'paid');
+                const openAmount = openInvoices.reduce((sum, inv) => sum + (inv.totalAmount - (inv.paidAmount || 0)), 0);
+                
+                // Ausgaben (Einkäufe)
+                const totalExpenses = purchases.reduce((sum, purchase) => sum + purchase.totalAmount, 0);
+                
+                // Überfällige Rechnungen
+                const today = new Date().toISOString().split('T')[0];
+                const overdueInvoices = openInvoices.filter(inv => inv.dueDate < today);
+                const overdueAmount = overdueInvoices.reduce((sum, inv) => sum + (inv.totalAmount - (inv.paidAmount || 0)), 0);
+                
+                // Einkommen nach Kategorien
+                const incomeByCategory = {};
+                income.forEach(inc => {
+                    if (!incomeByCategory[inc.category]) {
+                        incomeByCategory[inc.category] = 0;
+                    }
+                    incomeByCategory[inc.category] += inc.amount;
+                });
+                
+                return {
+                    totalIncome,
+                    totalInvoiceIncome,
+                    totalOtherIncome,
+                    paidAmount,
+                    openAmount,
+                    totalExpenses,
+                    profit: totalIncome - totalExpenses,
+                    overdueCount: overdueInvoices.length,
+                    overdueAmount,
+                    incomeByCategory
+                };
+            }
+            
+            async getOverdueInvoices() {
+                const invoices = await this.getAll('invoices');
+                const customers = await this.getAll('customers');
+                const today = new Date().toISOString().split('T')[0];
+                
+                return invoices
+                    .filter(inv => inv.status !== 'paid' && inv.dueDate < today)
+                    .map(inv => {
+                        const customer = customers.find(c => c.id === inv.customerId);
+                        return {
+                            ...inv,
+                            customerName: customer ? customer.name : 'Unbekannt',
+                            outstandingAmount: inv.totalAmount - (inv.paidAmount || 0)
+                        };
+                    });
+            }
+            
+            async getRecentInvoices(limit = 5) {
+                const invoices = await this.getAll('invoices');
+                const customers = await this.getAll('customers');
+                
+                return invoices
+                    .sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate))
+                    .slice(0, limit)
+                    .map(inv => {
+                        const customer = customers.find(c => c.id === inv.customerId);
+                        return {
+                            ...inv,
+                            customerName: customer ? customer.name : 'Unbekannt'
+                        };
+                    });
+            }
+            
+            // UI Aktualisierungen
+            async updateDashboard() {
+                const overview = await this.getFinancialOverview();
+                
+                // Stats aktualisieren
+                const statsContainer = document.getElementById('statsContainer');
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon income">
+                            <i class="fas fa-euro-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Gesamteinnahmen</h3>
+                            <div class="amount">${overview.totalIncome.toFixed(2)} €</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon other-income">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Sonstiges Einkommen</h3>
+                            <div class="amount">${overview.totalOtherIncome.toFixed(2)} €</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon expense">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Ausgaben</h3>
+                            <div class="amount">${overview.totalExpenses.toFixed(2)} €</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Offene Rechnungen</h3>
+                            <div class="amount">${overview.openAmount.toFixed(2)} €</div>
+                        </div>
+                    </div>
+                `;
+                
+                // Quick Stats
+                const quickStats = document.getElementById('quickStats');
+                if (quickStats) {
+                    quickStats.innerHTML = `
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px;">
+                                <div style="font-size: 0.9rem; color: var(--secondary);">Eingegangen</div>
+                                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">${overview.paidAmount.toFixed(2)} €</div>
+                            </div>
+                            <div style="background: #fef3c7; padding: 1rem; border-radius: 8px;">
+                                <div style="font-size: 0.9rem; color: var(--secondary);">Überfällig</div>
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #92400e;">${overview.overdueAmount.toFixed(2)} €</div>
+                            </div>
+                            <div style="background: #dcfce7; padding: 1rem; border-radius: 8px;">
+                                <div style="font-size: 0.9rem; color: var(--secondary);">Gewinn</div>
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #166534;">${overview.profit.toFixed(2)} €</div>
+                            </div>
+                            <div style="background: #e9d5ff; padding: 1rem; border-radius: 8px;">
+                                <div style="font-size: 0.9rem; color: var(--secondary);">Rechnungseinn.</div>
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">${overview.totalInvoiceIncome.toFixed(2)} €</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Aktuelle Rechnungen
+                this.updateRecentInvoices();
+                
+                // Überfällige Rechnungen
+                this.updateOverdueInvoices();
+            }
+            
+            async updateRecentInvoices() {
+                const recentInvoices = await this.getRecentInvoices(5);
+                const container = document.getElementById('recentInvoices');
+                
+                if (!container) return;
+                
+                container.innerHTML = recentInvoices.map(inv => {
+                    const statusClass = inv.status === 'paid' ? 'status-paid' : 
+                                       inv.status === 'partial' ? 'status-pending' : 
+                                       'status-pending';
+                    
+                    return `
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600;">${inv.invoiceNumber}</div>
+                                <div style="font-size: 0.9rem; color: var(--secondary);">
+                                    ${inv.customerName} · ${new Date(inv.issueDate).toLocaleDateString('de-DE')}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="status ${statusClass}" style="font-size: 0.8rem;">
+                                    ${inv.totalAmount.toFixed(2)} €
+                                </span>
+                            </div>
+                        </li>
+                    `;
+                }).join('');
+            }
+            
+            async updateOverdueInvoices() {
+                const overdueInvoices = await this.getOverdueInvoices();
+                const container = document.querySelector('#overdueInvoicesTable tbody');
+                
+                if (!container) return;
+                
+                container.innerHTML = overdueInvoices.map(inv => `
+                    <tr>
+                        <td>${inv.invoiceNumber}</td>
+                        <td>${inv.customerName}</td>
+                        <td>${new Date(inv.dueDate).toLocaleDateString('de-DE')}</td>
+                        <td>${inv.outstandingAmount.toFixed(2)} €</td>
+                        <td>
+                            <button class="action-btn payment-btn" onclick="recordPaymentModal(${inv.id})">
+                                <i class="fas fa-euro-sign"></i> Zahlung
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            async loadInvoices() {
+                const invoices = await this.getAll('invoices');
+                const customers = await this.getAll('customers');
+                const container = document.getElementById('invoicesTable');
+                
+                if (!container) return;
+                
+                container.innerHTML = invoices.map(inv => {
+                    const customer = customers.find(c => c.id === inv.customerId);
+                    const statusClass = inv.status === 'paid' ? 'status-paid' : 
+                                       inv.status === 'partial' ? 'status-pending' : 
+                                       inv.dueDate < new Date().toISOString().split('T')[0] ? 'status-overdue' : 'status-pending';
+                    const statusText = inv.status === 'paid' ? 'Bezahlt' : 
+                                     inv.status === 'partial' ? 'Teilweise' : 
+                                     inv.dueDate < new Date().toISOString().split('T')[0] ? 'Überfällig' : 'Offen';
+                    
+                    return `
+                        <tr>
+                            <td>${inv.invoiceNumber}</td>
+                            <td>${customer ? customer.name : 'Unbekannt'}</td>
+                            <td>${new Date(inv.issueDate).toLocaleDateString('de-DE')}</td>
+                            <td>${new Date(inv.dueDate).toLocaleDateString('de-DE')}</td>
+                            <td>${inv.totalAmount.toFixed(2)} €</td>
+                            <td><span class="status ${statusClass}">${statusText}</span></td>
+                            <td class="data-actions">
+                                <button class="action-btn view-btn" onclick="viewInvoice(${inv.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn payment-btn" onclick="recordPaymentModal(${inv.id})">
+                                    <i class="fas fa-euro-sign"></i>
+                                </button>
+                                <button class="action-btn delete-btn" onclick="deleteInvoice(${inv.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            async loadIncome() {
+                const income = await this.getAll('income');
+                const container = document.getElementById('incomeTable');
+                
+                if (!container) return;
+                
+                container.innerHTML = income.map(inc => {
+                    const categoryClass = this.getIncomeCategoryClass(inc.category);
+                    
+                    return `
+                        <tr>
+                            <td>${new Date(inc.date).toLocaleDateString('de-DE')}</td>
+                            <td>${inc.description}</td>
+                            <td><span class="category-badge ${categoryClass}">${inc.category}</span></td>
+                            <td>${inc.amount.toFixed(2)} €</td>
+                            <td>${inc.source || '-'}</td>
+                            <td>${inc.notes || '-'}</td>
+                            <td class="data-actions">
+                                <button class="action-btn delete-btn" onclick="deleteIncome(${inc.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            getIncomeCategoryClass(category) {
+                const classes = {
+                    'Gehalt': 'category-salary',
+                    'Investition': 'category-investment',
+                    'Mieteinnahmen': 'category-rental',
+                    'Freelance': 'category-freelance',
+                    'Verkauf': 'category-other',
+                    'Dividenden': 'category-investment',
+                    'Sonstiges': 'category-other'
+                };
+                return classes[category] || 'category-other';
+            }
+            
+            async loadCustomers() {
+                const customers = await this.getAll('customers');
+                const invoices = await this.getAll('invoices');
+                const container = document.getElementById('customersTable');
+                
+                if (!container) return;
+                
+                container.innerHTML = customers.map(customer => {
+                    const customerInvoices = invoices.filter(inv => inv.customerId === customer.id);
+                    const totalInvoices = customerInvoices.length;
+                    
+                    // Letzte Rechnung
+                    const lastInvoice = customerInvoices.sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate))[0];
+                    const lastActivity = lastInvoice ? new Date(lastInvoice.issueDate).toLocaleDateString('de-DE') : '-';
+                    
+                    return `
+                        <tr>
+                            <td>${customer.name}</td>
+                            <td>${customer.email || '-'}</td>
+                            <td>${customer.phone || '-'}</td>
+                            <td>${totalInvoices}</td>
+                            <td>${lastActivity}</td>
+                            <td class="data-actions">
+                                <button class="action-btn edit-btn" onclick="editCustomer(${customer.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" onclick="deleteCustomer(${customer.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            async loadPurchases() {
+                const purchases = await this.getAll('purchases');
+                const container = document.getElementById('purchasesTable');
+                
+                if (!container) return;
+                
+                container.innerHTML = purchases.map(purchase => {
+                    const statusClass = purchase.status === 'paid' ? 'status-paid' : 'status-pending';
+                    const statusText = purchase.status === 'paid' ? 'Bezahlt' : 'Offen';
+                    
+                    return `
+                        <tr>
+                            <td>${purchase.supplier}</td>
+                            <td>${new Date(purchase.date).toLocaleDateString('de-DE')}</td>
+                            <td>${purchase.totalAmount.toFixed(2)} €</td>
+                            <td><span class="status ${statusClass}">${statusText}</span></td>
+                            <td>${purchase.notes || '-'}</td>
+                            <td class="data-actions">
+                                <button class="action-btn delete-btn" onclick="deletePurchase(${purchase.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            async loadInstallments() {
+                const installmentPlans = await this.getAll('installmentPlans');
+                const invoices = await this.getAll('invoices');
+                const customers = await this.getAll('customers');
+                const installments = await this.getAll('installments');
+                const container = document.getElementById('installmentsTable');
+                
+                if (!container) return;
+                
+                const rows = [];
+                
+                for (const plan of installmentPlans) {
+                    const invoice = invoices.find(inv => inv.id === plan.invoiceId);
+                    if (!invoice) continue;
+                    
+                    const customer = customers.find(c => c.id === invoice.customerId);
+                    
+                    // Offene Raten berechnen
+                    const planInstallments = installments.filter(inst => inst.planId === plan.id);
+                    const pendingInstallments = planInstallments.filter(inst => inst.status === 'pending');
+                    const outstandingAmount = pendingInstallments.reduce((sum, inst) => sum + inst.amount, 0);
+                    
+                    // Nächste fällige Rate
+                    const nextInstallment = pendingInstallments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
+                    
+                    rows.push(`
+                        <tr>
+                            <td>${invoice.invoiceNumber}</td>
+                            <td>${customer ? customer.name : 'Unbekannt'}</td>
+                            <td>${plan.totalAmount.toFixed(2)} €</td>
+                            <td>${plan.totalInstallments} × ${plan.installmentAmount.toFixed(2)} €</td>
+                            <td>${outstandingAmount.toFixed(2)} €</td>
+                            <td>
+                                <span class="status ${pendingInstallments.length > 0 ? 'status-pending' : 'status-paid'}">
+                                    ${pendingInstallments.length > 0 ? 'Offen' : 'Bezahlt'}
+                                </span>
+                            </td>
+                            <td class="data-actions">
+                                <button class="action-btn payment-btn" onclick="recordPaymentModal(${invoice.id})">
+                                    <i class="fas fa-euro-sign"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+                }
+                
+                container.innerHTML = rows.join('');
+            }
+            
+            showAlert(message, type = 'success') {
+                const container = document.getElementById('alertContainer');
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                container.appendChild(alert);
+                
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                }, 3000);
+            }
         }
 
-        // Tab Navigation
-        async function switchTab(tabName) {
-            const hasAccessToTab = await hasAccess(tabName);
-            if (!hasAccessToTab) {
-                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
-                return;
-            }
-            
+        // Globale Instanz
+        const accountingSystem = new AccountingSystem();
+
+        // UI-Funktionen
+        function showTab(tabName) {
+            // Tab-Inhalt verstecken
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            document.querySelectorAll('.nav-tab').forEach(button => {
-                button.classList.remove('active');
+            // Tab anzeigen
+            document.getElementById(tabName).classList.add('active');
+            
+            // Navigation aktualisieren
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
             });
             
-            document.getElementById(tabName).classList.add('active');
-            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
             
-            // Rabatt-Einstellungen zurücksetzen beim Tab-Wechsel
-            if (tabName !== 'weed') {
-                lockDiscountSettings();
+            // Tab-spezifische Daten laden
+            switch(tabName) {
+                case 'dashboard':
+                    accountingSystem.updateDashboard();
+                    break;
+                case 'invoices':
+                    accountingSystem.loadInvoices();
+                    break;
+                case 'installments':
+                    accountingSystem.loadInstallments();
+                    break;
+                case 'income':
+                    accountingSystem.loadIncome();
+                    break;
+                case 'customers':
+                    accountingSystem.loadCustomers();
+                    break;
+                case 'purchases':
+                    accountingSystem.loadPurchases();
+                    break;
             }
-            
-            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
         }
 
-        function getTabDisplayName(tabName) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'weed': 'Weed System'
-            };
-            return names[tabName] || tabName;
+        let invoiceItems = [];
+        let currentTotal = 0;
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
         }
 
-        // Weed Price Calculation
-        function updateWeedPrices() {
-            const quantity = parseInt(weedQuantity.value) || 0;
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-
-            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
-            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
-            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
-            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            accountingSystem.currentInvoiceId = null;
+            accountingSystem.currentPaymentInvoiceId = null;
+            accountingSystem.editingCustomerId = null;
+            accountingSystem.editingIncomeId = null;
+            
+            // Rechnungsmodal zurücksetzen
+            if (modalId === 'invoiceModal') {
+                invoiceItems = [];
+                currentTotal = 0;
+                document.getElementById('invoiceItems').innerHTML = '';
+                document.getElementById('totalAmountDisplay').textContent = '0.00 €';
+                document.getElementById('installmentDisplay').innerHTML = '<p>Bitte geben Sie zuerst den Gesamtbetrag ein.</p>';
+            }
+            
+            // Einkommensmodal zurücksetzen
+            if (modalId === 'incomeModal') {
+                document.getElementById('incomeDescription').value = '';
+                document.getElementById('incomeAmount').value = '';
+                document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('incomeCategory').value = '';
+                document.getElementById('incomeSource').value = '';
+                document.getElementById('incomeNotes').value = '';
+                document.getElementById('incomePaymentMethod').value = 'Überweisung';
+            }
         }
 
-        // Handle Weed Form Submission
-        async function handleWeedSubmit() {
-            const hasAccessToWeed = await hasAccess('weed');
-            if (!hasAccessToWeed) {
-                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
-                return;
-            }
+        function addInvoiceItem() {
+            const container = document.getElementById('invoiceItems');
+            const itemId = invoiceItems.length + 1;
             
-            const buyer = document.getElementById('weedBuyer').value.trim();
-            const seller = document.getElementById('weedSeller').value.trim();
-            const quantity = parseInt(weedQuantity.value);
+            const itemHtml = `
+                <div class="item-row" id="item-${itemId}">
+                    <div>
+                        <label>Produkt/Beschreibung *</label>
+                        <input type="text" class="item-description" placeholder="z.B. Webdesign Paket" required onchange="calculateInvoiceTotal()">
+                    </div>
+                    <div>
+                        <label>Menge *</label>
+                        <input type="number" class="item-quantity" value="1" min="1" required onchange="calculateInvoiceTotal()">
+                    </div>
+                    <div>
+                        <label>Preis (€) *</label>
+                        <input type="number" class="item-price" step="0.01" required onchange="calculateInvoiceTotal()">
+                    </div>
+                    <div>
+                        <label>Gesamt (€)</label>
+                        <div class="item-total">0.00</div>
+                    </div>
+                    <div>
+                        <button type="button" class="remove-item" onclick="removeInvoiceItem(${itemId})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
             
-            if (!buyer || !seller || !quantity || quantity < 1) {
-                showNotification('Bitte alle Felder korrekt ausfüllen!', 'error');
-                return;
-            }
-            
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-            
-            const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
-            
-            const entry = {
-                buyer: buyer,
-                seller: seller,
-                quantity: quantity,
-                totalPrice: totalPrice,
-                discount: currentDiscount,
-                discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
-                discountAmount: discountValue,
-                sellerShare: sellerShare,
-                buyerShare: buyerShare,
-                date: new Date().toLocaleString('de-DE'),
-                timestamp: Date.now()
-            };
+            container.insertAdjacentHTML('beforeend', itemHtml);
+            invoiceItems.push({ id: itemId });
+        }
 
-            try {
-                const originalText = saveWeedBtn.innerHTML;
-                saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
-                saveWeedBtn.disabled = true;
+        function removeInvoiceItem(itemId) {
+            const element = document.getElementById(`item-${itemId}`);
+            if (element) {
+                element.remove();
+                invoiceItems = invoiceItems.filter(item => item.id !== itemId);
+                calculateInvoiceTotal();
+            }
+        }
+
+        function calculateInvoiceTotal() {
+            let total = 0;
+            
+            document.querySelectorAll('.item-row').forEach(row => {
+                const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const itemTotal = quantity * price;
                 
-                push(entriesRef, entry).then(() => {
-                    document.getElementById('weedBuyer').value = '';
-                    document.getElementById('weedSeller').value = '';
-                    weedQuantity.value = '1';
-                    updateWeedPrices();
-                    
-                    showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
-                    
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
-                }).catch(error => {
-                    console.error('Fehler beim Speichern:', error);
-                    showNotification('Fehler beim Speichern!', 'error');
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
+                row.querySelector('.item-total').textContent = itemTotal.toFixed(2);
+                total += itemTotal;
+            });
+            
+            currentTotal = total;
+            document.getElementById('totalAmountDisplay').textContent = total.toFixed(2) + ' €';
+            
+            // Installment-Berechnung aktualisieren
+            calculateInstallments();
+            
+            return total;
+        }
+
+        function toggleInstallmentOptions() {
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const options = document.getElementById('installmentOptions');
+            const dueDateField = document.getElementById('dueDate');
+            
+            if (paymentMethod === 'Ratenzahlung') {
+                options.style.display = 'block';
+                // Fälligkeitsdatum auf 01.01.2026 setzen
+                dueDateField.value = '2026-01-01';
+                calculateInstallments();
+            } else {
+                options.style.display = 'none';
+                // Standard: 30 Tage Frist
+                const today = new Date();
+                today.setDate(today.getDate() + 30);
+                dueDateField.value = today.toISOString().split('T')[0];
+            }
+        }
+
+        function calculateInstallments() {
+            const total = currentTotal;
+            const installmentCount = parseInt(document.getElementById('installmentCount')?.value) || 12;
+            const installmentAmount = total / installmentCount;
+            const display = document.getElementById('installmentDisplay');
+            
+            if (total > 0) {
+                let html = `<h5>Ratenplan:</h5>`;
+                html += `<div class="installment-row">
+                    <span><strong>Gesamtbetrag:</strong></span>
+                    <span><strong>${total.toFixed(2)} €</strong></span>
+                </div>`;
+                html += `<div class="installment-row">
+                    <span>${installmentCount} monatliche Raten à:</span>
+                    <span>${installmentAmount.toFixed(2)} €</span>
+                </div>`;
+                html += `<div class="installment-row">
+                    <span>Erste Rate fällig am:</span>
+                    <span>01.01.2026</span>
+                </div>`;
+                
+                display.innerHTML = html;
+            }
+        }
+
+        async function openInvoiceModal() {
+            // Kunden für Dropdown laden
+            const customers = await accountingSystem.getAll('customers');
+            const customerSelect = document.getElementById('invoiceCustomer');
+            customerSelect.innerHTML = '<option value="">Kunden auswählen...</option>' +
+                customers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            
+            // Formular zurücksetzen
+            document.getElementById('invoiceItems').innerHTML = '';
+            invoiceItems = [];
+            addInvoiceItem(); // Erste Position hinzufügen
+            
+            // Datum setzen
+            const today = new Date();
+            document.getElementById('invoiceDate').value = today.toISOString().split('T')[0];
+            
+            // Standard Fälligkeitsdatum: 30 Tage
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + 30);
+            document.getElementById('dueDate').value = dueDate.toISOString().split('T')[0];
+            
+            // Zahlungsmethode auf Standard setzen
+            document.getElementById('paymentMethod').value = '';
+            document.getElementById('installmentOptions').style.display = 'none';
+            
+            // Notizen leeren
+            document.getElementById('invoiceNotes').value = '';
+            
+            // Modal öffnen
+            openModal('invoiceModal');
+        }
+
+        async function saveInvoice() {
+            const customerId = document.getElementById('invoiceCustomer').value;
+            const issueDate = document.getElementById('invoiceDate').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const installmentCount = document.getElementById('installmentCount')?.value;
+            const notes = document.getElementById('invoiceNotes').value;
+            
+            // Validierung
+            if (!customerId) {
+                accountingSystem.showAlert('Bitte wählen Sie einen Kunden aus', 'warning');
+                return;
+            }
+            
+            if (!paymentMethod) {
+                accountingSystem.showAlert('Bitte wählen Sie eine Zahlungsmethode', 'warning');
+                return;
+            }
+            
+            // Rechnungspositionen sammeln
+            const items = [];
+            let totalAmount = 0;
+            let hasError = false;
+            
+            document.querySelectorAll('.item-row').forEach((row, index) => {
+                const description = row.querySelector('.item-description').value;
+                const quantity = parseFloat(row.querySelector('.item-quantity').value);
+                const price = parseFloat(row.querySelector('.item-price').value);
+                
+                if (!description || isNaN(quantity) || quantity <= 0 || isNaN(price) || price <= 0) {
+                    accountingSystem.showAlert(`Position ${index + 1} ist ungültig. Bitte überprüfen Sie die Eingaben.`, 'warning');
+                    hasError = true;
+                    return;
+                }
+                
+                const itemTotal = quantity * price;
+                items.push({
+                    description: description,
+                    quantity: quantity,
+                    unitPrice: price,
+                    totalPrice: itemTotal
                 });
+                totalAmount += itemTotal;
+            });
+            
+            if (hasError) return;
+            
+            if (items.length === 0) {
+                accountingSystem.showAlert('Bitte fügen Sie mindestens eine Rechnungsposition hinzu', 'warning');
+                return;
+            }
+            
+            // Rechnung erstellen
+            const invoiceData = {
+                customerId: parseInt(customerId),
+                issueDate: issueDate,
+                dueDate: dueDate,
+                totalAmount: totalAmount,
+                paidAmount: 0,
+                status: 'open',
+                paymentMethod: paymentMethod,
+                notes: notes
+            };
+            
+            // Bei Ratenzahlung zusätzliche Daten
+            if (paymentMethod === 'Ratenzahlung') {
+                invoiceData.installmentCount = parseInt(installmentCount) || 12;
+            }
+            
+            try {
+                const invoiceId = await accountingSystem.createInvoice(invoiceData, items);
+                accountingSystem.showAlert(`Rechnung erfolgreich erstellt!`);
+                
+                // UI aktualisieren
+                closeModal('invoiceModal');
+                accountingSystem.loadInvoices();
+                accountingSystem.loadInstallments();
+                accountingSystem.updateDashboard();
                 
             } catch (error) {
-                console.error('Fehler beim Speichern:', error);
-                showNotification('Fehler beim Speichern!', 'error');
-                saveWeedBtn.disabled = false;
+                accountingSystem.showAlert('Fehler beim Erstellen der Rechnung: ' + error.message, 'danger');
             }
         }
 
-        // Load and display entries from Firebase
-        function loadWeedEntries() {
-            onValue(entriesRef, (snapshot) => {
-                entries = [];
-                snapshot.forEach((childSnapshot) => {
-                    const data = childSnapshot.val();
-                    data.key = childSnapshot.key;
-                    entries.push(data);
-                });
-                
-                entries.sort((a, b) => b.timestamp - a.timestamp);
-                renderWeedTransactions();
-            });
+        function openIncomeModal(editId = null) {
+            const modalTitle = document.getElementById('incomeModalTitle');
+            
+            if (editId) {
+                modalTitle.textContent = 'Einkommen bearbeiten';
+                // Hier könnte Bearbeitungslogik hinzugefügt werden
+                accountingSystem.editingIncomeId = editId;
+            } else {
+                modalTitle.textContent = 'Neues Einkommen erfassen';
+                accountingSystem.editingIncomeId = null;
+            }
+            
+            // Datum auf heute setzen
+            document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+            
+            openModal('incomeModal');
         }
 
-        function renderWeedTransactions() {
-            const tbody = document.getElementById('weedTransactions');
-            tbody.innerHTML = '';
+        async function saveIncome() {
+            const description = document.getElementById('incomeDescription').value;
+            const amount = parseFloat(document.getElementById('incomeAmount').value);
+            const date = document.getElementById('incomeDate').value;
+            const category = document.getElementById('incomeCategory').value;
+            const source = document.getElementById('incomeSource').value;
+            const notes = document.getElementById('incomeNotes').value;
+            const paymentMethod = document.getElementById('incomePaymentMethod').value;
             
-            if (entries.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; color: #a0aec0;">
-                            Keine Transaktionen vorhanden
-                        </td>
-                    </tr>
-                `;
+            // Validierung
+            if (!description) {
+                accountingSystem.showAlert('Bitte geben Sie eine Beschreibung ein', 'warning');
                 return;
             }
             
-            const recentEntries = entries.slice(0, 10);
+            if (!amount || amount <= 0) {
+                accountingSystem.showAlert('Bitte geben Sie einen gültigen Betrag ein', 'warning');
+                return;
+            }
             
-            recentEntries.forEach(entry => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${entry.date}</td>
-                    <td>${entry.buyer}</td>
-                    <td>${entry.seller}</td>
-                    <td>${entry.quantity} Bricks</td>
-                    <td>${entry.discount}% (${entry.discountLabel})</td>
-                    <td>${entry.totalPrice} €</td>
-                    <td style="color: #48bb78;">${entry.sellerShare} €</td>
-                    <td style="color: #4299e1;">${entry.buyerShare} €</td>
-                `;
-            });
-        }
-
-        // Logo Einstellungen
-        function loadLogoSettings() {
-            onValue(logoSettingsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.logoText) {
-                    logoText = data.logoText;
-                    // Überschreiben wir nicht das globale Logo
+            if (!category) {
+                accountingSystem.showAlert('Bitte wählen Sie eine Kategorie', 'warning');
+                return;
+            }
+            
+            const incomeData = {
+                description: description,
+                amount: amount,
+                date: date,
+                category: category,
+                source: source,
+                notes: notes,
+                paymentMethod: paymentMethod
+            };
+            
+            try {
+                if (accountingSystem.editingIncomeId) {
+                    // Bearbeitung - später implementieren
+                    accountingSystem.showAlert('Einkommen erfolgreich aktualisiert');
+                } else {
+                    await accountingSystem.addIncome(incomeData);
+                    accountingSystem.showAlert('Einkommen erfolgreich erfasst!');
                 }
-            });
+                
+                closeModal('incomeModal');
+                accountingSystem.loadIncome();
+                accountingSystem.updateDashboard();
+                
+            } catch (error) {
+                accountingSystem.showAlert('Fehler beim Speichern des Einkommens: ' + error.message, 'danger');
+            }
         }
 
-        // Event Listeners initialisieren
-        function initializeEventListeners() {
-            discordLoginBtn.addEventListener('click', startDiscordOAuth);
-            logoutBtn.addEventListener('click', logout);
-            restrictedLogoutBtn.addEventListener('click', logout);
-            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
-            weedTab.addEventListener('click', () => switchTab('weed'));
+        async function recordPaymentModal(invoiceId) {
+            const invoice = await accountingSystem.get('invoices', invoiceId);
+            if (!invoice) {
+                accountingSystem.showAlert('Rechnung nicht gefunden', 'warning');
+                return;
+            }
             
-            // Logo Upload Event Listeners
-            headerLogo.addEventListener('click', openPasswordModal);
-            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
-            cancelPassword.addEventListener('click', closePasswordModal);
-            confirmPassword.addEventListener('click', verifyLogoPassword);
-            saveLogo.addEventListener('click', handleLogoUpload);
+            accountingSystem.currentPaymentInvoiceId = invoiceId;
+            document.getElementById('paymentInvoiceNumber').value = invoice.invoiceNumber;
+            document.getElementById('paymentAmount').value = (invoice.totalAmount - (invoice.paidAmount || 0)).toFixed(2);
             
-            // Discount Settings Event Listeners
-            openDiscountSettings.addEventListener('click', openDiscountPasswordModal);
-            cancelDiscountPassword.addEventListener('click', closeDiscountPasswordModal);
-            confirmDiscountPassword.addEventListener('click', verifyDiscountPassword);
-            addDiscount.addEventListener('click', addNewDiscount);
+            openModal('paymentModal');
+        }
+
+        async function recordPayment() {
+            const amount = parseFloat(document.getElementById('paymentAmount').value);
+            const date = document.getElementById('paymentDate').value;
+            const method = document.getElementById('paymentMethodSelect').value;
+            const notes = document.getElementById('paymentNotes').value;
             
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', function() {
-                    if (!this.classList.contains('disabled')) {
-                        const page = this.getAttribute('data-page');
-                        navigateToWithAccessCheck(page);
+            if (!amount || amount <= 0) {
+                accountingSystem.showAlert('Bitte geben Sie einen gültigen Betrag ein', 'warning');
+                return;
+            }
+            
+            try {
+                const success = await accountingSystem.recordPayment(
+                    accountingSystem.currentPaymentInvoiceId,
+                    {
+                        amount: amount,
+                        date: date,
+                        method: method,
+                        notes: notes
                     }
-                });
-            });
+                );
+                
+                if (success) {
+                    accountingSystem.showAlert('Zahlung erfolgreich erfasst');
+                    closeModal('paymentModal');
+                    accountingSystem.loadInvoices();
+                    accountingSystem.loadInstallments();
+                    accountingSystem.updateDashboard();
+                }
+            } catch (error) {
+                accountingSystem.showAlert('Fehler beim Erfassen der Zahlung: ' + error.message, 'danger');
+            }
+        }
+
+        async function openCustomerModal(editId = null) {
+            const modalTitle = document.getElementById('customerModalTitle');
             
-            weedQuantity.addEventListener('input', updateWeedPrices);
-            saveWeedBtn.addEventListener('click', handleWeedSubmit);
+            if (editId) {
+                modalTitle.textContent = 'Kunde bearbeiten';
+                const customer = await accountingSystem.get('customers', editId);
+                if (customer) {
+                    document.getElementById('customerName').value = customer.name;
+                    document.getElementById('customerEmail').value = customer.email || '';
+                    document.getElementById('customerPhone').value = customer.phone || '';
+                    document.getElementById('customerAddress').value = customer.address || '';
+                    accountingSystem.editingCustomerId = editId;
+                }
+            } else {
+                modalTitle.textContent = 'Neuer Kunde';
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerEmail').value = '';
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('customerAddress').value = '';
+                accountingSystem.editingCustomerId = null;
+            }
+            
+            openModal('customerModal');
+        }
+
+        async function saveCustomer() {
+            const name = document.getElementById('customerName').value;
+            
+            if (!name) {
+                accountingSystem.showAlert('Bitte geben Sie einen Namen ein', 'warning');
+                return;
+            }
+            
+            const customerData = {
+                name: name,
+                email: document.getElementById('customerEmail').value,
+                phone: document.getElementById('customerPhone').value,
+                address: document.getElementById('customerAddress').value
+            };
+            
+            try {
+                if (accountingSystem.editingCustomerId) {
+                    await accountingSystem.update('customers', accountingSystem.editingCustomerId, customerData);
+                    accountingSystem.showAlert('Kunde erfolgreich aktualisiert');
+                } else {
+                    await accountingSystem.add('customers', customerData);
+                    accountingSystem.showAlert('Kunde erfolgreich hinzugefügt');
+                }
+                
+                closeModal('customerModal');
+                accountingSystem.loadCustomers();
+                
+            } catch (error) {
+                accountingSystem.showAlert('Fehler beim Speichern des Kunden: ' + error.message, 'danger');
+            }
+        }
+
+        function openPurchaseModal() {
+            // Datum auf heute setzen
+            document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
+            openModal('purchaseModal');
+        }
+
+        async function savePurchase() {
+            const supplier = document.getElementById('purchaseSupplier').value;
+            const date = document.getElementById('purchaseDate').value;
+            const total = parseFloat(document.getElementById('purchaseTotal').value);
+            const notes = document.getElementById('purchaseNotes').value;
+            const paymentMethod = document.getElementById('purchasePaymentMethod').value;
+            
+            if (!supplier) {
+                accountingSystem.showAlert('Bitte geben Sie einen Lieferanten an', 'warning');
+                return;
+            }
+            
+            if (!total || total <= 0) {
+                accountingSystem.showAlert('Bitte geben Sie einen gültigen Betrag ein', 'warning');
+                return;
+            }
+            
+            const purchaseData = {
+                supplier: supplier,
+                date: date,
+                totalAmount: total,
+                notes: notes,
+                paymentMethod: paymentMethod,
+                status: 'paid' // Einkäufe sind sofort bezahlt
+            };
+            
+            try {
+                await accountingSystem.add('purchases', purchaseData);
+                accountingSystem.showAlert('Einkauf erfolgreich erfasst');
+                closeModal('purchaseModal');
+                accountingSystem.loadPurchases();
+                accountingSystem.updateDashboard();
+                
+            } catch (error) {
+                accountingSystem.showAlert('Fehler beim Speichern des Einkaufs: ' + error.message, 'danger');
+            }
+        }
+
+        async function deleteInvoice(id) {
+            if (confirm('Sind Sie sicher, dass Sie diese Rechnung löschen möchten?')) {
+                try {
+                    // Rechnungspositionen löschen
+                    const items = await accountingSystem.getAll('invoiceItems');
+                    const invoiceItems = items.filter(item => item.invoiceId === id);
+                    for (const item of invoiceItems) {
+                        await accountingSystem.delete('invoiceItems', item.id);
+                    }
+                    
+                    // Raten löschen (falls vorhanden)
+                    const installments = await accountingSystem.getAll('installments');
+                    const invoiceInstallments = installments.filter(inst => inst.invoiceId === id);
+                    for (const inst of invoiceInstallments) {
+                        await accountingSystem.delete('installments', inst.id);
+                    }
+                    
+                    // Ratenplan löschen (falls vorhanden)
+                    const plans = await accountingSystem.getAll('installmentPlans');
+                    const invoicePlan = plans.find(plan => plan.invoiceId === id);
+                    if (invoicePlan) {
+                        await accountingSystem.delete('installmentPlans', invoicePlan.id);
+                    }
+                    
+                    // Zahlungen löschen
+                    const payments = await accountingSystem.getAll('payments');
+                    const invoicePayments = payments.filter(payment => payment.invoiceId === id);
+                    for (const payment of invoicePayments) {
+                        await accountingSystem.delete('payments', payment.id);
+                    }
+                    
+                    // Rechnung löschen
+                    await accountingSystem.delete('invoices', id);
+                    
+                    accountingSystem.showAlert('Rechnung erfolgreich gelöscht');
+                    accountingSystem.loadInvoices();
+                    accountingSystem.loadInstallments();
+                    accountingSystem.updateDashboard();
+                    
+                } catch (error) {
+                    accountingSystem.showAlert('Fehler beim Löschen der Rechnung: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        async function deleteIncome(id) {
+            if (confirm('Sind Sie sicher, dass Sie dieses Einkommen löschen möchten?')) {
+                try {
+                    await accountingSystem.delete('income', id);
+                    accountingSystem.showAlert('Einkommen erfolgreich gelöscht');
+                    accountingSystem.loadIncome();
+                    accountingSystem.updateDashboard();
+                    
+                } catch (error) {
+                    accountingSystem.showAlert('Fehler beim Löschen des Einkommens: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        async function deleteCustomer(id) {
+            if (confirm('Sind Sie sicher, dass Sie diesen Kunden löschen möchten?')) {
+                try {
+                    // Prüfen, ob der Kunde Rechnungen hat
+                    const invoices = await accountingSystem.getAll('invoices');
+                    const customerInvoices = invoices.filter(inv => inv.customerId === id);
+                    
+                    if (customerInvoices.length > 0) {
+                        if (!confirm('Dieser Kunde hat noch Rechnungen. Trotzdem löschen?')) {
+                            return;
+                        }
+                    }
+                    
+                    await accountingSystem.delete('customers', id);
+                    accountingSystem.showAlert('Kunde erfolgreich gelöscht');
+                    accountingSystem.loadCustomers();
+                    
+                } catch (error) {
+                    accountingSystem.showAlert('Fehler beim Löschen des Kunden: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        async function deletePurchase(id) {
+            if (confirm('Sind Sie sicher, dass Sie diesen Einkauf löschen möchten?')) {
+                try {
+                    await accountingSystem.delete('purchases', id);
+                    accountingSystem.showAlert('Einkauf erfolgreich gelöscht');
+                    accountingSystem.loadPurchases();
+                    accountingSystem.updateDashboard();
+                    
+                } catch (error) {
+                    accountingSystem.showAlert('Fehler beim Löschen des Einkaufs: ' + error.message, 'danger');
+                }
+            }
+        }
+
+        function viewInvoice(id) {
+            accountingSystem.showAlert('Rechnungsdetails werden angezeigt', 'info');
+            // Hier könnte eine Detailansicht implementiert werden
+        }
+
+        function editCustomer(id) {
+            openCustomerModal(id);
+        }
+
+        async function exportData() {
+            try {
+                const data = {
+                    customers: await accountingSystem.getAll('customers'),
+                    invoices: await accountingSystem.getAll('invoices'),
+                    invoiceItems: await accountingSystem.getAll('invoiceItems'),
+                    income: await accountingSystem.getAll('income'),
+                    installmentPlans: await accountingSystem.getAll('installmentPlans'),
+                    installments: await accountingSystem.getAll('installments'),
+                    purchases: await accountingSystem.getAll('purchases'),
+                    payments: await accountingSystem.getAll('payments')
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `buchhaltung-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                accountingSystem.showAlert('Daten erfolgreich exportiert');
+                
+            } catch (error) {
+                accountingSystem.showAlert('Fehler beim Exportieren der Daten: ' + error.message, 'danger');
+            }
         }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
-            initializeEventListeners();
-            checkExistingLogin();
+            // Event Listener für Zahlungsmethode
+            const paymentMethodSelect = document.getElementById('paymentMethod');
+            if (paymentMethodSelect) {
+                paymentMethodSelect.addEventListener('change', toggleInstallmentOptions);
+            }
             
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            if (code) {
-                exchangeCodeForToken(code);
+            // Event Listener für Installment Count
+            const installmentCount = document.getElementById('installmentCount');
+            if (installmentCount) {
+                installmentCount.addEventListener('change', calculateInstallments);
             }
         });
-
-        console.log('KhusLand Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
     </script>
 </body>
 </html>

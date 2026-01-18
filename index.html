@@ -346,7 +346,7 @@
                 <i class="fas fa-chart-line"></i> CC-Shop Finanzsystem
             </h1>
             <div class="debug-info" id="debugInfo">
-                System startet...
+                Lade Daten...
             </div>
         </div>
         
@@ -521,12 +521,13 @@
         
         // Referenzen für Finanzsystem
         const transactionsRef = ref(db, 'finanz_transactions');
-        const balanceRef = ref(db, 'finanz_balance');
+        const balanceRef = ref(db, 'finanz_balance/current');
 
-        // Lokale Variablen
+        // Globale Variablen
         let holdTransactions = [];
         let availableBalance = 0;
         let holdDistributionChart = null;
+        let isDataLoaded = false;
 
         // DOM initialisieren
         document.addEventListener('DOMContentLoaded', function() {
@@ -547,7 +548,8 @@
             // Firebase Daten laden
             loadDataFromFirebase();
             
-            showNotification('System bereit!', 'success');
+            // Initiale Anzeige setzen
+            updateDisplay();
         });
 
         // Hilfsfunktionen
@@ -569,12 +571,12 @@
             console.log('📢', message);
         }
 
-        // Firebase: Daten laden
+        // Firebase: Daten laden - KORRIGIERT!
         function loadDataFromFirebase() {
             console.log('📥 Lade Daten von Firebase...');
             updateDebugInfo('Lade Daten von Firebase...');
             
-            // Transaktionen laden
+            // 1. ZUERST Transaktionen laden
             onValue(transactionsRef, (snapshot) => {
                 const data = snapshot.val();
                 holdTransactions = [];
@@ -591,29 +593,41 @@
                     console.log('📊 Keine Transaktionen gefunden');
                 }
                 
-                // Balance laden
+                // 2. DANACH Balance laden
                 get(balanceRef).then((snapshot) => {
                     if (snapshot.exists()) {
                         availableBalance = snapshot.val().amount || 0;
                         console.log('💰 Balance geladen:', availableBalance);
                     } else {
                         // Initiale Balance erstellen
-                        set(balanceRef, { amount: 0, lastUpdated: new Date().toISOString() });
-                        availableBalance = 0;
-                        console.log('💰 Initiale Balance erstellt: 0');
+                        console.log('💰 Erstelle initiale Balance...');
+                        set(balanceRef, { 
+                            amount: 0, 
+                            lastUpdated: new Date().toISOString() 
+                        }).then(() => {
+                            availableBalance = 0;
+                            console.log('💰 Initiale Balance erstellt: 0');
+                            updateDisplay();
+                            checkPendingReleases();
+                        });
                     }
                     
+                    isDataLoaded = true;
                     updateDisplay();
                     checkPendingReleases();
                     updateDebugInfo('Daten geladen ✅');
+                    showNotification('Daten geladen!', 'success');
+                    
                 }).catch((error) => {
                     console.error('❌ Fehler beim Laden der Balance:', error);
-                    updateDebugInfo('Fehler beim Laden');
+                    updateDebugInfo('Fehler beim Laden der Balance');
+                    showNotification('Fehler beim Laden!', 'error');
                 });
                 
             }, (error) => {
                 console.error('❌ Fehler beim Laden der Transaktionen:', error);
-                updateDebugInfo('Fehler beim Laden');
+                updateDebugInfo('Fehler beim Laden der Transaktionen');
+                showNotification('Fehler beim Laden!', 'error');
             });
         }
 
@@ -661,8 +675,13 @@
             }
         }
 
-        // Firebase: Hold Transaktion hinzufügen
+        // Firebase: Hold Transaktion hinzufügen - KORRIGIERT!
         async function addHoldTransaction() {
+            if (!isDataLoaded) {
+                showNotification('Daten werden noch geladen...', 'error');
+                return;
+            }
+            
             const amount = parseInt(document.getElementById('holdAmount').value);
             const purchaseDate = document.getElementById('holdDate').value;
             const releaseDate = document.getElementById('releaseDate').value;
@@ -680,7 +699,8 @@
                 releaseDate: releaseDate,
                 status: 'pending',
                 type: 'hold',
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             };
             
             try {
@@ -705,8 +725,13 @@
             }
         }
 
-        // Firebase: Direkte Einzahlung
+        // Firebase: Direkte Einzahlung - KORRIGIERT!
         async function addDirectDeposit() {
+            if (!isDataLoaded) {
+                showNotification('Daten werden noch geladen...', 'error');
+                return;
+            }
+            
             const amount = parseInt(document.getElementById('depositAmount').value);
             
             if (!amount || amount <= 0) {
@@ -718,14 +743,7 @@
             
             try {
                 // Balance in Firebase aktualisieren
-                const currentBalance = await get(balanceRef);
-                let currentAmount = 0;
-                
-                if (currentBalance.exists()) {
-                    currentAmount = currentBalance.val().amount || 0;
-                }
-                
-                const newAmount = currentAmount + amount;
+                const newAmount = availableBalance + amount;
                 
                 await set(balanceRef, { 
                     amount: newAmount, 
@@ -739,8 +757,11 @@
                     amount: amount,
                     type: 'deposit',
                     date: new Date().toISOString().split('T')[0],
+                    purchaseDate: new Date().toISOString().split('T')[0],
+                    releaseDate: new Date().toISOString().split('T')[0],
                     status: 'released',
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 };
                 
                 const newTransactionRef = push(transactionsRef);
@@ -762,8 +783,13 @@
             }
         }
 
-        // Firebase: Auszahlung
+        // Firebase: Auszahlung - KORRIGIERT!
         async function processWithdrawal() {
+            if (!isDataLoaded) {
+                showNotification('Daten werden noch geladen...', 'error');
+                return;
+            }
+            
             const amount = parseInt(document.getElementById('withdrawAmount').value);
             
             if (!amount || amount <= 0) {
@@ -794,8 +820,11 @@
                     amount: amount,
                     type: 'withdrawal',
                     date: new Date().toISOString().split('T')[0],
+                    purchaseDate: new Date().toISOString().split('T')[0],
+                    releaseDate: new Date().toISOString().split('T')[0],
                     status: 'released',
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 };
                 
                 const newTransactionRef = push(transactionsRef);
@@ -817,7 +846,7 @@
             }
         }
 
-        // Anzeige aktualisieren
+        // Anzeige aktualisieren - KORRIGIERT!
         function updateDisplay() {
             console.log('🔄 Aktualisiere Anzeige...');
             
@@ -989,28 +1018,26 @@
         }
 
         // Automatische Freigabe prüfen
-        function checkPendingReleases() {
+        async function checkPendingReleases() {
+            if (!isDataLoaded) return;
+            
             const today = new Date().toISOString().split('T')[0];
             let anyReleased = false;
             
-            holdTransactions.forEach(async (transaction) => {
+            for (const transaction of holdTransactions) {
                 if (transaction.status === 'pending' && transaction.releaseDate <= today) {
                     console.log(`🔄 Freigabe erkannt: ${transaction.amount} $`);
                     
                     try {
                         // Status in Firebase aktualisieren
                         const transactionRef = ref(db, `finanz_transactions/${transaction.id}`);
-                        await update(transactionRef, { status: 'released' });
+                        await update(transactionRef, { 
+                            status: 'released',
+                            updatedAt: new Date().toISOString()
+                        });
                         
                         // Balance in Firebase aktualisieren
-                        const currentBalance = await get(balanceRef);
-                        let currentAmount = 0;
-                        
-                        if (currentBalance.exists()) {
-                            currentAmount = currentBalance.val().amount || 0;
-                        }
-                        
-                        const newAmount = currentAmount + transaction.amount;
+                        const newAmount = availableBalance + transaction.amount;
                         
                         await set(balanceRef, { 
                             amount: newAmount, 
@@ -1028,7 +1055,7 @@
                         console.error('❌ Fehler beim Freigeben:', error);
                     }
                 }
-            });
+            }
             
             if (anyReleased) {
                 updateDisplay();
@@ -1038,6 +1065,13 @@
 
         // Alle 60 Sekunden prüfen
         setInterval(checkPendingReleases, 60000);
+        
+        // Initiale Notification
+        setTimeout(() => {
+            if (isDataLoaded) {
+                showNotification('System bereit!', 'success');
+            }
+        }, 1000);
     </script>
 </body>
 </html>

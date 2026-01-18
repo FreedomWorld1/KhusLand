@@ -501,18 +501,18 @@
     <!-- Firebase Realtime Database -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue, update, get, child } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-        // Firebase Konfiguration
+        // Firebase Konfiguration für CC-Shop
         const firebaseConfig = {
-            apiKey: "AIzaSyCw4nadHCIRcouTJJoQ3ElToiVVFr5Rufo",
-            authDomain: "khusland-b7d13.firebaseapp.com",
-            databaseURL: "https://khusland-b7d13-default-rtdb.firebaseio.com",
-            projectId: "khusland-b7d13",
-            storageBucket: "khusland-b7d13.firebasestorage.app",
-            messagingSenderId: "69573193613",
-            appId: "1:69573193613:web:86c4d839281b1e343cd7c4",
-            measurementId: "G-JSCWR4207G"
+            apiKey: "AIzaSyB7AmLb6NwR8sKyDXtIhmghGszpX_VsICY",
+            authDomain: "cc-shop-36c3b.firebaseapp.com",
+            databaseURL: "https://cc-shop-36c3b-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "cc-shop-36c3b",
+            storageBucket: "cc-shop-36c3b.firebasestorage.app",
+            messagingSenderId: "376170741825",
+            appId: "1:376170741825:web:bc6102e277da5ad7cbc6c0",
+            measurementId: "G-FJVHHQWZFW"
         };
 
         // Firebase initialisieren
@@ -531,7 +531,7 @@
 
         // DOM initialisieren
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 System startet...');
+            console.log('🚀 CC-Shop Finanzsystem startet...');
             updateDebugInfo('System startet...');
             
             // Heutiges Datum setzen
@@ -547,9 +547,6 @@
             
             // Firebase Daten laden
             loadDataFromFirebase();
-            
-            // Initiale Anzeige setzen
-            updateDisplay();
         });
 
         // Hilfsfunktionen
@@ -571,12 +568,12 @@
             console.log('📢', message);
         }
 
-        // Firebase: Daten laden - KORRIGIERT!
+        // Firebase: Daten laden
         function loadDataFromFirebase() {
             console.log('📥 Lade Daten von Firebase...');
             updateDebugInfo('Lade Daten von Firebase...');
             
-            // 1. ZUERST Transaktionen laden
+            // Transaktionen laden
             onValue(transactionsRef, (snapshot) => {
                 const data = snapshot.val();
                 holdTransactions = [];
@@ -593,7 +590,7 @@
                     console.log('📊 Keine Transaktionen gefunden');
                 }
                 
-                // 2. DANACH Balance laden
+                // Balance laden
                 get(balanceRef).then((snapshot) => {
                     if (snapshot.exists()) {
                         availableBalance = snapshot.val().amount || 0;
@@ -607,8 +604,6 @@
                         }).then(() => {
                             availableBalance = 0;
                             console.log('💰 Initiale Balance erstellt: 0');
-                            updateDisplay();
-                            checkPendingReleases();
                         });
                     }
                     
@@ -616,18 +611,15 @@
                     updateDisplay();
                     checkPendingReleases();
                     updateDebugInfo('Daten geladen ✅');
-                    showNotification('Daten geladen!', 'success');
                     
                 }).catch((error) => {
                     console.error('❌ Fehler beim Laden der Balance:', error);
                     updateDebugInfo('Fehler beim Laden der Balance');
-                    showNotification('Fehler beim Laden!', 'error');
                 });
                 
             }, (error) => {
                 console.error('❌ Fehler beim Laden der Transaktionen:', error);
                 updateDebugInfo('Fehler beim Laden der Transaktionen');
-                showNotification('Fehler beim Laden!', 'error');
             });
         }
 
@@ -675,7 +667,7 @@
             }
         }
 
-        // Firebase: Hold Transaktion hinzufügen - KORRIGIERT!
+        // Firebase: Hold Transaktion hinzufügen
         async function addHoldTransaction() {
             if (!isDataLoaded) {
                 showNotification('Daten werden noch geladen...', 'error');
@@ -725,7 +717,7 @@
             }
         }
 
-        // Firebase: Direkte Einzahlung - KORRIGIERT!
+        // Firebase: Direkte Einzahlung
         async function addDirectDeposit() {
             if (!isDataLoaded) {
                 showNotification('Daten werden noch geladen...', 'error');
@@ -783,7 +775,7 @@
             }
         }
 
-        // Firebase: Auszahlung - KORRIGIERT!
+        // Firebase: Auszahlung
         async function processWithdrawal() {
             if (!isDataLoaded) {
                 showNotification('Daten werden noch geladen...', 'error');
@@ -846,7 +838,7 @@
             }
         }
 
-        // Anzeige aktualisieren - KORRIGIERT!
+        // Anzeige aktualisieren
         function updateDisplay() {
             console.log('🔄 Aktualisiere Anzeige...');
             
@@ -857,7 +849,7 @@
             // Zurückgehaltene Beträge
             const totalHoldBalance = pendingTransactions.reduce((sum, t) => sum + t.amount, 0);
             
-            // Balances SOFORT anzeigen
+            // Balances anzeigen
             document.getElementById('holdBalance').textContent = totalHoldBalance + ' $';
             document.getElementById('availableBalance').textContent = availableBalance + ' $';
             
@@ -891,7 +883,7 @@
             
             const dailyBalance = dailyDeposits - dailyWithdrawals;
             
-            // Restliche Werte anzeigen
+            // Werte anzeigen
             document.getElementById('dueToday').textContent = dueToday + ' $';
             document.getElementById('dueNextWeek').textContent = dueNextWeek + ' $';
             document.getElementById('pendingCount').textContent = pendingTransactions.length;
@@ -1069,7 +1061,7 @@
         // Initiale Notification
         setTimeout(() => {
             if (isDataLoaded) {
-                showNotification('System bereit!', 'success');
+                showNotification('CC-Shop Finanzsystem bereit!', 'success');
             }
         }, 1000);
     </script>

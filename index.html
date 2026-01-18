@@ -1,218 +1,364 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CC-Shop ohne Firebase SDK</title>
+    <title>🏪 CC-Shop FINANZSISTEM</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        body { font-family: Arial; background: #0f172a; color: white; padding: 20px; }
+        
         .container { max-width: 800px; margin: 0 auto; }
-        .card { background: white; padding: 20px; margin: 20px 0; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        button { padding: 10px 20px; margin: 5px; background: #4285f4; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        .success { color: green; }
-        .error { color: red; }
+        
+        .header { 
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .balance { 
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .balance h2 { color: #60a5fa; margin-bottom: 15px; }
+        .amount { font-size: 3.5rem; font-weight: bold; color: #fbbf24; margin: 20px 0; }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        button:hover { transform: translateY(-3px); }
+        
+        .hold { background: #8b5cf6; }
+        .deposit { background: #10b981; }
+        .withdraw { background: #ef4444; }
+        .save { background: #3b82f6; }
+        .load { background: #f59e0b; }
+        
+        .transactions {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+        
+        .transaction {
+            background: #0f172a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .log {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏪 CC-Shop Finanzsystem (ohne Firebase SDK)</h1>
-        
-        <div class="card">
-            <h3>Status</h3>
-            <div id="status">Nicht verbunden</div>
+        <!-- Header -->
+        <div class="header">
+            <h1>🏪 CC-SHOP FINANZSISTEM</h1>
+            <p>📅 Lokale Datenbank - Kein Firebase nötig!</p>
         </div>
         
-        <div class="card">
-            <h3>Aktionen</h3>
-            <button onclick="testConnection()">🔗 Verbindung testen</button>
-            <button onclick="createData()">➕ Daten erstellen</button>
-            <button onclick="readData()">📖 Daten lesen</button>
-            <button onclick="saveTransaction()">💸 Transaktion speichern</button>
+        <!-- Balance -->
+        <div class="balance">
+            <h2>💰 VERFÜGBARES GUTHABEN</h2>
+            <div class="amount" id="balance">5.000 $</div>
+            <p>💵 Sofort verfügbar für Auszahlungen</p>
         </div>
         
-        <div class="card">
-            <h3>Debug Info</h3>
-            <div id="debug"></div>
+        <!-- Buttons -->
+        <div class="buttons">
+            <button class="hold" onclick="addHold(100)">⏸️ 100$ zurückhalten</button>
+            <button class="deposit" onclick="addDeposit(500)">➕ 500$ einzahlen</button>
+            <button class="withdraw" onclick="addWithdraw(200)">➖ 200$ auszahlen</button>
+        </div>
+        
+        <!-- Save/Load -->
+        <div style="display: flex; gap: 15px; margin: 20px 0;">
+            <button class="save" onclick="saveData()">💾 Daten speichern</button>
+            <button class="load" onclick="loadData()">📂 Daten laden</button>
+            <button class="load" onclick="exportData()">📤 Exportieren</button>
+            <button class="save" onclick="importData()">📥 Importieren</button>
+        </div>
+        
+        <!-- Transactions -->
+        <div class="transactions">
+            <h3>📋 TRANSACTIONEN:</h3>
+            <div id="transactionsList">
+                <!-- Hier kommen die Transaktionen -->
+            </div>
+        </div>
+        
+        <!-- Log -->
+        <div class="log">
+            <h3>📝 LOG:</h3>
+            <div id="log"></div>
         </div>
     </div>
-    
+
     <script>
-        // Firebase URL
-        const FIREBASE_DB_URL = 'https://cc-shop-36c3b-default-rtdb.europe-west1.firebasedatabase.app';
+        // ==================== DATENBANK ====================
+        let database = {
+            balance: 5000,
+            transactions: [],
+            lastUpdated: new Date().toISOString()
+        };
         
-        // Helper Funktionen
-        function log(message, type = 'info') {
-            const debugDiv = document.getElementById('debug');
+        // ==================== HELPER FUNCTIONS ====================
+        function log(message) {
+            const logDiv = document.getElementById('log');
             const time = new Date().toLocaleTimeString();
-            const msg = document.createElement('div');
-            msg.className = type;
-            msg.textContent = `[${time}] ${message}`;
-            debugDiv.appendChild(msg);
-            console.log(`[${type}]`, message);
+            const entry = document.createElement('div');
+            entry.textContent = `[${time}] ${message}`;
+            logDiv.appendChild(entry);
+            console.log(message);
         }
         
-        async function firebaseRequest(path, method = 'GET', data = null) {
-            const url = `${FIREBASE_DB_URL}${path}.json`;
+        function updateDisplay() {
+            // Balance aktualisieren
+            document.getElementById('balance').textContent = `${database.balance} $`;
             
-            const options = {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+            // Transaktionen anzeigen
+            const transactionsList = document.getElementById('transactionsList');
+            transactionsList.innerHTML = '';
+            
+            database.transactions.slice(-10).reverse().forEach(trans => {
+                const div = document.createElement('div');
+                div.className = 'transaction';
+                div.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="font-size: 1.5rem; color: #fbbf24;">${trans.amount} $</strong>
+                            <div style="color: #94a3b8; font-size: 0.9rem;">
+                                ${trans.type === 'hold' ? '⏸️ Zurückgehalten' : 
+                                  trans.type === 'deposit' ? '➕ Eingezahlt' : '➖ Ausgezahlt'}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div>${trans.date}</div>
+                            <div style="color: ${trans.status === 'pending' ? '#f59e0b' : '#10b981'};">
+                                ${trans.status === 'pending' ? '⏳ Ausstehend' : '✅ Freigegeben'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                transactionsList.appendChild(div);
+            });
+            
+            log(`Balance aktualisiert: ${database.balance}$`);
+        }
+        
+        // ==================== TRANSACTION FUNCTIONS ====================
+        function addHold(amount) {
+            const today = new Date();
+            const releaseDate = new Date(today);
+            releaseDate.setDate(releaseDate.getDate() + 2);
+            
+            const transaction = {
+                id: Date.now(),
+                amount: amount,
+                type: 'hold',
+                status: 'pending',
+                date: today.toLocaleDateString('de-DE'),
+                purchaseDate: today.toISOString().split('T')[0],
+                releaseDate: releaseDate.toISOString().split('T')[0],
+                createdAt: new Date().toISOString()
             };
             
-            if (data) {
-                options.body = JSON.stringify(data);
-            }
+            database.transactions.push(transaction);
+            log(`✅ ${amount}$ zurückgehalten (Freigabe: ${releaseDate.toLocaleDateString('de-DE')})`);
+            updateDisplay();
+            saveData();
+        }
+        
+        function addDeposit(amount) {
+            database.balance += amount;
             
-            try {
-                const response = await fetch(url, options);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                return await response.json();
-            } catch (error) {
-                log(`Fehler bei ${method} ${path}: ${error.message}`, 'error');
-                throw error;
-            }
+            const transaction = {
+                id: Date.now(),
+                amount: amount,
+                type: 'deposit',
+                status: 'released',
+                date: new Date().toLocaleDateString('de-DE'),
+                createdAt: new Date().toISOString()
+            };
+            
+            database.transactions.push(transaction);
+            log(`✅ ${amount}$ eingezahlt. Neue Balance: ${database.balance}$`);
+            updateDisplay();
+            saveData();
         }
         
-        // Hauptfunktionen
-        async function testConnection() {
-            try {
-                log('Teste Firebase Verbindung...', 'info');
-                document.getElementById('status').textContent = 'Verbindung wird getestet...';
-                
-                // Test schreiben
-                const writeResult = await firebaseRequest('/test', 'PUT', {
-                    timestamp: new Date().toISOString(),
-                    message: 'Verbindungstest CC-Shop'
-                });
-                
-                log(`✅ Test geschrieben: ${JSON.stringify(writeResult)}`, 'success');
-                
-                // Test lesen
-                const readResult = await firebaseRequest('/test', 'GET');
-                log(`✅ Test gelesen: ${JSON.stringify(readResult)}`, 'success');
-                
-                // Test löschen
-                await firebaseRequest('/test', 'DELETE');
-                log('✅ Test gelöscht', 'info');
-                
-                document.getElementById('status').innerHTML = '<span style="color:green">✅ Verbunden mit Firebase!</span>';
-                
-            } catch (error) {
-                document.getElementById('status').innerHTML = `<span style="color:red">❌ Fehler: ${error.message}</span>`;
-                log(`❌ Verbindungstest fehlgeschlagen: ${error.message}`, 'error');
-                
-                // Zeige Lösung
-                if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
-                    log('⚠️ Lösung: Ändere Firebase Database Rules:', 'warning');
-                    log('1. Gehe zu Firebase Console → Realtime Database → Rules', 'warning');
-                    log('2. Ändere zu: { "rules": { ".read": true, ".write": true } }', 'warning');
-                    log('3. Klicke "PUBLISH"', 'warning');
-                }
-            }
-        }
-        
-        async function createData() {
-            try {
-                // Erstelle Balance
-                await firebaseRequest('/balance', 'PUT', {
-                    amount: 10000,
-                    currency: 'USD',
-                    lastUpdated: new Date().toISOString()
-                });
-                
-                // Erstelle Transaktionen
-                const today = new Date().toISOString().split('T')[0];
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const tomorrowStr = tomorrow.toISOString().split('T')[0];
-                
-                const transactions = [
-                    {
-                        amount: 1000,
-                        type: 'hold',
-                        status: 'pending',
-                        purchaseDate: today,
-                        releaseDate: tomorrowStr,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        amount: 500,
-                        type: 'deposit',
-                        status: 'released',
-                        purchaseDate: today,
-                        releaseDate: today,
-                        createdAt: new Date().toISOString()
-                    }
-                ];
-                
-                // Transaktionen speichern
-                for (let i = 0; i < transactions.length; i++) {
-                    await firebaseRequest(`/transactions/t${Date.now()}${i}`, 'PUT', transactions[i]);
-                }
-                
-                log('✅ Testdaten erfolgreich erstellt!', 'success');
-                alert('✅ Testdaten in Firebase gespeichert!');
-                
-            } catch (error) {
-                log(`❌ Fehler beim Erstellen: ${error.message}`, 'error');
-            }
-        }
-        
-        async function readData() {
-            try {
-                const balance = await firebaseRequest('/balance', 'GET');
-                const transactions = await firebaseRequest('/transactions', 'GET');
-                
-                log(`📊 Balance: ${balance?.amount || 0} $`, 'info');
-                log(`📊 Transaktionen: ${transactions ? Object.keys(transactions).length : 0}`, 'info');
-                
-                if (transactions) {
-                    Object.entries(transactions).forEach(([key, value]) => {
-                        log(`- ${value.amount}$ (${value.type}, ${value.status})`, 'info');
-                    });
-                }
-                
-            } catch (error) {
-                log(`❌ Fehler beim Lesen: ${error.message}`, 'error');
-            }
-        }
-        
-        async function saveTransaction() {
-            const amount = prompt('Betrag in $:');
-            if (!amount || isNaN(amount)) {
-                alert('Ungültiger Betrag!');
+        function addWithdraw(amount) {
+            if (amount > database.balance) {
+                log(`❌ Nicht genug Guthaben! Verfügbar: ${database.balance}$`);
+                alert(`❌ Nicht genug Guthaben!\nVerfügbar: ${database.balance}$`);
                 return;
             }
             
+            database.balance -= amount;
+            
+            const transaction = {
+                id: Date.now(),
+                amount: amount,
+                type: 'withdrawal',
+                status: 'released',
+                date: new Date().toLocaleDateString('de-DE'),
+                createdAt: new Date().toISOString()
+            };
+            
+            database.transactions.push(transaction);
+            log(`✅ ${amount}$ ausgezahlt. Neue Balance: ${database.balance}$`);
+            updateDisplay();
+            saveData();
+        }
+        
+        // ==================== DATEN SPEICHERN/LADEN ====================
+        function saveData() {
             try {
-                const transactionId = `trans_${Date.now()}`;
-                const today = new Date().toISOString().split('T')[0];
+                // In localStorage speichern
+                localStorage.setItem('ccshop_database', JSON.stringify(database));
+                log('💾 Daten lokal gespeichert');
                 
-                await firebaseRequest(`/transactions/${transactionId}`, 'PUT', {
-                    amount: parseInt(amount),
-                    type: 'hold',
-                    status: 'pending',
-                    purchaseDate: today,
-                    releaseDate: today,
-                    createdAt: new Date().toISOString(),
-                    description: 'Manuelle Transaktion'
-                });
-                
-                log(`✅ Transaktion ${amount}$ gespeichert (ID: ${transactionId})`, 'success');
-                alert(`✅ ${amount}$ erfolgreich gespeichert!`);
+                // Als Datei speichern (optional)
+                const dataStr = JSON.stringify(database, null, 2);
+                localStorage.setItem('ccshop_backup', dataStr);
                 
             } catch (error) {
-                log(`❌ Fehler beim Speichern: ${error.message}`, 'error');
+                log(`❌ Fehler beim Speichern: ${error.message}`);
             }
         }
         
-        // Automatisch testen
-        window.onload = testConnection;
+        function loadData() {
+            try {
+                const saved = localStorage.getItem('ccshop_database');
+                if (saved) {
+                    database = JSON.parse(saved);
+                    log(`📂 Daten geladen: ${database.transactions.length} Transaktionen`);
+                    updateDisplay();
+                } else {
+                    log('ℹ️ Keine gespeicherten Daten gefunden');
+                }
+            } catch (error) {
+                log(`❌ Fehler beim Laden: ${error.message}`);
+            }
+        }
+        
+        function exportData() {
+            const dataStr = JSON.stringify(database, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            // Download Link erstellen
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `ccshop_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            log('📤 Daten exportiert als JSON Datei');
+        }
+        
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        database = importedData;
+                        log(`📥 Daten importiert: ${database.transactions.length} Transaktionen`);
+                        updateDisplay();
+                        saveData();
+                        alert('✅ Daten erfolgreich importiert!');
+                    } catch (error) {
+                        log(`❌ Fehler beim Import: ${error.message}`);
+                        alert('❌ Ungültige JSON Datei!');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        // ==================== AUTOMATISCHE FUNKTIONEN ====================
+        function checkPendingReleases() {
+            const today = new Date().toISOString().split('T')[0];
+            let releasedCount = 0;
+            
+            database.transactions.forEach(trans => {
+                if (trans.status === 'pending' && trans.releaseDate && trans.releaseDate <= today) {
+                    trans.status = 'released';
+                    database.balance += trans.amount;
+                    releasedCount++;
+                    log(`🎉 ${trans.amount}$ freigegeben!`);
+                }
+            });
+            
+            if (releasedCount > 0) {
+                log(`✅ ${releasedCount} Beträge automatisch freigegeben`);
+                updateDisplay();
+                saveData();
+            }
+        }
+        
+        // ==================== INITIALISIERUNG ====================
+        function init() {
+            log('🚀 CC-Shop Finanzsystem gestartet');
+            loadData();
+            checkPendingReleases();
+            updateDisplay();
+            
+            // Alle 5 Minuten auf Freigaben prüfen
+            setInterval(checkPendingReleases, 5 * 60 * 1000);
+            
+            // Automatisch alle 30 Sekunden speichern
+            setInterval(saveData, 30 * 1000);
+            
+            log('✅ System bereit!');
+        }
+        
+        // Starte das System
+        init();
+        
+        // Für manuelle Eingaben in Console
+        window.db = database;
+        window.addTransaction = (amount, type) => {
+            if (type === 'hold') addHold(amount);
+            else if (type === 'deposit') addDeposit(amount);
+            else if (type === 'withdraw') addWithdraw(amount);
+        };
     </script>
 </body>
 </html>

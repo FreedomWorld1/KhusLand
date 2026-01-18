@@ -3,469 +3,290 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KhusLand Panel</title>
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    <title>CC-Shop Finanzsystem</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
         
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            min-height: 100vh;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+            min-height: 100vh; 
             color: #e2e8f0;
+            padding: 20px;
         }
         
-        /* Login Styles */
-        .login-container {
-            background: rgba(30, 41, 59, 0.95);
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-        
-        .logo {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 2rem;
-            box-shadow: 0 8px 20px rgba(66, 153, 225, 0.4);
-        }
-        
-        h1 {
-            color: #90cdf4;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-        
-        .login-container p {
-            color: #a0aec0;
-            margin-bottom: 1rem;
-        }
-        
-        .discord-login-btn {
-            background: #5865F2;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-top: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .discord-login-btn:hover {
-            background: #4752c4;
-            transform: translateY(-2px);
-        }
-        
-        .loading {
-            display: none;
-            margin-top: 1.5rem;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #4299e1;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
+        .container {
+            max-width: 1400px;
             margin: 0 auto;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error-message {
-            background: rgba(254, 178, 178, 0.1);
-            color: #fc8181;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 1.5rem 0;
-            display: none;
-            border-left: 4px solid #f56565;
-        }
-        
-        /* Main Content Styles */
         .header {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 1.2rem 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            border-bottom: 2px solid #4299e1;
-        }
-        
-        .logo-small {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-        }
-        
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .logo-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(66, 153, 225, 0.5);
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: #cbd5e0;
-        }
-        
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .logout-btn {
-            background: rgba(66, 153, 225, 0.15);
-            color: #90cdf4;
-            border: 1px solid #4299e1;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .logout-btn:hover {
-            background: rgba(66, 153, 225, 0.25);
-        }
-        
-        .main-container {
-            max-width: 1300px;
-            margin: 2.5rem auto;
-            padding: 0 2.5rem;
-        }
-        
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
             background: rgba(26, 32, 44, 0.9);
-            padding: 1.8rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
             border: 1px solid rgba(101, 119, 149, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
         
-        .grid-container {
+        .hold-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-top: 2.5rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
         
-        .card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 16px;
-            padding: 2.2rem;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            border-color: #4299e1;
-            background: rgba(30, 38, 54, 0.9);
-        }
-        
-        .card.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .card.disabled:hover {
-            transform: none;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            border-color: rgba(101, 119, 149, 0.3);
-            background: rgba(26, 32, 44, 0.8);
-        }
-        
-        .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-        
-        .card h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1.2rem;
-            color: #90cdf4;
-        }
-        
-        .card p {
-            color: #cbd5e0;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-        
-        .status {
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        
-        .status-online {
-            background: #48bb78;
-            box-shadow: 0 0 8px rgba(72, 187, 120, 0.5);
-        }
-        
-        .access-status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 0.8rem;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-        
-        .access-allowed {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-        }
-        
-        .access-denied {
-            background: rgba(245, 101, 101, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2.5rem;
-            margin-top: 4rem;
-            border-top: 1px solid rgba(101, 119, 149, 0.3);
-            color: #a0aec0;
-            background: rgba(26, 32, 44, 0.8);
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        /* System-spezifische Styles */
-        .system-card {
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
+        .hold-balance-card {
+            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
             padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .available-balance-card {
+            background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .balance-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .balance-amount {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .balance-detail {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .pending-releases {
+            background: rgba(26, 32, 44, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
             margin-bottom: 2rem;
             border: 1px solid rgba(101, 119, 149, 0.3);
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
         
-        .system-form {
+        .pending-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .pending-item.released {
+            border-left-color: #10b981;
+        }
+        
+        .pending-item .amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f59e0b;
+        }
+        
+        .pending-item.released .amount {
+            color: #10b981;
+        }
+        
+        .transaction-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .transaction-btn {
+            padding: 1.2rem 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+        
+        .hold-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+        
+        .deposit-btn {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+        
+        .withdraw-btn {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: white;
+        }
+        
+        .transaction-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: rgba(26, 32, 44, 0.95);
+            padding: 2.5rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(101, 119, 149, 0.3);
+        }
+        
+        .modal-content h3 {
+            color: #90cdf4;
             margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
         }
         
         .form-group {
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 1.5rem;
         }
         
         .form-group label {
-            font-weight: 600;
-            margin-bottom: 0.8rem;
+            display: block;
+            margin-bottom: 0.5rem;
             color: #90cdf4;
-            font-size: 0.9rem;
+            font-weight: 500;
         }
         
-        .form-group input,
-        .form-group select {
+        .form-group input {
+            width: 100%;
             padding: 0.9rem;
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(101, 119, 149, 0.3);
             border-radius: 8px;
             font-size: 1rem;
             color: #e2e8f0;
-            transition: all 0.3s;
         }
         
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
-        }
-        
-        .price-display {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .price-amount {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #48bb78;
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
         }
         
         .btn-primary {
             background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
             border: none;
-            padding: 1rem 2rem;
+            padding: 0.9rem 1.8rem;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
             font-weight: 600;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
-        }
-        
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .table th,
-        .table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .table th {
-            background: rgba(26, 32, 44, 0.8);
-            font-weight: 600;
+        .btn-secondary {
+            background: rgba(66, 153, 225, 0.15);
             color: #90cdf4;
+            border: 1px solid #4299e1;
+            padding: 0.9rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
         }
         
-        .table td {
-            color: #cbd5e0;
+        .chart-container {
+            height: 300px;
+            margin-top: 1.5rem;
         }
         
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
+        .hold-distribution {
             background: rgba(26, 32, 44, 0.8);
             border-radius: 12px;
-            padding: 0.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 1.8rem;
+            margin-top: 2rem;
             border: 1px solid rgba(101, 119, 149, 0.3);
         }
         
-        .nav-tab {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            text-align: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .summary-card {
+            background: rgba(30, 41, 59, 0.4);
+            padding: 1.2rem;
             border-radius: 8px;
-            transition: all 0.3s;
-            color: #a0aec0;
+            text-align: center;
+        }
+        
+        .summary-label {
             font-size: 0.9rem;
+            color: #a0aec0;
+            margin-bottom: 0.5rem;
         }
         
-        .nav-tab.active {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        .summary-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #90cdf4;
         }
         
-        .tab-content {
-            display: none;
+        .hold-value {
+            color: #8b5cf6 !important;
         }
         
-        .tab-content.active {
-            display: block;
+        .positive-amount {
+            color: #48bb78 !important;
         }
         
-        /* Notification System */
         .notification {
             position: fixed;
             top: 20px;
@@ -475,7 +296,7 @@
             color: white;
             font-weight: 500;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            z-index: 1000;
+            z-index: 1001;
             transform: translateX(150%);
             transition: transform 0.3s ease;
         }
@@ -492,577 +313,195 @@
             background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
         }
         
-        .notification.info {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-        }
-        
-        /* Access Badge */
-        .access-badge {
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            border-radius: 12px;
-            margin-left: 8px;
-            font-weight: 600;
-        }
-        
-        .access-permanent {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-        
-        .access-temporary {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-            color: white;
-        }
-        
-        /* Discount System */
-        .discount-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .discount-btn {
-            padding: 0.8rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #cbd5e0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-        
-        .discount-btn.active {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-            border-color: #4299e1;
-            box-shadow: 0 2px 10px rgba(66, 153, 225, 0.3);
-        }
-        
-        .discount-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        .price-breakdown {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-        
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid rgba(101, 119, 149, 0.1);
-        }
-        
-        .price-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .price-label {
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-        
-        .price-value {
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-        
-        .seller-share {
-            color: #48bb78;
-        }
-        
-        .buyer-share {
-            color: #4299e1;
-        }
-        
-        /* Access Restricted Styles */
-        .access-restricted {
+        .empty-state {
             text-align: center;
             padding: 3rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-        }
-
-        .access-restricted h2 {
-            color: #fc8181;
-            margin-bottom: 1rem;
-        }
-
-        .access-restricted p {
             color: #a0aec0;
-            margin-bottom: 1.5rem;
         }
-
-        /* Logo Upload Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: rgba(26, 32, 44, 0.95);
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-
-        .modal-content h3 {
-            color: #90cdf4;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
+        
+        .debug-info {
+            background: rgba(245, 101, 101, 0.1);
+            padding: 1rem;
             border-radius: 8px;
-            color: #e2e8e0;
-            font-size: 1rem;
-        }
-
-        .file-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 1.5rem;
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(101, 119, 149, 0.3);
-            border-radius: 8px;
-            color: #e2e8e0;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
-        /* Discount Settings Styles */
-        .discount-settings {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: rgba(26, 32, 44, 0.8);
-            border-radius: 12px;
-            border: 1px solid rgba(101, 119, 149, 0.3);
-        }
-
-        .discount-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .discount-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .discount-list {
             margin-top: 1rem;
-        }
-
-        .discount-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem;
-            background: rgba(30, 41, 59, 0.6);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            border: 1px solid rgba(101, 119, 149, 0.2);
-        }
-
-        .discount-item-info {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .discount-value {
-            font-weight: bold;
-            color: #4299e1;
-        }
-
-        .discount-label {
-            color: #cbd5e0;
-        }
-
-        .delete-discount {
-            background: rgba(245, 101, 101, 0.2);
+            border-left: 4px solid #f56565;
             color: #fc8181;
-            border: 1px solid rgba(245, 101, 101, 0.3);
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
-
-        .delete-discount:hover {
-            background: rgba(245, 101, 101, 0.3);
-        }
-
-        .discount-settings-content {
-            display: none;
-        }
-
-        .discount-settings-content.active {
-            display: block;
+        
+        .hold-info {
+            background: rgba(139, 92, 246, 0.1);
+            border-left: 4px solid #8b5cf6;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
         }
     </style>
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="loginPage" class="login-container">
-        <div class="logo">KL</div>
-        <h1>KhusLand Panel Login</h1>
-        <p>Bitte mit Discord anmelden um fortzufahren</p>
-        
-        <div class="error-message" id="errorMessage"></div>
-        
-        <button id="discordLogin" class="discord-login-btn">
-            <i class="fab fa-discord"></i> Mit Discord anmelden
-        </button>
-        
-        <div class="loading" id="loginLoading">
-            <div class="spinner"></div>
-            <p style="margin-top: 1rem;">Anmeldung läuft...</p>
-        </div>
-    </div>
-
-    <!-- Main Content (Hidden until login) -->
-    <div id="mainContent" class="hidden">
+    <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="logo-small">
-                <div class="logo-icon" id="headerLogo">A</div>
-                <h2>KhusLand Management Panel</h2>
+            <h1 style="color: #90cdf4; font-size: 2rem;">
+                <i class="fas fa-chart-line"></i> CC-Shop Finanzsystem
+            </h1>
+            <div class="debug-info" id="debugInfo">
+                System startet...
             </div>
-            <div class="user-info">
-                <span id="userWelcome">Willkommen, Benutzer</span>
-                <span id="accessBadge" class="access-badge access-permanent hidden">PREMIUM</span>
-                
-                <!-- User Avatar -->
-                <div class="user-avatar" id="userAvatar">
-                    <i class="fas fa-user"></i>
+        </div>
+        
+        <!-- Hold Information -->
+        <div class="hold-info">
+            <i class="fas fa-info-circle" style="color: #8b5cf6;"></i>
+            <strong style="margin-left: 8px;">Deine Einnahmen werden erst 2 Tage nach dem Kauf freigegeben.</strong> 
+        </div>
+        
+        <!-- Balance Cards -->
+        <div class="hold-section">
+            <div class="hold-balance-card">
+                <div class="balance-label">Zurückgehaltene Beträge</div>
+                <div class="balance-amount hold-value" id="holdBalance">0 $</div>
+                <div class="balance-detail">Werden zu den jeweiligen Freigabedaten verfügbar</div>
+            </div>
+            
+            <div class="available-balance-card">
+                <div class="balance-label">Verfügbares Guthaben</div>
+                <div class="balance-amount" id="availableBalance">0 $</div>
+                <div class="balance-detail">Sofort verfügbar für Auszahlungen</div>
+            </div>
+        </div>
+        
+        <!-- Transaction Buttons -->
+        <div class="transaction-buttons">
+            <button class="transaction-btn hold-btn" onclick="openHoldModal()">
+                <i class="fas fa-pause-circle"></i>
+                <span>Betrag zurückhalten</span>
+            </button>
+            <button class="transaction-btn deposit-btn" onclick="openDepositModal()">
+                <i class="fas fa-plus-circle"></i>
+                <span>Direkt einzahlen</span>
+            </button>
+            <button class="transaction-btn withdraw-btn" onclick="openWithdrawModal()">
+                <i class="fas fa-minus-circle"></i>
+                <span>Auszahlen</span>
+            </button>
+        </div>
+        
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-label">Heute fällig</div>
+                <div class="summary-value positive-amount" id="dueToday">0 $</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Nächste 7 Tage</div>
+                <div class="summary-value hold-value" id="dueNextWeek">0 $</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Anstehende Freigaben</div>
+                <div class="summary-value" id="pendingCount">0</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Tagesbilanz</div>
+                <div class="summary-value" id="dailyBalance">0 $</div>
+            </div>
+        </div>
+        
+        <!-- Pending Releases -->
+        <div class="pending-releases">
+            <h3 style="color: #90cdf4; margin-bottom: 1rem;">
+                <i class="fas fa-clock"></i> Anstehende Freigaben
+            </h3>
+            <div id="pendingReleases">
+                <div class="empty-state">
+                    <i class="fas fa-clock" style="font-size: 3rem; margin-bottom: 1rem; color: #8b5cf6;"></i>
+                    <p>Keine zurückgehaltenen Beträge vorhanden</p>
                 </div>
-                
-                <button id="logoutBtn" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+        </div>
+        
+        <!-- Hold Distribution Chart -->
+        <div class="hold-distribution">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="color: #90cdf4;">
+                    <i class="fas fa-chart-bar"></i> Freigabe-Verteilung
+                </h3>
+                <button class="btn-secondary" onclick="refreshChart()">
+                    <i class="fas fa-sync"></i> Aktualisieren
                 </button>
             </div>
-        </div>
-
-        <!-- Logo Upload Modal -->
-        <div id="logoUploadModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Logo ändern</h3>
-                <input type="password" id="adminPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <input type="file" id="logoFile" class="file-input" accept="image/*">
-                <div class="modal-buttons">
-                    <button id="cancelLogoUpload" class="logout-btn">Abbrechen</button>
-                    <button id="saveLogo" class="btn-primary">Logo speichern</button>
-                </div>
+            <div class="chart-container">
+                <canvas id="holdDistributionChart"></canvas>
             </div>
-        </div>
-
-        <!-- Password Modal für Logo -->
-        <div id="passwordModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Admin Passwort erforderlich</h3>
-                <input type="password" id="logoPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <div class="modal-buttons">
-                    <button id="cancelPassword" class="logout-btn">Abbrechen</button>
-                    <button id="confirmPassword" class="btn-primary">Bestätigen</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Password Modal für Discount Settings -->
-        <div id="discountPasswordModal" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Admin Passwort für Rabatt-Einstellungen</h3>
-                <input type="password" id="discountPassword" class="password-input" placeholder="Admin Passwort eingeben">
-                <div class="modal-buttons">
-                    <button id="cancelDiscountPassword" class="logout-btn">Abbrechen</button>
-                    <button id="confirmDiscountPassword" class="btn-primary">Bestätigen</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-container">
-            <!-- Access Restricted Message (Initially Hidden) -->
-            <div id="accessRestricted" class="access-restricted hidden">
-                <h2><i class="fas fa-ban"></i> Zugriff verweigert</h2>
-                <p>Dein Account hat keinen Zugriff auf diese Seite.</p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">Seite: <span id="restrictedPageName"></span></p>
-                <p style="font-size: 0.9rem; color: #cbd5e0;">Benutzer: <span id="restrictedUserName"></span></p>
-                <button id="restrictedLogoutBtn" class="logout-btn" style="margin-top: 1rem;">
-                    <i class="fas fa-sign-out-alt"></i> Abmelden
-                </button>
-            </div>
-
-            <!-- Authorized Content (Initially Hidden) -->
-            <div id="authorizedContent" class="hidden">
-                <div class="page-header">
-                    <h1 style="color: #90cdf4; font-size: 2rem;">KhusLand</h1>
-                    <div class="status-indicators">
-                        <span style="color: #48bb78;">
-                            <i class="fas fa-circle"></i> Alle Systeme Online
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Navigation Tabs -->
-                <div class="nav-tabs">
-                    <button id="dashboardTab" class="nav-tab active">
-                        <i class="fas fa-tachometer-alt"></i> Dashboard
-                    </button>
-                    <button id="weedTab" class="nav-tab">
-                        <i class="fas fa-cannabis"></i> Weed System
-                    </button>
-                </div>
-
-                <!-- Dashboard Tab -->
-                <div id="dashboard" class="tab-content active">
-                    <!-- System Cards -->
-                    <div class="grid-container">
-                        <div class="card" data-page="index.html">
-                            <div class="card-icon">🌿</div>
-                            <h3>Weed Ankauf</h3>
-                            <p>Koordinieren Sie Wareneingang und Ankaufkonditionen.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite2.html">
-                            <div class="card-icon">💊</div>
-                            <h3>Kokain Ankauf</h3>
-                            <p>Kontrollieren Sie Kokain-Operationen. Tracken Sie Lieferungen und Qualität mit erweiterten Sicherheitsfunktionen.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite3.html">
-                            <div class="card-icon">♻️</div>
-                            <h3>Materialrecycler - Produkte</h3>
-                            <p>Verwalten Sie Recycling-Prozesse und produzierte Materialien. Optimieren Sie Ressourcennutzung und Effizienz.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite4.html">
-                            <div class="card-icon">🔧</div>
-                            <h3>Werkbank Manager</h3>
-                            <p>Überwachen Sie Werkstattaktivitäten und Produktionsaufträge. Verwalten Sie Materialbestände und Arbeitsprozesse.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite5.html">
-                            <div class="card-icon">🛣️</div>
-                            <h3>Drogenrouten</h3>
-                            <p>Planen und überwachen Sie sichere Transportrouten für Lieferungen. Optimieren Sie Logistik und Sicherheit.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-
-                        <div class="card" data-page="seite6.html">
-                            <div class="card-icon">🏞️</div>
-                            <h3>KhusLand Management</h3>
-                            <p>Verwalten Sie KhusLand Gebiete und Operationen. Überwachen Sie Sicherheit und Geschäftsaktivitäten.</p>
-                            <div class="status">
-                                <span class="status-indicator status-online"></span>
-                                System online
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Weed System Tab -->
-                <div id="weed" class="tab-content">
-                    <!-- Discount Settings -->
-                    <div class="discount-settings">
-                        <div class="discount-header">
-                            <h3 style="color: #90cdf4; font-size: 1.5rem;">
-                                <i class="fas fa-percentage"></i> Rabatt Einstellungen
-                            </h3>
-                            <button id="openDiscountSettings" class="btn-primary">
-                                <i class="fas fa-cog"></i> Einstellungen öffnen
-                            </button>
-                        </div>
-                        
-                        <div class="discount-settings-content" id="discountSettingsContent">
-                            <div class="discount-form">
-                                <div class="form-group">
-                                    <label for="discountValue">Rabatt Wert (%)</label>
-                                    <input type="number" id="discountValue" min="0" max="100" placeholder="0-100" value="0">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="discountName">Rabatt Name</label>
-                                    <input type="text" id="discountName" placeholder="Name des Rabatts" value="Kein Rabatt">
-                                </div>
-                                
-                                <button id="addDiscount" class="btn-primary" style="align-self: end;">
-                                    <i class="fas fa-plus"></i> Hinzufügen
-                                </button>
-                            </div>
-                            
-                            <div class="discount-list" id="discountList">
-                                <!-- Discount items will be generated here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="system-card">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-cannabis"></i> Weed Ankauf Management
-                        </h3>
-                        
-                        <!-- Discount Selection -->
-                        <div style="margin-bottom: 1.5rem;">
-                            <label style="color: #90cdf4; font-weight: 600; margin-bottom: 0.8rem; display: block;">Rabatt auswählen</label>
-                            <div class="discount-grid" id="discountButtons">
-                                <!-- Discount buttons will be generated here -->
-                            </div>
-                        </div>
-                        
-                        <div class="system-form">
-                            <div class="form-group">
-                                <label for="weedBuyer">Käufer Name</label>
-                                <input type="text" id="weedBuyer" required placeholder="Name des Käufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="weedSeller">Verkäufer Name</label>
-                                <input type="text" id="weedSeller" required placeholder="Name des Verkäufers">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="weedQuantity">Menge (Bricks)</label>
-                                <input type="number" id="weedQuantity" required placeholder="Menge in Bricks" min="1" value="1">
-                            </div>
-                        </div>
-                        
-                        <!-- Price Breakdown -->
-                        <div class="price-breakdown">
-                            <div class="price-row">
-                                <span class="price-label">Gesamtpreis (2500€ pro Brick):</span>
-                                <span class="price-value" id="totalPrice">0 €</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Rabatt:</span>
-                                <span class="price-value" id="discountAmount">0% (0 €)</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Verkäufer Anteil:</span>
-                                <span class="price-value seller-share" id="sellerShare">0 €</span>
-                            </div>
-                            <div class="price-row">
-                                <span class="price-label">Käufer Anteil:</span>
-                                <span class="price-value buyer-share" id="buyerShare">0 €</span>
-                            </div>
-                        </div>
-                        
-                        <button type="button" id="saveWeedBtn" class="btn-primary">
-                            <i class="fas fa-save"></i> Ankauf speichern
-                        </button>
-                    </div>
-
-                    <!-- Weed Transactions Table -->
-                    <div class="system-card">
-                        <h3 style="color: #90cdf4; margin-bottom: 1.5rem; font-size: 1.5rem;">
-                            <i class="fas fa-history"></i> Letzte Weed Ankäufe
-                        </h3>
-                        
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Datum</th>
-                                    <th>Käufer</th>
-                                    <th>Verkäufer</th>
-                                    <th>Menge</th>
-                                    <th>Rabatt</th>
-                                    <th>Gesamt</th>
-                                    <th>Verkäufer</th>
-                                    <th>Käufer</th>
-                                </tr>
-                            </thead>
-                            <tbody id="weedTransactions">
-                                <tr>
-                                    <td colspan="8" style="text-align: center; color: #a0aec0;">
-                                        Keine Transaktionen vorhanden
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>KhusLand Management System © 2025 | Alle Rechte vorbehalten | Vertrauliche Informationen</p>
         </div>
     </div>
+    
+    <!-- Hold Modal -->
+    <div id="holdModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-pause-circle"></i> Betrag zurückhalten</h3>
+            <div class="form-group">
+                <label for="holdAmount">Betrag ($)</label>
+                <input type="number" id="holdAmount" min="0" step="1" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label for="holdDate">Kaufdatum</label>
+                <input type="date" id="holdDate">
+            </div>
+            <div class="form-group">
+                <label for="releaseDate">Freigabedatum (+2 Tage)</label>
+                <input type="date" id="releaseDate" readonly style="background: rgba(30, 41, 59, 0.8);">
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-secondary" onclick="closeHoldModal()">Abbrechen</button>
+                <button type="button" class="btn-primary" onclick="addHoldTransaction()">
+                    <i class="fas fa-check"></i> Zurückhalten
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Deposit Modal -->
+    <div id="depositModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-plus-circle"></i> Direkte Einzahlung</h3>
+            <div class="form-group">
+                <label for="depositAmount">Betrag ($)</label>
+                <input type="number" id="depositAmount" min="0" step="1" placeholder="0">
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-secondary" onclick="closeDepositModal()">Abbrechen</button>
+                <button type="button" class="btn-primary" onclick="addDirectDeposit()">
+                    <i class="fas fa-check"></i> Einzahlen
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Withdrawal Modal -->
+    <div id="withdrawModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-minus-circle"></i> Auszahlung</h3>
+            <div class="form-group">
+                <label for="withdrawAmount">Betrag ($)</label>
+                <input type="number" id="withdrawAmount" min="0" step="1" placeholder="0">
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-secondary" onclick="closeWithdrawModal()">Abbrechen</button>
+                <button type="button" class="btn-primary" onclick="processWithdrawal()">
+                    <i class="fas fa-check"></i> Auszahlen
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
 
-    <!-- Notification Container -->
-    <div id="notification" class="notification hidden"></div>
-
+    <!-- Firebase Realtime Database -->
     <script type="module">
-        // Discord OAuth Konfiguration
-        const DISCORD_CLIENT_ID = '1432942180770644079';
-        const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        const BACKEND_URL = 'https://discord-oauth.ehrlichcolin2.workers.dev';
-
-        // Firebase Import und Konfiguration
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+        import { getDatabase, ref, push, set, onValue, update, get, child } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
         // Firebase Konfiguration
         const firebaseConfig = {
@@ -1076,1015 +515,529 @@
             measurementId: "G-JSCWR4207G"
         };
 
+        // Firebase initialisieren
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
         const db = getDatabase(app);
-        const storage = getStorage(app);
-        const entriesRef = ref(db,'weed_entries');
-        const discountsRef = ref(db,'discount_settings');
-        const logoSettingsRef = ref(db,'logo_settings');
-        const logoImageRef = storageRef(storage, 'global_logo.png');
-
-        // Seitenspezifische Konfiguration
-        const PAGE_ACCESS_CONFIG = {
-            'seite7.html': 'dashboard',
-            'seite5.html': 'route', 
-            'seite4.html': 'werkbank',
-            'seite3.html': 'materialrecycler',
-            'seite2.html': 'kokain',
-            'index.html': 'weed',
-            'seite6.html': 'management'
-        };
-
-        // System Variablen
-        const ADMIN_PASSWORD = '1101';
-        let currentDiscount = 0;
-        let entries = [];
-        let availableDiscounts = [
-            { value: 0, label: 'Kein Rabatt' },
-            { value: 10, label: 'Mitarbeiter' },
-            { value: 15, label: 'Einkäufer' },
-            { value: 20, label: 'Normal' }
-        ];
-        let logoText = 'A';
-        let currentUser = null;
-        let userAccessInfo = null;
-        let discountSettingsUnlocked = false;
-
-        // DOM Elemente
-        const loginPage = document.getElementById('loginPage');
-        const mainContent = document.getElementById('mainContent');
-        const authorizedContent = document.getElementById('authorizedContent');
-        const accessRestricted = document.getElementById('accessRestricted');
-        const errorMessage = document.getElementById('errorMessage');
-        const userWelcome = document.getElementById('userWelcome');
-        const notification = document.getElementById('notification');
-        const accessBadge = document.getElementById('accessBadge');
-        const headerLogo = document.getElementById('headerLogo');
-        const restrictedUserName = document.getElementById('restrictedUserName');
-        const restrictedPageName = document.getElementById('restrictedPageName');
-        const discordLoginBtn = document.getElementById('discordLogin');
-        const loginLoading = document.getElementById('loginLoading');
         
-        // Logo Upload Modal Elemente
-        const logoUploadModal = document.getElementById('logoUploadModal');
-        const passwordModal = document.getElementById('passwordModal');
-        const discountPasswordModal = document.getElementById('discountPasswordModal');
-        const adminPassword = document.getElementById('adminPassword');
-        const logoPassword = document.getElementById('logoPassword');
-        const discountPassword = document.getElementById('discountPassword');
-        const logoFile = document.getElementById('logoFile');
-        const cancelLogoUpload = document.getElementById('cancelLogoUpload');
-        const cancelPassword = document.getElementById('cancelPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const cancelDiscountPassword = document.getElementById('cancelDiscountPassword');
-        const confirmDiscountPassword = document.getElementById('confirmDiscountPassword');
-        const saveLogo = document.getElementById('saveLogo');
-        
-        // Discount Settings Elemente
-        const openDiscountSettings = document.getElementById('openDiscountSettings');
-        const discountSettingsContent = document.getElementById('discountSettingsContent');
-        const discountValue = document.getElementById('discountValue');
-        const discountName = document.getElementById('discountName');
-        const addDiscount = document.getElementById('addDiscount');
-        const discountList = document.getElementById('discountList');
-        
-        // Buttons
-        const logoutBtn = document.getElementById('logoutBtn');
-        const restrictedLogoutBtn = document.getElementById('restrictedLogoutBtn');
-        const dashboardTab = document.getElementById('dashboardTab');
-        const weedTab = document.getElementById('weedTab');
-        const saveWeedBtn = document.getElementById('saveWeedBtn');
-        const weedQuantity = document.getElementById('weedQuantity');
+        // Referenzen für Finanzsystem
+        const transactionsRef = ref(db, 'finanz_transactions');
+        const balanceRef = ref(db, 'finanz_balance');
 
-        // Logo Upload Funktionen
-        function openPasswordModal() {
-            passwordModal.classList.add('active');
-        }
+        // Lokale Variablen
+        let holdTransactions = [];
+        let availableBalance = 0;
+        let holdDistributionChart = null;
 
-        function closePasswordModal() {
-            passwordModal.classList.remove('active');
-            logoPassword.value = '';
-        }
-
-        function openLogoUploadModal() {
-            logoUploadModal.classList.add('active');
-        }
-
-        function closeLogoUploadModal() {
-            logoUploadModal.classList.remove('active');
-            adminPassword.value = '';
-            logoFile.value = '';
-        }
-
-        function verifyLogoPassword() {
-            const password = logoPassword.value;
-            if (password === ADMIN_PASSWORD) {
-                closePasswordModal();
-                openLogoUploadModal();
-            } else {
-                showNotification('Falsches Passwort!', 'error');
-            }
-        }
-
-        // Discount Settings Funktionen
-        function openDiscountPasswordModal() {
-            discountPasswordModal.classList.add('active');
-        }
-
-        function closeDiscountPasswordModal() {
-            discountPasswordModal.classList.remove('active');
-            discountPassword.value = '';
-        }
-
-        function verifyDiscountPassword() {
-            const password = discountPassword.value;
-            if (password === ADMIN_PASSWORD) {
-                discountSettingsUnlocked = true;
-                discountSettingsContent.classList.add('active');
-                openDiscountSettings.classList.add('hidden');
-                closeDiscountPasswordModal();
-                loadDiscountSettings(); // Rabatte neu laden
-                showNotification('Rabatt-Einstellungen freigeschaltet', 'success');
-            } else {
-                showNotification('Falsches Passwort!', 'error');
-            }
-        }
-
-        function lockDiscountSettings() {
-            discountSettingsUnlocked = false;
-            discountSettingsContent.classList.remove('active');
-            openDiscountSettings.classList.remove('hidden');
-        }
-
-        async function handleLogoUpload() {
-            const password = adminPassword.value;
-            const file = logoFile.files[0];
-
-            if (password !== ADMIN_PASSWORD) {
-                showNotification('Falsches Admin Passwort!', 'error');
-                return;
-            }
-
-            if (!file) {
-                showNotification('Bitte wählen Sie ein Bild aus!', 'error');
-                return;
-            }
-
-            if (!file.type.startsWith('image/')) {
-                showNotification('Bitte wählen Sie eine Bilddatei aus!', 'error');
-                return;
-            }
-
-            try {
-                saveLogo.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Hochladen...';
-                saveLogo.disabled = true;
-
-                // Bild in Firebase Storage hochladen
-                await uploadBytes(logoImageRef, file);
-                
-                // Download URL holen
-                const downloadURL = await getDownloadURL(logoImageRef);
-                
-                // Logo in der Datenbank speichern
-                await set(logoSettingsRef, {
-                    logoUrl: downloadURL,
-                    uploadedAt: new Date().toISOString(),
-                    uploadedBy: currentUser ? currentUser.username : 'Unknown'
-                });
-
-                // Logo sofort anwenden
-                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
-                headerLogo.innerHTML = '';
-
-                showNotification('Logo erfolgreich hochgeladen!', 'success');
-                closeLogoUploadModal();
-                
-            } catch (error) {
-                console.error('Fehler beim Hochladen des Logos:', error);
-                showNotification('Fehler beim Hochladen des Logos!', 'error');
-            } finally {
-                saveLogo.innerHTML = 'Logo speichern';
-                saveLogo.disabled = false;
-            }
-        }
-
-        // Discount Settings Funktionen
-        function loadDiscountSettings() {
-            onValue(discountsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // Konvertiere Firebase-Daten in Array
-                    availableDiscounts = [];
-                    if (Array.isArray(data)) {
-                        availableDiscounts = data;
-                    } else {
-                        // Falls es ein Objekt ist, in Array umwandeln
-                        availableDiscounts = Object.values(data);
-                    }
-                    
-                    renderDiscountButtons();
-                    if (discountSettingsUnlocked) {
-                        renderDiscountList();
-                    }
-                } else {
-                    // Standard-Discounts setzen
-                    set(discountsRef, availableDiscounts);
-                }
-            });
-        }
-
-        function renderDiscountList() {
-            discountList.innerHTML = '';
+        // DOM initialisieren
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 System startet...');
+            updateDebugInfo('System startet...');
             
-            if (availableDiscounts.length === 0) {
-                discountList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Keine Rabatte vorhanden</p>';
-                return;
-            }
+            // Heutiges Datum setzen
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('holdDate').value = today;
+            updateReleaseDate();
             
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const discountItem = document.createElement('div');
-                discountItem.className = 'discount-item';
-                discountItem.innerHTML = `
-                    <div class="discount-item-info">
-                        <span class="discount-value">${discount.value}%</span>
-                        <span class="discount-label">${discount.label}</span>
-                    </div>
-                    <button class="delete-discount" data-index="${index}">
-                        <i class="fas fa-trash"></i> Löschen
-                    </button>
-                `;
-                discountList.appendChild(discountItem);
-            });
-
-            // Event Listener für Lösch-Buttons
-            document.querySelectorAll('.delete-discount').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    deleteDiscount(index);
-                });
-            });
-        }
-
-        function addNewDiscount() {
-            if (!discountSettingsUnlocked) {
-                showNotification('Bitte zuerst Passwort eingeben!', 'error');
-                return;
-            }
-
-            const value = parseInt(discountValue.value);
-            const name = discountName.value.trim();
-
-            if (isNaN(value) || value < 0 || value > 100) {
-                showNotification('Bitte geben Sie einen gültigen Rabattwert zwischen 0 und 100 ein!', 'error');
-                return;
-            }
-
-            if (!name) {
-                showNotification('Bitte geben Sie einen Namen für den Rabatt ein!', 'error');
-                return;
-            }
-
-            const newDiscount = {
-                value: value,
-                label: name
-            };
-
-            // Prüfen ob Rabatt mit gleichem Wert UND Namen bereits existiert
-            const exists = availableDiscounts.some(d => d.value === value && d.label === name);
-            if (exists) {
-                showNotification('Ein Rabatt mit diesem Wert und Namen existiert bereits!', 'error');
-                return;
-            }
-
-            availableDiscounts.push(newDiscount);
-            saveDiscountsToFirebase();
+            // Chart initialisieren
+            initializeHoldChart();
             
-            discountValue.value = '0';
-            discountName.value = 'Kein Rabatt';
-
-            showNotification(`Rabatt ${value}% (${name}) hinzugefügt!`, 'success');
-        }
-
-        function deleteDiscount(index) {
-            if (!discountSettingsUnlocked) {
-                showNotification('Bitte zuerst Passwort eingeben!', 'error');
-                return;
-            }
-
-            if (index >= 0 && index < availableDiscounts.length) {
-                const discount = availableDiscounts[index];
-                
-                // Verhindere das Löschen des Standard-Rabatts (0%)
-                if (discount.value === 0 && discount.label === 'Kein Rabatt') {
-                    showNotification('Der Standard-Rabatt (0%) kann nicht gelöscht werden!', 'error');
-                    return;
-                }
-                
-                availableDiscounts.splice(index, 1);
-                saveDiscountsToFirebase();
-                showNotification(`Rabatt ${discount.value}% (${discount.label}) gelöscht!`, 'success');
-            }
-        }
-
-        function saveDiscountsToFirebase() {
-            set(discountsRef, availableDiscounts)
-                .then(() => {
-                    renderDiscountButtons();
-                    if (discountSettingsUnlocked) {
-                        renderDiscountList();
-                    }
-                })
-                .catch(error => {
-                    console.error('Fehler beim Speichern der Rabatte:', error);
-                    showNotification('Fehler beim Speichern der Rabatte!', 'error');
-                });
-        }
-
-        function renderDiscountButtons() {
-            const container = document.getElementById('discountButtons');
-            container.innerHTML = '';
+            // Event Listener für Datumsänderung
+            document.getElementById('holdDate').addEventListener('change', updateReleaseDate);
             
-            availableDiscounts.sort((a, b) => a.value - b.value).forEach((discount, index) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = `discount-btn ${discount.value === currentDiscount ? 'active' : ''}`;
-                button.setAttribute('data-discount', discount.value);
-                button.setAttribute('data-label', discount.label);
-                button.innerHTML = `
-                    <div style="font-weight: bold; font-size: 1.1rem;">${discount.value}%</div>
-                    <div style="font-size: 0.8rem; opacity: 0.8;">${discount.label}</div>
-                `;
-                button.addEventListener('click', () => {
-                    document.querySelectorAll('.discount-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    
-                    button.classList.add('active');
-                    currentDiscount = discount.value;
-                    
-                    updateWeedPrices();
-                    
-                    if (discount.value > 0) {
-                        showNotification(`${discount.value}% Rabatt aktiviert - ${discount.label}`, 'info', 2000);
-                    } else {
-                        showNotification('Kein Rabatt aktiviert', 'info', 2000);
-                    }
-                });
-                
-                container.appendChild(button);
-            });
-        }
-
-        // Globales Logo laden
-        async function loadGlobalLogo() {
-            try {
-                const downloadURL = await getDownloadURL(logoImageRef);
-                headerLogo.style.backgroundImage = `url('${downloadURL}')`;
-                headerLogo.innerHTML = '';
-            } catch (error) {
-                // Falls kein Logo vorhanden ist, Standard beibehalten
-                console.log('Kein globales Logo gefunden, verwende Standard');
-            }
-        }
-
-        // ZUGRIFFSPRÜFUNG MIT CLOUDFLARE WORKER
-        async function hasAccess(pageKey) {
-            if (!currentUser) return false;
+            // Firebase Daten laden
+            loadDataFromFirebase();
             
-            const token = localStorage.getItem('discord_access_token');
-            if (!token) return false;
+            showNotification('System bereit!', 'success');
+        });
 
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: token,
-                        currentPage: pageKey
-                    })
-                });
-
-                if (!response.ok) return false;
-
-                const data = await response.json();
-                return data.hasPageAccess;
-                
-            } catch (error) {
-                console.error('Fehler bei Zugriffsprüfung:', error);
-                return false;
-            }
+        // Hilfsfunktionen
+        function updateDebugInfo(message) {
+            document.getElementById('debugInfo').textContent = message;
+            console.log('🔧', message);
         }
 
-        // BENUTZER EXISTENZ PRÜFEN
-        async function checkUserExists() {
-            if (!currentUser) return false;
-            
-            const token = localStorage.getItem('discord_access_token');
-            if (!token) return false;
-
-            try {
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken: token
-                    })
-                });
-
-                if (!response.ok) return false;
-
-                const data = await response.json();
-                return data.isAuthorized;
-                
-            } catch (error) {
-                console.error('Fehler bei Benutzerprüfung:', error);
-                return false;
-            }
-        }
-
-        // DISCORD AVATAR LADEN
-        async function loadDiscordAvatar(userData) {
-            if (userData.avatar) {
-                const avatarUrl = `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png?size=256`;
-                
-                // User Avatar (oben rechts)
-                const userAvatar = document.getElementById('userAvatar');
-                userAvatar.style.backgroundImage = `url('${avatarUrl}')`;
-                userAvatar.innerHTML = ''; // Icon entfernen
-            } else {
-                // Fallback: Ersten Buchstaben des Usernamens anzeigen
-                const userAvatar = document.getElementById('userAvatar');
-                const firstLetter = userData.username.charAt(0).toUpperCase();
-                userAvatar.innerHTML = `<span>${firstLetter}</span>`;
-            }
-        }
-
-        // Aktuelle Seite identifizieren
-        function getCurrentPageKey() {
-            const pathname = window.location.pathname;
-            const filename = pathname.split('/').pop();
-            return PAGE_ACCESS_CONFIG[filename] || 'dashboard';
-        }
-
-        // Discord OAuth Login
-        function startDiscordOAuth() {
-            const scope = 'identify';
-            const state = generateRandomState();
-            
-            const authUrl = new URL('https://discord.com/api/oauth2/authorize');
-            authUrl.searchParams.set('client_id', DISCORD_CLIENT_ID);
-            authUrl.searchParams.set('redirect_uri', DISCORD_REDIRECT_URI);
-            authUrl.searchParams.set('response_type', 'code');
-            authUrl.searchParams.set('scope', scope);
-            authUrl.searchParams.set('state', state);
-            
-            window.location.href = authUrl.toString();
-        }
-
-        function generateRandomState() {
-            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        }
-
-        async function exchangeCodeForToken(code) {
-            try {
-                loginLoading.style.display = 'block';
-                
-                const response = await fetch(`${BACKEND_URL}/token`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        code, 
-                        redirect_uri: DISCORD_REDIRECT_URI
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Worker responded with status ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.access_token) {
-                    await verifyUser(data.access_token);
-                } else {
-                    throw new Error('Kein Access Token erhalten');
-                }
-            } catch (error) {
-                console.error('Fehler beim Token-Austausch:', error);
-                showError('Fehler bei der Anmeldung. Bitte versuche es später erneut.');
-                loginLoading.style.display = 'none';
-            }
-        }
-
-        async function verifyUser(accessToken) {
-            try {
-                const currentPage = getCurrentPageKey();
-                
-                const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        accessToken,
-                        currentPage
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Verification failed');
-                }
-
-                const data = await response.json();
-
-                if (data.isAuthorized) {
-                    localStorage.setItem('discord_user', JSON.stringify(data.user));
-                    localStorage.setItem('discord_access_token', accessToken);
-                    localStorage.setItem('user_access_info', JSON.stringify(data.accessInfo || {}));
-                    
-                    const user = data.user;
-                    userAccessInfo = data.accessInfo;
-                    
-                    currentUser = {
-                        id: user.id,
-                        username: user.username,
-                        ...userAccessInfo
-                    };
-                    
-                    // Discord Avatar laden (nur für User Avatar)
-                    await loadDiscordAvatar(user);
-                    
-                    if (data.hasPageAccess) {
-                        showAuthorizedContent(currentUser);
-                        showNotification(`Erfolgreich als ${user.username} angemeldet`, 'success');
-                    } else {
-                        showAccessRestricted(currentUser, currentPage);
-                    }
-                } else {
-                    showError('Zugriff verweigert. Du bist nicht in der Benutzerliste eingetragen.');
-                }
-            } catch (error) {
-                console.error('Fehler bei der Benutzerüberprüfung:', error);
-                showError('Fehler bei der Berechtigungsprüfung');
-            } finally {
-                loginLoading.style.display = 'none';
-            }
-        }
-
-        // Zugriff verweigert anzeigen
-        function showAccessRestricted(user, pageKey) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.remove('hidden');
-            authorizedContent.classList.add('hidden');
-            
-            restrictedUserName.textContent = user.username;
-            restrictedPageName.textContent = getPageDisplayName(pageKey);
-            showNotification(`Zugriff verweigert - ${user.username} hat keinen Zugriff auf diese Seite`, 'error');
-        }
-
-        // Login-Seite anzeigen
-        function showLoginPage() {
-            loginPage.classList.remove('hidden');
-            mainContent.classList.add('hidden');
-            accessRestricted.classList.add('hidden');
-            authorizedContent.classList.add('hidden');
-        }
-
-        // Seiten-Namen für Anzeige
-        function getPageDisplayName(pageKey) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'route': 'Route',
-                'werkbank': 'Werkbank', 
-                'materialrecycler': 'Materialrecycler',
-                'kokain': 'Kokain',
-                'weed': 'Weed',
-                'management': 'Management'
-            };
-            return names[pageKey] || pageKey;
-        }
-
-        // Navigation zu anderen Seiten mit Zugriffsprüfung
-        async function navigateToWithAccessCheck(page) {
-            if (!currentUser) {
-                showNotification('Bitte zuerst anmelden', 'error');
-                return;
-            }
-            
-            // Prüfen ob Benutzer noch existiert
-            const userExists = await checkUserExists();
-            if (!userExists) {
-                showNotification('Dein Account wurde aus der Benutzerliste entfernt', 'error');
-                logout();
-                return;
-            }
-            
-            const pageKey = PAGE_ACCESS_CONFIG[page];
-            if (!pageKey) {
-                showNotification('Ungültige Seite', 'error');
-                return;
-            }
-            
-            const hasAccessToPage = await hasAccess(pageKey);
-            if (!hasAccessToPage) {
-                showNotification(`Zugriff verweigert - Keine Berechtigung für ${getPageDisplayName(pageKey)}`, 'error');
-                return;
-            }
-            
-            showNotification(`Weiterleitung zu ${getPageDisplayName(pageKey)}...`, 'info', 1500);
-            setTimeout(() => {
-                window.location.href = page;
-            }, 1500);
-        }
-
-        // Autorisierten Inhalt anzeigen
-        function showAuthorizedContent(user) {
-            loginPage.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            accessRestricted.classList.add('hidden');
-            authorizedContent.classList.remove('hidden');
-            
-            userWelcome.textContent = `Willkommen, ${user.username}`;
-            
-            if (userAccessInfo && userAccessInfo.message) {
-                accessBadge.textContent = userAccessInfo.message;
-                accessBadge.classList.remove('hidden');
-                
-                if (userAccessInfo.isPermanent) {
-                    accessBadge.className = 'access-badge access-permanent';
-                } else {
-                    accessBadge.className = 'access-badge access-temporary';
-                }
-            }
-            
-            updateCardAccess();
-            updateWeedPrices();
-            loadWeedEntries();
-            loadDiscountSettings();
-            loadGlobalLogo(); // Globales Logo laden
-        }
-
-        // Karten-Zugriffsanzeige aktualisieren - NUR FÜR DIE GROSSEN KARTEN
-        async function updateCardAccess() {
-            if (!currentUser) return;
-            
-            const cards = document.querySelectorAll('.card');
-            
-            for (const card of cards) {
-                const page = card.getAttribute('data-page');
-                const pageKey = PAGE_ACCESS_CONFIG[page];
-                
-                if (pageKey) {
-                    const hasAccessToPage = await hasAccess(pageKey);
-                    
-                    // Entferne bestehende Status-Badges
-                    const existingStatus = card.querySelector('.access-status');
-                    if (existingStatus) {
-                        existingStatus.remove();
-                    }
-                    
-                    if (hasAccessToPage) {
-                        card.classList.remove('disabled');
-                        const statusBadge = document.createElement('span');
-                        statusBadge.className = 'access-status access-allowed';
-                        statusBadge.textContent = '✓ Zugriff';
-                        card.appendChild(statusBadge);
-                    } else {
-                        card.classList.add('disabled');
-                        const statusBadge = document.createElement('span');
-                        statusBadge.className = 'access-status access-denied';
-                        statusBadge.textContent = '✗ Kein Zugriff';
-                        card.appendChild(statusBadge);
-                    }
-                }
-            }
-        }
-
-        // Notification System
-        function showNotification(message, type = 'info', duration = 4000) {
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type}`;
-            notification.classList.remove('hidden');
             notification.classList.add('show');
             
             setTimeout(() => {
                 notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.classList.add('hidden');
-                }, 300);
-            }, duration);
+            }, 3000);
+            
+            console.log('📢', message);
         }
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-        }
-
-        // Logout
-        function logout() {
-            currentUser = null;
-            userAccessInfo = null;
-            discountSettingsUnlocked = false;
-            localStorage.removeItem('discord_user');
-            localStorage.removeItem('discord_access_token');
-            localStorage.removeItem('user_access_info');
+        // Firebase: Daten laden
+        function loadDataFromFirebase() {
+            console.log('📥 Lade Daten von Firebase...');
+            updateDebugInfo('Lade Daten von Firebase...');
             
-            // User Avatar zurücksetzen
-            const userAvatar = document.getElementById('userAvatar');
-            userAvatar.style.backgroundImage = '';
-            userAvatar.innerHTML = '<i class="fas fa-user"></i>';
-            
-            showLoginPage();
-            accessBadge.classList.add('hidden');
-            
-            showNotification('Erfolgreich ausgeloggt', 'info');
-        }
-
-        // Session prüfen
-        async function checkExistingLogin() {
-            const userData = localStorage.getItem('discord_user');
-            const token = localStorage.getItem('discord_access_token');
-            const storedAccessInfo = localStorage.getItem('user_access_info');
-            
-            if (userData && token) {
-                try {
-                    const user = JSON.parse(userData);
-                    userAccessInfo = storedAccessInfo ? JSON.parse(storedAccessInfo) : null;
-                    
-                    const currentPage = getCurrentPageKey();
-                    const response = await fetch(`${BACKEND_URL}/verify-user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ 
-                            accessToken: token,
-                            currentPage
-                        })
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
-                        
-                        if (data.isAuthorized) {
-                            currentUser = {
-                                id: user.id,
-                                username: user.username,
-                                ...userAccessInfo
-                            };
-                            
-                            // Discord Avatar laden (nur für User Avatar)
-                            await loadDiscordAvatar(user);
-                            
-                            if (data.hasPageAccess) {
-                                showAuthorizedContent(currentUser);
-                                showNotification(`Willkommen zurück, ${user.username}`, 'info');
-                            } else {
-                                showAccessRestricted(currentUser, currentPage);
-                            }
-                            return;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Fehler beim Laden der Benutzerdaten:', e);
-                }
-            }
-            
-            showLoginPage();
-        }
-
-        // Tab Navigation
-        async function switchTab(tabName) {
-            const hasAccessToTab = await hasAccess(tabName);
-            if (!hasAccessToTab) {
-                showNotification(`Zugriff auf ${getTabDisplayName(tabName)} wurde für deinen Account deaktiviert`, 'error');
-                return;
-            }
-            
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.nav-tab').forEach(button => {
-                button.classList.remove('active');
-            });
-            
-            document.getElementById(tabName).classList.add('active');
-            document.getElementById(tabName + 'Tab').classList.add('active');
-            
-            // Rabatt-Einstellungen zurücksetzen beim Tab-Wechsel
-            if (tabName !== 'weed') {
-                lockDiscountSettings();
-            }
-            
-            showNotification(`${getTabDisplayName(tabName)} geladen`, 'info', 2000);
-        }
-
-        function getTabDisplayName(tabName) {
-            const names = {
-                'dashboard': 'Dashboard',
-                'weed': 'Weed System'
-            };
-            return names[tabName] || tabName;
-        }
-
-        // Weed Price Calculation
-        function updateWeedPrices() {
-            const quantity = parseInt(weedQuantity.value) || 0;
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-
-            document.getElementById('totalPrice').textContent = `${totalPrice} €`;
-            document.getElementById('discountAmount').textContent = `${currentDiscount}% (${discountValue} €)`;
-            document.getElementById('sellerShare').textContent = `${sellerShare} €`;
-            document.getElementById('buyerShare').textContent = `${buyerShare} €`;
-        }
-
-        // Handle Weed Form Submission
-        async function handleWeedSubmit() {
-            const hasAccessToWeed = await hasAccess('weed');
-            if (!hasAccessToWeed) {
-                showNotification('Zugriff auf Weed System wurde für deinen Account deaktiviert', 'error');
-                return;
-            }
-            
-            const buyer = document.getElementById('weedBuyer').value.trim();
-            const seller = document.getElementById('weedSeller').value.trim();
-            const quantity = parseInt(weedQuantity.value);
-            
-            if (!buyer || !seller || !quantity || quantity < 1) {
-                showNotification('Bitte alle Felder korrekt ausfüllen!', 'error');
-                return;
-            }
-            
-            const pricePerBrick = 2500;
-            const totalPrice = quantity * pricePerBrick;
-            const discountValue = (totalPrice * currentDiscount) / 100;
-            const sellerShare = totalPrice - discountValue;
-            const buyerShare = discountValue;
-            
-            const activeDiscount = availableDiscounts.find(d => d.value === currentDiscount);
-            
-            const entry = {
-                buyer: buyer,
-                seller: seller,
-                quantity: quantity,
-                totalPrice: totalPrice,
-                discount: currentDiscount,
-                discountLabel: activeDiscount ? activeDiscount.label : 'Kein Rabatt',
-                discountAmount: discountValue,
-                sellerShare: sellerShare,
-                buyerShare: buyerShare,
-                date: new Date().toLocaleString('de-DE'),
-                timestamp: Date.now()
-            };
-
-            try {
-                const originalText = saveWeedBtn.innerHTML;
-                saveWeedBtn.innerHTML = '<div class="spinner" style="display: inline-block; margin-right: 8px;"></div> Speichere...';
-                saveWeedBtn.disabled = true;
+            // Transaktionen laden
+            onValue(transactionsRef, (snapshot) => {
+                const data = snapshot.val();
+                holdTransactions = [];
                 
-                push(entriesRef, entry).then(() => {
-                    document.getElementById('weedBuyer').value = '';
-                    document.getElementById('weedSeller').value = '';
-                    weedQuantity.value = '1';
-                    updateWeedPrices();
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        holdTransactions.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                    console.log(`📊 ${holdTransactions.length} Transaktionen geladen`);
+                } else {
+                    console.log('📊 Keine Transaktionen gefunden');
+                }
+                
+                // Balance laden
+                get(balanceRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        availableBalance = snapshot.val().amount || 0;
+                        console.log('💰 Balance geladen:', availableBalance);
+                    } else {
+                        // Initiale Balance erstellen
+                        set(balanceRef, { amount: 0, lastUpdated: new Date().toISOString() });
+                        availableBalance = 0;
+                        console.log('💰 Initiale Balance erstellt: 0');
+                    }
                     
-                    showNotification(`Weed Ankauf gespeichert! Verkäufer: ${sellerShare}€, Käufer: ${buyerShare}€`, 'success');
-                    
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
-                }).catch(error => {
-                    console.error('Fehler beim Speichern:', error);
-                    showNotification('Fehler beim Speichern!', 'error');
-                    saveWeedBtn.innerHTML = originalText;
-                    saveWeedBtn.disabled = false;
+                    updateDisplay();
+                    checkPendingReleases();
+                    updateDebugInfo('Daten geladen ✅');
+                }).catch((error) => {
+                    console.error('❌ Fehler beim Laden der Balance:', error);
+                    updateDebugInfo('Fehler beim Laden');
                 });
+                
+            }, (error) => {
+                console.error('❌ Fehler beim Laden der Transaktionen:', error);
+                updateDebugInfo('Fehler beim Laden');
+            });
+        }
+
+        // Modal Funktionen
+        function openHoldModal() {
+            console.log('📋 Öffne Hold Modal');
+            document.getElementById('holdModal').classList.add('active');
+        }
+        
+        function openDepositModal() {
+            console.log('💰 Öffne Deposit Modal');
+            document.getElementById('depositModal').classList.add('active');
+        }
+        
+        function openWithdrawModal() {
+            console.log('💸 Öffne Withdraw Modal');
+            document.getElementById('withdrawModal').classList.add('active');
+        }
+        
+        function closeHoldModal() {
+            console.log('❌ Schließe Hold Modal');
+            document.getElementById('holdModal').classList.remove('active');
+            document.getElementById('holdAmount').value = '';
+        }
+        
+        function closeDepositModal() {
+            console.log('❌ Schließe Deposit Modal');
+            document.getElementById('depositModal').classList.remove('active');
+            document.getElementById('depositAmount').value = '';
+        }
+        
+        function closeWithdrawModal() {
+            console.log('❌ Schließe Withdraw Modal');
+            document.getElementById('withdrawModal').classList.remove('active');
+            document.getElementById('withdrawAmount').value = '';
+        }
+
+        // Freigabedatum berechnen
+        function updateReleaseDate() {
+            const holdDate = document.getElementById('holdDate').value;
+            if (holdDate) {
+                const releaseDate = new Date(holdDate);
+                releaseDate.setDate(releaseDate.getDate() + 2);
+                document.getElementById('releaseDate').value = releaseDate.toISOString().split('T')[0];
+            }
+        }
+
+        // Firebase: Hold Transaktion hinzufügen
+        async function addHoldTransaction() {
+            const amount = parseInt(document.getElementById('holdAmount').value);
+            const purchaseDate = document.getElementById('holdDate').value;
+            const releaseDate = document.getElementById('releaseDate').value;
+            
+            if (!amount || amount <= 0) {
+                showNotification('Bitte geben Sie einen gültigen Betrag ein!', 'error');
+                return;
+            }
+            
+            console.log('➕ Füge Hold hinzu:', amount, purchaseDate, releaseDate);
+            
+            const transaction = {
+                amount: amount,
+                purchaseDate: purchaseDate,
+                releaseDate: releaseDate,
+                status: 'pending',
+                type: 'hold',
+                createdAt: new Date().toISOString()
+            };
+            
+            try {
+                // Zu Firebase hinzufügen
+                const newTransactionRef = push(transactionsRef);
+                await set(newTransactionRef, transaction);
+                
+                console.log('✅ Hold in Firebase gespeichert:', newTransactionRef.key);
+                
+                // Lokal hinzufügen
+                transaction.id = newTransactionRef.key;
+                holdTransactions.unshift(transaction);
+                
+                closeHoldModal();
+                
+                updateDisplay();
+                showNotification(`✅ ${amount} $ zurückgehalten (Freigabe: ${releaseDate})`, 'success');
                 
             } catch (error) {
-                console.error('Fehler beim Speichern:', error);
+                console.error('❌ Fehler beim Speichern in Firebase:', error);
                 showNotification('Fehler beim Speichern!', 'error');
-                saveWeedBtn.disabled = false;
             }
         }
 
-        // Load and display entries from Firebase
-        function loadWeedEntries() {
-            onValue(entriesRef, (snapshot) => {
-                entries = [];
-                snapshot.forEach((childSnapshot) => {
-                    const data = childSnapshot.val();
-                    data.key = childSnapshot.key;
-                    entries.push(data);
+        // Firebase: Direkte Einzahlung
+        async function addDirectDeposit() {
+            const amount = parseInt(document.getElementById('depositAmount').value);
+            
+            if (!amount || amount <= 0) {
+                showNotification('Bitte geben Sie einen gültigen Betrag ein!', 'error');
+                return;
+            }
+            
+            console.log('💰 Füge Deposit hinzu:', amount);
+            
+            try {
+                // Balance in Firebase aktualisieren
+                const currentBalance = await get(balanceRef);
+                let currentAmount = 0;
+                
+                if (currentBalance.exists()) {
+                    currentAmount = currentBalance.val().amount || 0;
+                }
+                
+                const newAmount = currentAmount + amount;
+                
+                await set(balanceRef, { 
+                    amount: newAmount, 
+                    lastUpdated: new Date().toISOString() 
                 });
                 
-                entries.sort((a, b) => b.timestamp - a.timestamp);
-                renderWeedTransactions();
-            });
+                availableBalance = newAmount;
+                
+                // Transaktion in Firebase speichern
+                const transaction = {
+                    amount: amount,
+                    type: 'deposit',
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'released',
+                    createdAt: new Date().toISOString()
+                };
+                
+                const newTransactionRef = push(transactionsRef);
+                await set(newTransactionRef, transaction);
+                
+                // Lokal hinzufügen
+                transaction.id = newTransactionRef.key;
+                holdTransactions.unshift(transaction);
+                
+                closeDepositModal();
+                
+                console.log('✅ Deposit in Firebase gespeichert');
+                updateDisplay();
+                showNotification(`✅ ${amount} $ eingezahlt`, 'success');
+                
+            } catch (error) {
+                console.error('❌ Fehler beim Einzahlen:', error);
+                showNotification('Fehler beim Einzahlen!', 'error');
+            }
         }
 
-        function renderWeedTransactions() {
-            const tbody = document.getElementById('weedTransactions');
-            tbody.innerHTML = '';
+        // Firebase: Auszahlung
+        async function processWithdrawal() {
+            const amount = parseInt(document.getElementById('withdrawAmount').value);
             
-            if (entries.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; color: #a0aec0;">
-                            Keine Transaktionen vorhanden
-                        </td>
-                    </tr>
+            if (!amount || amount <= 0) {
+                showNotification('Bitte geben Sie einen gültigen Betrag ein!', 'error');
+                return;
+            }
+            
+            if (amount > availableBalance) {
+                showNotification(`Nicht genug Guthaben! Verfügbar: ${availableBalance} $`, 'error');
+                return;
+            }
+            
+            console.log('💸 Füge Withdrawal hinzu:', amount);
+            
+            try {
+                // Balance in Firebase aktualisieren
+                const newAmount = availableBalance - amount;
+                
+                await set(balanceRef, { 
+                    amount: newAmount, 
+                    lastUpdated: new Date().toISOString() 
+                });
+                
+                availableBalance = newAmount;
+                
+                // Transaktion in Firebase speichern
+                const transaction = {
+                    amount: amount,
+                    type: 'withdrawal',
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'released',
+                    createdAt: new Date().toISOString()
+                };
+                
+                const newTransactionRef = push(transactionsRef);
+                await set(newTransactionRef, transaction);
+                
+                // Lokal hinzufügen
+                transaction.id = newTransactionRef.key;
+                holdTransactions.unshift(transaction);
+                
+                closeWithdrawModal();
+                
+                console.log('✅ Withdrawal in Firebase gespeichert');
+                updateDisplay();
+                showNotification(`✅ ${amount} $ ausgezahlt`, 'success');
+                
+            } catch (error) {
+                console.error('❌ Fehler beim Auszahlen:', error);
+                showNotification('Fehler beim Auszahlen!', 'error');
+            }
+        }
+
+        // Anzeige aktualisieren
+        function updateDisplay() {
+            console.log('🔄 Aktualisiere Anzeige...');
+            
+            // Pending Transaktionen
+            const pendingTransactions = holdTransactions.filter(t => t.status === 'pending');
+            const releasedTransactions = holdTransactions.filter(t => t.status === 'released');
+            
+            // Zurückgehaltene Beträge
+            const totalHoldBalance = pendingTransactions.reduce((sum, t) => sum + t.amount, 0);
+            
+            // Balances SOFORT anzeigen
+            document.getElementById('holdBalance').textContent = totalHoldBalance + ' $';
+            document.getElementById('availableBalance').textContent = availableBalance + ' $';
+            
+            console.log('📊 Hold:', totalHoldBalance, 'Available:', availableBalance);
+            
+            // Weitere Berechnungen
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Heute fällig
+            const dueToday = pendingTransactions
+                .filter(t => t.releaseDate === today)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            // Nächste 7 Tage
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            const nextWeekStr = nextWeek.toISOString().split('T')[0];
+            
+            const dueNextWeek = pendingTransactions
+                .filter(t => t.releaseDate > today && t.releaseDate <= nextWeekStr)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            // Tagesbilanz
+            const dailyDeposits = releasedTransactions
+                .filter(t => t.type === 'deposit' && t.date === today)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const dailyWithdrawals = releasedTransactions
+                .filter(t => t.type === 'withdrawal' && t.date === today)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const dailyBalance = dailyDeposits - dailyWithdrawals;
+            
+            // Restliche Werte anzeigen
+            document.getElementById('dueToday').textContent = dueToday + ' $';
+            document.getElementById('dueNextWeek').textContent = dueNextWeek + ' $';
+            document.getElementById('pendingCount').textContent = pendingTransactions.length;
+            document.getElementById('dailyBalance').textContent = dailyBalance + ' $';
+            
+            // Pending Releases Liste
+            updatePendingReleasesList(pendingTransactions);
+            
+            // Chart aktualisieren
+            updateHoldChart();
+            
+            console.log('✅ Anzeige aktualisiert');
+        }
+
+        function updatePendingReleasesList(pendingTransactions) {
+            const container = document.getElementById('pendingReleases');
+            
+            if (pendingTransactions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clock" style="font-size: 3rem; margin-bottom: 1rem; color: #8b5cf6;"></i>
+                        <p>Keine zurückgehaltenen Beträge vorhanden</p>
+                    </div>
                 `;
                 return;
             }
             
-            const recentEntries = entries.slice(0, 10);
+            // Sortieren
+            pendingTransactions.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
             
-            recentEntries.forEach(entry => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${entry.date}</td>
-                    <td>${entry.buyer}</td>
-                    <td>${entry.seller}</td>
-                    <td>${entry.quantity} Bricks</td>
-                    <td>${entry.discount}% (${entry.discountLabel})</td>
-                    <td>${entry.totalPrice} €</td>
-                    <td style="color: #48bb78;">${entry.sellerShare} €</td>
-                    <td style="color: #4299e1;">${entry.buyerShare} €</td>
+            container.innerHTML = '';
+            
+            pendingTransactions.forEach(transaction => {
+                const today = new Date().toISOString().split('T')[0];
+                const isReleasedToday = transaction.releaseDate === today;
+                
+                const div = document.createElement('div');
+                div.className = `pending-item ${isReleasedToday ? 'released' : ''}`;
+                div.innerHTML = `
+                    <div>
+                        <div class="amount">${transaction.amount} $</div>
+                        <div style="color: #a0aec0; font-size: 0.8rem; margin-top: 0.3rem;">
+                            Kauf: ${transaction.purchaseDate}
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: #cbd5e0; font-size: 0.9rem;">Freigabe: ${transaction.releaseDate}</div>
+                        <div style="padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; 
+                             background: ${isReleasedToday ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)'}; 
+                             color: ${isReleasedToday ? '#10b981' : '#f59e0b'};">
+                            ${isReleasedToday ? 'Heute fällig' : 'Ausstehend'}
+                        </div>
+                    </div>
                 `;
+                container.appendChild(div);
             });
         }
 
-        // Logo Einstellungen
-        function loadLogoSettings() {
-            onValue(logoSettingsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.logoText) {
-                    logoText = data.logoText;
-                    // Überschreiben wir nicht das globale Logo
+        // Chart Funktionen
+        function initializeHoldChart() {
+            const canvas = document.getElementById('holdDistributionChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            holdDistributionChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Heute', 'Morgen', 'Übermorgen', 'Tag 4', 'Tag 5'],
+                    datasets: [{
+                        label: 'Freigabebeträge ($)',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: 'rgba(139, 92, 246, 0.7)',
+                        borderColor: '#8b5cf6',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
                 }
             });
+            
+            console.log('📊 Chart initialisiert');
         }
 
-        // Event Listeners initialisieren
-        function initializeEventListeners() {
-            discordLoginBtn.addEventListener('click', startDiscordOAuth);
-            logoutBtn.addEventListener('click', logout);
-            restrictedLogoutBtn.addEventListener('click', logout);
-            dashboardTab.addEventListener('click', () => switchTab('dashboard'));
-            weedTab.addEventListener('click', () => switchTab('weed'));
+        function updateHoldChart() {
+            if (!holdDistributionChart) return;
             
-            // Logo Upload Event Listeners
-            headerLogo.addEventListener('click', openPasswordModal);
-            cancelLogoUpload.addEventListener('click', closeLogoUploadModal);
-            cancelPassword.addEventListener('click', closePasswordModal);
-            confirmPassword.addEventListener('click', verifyLogoPassword);
-            saveLogo.addEventListener('click', handleLogoUpload);
+            const pendingTransactions = holdTransactions.filter(t => t.status === 'pending');
+            const today = new Date();
             
-            // Discount Settings Event Listeners
-            openDiscountSettings.addEventListener('click', openDiscountPasswordModal);
-            cancelDiscountPassword.addEventListener('click', closeDiscountPasswordModal);
-            confirmDiscountPassword.addEventListener('click', verifyDiscountPassword);
-            addDiscount.addEventListener('click', addNewDiscount);
+            // Daten für nächste 5 Tage
+            const data = [];
+            const labels = [];
             
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', function() {
-                    if (!this.classList.contains('disabled')) {
-                        const page = this.getAttribute('data-page');
-                        navigateToWithAccessCheck(page);
+            for (let i = 0; i < 5; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() + i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // Label
+                if (i === 0) labels.push('Heute');
+                else if (i === 1) labels.push('Morgen');
+                else labels.push(`Tag ${i + 1}`);
+                
+                // Betrag
+                const dayAmount = pendingTransactions
+                    .filter(t => t.releaseDate === dateStr)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                
+                data.push(dayAmount);
+            }
+            
+            holdDistributionChart.data.labels = labels;
+            holdDistributionChart.data.datasets[0].data = data;
+            holdDistributionChart.update();
+            
+            console.log('📊 Chart aktualisiert');
+        }
+
+        function refreshChart() {
+            updateHoldChart();
+            showNotification('Chart aktualisiert', 'info');
+        }
+
+        // Automatische Freigabe prüfen
+        function checkPendingReleases() {
+            const today = new Date().toISOString().split('T')[0];
+            let anyReleased = false;
+            
+            holdTransactions.forEach(async (transaction) => {
+                if (transaction.status === 'pending' && transaction.releaseDate <= today) {
+                    console.log(`🔄 Freigabe erkannt: ${transaction.amount} $`);
+                    
+                    try {
+                        // Status in Firebase aktualisieren
+                        const transactionRef = ref(db, `finanz_transactions/${transaction.id}`);
+                        await update(transactionRef, { status: 'released' });
+                        
+                        // Balance in Firebase aktualisieren
+                        const currentBalance = await get(balanceRef);
+                        let currentAmount = 0;
+                        
+                        if (currentBalance.exists()) {
+                            currentAmount = currentBalance.val().amount || 0;
+                        }
+                        
+                        const newAmount = currentAmount + transaction.amount;
+                        
+                        await set(balanceRef, { 
+                            amount: newAmount, 
+                            lastUpdated: new Date().toISOString() 
+                        });
+                        
+                        // Lokal aktualisieren
+                        transaction.status = 'released';
+                        availableBalance = newAmount;
+                        anyReleased = true;
+                        
+                        console.log(`✅ Freigabe gespeichert: ${transaction.amount} $`);
+                        
+                    } catch (error) {
+                        console.error('❌ Fehler beim Freigeben:', error);
                     }
-                });
+                }
             });
             
-            weedQuantity.addEventListener('input', updateWeedPrices);
-            saveWeedBtn.addEventListener('click', handleWeedSubmit);
+            if (anyReleased) {
+                updateDisplay();
+                showNotification('Neue Beträge freigegeben!', 'success');
+            }
         }
 
-        // Initialisierung
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeEventListeners();
-            checkExistingLogin();
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            if (code) {
-                exchangeCodeForToken(code);
-            }
-        });
-
-        console.log('KhusLand Panel - Mit passwortgeschützten Rabatt-Einstellungen!');
+        // Alle 60 Sekunden prüfen
+        setInterval(checkPendingReleases, 60000);
     </script>
 </body>
 </html>

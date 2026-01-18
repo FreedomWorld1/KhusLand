@@ -1,90 +1,218 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Firebase Direkttest</title>
+    <title>CC-Shop ohne Firebase SDK</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 20px; margin: 20px 0; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; margin: 5px; background: #4285f4; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
 </head>
 <body>
-    <h1>🔥 Firebase Direkttest</h1>
-    
-    <button onclick="testDirect()">🔗 Direktverbindung testen</button>
-    <button onclick="testCors()">🔄 CORS Umgehung testen</button>
-    <button onclick="testJson()">📡 JSON Direktzugriff</button>
-    
-    <div id="result" style="margin-top:20px;padding:20px;background:#f0f0f0;"></div>
+    <div class="container">
+        <h1>🏪 CC-Shop Finanzsystem (ohne Firebase SDK)</h1>
+        
+        <div class="card">
+            <h3>Status</h3>
+            <div id="status">Nicht verbunden</div>
+        </div>
+        
+        <div class="card">
+            <h3>Aktionen</h3>
+            <button onclick="testConnection()">🔗 Verbindung testen</button>
+            <button onclick="createData()">➕ Daten erstellen</button>
+            <button onclick="readData()">📖 Daten lesen</button>
+            <button onclick="saveTransaction()">💸 Transaktion speichern</button>
+        </div>
+        
+        <div class="card">
+            <h3>Debug Info</h3>
+            <div id="debug"></div>
+        </div>
+    </div>
     
     <script>
-        // DEINE FIREBASE URL
-        const FIREBASE_URL = 'https://cc-shop-36c3b-default-rtdb.europe-west1.firebasedatabase.app';
+        // Firebase URL
+        const FIREBASE_DB_URL = 'https://cc-shop-36c3b-default-rtdb.europe-west1.firebasedatabase.app';
         
-        async function testDirect() {
+        // Helper Funktionen
+        function log(message, type = 'info') {
+            const debugDiv = document.getElementById('debug');
+            const time = new Date().toLocaleTimeString();
+            const msg = document.createElement('div');
+            msg.className = type;
+            msg.textContent = `[${time}] ${message}`;
+            debugDiv.appendChild(msg);
+            console.log(`[${type}]`, message);
+        }
+        
+        async function firebaseRequest(path, method = 'GET', data = null) {
+            const url = `${FIREBASE_DB_URL}${path}.json`;
+            
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
             try {
-                const result = document.getElementById('result');
-                result.innerHTML = '<p style="color:blue">⏳ Teste direkte Verbindung...</p>';
+                const response = await fetch(url, options);
                 
-                // Direkter Fetch ohne Firebase SDK
-                const response = await fetch(`${FIREBASE_URL}/test.json`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        test: true,
-                        timestamp: new Date().toISOString(),
-                        message: 'Direkter Test von CC-Shop'
-                    })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    result.innerHTML = `
-                        <div style="color:green;border:2px solid green;padding:15px;">
-                        <h3>✅ DIREKTE VERBINDUNG FUNKTIONIERT!</h3>
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                        </div>
-                    `;
-                    console.log('✅ Direktzugriff erfolgreich:', data);
-                } else {
+                if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
+                return await response.json();
             } catch (error) {
-                document.getElementById('result').innerHTML = `
-                    <div style="color:red;border:2px solid red;padding:15px;">
-                    <h3>❌ FEHLER: ${error.message}</h3>
-                    <p>Problem: CORS oder Firebase-Regeln blockieren</p>
-                    </div>
-                `;
-                console.error('❌ Direktzugriff fehlgeschlagen:', error);
+                log(`Fehler bei ${method} ${path}: ${error.message}`, 'error');
+                throw error;
             }
         }
         
-        async function testCors() {
+        // Hauptfunktionen
+        async function testConnection() {
             try {
-                // CORS Proxy verwenden
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const targetUrl = `${FIREBASE_URL}/test.json`;
+                log('Teste Firebase Verbindung...', 'info');
+                document.getElementById('status').textContent = 'Verbindung wird getestet...';
                 
-                const response = await fetch(proxyUrl + targetUrl, {
-                    method: 'GET'
+                // Test schreiben
+                const writeResult = await firebaseRequest('/test', 'PUT', {
+                    timestamp: new Date().toISOString(),
+                    message: 'Verbindungstest CC-Shop'
                 });
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    alert(`✅ CORS Proxy funktioniert!\nDaten: ${JSON.stringify(data)}`);
-                }
+                log(`✅ Test geschrieben: ${JSON.stringify(writeResult)}`, 'success');
+                
+                // Test lesen
+                const readResult = await firebaseRequest('/test', 'GET');
+                log(`✅ Test gelesen: ${JSON.stringify(readResult)}`, 'success');
+                
+                // Test löschen
+                await firebaseRequest('/test', 'DELETE');
+                log('✅ Test gelöscht', 'info');
+                
+                document.getElementById('status').innerHTML = '<span style="color:green">✅ Verbunden mit Firebase!</span>';
+                
             } catch (error) {
-                console.error('CORS Proxy Fehler:', error);
+                document.getElementById('status').innerHTML = `<span style="color:red">❌ Fehler: ${error.message}</span>`;
+                log(`❌ Verbindungstest fehlgeschlagen: ${error.message}`, 'error');
+                
+                // Zeige Lösung
+                if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
+                    log('⚠️ Lösung: Ändere Firebase Database Rules:', 'warning');
+                    log('1. Gehe zu Firebase Console → Realtime Database → Rules', 'warning');
+                    log('2. Ändere zu: { "rules": { ".read": true, ".write": true } }', 'warning');
+                    log('3. Klicke "PUBLISH"', 'warning');
+                }
             }
         }
         
-        async function testJson() {
-            // Einfachste Methode: JSON direkt laden
-            const url = `${FIREBASE_URL}/.json`;
-            document.getElementById('result').innerHTML = `
-                <p>📡 Versuche JSON zu laden: <a href="${url}" target="_blank">${url}</a></p>
-                <iframe src="${url}" width="100%" height="300"></iframe>
-            `;
+        async function createData() {
+            try {
+                // Erstelle Balance
+                await firebaseRequest('/balance', 'PUT', {
+                    amount: 10000,
+                    currency: 'USD',
+                    lastUpdated: new Date().toISOString()
+                });
+                
+                // Erstelle Transaktionen
+                const today = new Date().toISOString().split('T')[0];
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                
+                const transactions = [
+                    {
+                        amount: 1000,
+                        type: 'hold',
+                        status: 'pending',
+                        purchaseDate: today,
+                        releaseDate: tomorrowStr,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        amount: 500,
+                        type: 'deposit',
+                        status: 'released',
+                        purchaseDate: today,
+                        releaseDate: today,
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                
+                // Transaktionen speichern
+                for (let i = 0; i < transactions.length; i++) {
+                    await firebaseRequest(`/transactions/t${Date.now()}${i}`, 'PUT', transactions[i]);
+                }
+                
+                log('✅ Testdaten erfolgreich erstellt!', 'success');
+                alert('✅ Testdaten in Firebase gespeichert!');
+                
+            } catch (error) {
+                log(`❌ Fehler beim Erstellen: ${error.message}`, 'error');
+            }
         }
+        
+        async function readData() {
+            try {
+                const balance = await firebaseRequest('/balance', 'GET');
+                const transactions = await firebaseRequest('/transactions', 'GET');
+                
+                log(`📊 Balance: ${balance?.amount || 0} $`, 'info');
+                log(`📊 Transaktionen: ${transactions ? Object.keys(transactions).length : 0}`, 'info');
+                
+                if (transactions) {
+                    Object.entries(transactions).forEach(([key, value]) => {
+                        log(`- ${value.amount}$ (${value.type}, ${value.status})`, 'info');
+                    });
+                }
+                
+            } catch (error) {
+                log(`❌ Fehler beim Lesen: ${error.message}`, 'error');
+            }
+        }
+        
+        async function saveTransaction() {
+            const amount = prompt('Betrag in $:');
+            if (!amount || isNaN(amount)) {
+                alert('Ungültiger Betrag!');
+                return;
+            }
+            
+            try {
+                const transactionId = `trans_${Date.now()}`;
+                const today = new Date().toISOString().split('T')[0];
+                
+                await firebaseRequest(`/transactions/${transactionId}`, 'PUT', {
+                    amount: parseInt(amount),
+                    type: 'hold',
+                    status: 'pending',
+                    purchaseDate: today,
+                    releaseDate: today,
+                    createdAt: new Date().toISOString(),
+                    description: 'Manuelle Transaktion'
+                });
+                
+                log(`✅ Transaktion ${amount}$ gespeichert (ID: ${transactionId})`, 'success');
+                alert(`✅ ${amount}$ erfolgreich gespeichert!`);
+                
+            } catch (error) {
+                log(`❌ Fehler beim Speichern: ${error.message}`, 'error');
+            }
+        }
+        
+        // Automatisch testen
+        window.onload = testConnection;
     </script>
 </body>
 </html>
